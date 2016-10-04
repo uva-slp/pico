@@ -49,7 +49,7 @@ UVa has significant experience with programming contests, and somebody can answe
 - Proper execution of the problems with error detection if something goes wrong
   - Only using PC^2 format; no validators
   - Execution is handled by the web server
-- Ability to judge, both by computer and human
+- Ability to judge by human
 - Scoreboard creation display
 - Basic web interface
 - The ability of the system to work for many contests: each one has it's own teams and problems (although some will be shared), and an instructor's login will show all past contests (and can pull up data about each)
