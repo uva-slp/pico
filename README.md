@@ -74,3 +74,5 @@ UVa has significant experience with programming contests, and somebody can answe
 - More flexible grading, so that this type of system could be used in a class, for example.  This implies the ability to configure scoring metrics.
 - The ability to *theme* the web interface to mimic existing systems, or to create new themes
 - Fully sandboxed execution environments
+
+## The iteration goals: [Link](http://aaronbloomfield.github.io/slp/uva/iteration-goals.html#/)
