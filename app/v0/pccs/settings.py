@@ -78,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pccs',
-        'USER': 'root',
-        'PASSWORD': 'password',
+        'USER': os.environ.get('PCCS_DB_USER', 'root'),
+        'PASSWORD': os.environ.get('PCCS_DB_PASSWORD', 'password'),
         'HOST': 'localhost',
         'PORT': '8000'
     }
