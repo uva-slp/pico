@@ -10,6 +10,7 @@ def index(request):
 
 def github_hook(request):
 	if os.path.isfile('/home/slp/pccs/html/github-hook.php'):
-		subprocess.call('/usr/bin/php /home/slp/pccs/html/github-hook.php')
+		proc = subprocess.Popen(['php','/home/slp/pccs/html/github-hook.php'])
+		proc.wait()
 		return HttpResponse('Success!')
 	raise Http404
