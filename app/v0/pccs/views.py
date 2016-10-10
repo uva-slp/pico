@@ -6,7 +6,7 @@ import subprocess
 import os
 
 def index(request):
-    return HttpResponse('Hello world!')
+    return HttpResponse('Hello world! How are you?')
 
 def github_hook(request):
 	if os.path.isfile('/home/slp/pccs/html/github-hook.php'):
