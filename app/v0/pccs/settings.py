@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'main.apps.MainConfig',
+    # 'users.apps.MainConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,6 +77,9 @@ WSGI_APPLICATION = 'pccs.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': '~/.my.cnf',
+        },
         'NAME': 'pccs',
         'USER': os.environ.get('PCCS_DB_USER', 'root'),
         'PASSWORD': os.environ.get('PCCS_DB_PASSWORD', 'password'),
