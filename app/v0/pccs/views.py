@@ -10,9 +10,9 @@ def index(request):
 
 def github_hook(request):
 	if os.path.isfile('/home/slp/pccs/html/github-hook.php'):
-		p = Popen(['php','/home/slp/pccs/html/github-hook.php'], stderr=PIPE)
+		p = Popen(['php','/home/slp/pccs/html/github-hook.php'], shell=True, stdout=PIPE, stderr=PIPE)
 		output, errors = p.communicate()
 		if not p.returncode and not errors:
 			return HttpResponse('Success!')
-		return HttpResponseServerError('Failed to pull from git repo.')
+		return HttpResponseServerError('Failed to pull from git repo.<br><br>%s<br><br>%s'%(output, errors))
 	return HttpResponseNotFound('Unable to find github hook script.')
