@@ -1,16 +1,18 @@
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseServerError
 from django.shortcuts import render
 from django.views import generic
 
-import subprocess
 import os
+from subprocess import Popen, PIPE
 
 def index(request):
     return HttpResponse('Hello world!')
 
 def github_hook(request):
 	if os.path.isfile('/home/slp/pccs/html/github-hook.php'):
-		proc = subprocess.Popen(['php','/home/slp/pccs/html/github-hook.php'])
-		proc.wait()
-		return HttpResponse('Success!')
-	raise Http404
+		p = Popen(['php','/home/slp/pccs/html/github-hook.php'], stderr=PIPE)
+		output, errors = p.communicate()
+		if not p.returncode and not errors:
+			return HttpResponse('Success!')
+		return HttpResponseServerError('Failed to pull from git repo.')
+	return HttpResponseNotFound('Unable to find github hook script.')
