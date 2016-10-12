@@ -6,7 +6,7 @@ import os
 from subprocess import Popen, PIPE
 
 def index(request):
-    return HttpResponse('Hello world! How are you?')
+    return HttpResponse('Hello world! How are you? I am well.')
 
 def github_hook(request):
 	if os.path.isfile('/home/slp/pccs/html/github-hook.php'):
