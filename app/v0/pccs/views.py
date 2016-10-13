@@ -2,14 +2,5 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.views import generic
 
-import os
-import subprocess
-
 def index(request):
     return HttpResponse('Hello world! How are you?')
-
-def github_hook(request):
-	if os.path.isfile('/home/slp/pccs/html/github-hook.php'):
-		output = subprocess.check_output('php /home/slp/pccs/html/github-hook.php', shell=True)
-		return HttpResponse('Success!<br><br>%s'%(output))
-	raise Http404('Unable to find github hook script.')
