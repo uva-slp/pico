@@ -46,9 +46,22 @@ UVa has significant experience with programming contests, and somebody can answe
   - Only using PC^2 format; no validators
   - Execution is handled by the web server
 - Ability to judge by human
+  - Allow judge to send specific messages to competitors, whether they be custom or based on the error
 - Scoreboard creation display
+  - Show all competitors and their scores (optional graphics)
+  - Include link to scoreboard on main page, doesn't need to be in the way of more important information
 - Basic web interface
+  - Contests page for when a contestant is participating in a contest
+  - Includes simple interface that gives all pertinent information without the need for a contestant to search for anything
+  - Change question box color based on submission status (Red = wrong, yellow = waiting for judge, green = correct
+  - Summary dashboard for each individual problem, shows information for each
+  - Window flashes orange in the taskbar when an alert is given to competitors
+  - Landing Page: Show the contest(s) you're a part of at that moment, contests you've created, About Us info screen
 - The ability of the system to work for many contests: each one has it's own teams and problems (although some will be shared), and an instructor's login will show all past contests (and can pull up data about each)
+- Admin Page
+  - Have various settings for contest creation, allow for default settings per admin across contests so that settings don't need to be inputted for every question/contest created by that admin
+  - Timer settings for how long a contest runs, time penalties, etc.
+  - Autojudge option, shows judge what failed
 
 
 ## Requirements: Desired
@@ -57,6 +70,10 @@ UVa has significant experience with programming contests, and somebody can answe
 - Ability to use validators for problem judging
 - Implementation of many (if not all) of the features currently handled by PC^2
 - Fully fledged, easy to use, and nice looking web interface
+- Admin Page
+  - Copy contest settings for new contest
+  - Highlight diff of candidate submission and judge submission for easy readability by judge. Allow options such as ignore whitespace
+  - Admin role by contest, not for overall system (e.g. a student can be an admin for a specific contest)
 - Flexible execution system that will allow new execution environments to be easily added
   - Also, the ability to "farm out" the judging to external clients
 - Generation of reports, graphs, and statistics
