@@ -79,12 +79,9 @@ WSGI_APPLICATION = 'pccs.wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
-		'OPTIONS': {
-			'read_default_file': '~/.my.cnf',
-		},
-		'NAME': 'pccs',
-		'USER': os.environ.get('PCCS_DB_USER', 'root'),
-		'PASSWORD': os.environ.get('PCCS_DB_PASSWORD', 'password'),
+		'NAME': secret.DB_NAME,
+		'USER': secret.DB_USER,
+		'PASSWORD': secret.DB_PASS,
 		'HOST': 'localhost',
 		'PORT': '8000'
 	}

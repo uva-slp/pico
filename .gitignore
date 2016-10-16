@@ -92,5 +92,5 @@ ENV/
 # Django static root
 app/*/static/
 
-# Django secret key
-app/*/pccs/secret.py
+# # Django secret key
+# app/*/pccs/secret.py
