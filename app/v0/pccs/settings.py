@@ -31,17 +31,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-	'users.apps.UsersConfig',
-    'contests.apps.ContestsConfig',
+    # 'users.apps.UsersConfig',
+    # 'contests.apps.ContestsConfig',
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+	'users'
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE_CLASSES = [
 	'django.middleware.security.SecurityMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
@@ -122,9 +123,20 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATE_FORMAT = "Y-m-d"
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/pccs/static/'
+LOGIN_REDIRECT_URL = '/users/profile'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'pccsuva@gmail.com'
+EMAIL_HOST_PASSWORD = 'pccsuvapassword'
+DEFAULT_FROM_EMAIL = 'pccsuva@gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
