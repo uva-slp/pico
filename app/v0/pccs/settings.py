@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import secret
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'd-@a-nf@5t$wd^kd2lz+!3lu32bx_hta^7%540hso(xifiun4b'
+SECRET_KEY = secret.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -82,8 +83,6 @@ DATABASES = {
 			'read_default_file': '~/.my.cnf',
 		},
 		'NAME': 'pccs',
-		'USER': os.environ.get('PCCS_DB_USER', 'root'),
-		'PASSWORD': os.environ.get('PCCS_DB_PASSWORD', 'password'),
 		'HOST': 'localhost',
 		'PORT': '8000'
 	}
@@ -128,3 +127,6 @@ USE_TZ = True
 
 STATIC_URL = '/pccs/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Non-root domain /server/pccs
+FORCE_SCRIPT_NAME = '/pccs'
