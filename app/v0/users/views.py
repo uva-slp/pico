@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login as auth_login
+from django.urls import reverse
 
 from users.forms import UserForm
 
@@ -37,7 +38,7 @@ def login(request):
 		if user:
 			if user.is_active:
 				auth_login(request, user)
-				return HttpResponseRedirect('/contests/home')
+				return HttpResponseRedirect(reverse('contests:home'))
 			else:
 				return HttpResponse("Your account is disabled.")
 		else:

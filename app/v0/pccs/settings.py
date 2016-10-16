@@ -83,6 +83,8 @@ DATABASES = {
 			'read_default_file': '~/.my.cnf',
 		},
 		'NAME': 'pccs',
+		'USER': os.environ.get('PCCS_DB_USER', 'root'),
+		'PASSWORD': os.environ.get('PCCS_DB_PASSWORD', 'password'),
 		'HOST': 'localhost',
 		'PORT': '8000'
 	}
@@ -127,3 +129,6 @@ USE_TZ = True
 
 STATIC_URL = '/pccs/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Non-root domain /server/pccs
+FORCE_SCRIPT_NAME = '/pccs'

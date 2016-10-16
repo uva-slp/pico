@@ -7,7 +7,7 @@
         <strong>thank you for registering!</strong>
         <a href="/">Return to the homepage.</a><br />
         {% else %}
-        <form id="user_form" method="post" action="{% 'users:login' %}"
+        <form id="user_form" method="post" action="{% url 'users:register' %}"
                 enctype="multipart/form-data">
 
             {% csrf_token %}
