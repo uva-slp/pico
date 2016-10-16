@@ -22,10 +22,6 @@ def register(request):
 	else:
 		user_form = UserForm()
 
-	context = {
-
-	}
-
 	return render(
 		request,
 		'users/register.html',
