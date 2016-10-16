@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Log In | PCCS{% endblock %}
+
+{% block content_title %}
+  <h2>Register Success</h2>
+{% endblock %}
+
+{% block content %}
+    <div class="list-group">
+        <h3>Congratulations! You've successfully registered!</h3>
+        <h3>An confirmation email has been sent to your registered email. To activate your account, click on the link in the email.</h3>
+    </div>
+    <div class="list-group">
+        <h3 align="left"> <a href="{% url 'home' %}" class = "btn btn-primary"> Back To Homepage</a></h3>
+    </div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Home | PCCS{% endblock %}
+
+{% block content_title %}
+  <h2>Forbidden!</h2>
+{% endblock %}
+
+{% block content %}
+    <div class="list-group">
+    {% if t == 1 %}
+        <h3>You don't have access to this private report. Please check the information you entered or contact the owner for more information.</h3>
+    {% elif t == 2 %}
+        <h3>You don't have the right to edit/delete this report.</h3>
+    {% elif t == 3 %}
+        <h3>The folder does not exist or you don't have access to this private repository. Please check the information you entered.</h3>
+    {% elif t == 4 %}
+        <h3>There is something wrong:(</h3>
+    {% elif t == 5 %}
+        <h3>Your account is not activated! Please check your confirmation email and activate your account before log in!</h3>
+    {% elif t == 6 %}
+        <h3> Invalid input! please follow the search format!</h3>
+    {% endif %}
+    </div>
+    <div class="list-group">
+        <h3 align="left"> <a href="{% url 'home' %}" class = "btn btn-primary"> Back To Homepage</a></h3>
+    </div>
+{% endblock %}
