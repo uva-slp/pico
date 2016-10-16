@@ -8,34 +8,25 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.translation import ugettext as _
 
-from django.db.models import Q
-from models import UserProfile, UserGroup
-from forms import GroupCreationForm, UserGroupCreationForm, GroupAdditionForm
+from models import UserProfile
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
-from django.utils.http import int_to_base36
 from django.core.mail import send_mail
 import hashlib, datetime, random
 from django.utils import timezone
 from django.contrib.auth import (REDIRECT_FIELD_NAME, login as auth_login,
-                                 logout as auth_logout, get_user_model, update_session_auth_hash)
+                                 logout as auth_logout)
 
 from django.template.response import TemplateResponse
 from django.utils.http import is_safe_url
-
-from pprint import pprint
-import sys
-
-from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -329,211 +320,4 @@ def profile(request):
     else:
         profile = None
 
-    group_list = []
-    groups = UserGroup.objects.all()
-    #    pprint(groups, sys.stderr)
-    for g in groups:
-        users = g.user_set.all()
-        if profile.user in users:
-            group_list.append(g)
-
-    return render(request, 'user_profile.html', {'prof': profile, 'groups': group_list})
-
-
-def admin_page(request):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    Groups = UserGroup.objects.all()[:20]
-    Users = UserProfile.objects.all()[:20]
-
-    context = {'groups': Groups, 'users': Users}
-    return render(request, 'admin/main.html', context)
-
-
-def admin_user(request, user_id):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    u = UserProfile.objects.filter(pk=user_id)[0]
-
-    context = {'u': u, 'isnotme': u.user != request.user}
-    return render(request, 'admin/user.html', context)
-
-
-def admin_group(request, group_id):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    user_set = UserProfile.objects.filter(user__groups=UserGroup.objects.filter(pk=group_id)[0].group)
-
-    context = {'g': UserGroup.objects.filter(pk=group_id)[0], 'user_set': user_set}
-    return render(request, 'admin/group.html', context)
-
-
-@sensitive_post_parameters()
-@csrf_protect
-@never_cache
-def admin_creategroup(request, creation_form=UserGroupCreationForm):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    if request.method == "POST":
-        form = creation_form(data=request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request, 'admin/action_complete.html')
-    else:
-        form = creation_form(request)
-
-    context = {
-        'form': form,
-    }
-    return render(request, "admin/creategroup.html", context)
-
-
-def admin_deleteuser(request, user_id):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    u = UserProfile.objects.filter(pk=user_id)[0]
-    u_u = u.user
-    u.delete()
-    u_u.delete()
-    return render(request, 'admin/action_complete.html')
-
-
-def admin_makeadmin(request, user_id):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    u = UserProfile.objects.filter(pk=user_id)[0]
-    u.administrator = 1
-    u.save()
-    return render(request, 'admin/action_complete.html')
-
-
-def admin_suspend(request, user_id):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    u = UserProfile.objects.filter(pk=user_id)[0]
-    u.suspended = 1
-    u.user.save()
-    u.save()
-    return render(request, 'admin/action_complete.html')
-
-
-def admin_unsuspend(request, user_id):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    u = UserProfile.objects.filter(pk=user_id)[0]
-    u.suspended = 0
-    u.user.save()
-    u.save()
-    return render(request, 'admin/action_complete.html')
-
-
-def admin_group_adduser(request, group_id, addition_form=GroupAdditionForm):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    if request.method == "POST":
-        form = addition_form(data=request.POST)
-        if form.is_valid():
-            user = form.save()
-            group = UserGroup.objects.filter(pk=group_id)[0]
-            group.group.user_set.add(user)
-            group.save()
-            group.group.save()
-            return HttpResponseRedirect("/users/admin")
-    else:
-        form = addition_form(request)
-
-    context = {
-        'form': form,
-        'g': UserGroup.objects.filter(pk=group_id)[0]
-    }
-    return render(request, "admin/group_adduser.html", context)
-
-
-def admin_group_removeuser(request, group_id, user_id):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    g = UserGroup.objects.filter(pk=group_id)[0]
-    u = UserProfile.objects.filter(pk=user_id)[0].user
-    g.user_set.remove(u)
-    g.save()
-    return render(request, 'admin/action_complete.html')
-
-
-def admin_group_delete(request, group_id):
-    if check_user_fail(request):
-        return render(request, 'admin/reject.html')
-
-    g = UserGroup.objects.filter(pk=group_id)[0]
-    g.group.delete()
-    g.delete()
-    return render(request, 'admin/action_complete.html')
-
-
-def check_user_fail(request):
-    try:
-        profile = UserProfile.objects.filter(user=request.user)[0]
-    except IndexError:
-        return True
-    if not profile.is_admin:
-        return True
-
-
-@login_required(login_url="/users/login/")
-def group_details(request, pk):
-    usergroup = UserGroup.objects.filter(pk=pk)[0]
-    users = usergroup.user_set.all()
-    #    pprint(users, sys.stderr)
-    #   pprint(usergroup.group.name, sys.stderr)
-    name = str(usergroup.group.name)
-
-    # Get and return the reports that are being shared to this group
-    reports = usergroup.group.reports_set.all()
-    # pprint(reports, sys.stderr)
-    return render(request, 'group_details.html',
-                  {'group': usergroup.group, 'group_name': name, 'users': users, 'reports': reports})
-
-
-@login_required(login_url="/users/login/")
-def add_group_user(request, pk):
-    if request.method == "POST":
-        group = UserGroup.objects.get(pk=pk)
-        users = request.POST.get('usernames')
-        if users == "":
-            return profile(request)
-        users = users.split(",")
-        for u in users:
-            user = User.objects.get(username=u)
-            group.group.user_set.add(user)
-            group.save()
-            group.group.save()
-        return HttpResponseRedirect(reverse('home'))
-
-    group = UserGroup.objects.get(pk=pk)
-    users = group.user_set.all()
-
-    return render(request, "add_group_user.html", {'group': group, 'users': users})
-
-
-@login_required(login_url="/users/login/")
-def add_group(request, creation_form=UserGroupCreationForm):
-    if request.method == "POST":
-        form = creation_form(data=request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('home'))
-    else:
-        form = creation_form(request)
-    context = {
-        'form': form,
-    }
-    return render(request, "add_group.html")
+    return render(request, 'user_profile.html', {'prof': profile})

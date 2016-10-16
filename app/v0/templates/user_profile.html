@@ -11,18 +11,3 @@
     <h3 align="left"> <a href="{% url 'users:reset_password'%}" class = "btn btn-primary"> Reset Password</a></h3>
   </h2>
 {% endblock %}
-
-{% block content %}
-<div class="list-group">
-	<h2> Groups </h2> 
-	{% if groups %} 
-		{% for g in groups %} 
-			<a href="{% url 'users:group_details' g.pk %}" class="list-group-item">
-				<h3>{{ g }}</h3>
-			</a>
-		{% endfor %} 		
-	{% else %} 
-		<h4> You are currently in no groups <h4> 
-	{% endif %} 
-</div>
-{% endblock %}

@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.auth.models import Group
 import datetime
 
 
@@ -30,14 +29,3 @@ class UserProfile(models.Model):
     @property
     def is_suspended(self):
         return bool(self.suspended)
-
-
-class UserGroup(models.Model):
-    group = models.OneToOneField(Group)
-
-    @property
-    def user_set(self):
-        return self.group.user_set
-
-    def __str__(self):
-        return self.group.name
