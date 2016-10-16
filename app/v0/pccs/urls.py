@@ -1,8 +1,7 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from pccs.views import *
-from submissions import views
+from . import views
 
 urlpatterns = [
 	url(r'^admin/', admin.site.urls),
