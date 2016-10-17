@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login as auth_login
 from django.urls import reverse
 
-from users.forms import UserForm
+from users.forms import UserForm, LoginForm
 
 def register(request):
 	registered = False
@@ -17,9 +17,6 @@ def register(request):
 			user.save()
 
 			registered = True
-
-		else:
-			print(user_form.errors)
 	else:
 		user_form = UserForm()
 
@@ -30,19 +27,25 @@ def register(request):
 
 def login(request):
 	if request.method == 'POST':
-		username = request.POST['username']
-		password = request.POST['password']
+		login_form = LoginForm(data=request.POST)
 
-		user = authenticate(username=username, password=password)
+		user = authenticate(
+			username=request.POST['username'],
+			password=request.POST['password'])
 
 		if user:
 			if user.is_active:
 				auth_login(request, user)
 				return HttpResponseRedirect(reverse('contests:home'))
 			else:
-				return HttpResponse("Your account is disabled.")
+				login_form.add_error(None, "Your account is disabled.")
 		else:
-			return HttpResponse("Invalid login details supplied.")
+			login_form.add_error(None, "Invalid username or password.")
 
 	else:
-		return render(request, 'users/login.html', {})
+		login_form = LoginForm()
+
+	return render(
+		request,
+		'users/login.html',
+		{'login_form': login_form})

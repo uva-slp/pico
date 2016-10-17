@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <h1>Register</h1>
 
-        {% if registered %}
-        <strong>Thank you for registering!</strong>
-        Click <a href="{% url 'contests:home' %}">here</a> to continue to the homepage.<br />
-        {% else %}
+        <h1>Login</h1>
+
+        <form id="login_form" method="post" action="{% url 'users:login' %}">
+            {% csrf_token %}
+            {{ login_form.as_p }}
+
+            <input type="submit" value="submit" />
+        </form>
+
+    	<h1>Register</h1>
+
         <form id="user_form" method="post" action="{% url 'users:register' %}"
                 enctype="multipart/form-data">
 
@@ -15,6 +21,6 @@
 
             <input type="submit" name="submit" value="Register" />
         </form>
-        {% endif %}
+
     </body>
 </html>
