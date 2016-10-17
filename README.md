@@ -7,3 +7,7 @@
 * [Repo](https://github.com/uva-slp/pccs)
 * [Iteration goals](http://aaronbloomfield.github.io/slp/uva/iteration-goals.html#/)
 * [Getting started in Django](http://aaronbloomfield.github.io/slp/docs/django-getting-started.html)
+
+### Setup
+1. Fork repo
+2. Edit secret.py
