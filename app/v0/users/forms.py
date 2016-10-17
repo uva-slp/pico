@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 
 class UserForm(forms.ModelForm):
@@ -12,10 +13,6 @@ class UserForm(forms.ModelForm):
 		model = User
 		fields = ('username', 'password', 'first_name', 'last_name', 'email')
 
-class LoginForm(forms.ModelForm):
-	username = forms.CharField(required=True)
-	password = forms.CharField(required=True, widget=forms.PasswordInput())
-	
-	class Meta:
-		model = User
-		fields = ('username', 'password')
+class LoginForm(AuthenticationForm):
+	# See https://docs.djangoproject.com/en/1.10/topics/auth/default/#django.contrib.auth.forms.AuthenticationForm
+	pass

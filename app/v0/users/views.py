@@ -29,18 +29,9 @@ def login(request):
 	if request.method == 'POST':
 		login_form = LoginForm(data=request.POST)
 
-		user = authenticate(
-			username=request.POST['username'],
-			password=request.POST['password'])
-
-		if user:
-			if user.is_active:
-				auth_login(request, user)
-				return HttpResponseRedirect(reverse('contests:home'))
-			else:
-				login_form.add_error(None, "Your account is disabled.")
-		else:
-			login_form.add_error(None, "Invalid username or password.")
+		if login_form.is_valid():
+			auth_login(request, login_form.user_cache)
+			return HttpResponseRedirect(reverse('contests:home'))
 
 	else:
 		login_form = LoginForm()
