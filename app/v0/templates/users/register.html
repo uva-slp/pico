@@ -5,7 +5,7 @@
 
         {% if registered %}
         <strong>thank you for registering!</strong>
-        <a href="{% url 'contests:home' %}">Return to the homepage.</a><br />
+        <a href="{% url 'contests:home' %}">Continue to the homepage.</a><br />
         {% else %}
         <form id="user_form" method="post" action="{% url 'users:register' %}"
                 enctype="multipart/form-data">
