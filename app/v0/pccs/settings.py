@@ -126,6 +126,3 @@ USE_TZ = True
 
 STATIC_URL = '/pccs/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-# Non-root domain /server/pccs
-FORCE_SCRIPT_NAME = '/pccs'
