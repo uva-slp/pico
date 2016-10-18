@@ -1,0 +1,3 @@
+{% for item in questions %}
+<a href = "{% url 'submissions:upload_code' item.id %}">{{ item.id  }}: {{ item.name }}</a>
+{% endfor  %}

@@ -1,5 +1,8 @@
 from django import forms
+from .models import Submission
 
-class UploadCodeForm(forms.Form):
-    title = forms.CharField(max_length=50)
-    file = forms.FileField()
+class UploadCodeForm(forms.ModelForm):
+    class Meta:
+        model = Submission
+        fields = ['code_file', 'question']
+        widgets = {'question': forms.HiddenInput()}
