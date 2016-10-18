@@ -1,0 +1,23 @@
+from django.http import HttpResponse
+from django.template import loader
+from django.urls import reverse
+from django.shortcuts import render
+from .forms import UploadCodeForm
+
+def upload_code(request):
+    if request.method == 'POST':
+        form = UploadCodeForm(request.POST, request.FILES)
+        if form.is_valid():
+            save_submission(request.FILES['file'])
+            return HttpResponseRedirect('/submissions/execute')
+    else:
+        form = UploadCodeForm()
+    return render(request, 'submissions/upload_page.html', {'form': form})
+
+def execute(request):
+    #Will attempt to execute the code here, or give error messages
+    return HttpResponse("Code will be executed here")
+
+def save_submission(f):
+    #This is where the submission will be saved to a model
+    print("Submissions will be saved here!")
