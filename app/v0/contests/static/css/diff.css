@@ -33,18 +33,18 @@
 	word-wrap: break-word;
 }
 
-div.added {
+.added-bg {
 	background-color: #ddffdd;
 }
 
-span.added {
+.added {
 	background-color: #beffbe;
 }
 
-div.deleted {
+.deleted-bg {
 	background-color: #ffecec;
 }
 
-span.deleted {
+.deleted {
 	background-color: #ffc5c5;
 }
