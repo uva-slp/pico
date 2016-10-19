@@ -6,7 +6,7 @@ diff.py is concerned with the comparison of two string lists
 """
 
 import difflib
-from html import Table, Row, Th, Td, Div, Span
+from html import Table, Row, Th, Td, Div, Span, Mark
 
 """
 Generates HTML containing the diff of two string lists
@@ -61,32 +61,29 @@ class HtmlFormatter():
 Wraps text indicated by difflib (surrounded with \x00 and \x01) with a span and assigns the appropriate classes so that additions are highlighted green and deletions are highlighted red
 """
 def prepare(text):
-	content = ''
+	div = Div()
 	change = None
 	
 	i = 0
 	while i < len(text):
 		if text[i] == '\x00':
-			span = Span()
-			
 			change = text[i+1]
 			if change == '+':
-				span.addClass('added')
+				spanClass = 'added'
 			else: # change == '-'
-				span.addClass('deleted')
+				spanClass = 'deleted'
 			
 			left = i+2
 			right = text.find('\x01', left)
-			span.append(text[left:right])
+			
+			for ch in text[left:right]:
+				div.append(Span(ch).addClass(spanClass))
 
-			content += str(span)
 			i = right
 		
 		else:
-			content += text[i]
+			div.append(text[i])
 		i+=1
-	
-	div = Div(content)
 
 	if change:
 		if change == '+':

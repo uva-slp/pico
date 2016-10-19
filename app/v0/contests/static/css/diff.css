@@ -39,6 +39,7 @@
 
 .added {
 	background-color: #beffbe;
+	display: inline-block;
 }
 
 .deleted-bg {
@@ -47,4 +48,5 @@
 
 .deleted {
 	background-color: #ffc5c5;
+	display: inline-block;
 }

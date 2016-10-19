@@ -6,12 +6,13 @@ html.py encapsulates key DOM elements and generates valid HTML given the content
 """
 
 class Element(object):
-	def __init__(self, tag):
+	def __init__(self, tag, content=''):
 		self.tag = tag
 		self.elid = ''
 		self.classes = []
 		self.style = {}
 		self.properties = {}
+		self.content = str(content)
 
 	def __str__(self):
 		return '<{0} id="{1}" class="{2}" style="{3}" {4}>{5}</{0}>'.format(
@@ -48,7 +49,11 @@ class Element(object):
 		return self
 
 	def innerHtml(self):
-		pass
+		return self.content
+
+	def append(self, s):
+		self.content += str(s)
+		return self
 
 class Table(Element):
 	def __init__(self):
@@ -81,38 +86,20 @@ class Row(Element):
 class Th(Element):
 	def __init__(self, content='', colSpan=1):
 		super(Th, self).__init__('th')
-		self.content = content
 		self.addProperty('colSpan', colSpan)
-
-	def innerHtml(self):
-		return self.content
 
 class Td(Element):
 	def __init__(self, data=''):
-		super(Td, self).__init__('td')
-		self.data = str(data)
-
-	def innerHtml(self):
-		return self.data
+		super(Td, self).__init__('td', data)
 
 class Div(Element):
 	def __init__(self, content=''):
-		super(Div, self).__init__('div')
-		self.content = str(content)
-
-	def innerHtml(self):
-		return self.content
-
-	def append(self, s):
-		self.content += str(s)
+		super(Div, self).__init__('div', content)
 
 class Span(Element):
 	def __init__(self, content=''):
-		super(Span, self).__init__('span')
-		self.content = str(content)
+		super(Span, self).__init__('span', content)
 
-	def innerHtml(self):
-		return self.content
-
-	def append(self, s):
-		self.content += str(s)
+class Mark(Element):
+	def __init__(self, content=''):
+		super(Mark, self).__init__('mark', content)
