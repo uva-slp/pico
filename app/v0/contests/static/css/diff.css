@@ -1,0 +1,52 @@
+.diff-table {
+	border-spacing:0;
+	border-collapse: collapse;
+	font-size: 18px;
+}
+
+.diff-table thead, .diff-table tbody {
+	display: block;
+}
+
+.diff-table tbody {
+	height: 100px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.diff-cell {
+	padding-top: 0;
+	padding-bottom: 0;
+	font-family: monospace;
+}
+
+.line-number {
+	text-align: right;
+	padding-left: 4px;
+	padding-right: 4px;
+	vertical-align: top;
+}
+
+.line-text {
+	width: 300px;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+.added-bg {
+	background-color: #ddffdd;
+}
+
+.added {
+	background-color: #beffbe;
+	display: inline-block;
+}
+
+.deleted-bg {
+	background-color: #ffecec;
+}
+
+.deleted {
+	background-color: #ffc5c5;
+	display: inline-block;
+}
