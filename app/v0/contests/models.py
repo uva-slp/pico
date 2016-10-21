@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User, Group
 
 class Contest(models.Model):
-	title = models.CharField(max_length=128, primary_key=True)
+	title = models.CharField(max_length=128)
 	dateCreated = models.DateTimeField(auto_now_add=True)
-	creator = models.CharField(max_length=32, primary_key=True)
+	creator = models.CharField(max_length=32)
 	teams = models.ManyToManyField(Group)
 	
 	def __str__(self):
