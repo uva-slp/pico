@@ -1,0 +1,11 @@
+language: python
+
+python:
+  - "2.7"
+
+install:
+  - pip install -q Django==1.10
+
+script: python app/v0/manage.py test
+
+sudo: false
