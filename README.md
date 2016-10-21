@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/uva-slp/pccs.svg?token=aW6wnLAt24FpZ7h9WE5x&branch=master)](https://travis-ci.com/uva-slp/pccs)
+
 # UVA Programming Contests Capstone Project
 
 ----------------------------
