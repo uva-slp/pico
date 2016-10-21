@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html>
+	{% load staticfiles %}
+	
+	<head>
+        <title>PCCS</title>
+
+        <!-- jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+		<style>
+			.footer {
+				position: absolute;
+				bottom: 0;
+				width: 100%;
+				padding-top: 5px;
+				padding-bottom: 5px;
+			}
+		</style>
+
+    	{% block css_block %}{% endblock %}
+
+    </head>
+
+    <body>
+
+		<nav class="navbar navbar-inverse navbar-static-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="{% url 'index' %}">PCCS</a>
+				</div>
+			</div>
+		</nav>
+
+        <div class="container">
+            {% block body_block %}
+            	<div class="panel panel-default col-md-8 col-md-offset-2">
+					{% block content_block %}{% endblock %}
+            	</div>
+            {% endblock %}
+        </div>
+
+		<footer class="footer navbar-static-bottom">
+			<div class="container text-center">
+				<span>Copyright © 2016</span> | <a href="">About</a> | <a href="">Contact Us</a>
+			</div>
+		</footer>
+
+    </body>
+    
+    <script>
+		function getCookie(name) {
+			var cookieValue = null;
+			if (document.cookie && document.cookie != '') {
+				var cookies = document.cookie.split(';');
+				for (var i = 0; i < cookies.length; i++) {
+					var cookie = jQuery.trim(cookies[i]);
+					// Does this cookie string begin with the name we want?
+					if (cookie.substring(0, name.length + 1) == (name + '=')) {
+						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						break;
+					}
+				}
+			}
+			return cookieValue;
+		}
+		jQuery.fn.outerHTML = function() {
+			return jQuery('<div />').append(this.eq(0).clone()).html();
+		};
+    </script>
+
+	{% block script_block %}{% endblock %}
+
+</html>
+

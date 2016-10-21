@@ -1,20 +1,18 @@
-<!DOCTYPE html>
-<html>
-    <body>
-        <h1>Register</h1>
+{% extends 'base.html' %}
 
-        {% if registered %}
-        <strong>Thank you for registering!</strong>
-        Click <a href="{% url 'contests:home' %}">here</a> to continue to the homepage.<br />
-        {% else %}
-        <form id="user_form" method="post" action="{% url 'users:register' %}"
-                enctype="multipart/form-data">
+{% block css_block %}{% endblock %}
 
-            {% csrf_token %}
-            {{ user_form.as_p }}
+{% block body_block %}
+    <h1>Register</h1>
 
-            <input type="submit" name="submit" value="Register" />
-        </form>
-        {% endif %}
-    </body>
-</html>
+    <form id="user_form" method="post" action="{% url 'users:register' %}"
+            enctype="multipart/form-data">
+
+        {% csrf_token %}
+        {{ user_form.as_p }}
+
+        <input type="submit" name="submit" value="Register" />
+    </form>
+{% endblock %}
+
+{% block script_block %}{% endblock %}

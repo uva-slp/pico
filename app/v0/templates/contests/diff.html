@@ -1,84 +1,90 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+{% extends 'base.html' %}
 
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/diff.css' %}" />
+{% block css_block %}
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/diff.css' %}" />
+{% endblock %}
 
-<div>
+{% block body_block %}
 	<div>
-		<button id="first">first</button>
-		<button id="prev">prev</button>
-		<button id="next">next</button>
-		<button id="last">last</button>
+		<div>
+			<button id="first">first</button>
+			<button id="prev">prev</button>
+			<button id="next">next</button>
+			<button id="last">last</button>
+		</div>
+		{{ diff_table|safe }}
 	</div>
-	{{ diff_table|safe }}
-</div>
+{% endblock %}
 
-<script type="text/javascript">
+{% block script_block %}
+	<script type="text/javascript">
 
-	////////////////////////
-	// Diff table nav bar //
-	////////////////////////
+		////////////////////////
+		// Diff table nav bar //
+		////////////////////////
 
-	var numChanges = {{ numChanges }};
-	
-	var cur = 0;
-	var url = document.location.toString()
-	var i = url.indexOf("#");
-	if (i != -1) {
-		cur = parseInt(url.substring(i+1));
-	}
+		var numChanges = {{ numChanges }};
+		
+		var cur = 0;
+		var url = document.location.toString()
+		var i = url.indexOf("#");
+		if (i != -1) {
+			cur = parseInt(url.substring(i+1));
+		}
 
-	var first = 0;
-	var prev = cur-1;
-	var next = cur+1;
-	var last = numChanges-1;
+		var first = 0;
+		var prev = cur-1;
+		var next = cur+1;
+		var last = numChanges-1;
 
-	function goToAnchor(anchor) {
-		var loc = document.location.toString().split('#')[0];
-		document.location = loc + '#' + anchor;
+		function goToAnchor(anchor) {
+			var loc = document.location.toString().split('#')[0];
+			document.location = loc + '#' + anchor;
 
-		cur = anchor;
-		prev = anchor-1;
-		next = anchor+1;
+			cur = anchor;
+			prev = anchor-1;
+			next = anchor+1;
 
-		$('#first').prop('disabled', numChanges==0||cur==first);
-		$('#last').prop('disabled', numChanges==0||cur==last);
-		$('#prev').prop('disabled', prev<0);
-		$('#next').prop('disabled', next>last);
-	}
+			$('#first').prop('disabled', numChanges==0||cur==first);
+			$('#last').prop('disabled', numChanges==0||cur==last);
+			$('#prev').prop('disabled', prev<0);
+			$('#next').prop('disabled', next>last);
+		}
 
-	$('document').ready(function(){
-		$('#first').click(function(){
-			goToAnchor(first);
+		$('document').ready(function(){
+			$('#first').click(function(){
+				goToAnchor(first);
+			});
+			$('#last').click(function(){
+				goToAnchor(last);
+			});
+			$('#prev').click(function(){
+				goToAnchor(prev);
+			});
+			$('#next').click(function(){
+				goToAnchor(next);
+			});
+
+			$('#first').prop('disabled', numChanges==0||cur==first);
+			$('#last').prop('disabled', numChanges==0||cur==last);
+			$('#prev').prop('disabled', prev<0);
+			$('#next').prop('disabled', next>last);
 		});
-		$('#last').click(function(){
-			goToAnchor(last);
-		});
-		$('#prev').click(function(){
-			goToAnchor(prev);
-		});
-		$('#next').click(function(){
-			goToAnchor(next);
-		});
 
-		$('#first').prop('disabled', numChanges==0||cur==first);
-		$('#last').prop('disabled', numChanges==0||cur==last);
-		$('#prev').prop('disabled', prev<0);
-		$('#next').prop('disabled', next>last);
-	});
+		////////////////////////
+		// Diff table display //
+		////////////////////////
 
-	////////////////////////
-	// Diff table display //
-	////////////////////////
+		var $table = $('table.diff-table');
+		var $theadCells = $table.find('thead tr').children();
 
-	var $table = $('table.diff-table');
-	var $theadCells = $table.find('thead tr').children();
+		$(window).resize(function() {
+	    	var tableWidth = $table.find('tbody').width();
+	    	$theadCells.each(function(i, th) {
+	    		$(th).width(tableWidth/2);
+	    	});
+		}).resize();
 
-	$(window).resize(function() {
-    	var tableWidth = $table.find('tbody').width();
-    	$theadCells.each(function(i, th) {
-    		$(th).width(tableWidth/2);
-    	});
-	}).resize();
-
-</script>
+	</script>
+{% endblock %}
