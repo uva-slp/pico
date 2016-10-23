@@ -9,8 +9,6 @@ from users.forms import UserForm, LoginForm
 
 @anonymous_required
 def register(request):
-	registered = False
-
 	if request.method == 'POST':
 		user_form = UserForm(data=request.POST)
 
@@ -19,14 +17,14 @@ def register(request):
 			user.set_password(user.password)
 			user.save()
 
-			registered = True
+			return redirect(reverse('contests:home'))
 	else:
 		user_form = UserForm()
 
 	return render(
 		request,
 		'users/register.html',
-		{'user_form': user_form, 'registered': registered})
+		{'user_form': user_form})
 
 @anonymous_required
 def login(request):
