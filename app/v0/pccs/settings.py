@@ -127,6 +127,10 @@ USE_L10N = True
 USE_TZ = True
 
 
+# Login urls
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'contests:home'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
