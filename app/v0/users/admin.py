@@ -1,10 +1,17 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
-from django.contrib.auth.models import User as AuthUser, Group
 
-from .models import User, Team
+from .models import Team
 
-admin.site.unregister(AuthUser)
-admin.site.unregister(Group)
-admin.site.register(User, UserAdmin)
-admin.site.register(Team, GroupAdmin)
+class MembersInline(admin.TabularInline):
+	model = Team.members.through
+
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+	fieldsets = [
+		(None, {'fields': ['name']}),
+	]
+	inlines = [MembersInline]
+	list_display = ('name', 'date_created')
+	list_filter = ['date_created']
+	search_fields = ['name']

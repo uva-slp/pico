@@ -2,4 +2,14 @@
 
 {% block body_block %}
 	<a href="{% url 'users:logout' %}">Logout</a>
+	<br/>
+	
+	<h3>Create team</h3>
+
+	<form id="team_form" method="post" action="{% url 'users:create-team' %}">
+        {% csrf_token %}
+        {{ team_form.as_p }}
+
+        <input type="submit" value="submit" />
+    </form>
 {% endblock %}

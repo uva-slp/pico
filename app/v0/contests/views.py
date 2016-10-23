@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 
-from difflib import HtmlDiff # temporary
-
+from users.forms import TeamForm
 from lib import diff as _diff
 
 def home(request):
-	return render(request, 'contests/home.html', {})
+	return render(
+		request,
+		'contests/home.html',
+		{'team_form': TeamForm()})
 
 def diff(request):
 	fromlines = ['foo', 'bar', 'flarp']

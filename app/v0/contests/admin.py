@@ -8,6 +8,7 @@ class TeamsInline(admin.TabularInline):
 class QuestionInline(admin.TabularInline):
     model = Question
 
+@admin.register(Contest)
 class ContestAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['title']}),
@@ -16,5 +17,3 @@ class ContestAdmin(admin.ModelAdmin):
     list_display = ('title', 'date_created')
     list_filter = ['date_created']
     search_fields = ['title', 'creator']
-
-admin.site.register(Contest, ContestAdmin)

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User as AuthUser, Group
+from django.contrib.auth.models import User as AuthUser
 
 class User(AuthUser):
 	class Meta:
@@ -8,6 +8,7 @@ class User(AuthUser):
 			('create_contest', 'Can create contests'),
 		)
 
-class Team(Group):
-	class Meta:
-		proxy = True
+class Team(models.Model):
+	name = models.CharField(max_length=32)
+	date_created = models.DateTimeField(auto_now_add=True)
+	members = models.ManyToManyField(User)
