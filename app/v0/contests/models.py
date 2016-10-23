@@ -3,7 +3,7 @@ from users.models import User, Team
 
 class Contest(models.Model):
 	title = models.CharField(max_length=128)
-	dateCreated = models.DateTimeField(auto_now_add=True)
+	date_created = models.DateTimeField(auto_now_add=True)
 	creator = models.CharField(max_length=32)
 	teams = models.ManyToManyField(Team)
 	
@@ -20,6 +20,5 @@ class Question(models.Model):
 
 class Submissions(models.Model):
 	team = models.ForeignKey(Team)
-	contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
 	question = models.ForeignKey(Question, on_delete=models.CASCADE)
 	timestamp = models.DateTimeField(auto_now=True)
