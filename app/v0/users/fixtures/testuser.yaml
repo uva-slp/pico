@@ -1,8 +1,0 @@
-- model: auth.User
-  pk: 1
-  fields:
-    username: testuser
-    password: password
-    first_name: John
-    last_name: Doe
-    email: john.doe@email.com
