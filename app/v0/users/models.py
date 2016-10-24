@@ -7,8 +7,3 @@ class User(AuthUser):
 		permissions = (
 			('create_contest', 'Can create contests'),
 		)
-
-class Team(models.Model):
-	name = models.CharField(max_length=32)
-	date_created = models.DateTimeField(auto_now_add=True)
-	members = models.ManyToManyField(User)

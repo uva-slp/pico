@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
 from common.decorators import anonymous_required
-from .forms import UserForm, LoginForm, TeamForm
+from .forms import UserForm, LoginForm
 
 @anonymous_required
 def register(request):
@@ -46,14 +46,3 @@ def login(request):
 def logout(request):
 	auth_logout(request)
 	return redirect(reverse('index'))
-
-@login_required
-def create_team(request):
-	if request.method == 'POST':
-		team_form = TeamForm(data=request.POST)
-
-		if team_form.is_valid():
-			team = team_form.save()
-			team.user_set.add(request.user)
-	
-	return redirect(reverse('contests:home'))

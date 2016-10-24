@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-from .models import User, Team
+from .models import User
 
 class UserForm(forms.ModelForm):
 	username = forms.CharField(required=True)
@@ -16,10 +16,3 @@ class UserForm(forms.ModelForm):
 class LoginForm(AuthenticationForm):
 	# See https://docs.djangoproject.com/en/1.10/topics/auth/default/#django.contrib.auth.forms.AuthenticationForm
 	pass
-
-class TeamForm(forms.ModelForm):
-	name = forms.CharField(required=True)
-
-	class Meta:
-		model = Team
-		fields = ('name',)

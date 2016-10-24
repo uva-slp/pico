@@ -6,9 +6,27 @@
 	
 	<h3>Create team</h3>
 
-	<form id="team_form" method="post" action="{% url 'users:create-team' %}">
+	<form id="team_form" method="post" action="{% url 'teams:create-team' %}">
         {% csrf_token %}
         {{ team_form.as_p }}
+
+        <input type="submit" value="submit" />
+    </form>
+
+	<h3>Join team</h3>
+
+	<form id="team_join_form" method="post" action="{% url 'teams:join-team' %}">
+        {% csrf_token %}
+        {{ team_join_form.as_p }}
+
+        <input type="submit" value="submit" />
+    </form>
+
+	<h3>Leave team</h3>
+
+	<form id="team_leave_form" method="post" action="{% url 'teams:leave-team' %}">
+        {% csrf_token %}
+        {{ team_leave_form.as_p }}
 
         <input type="submit" value="submit" />
     </form>

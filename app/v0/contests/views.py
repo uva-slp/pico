@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 
-from users.forms import TeamForm
+from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from lib import diff as _diff
 
 def home(request):
 	return render(
 		request,
 		'contests/home.html',
-		{'team_form': TeamForm()})
+		{'team_form': TeamForm(), 'team_join_form': TeamJoinForm(request), 'team_leave_form': TeamLeaveForm(request)})
 
 def diff(request):
 	fromlines = ['foo', 'bar', 'flarp']

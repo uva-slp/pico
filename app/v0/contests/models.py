@@ -1,5 +1,6 @@
 from django.db import models
-from users.models import User, Team
+from users.models import User
+from teams.models import Team
 
 class Contest(models.Model):
 	title = models.CharField(max_length=128)

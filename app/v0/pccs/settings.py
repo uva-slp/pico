@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
 	'users.apps.UsersConfig',
+	'teams.apps.TeamsConfig',
     'contests.apps.ContestsConfig',
 	'django.contrib.admin',
 	'django.contrib.auth',
@@ -50,6 +51,10 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+	'users.backends.ModelBackend',
 ]
 
 ROOT_URLCONF = 'pccs.urls'
