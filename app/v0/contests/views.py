@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
+from contests.forms import CreateContestForm
 from lib import diff as _diff
 
 def home(request):
@@ -19,3 +20,19 @@ def diff(request):
 		request,
 		'contests/diff.html',
 		{'diff_table': html, 'numChanges': numChanges})
+
+def create(request):
+    #boolean to see if the contest was successfully created
+    #initally false, code will make it true it successful
+    #successfully_created_contest = False
+    #check to see if the page was loaded with POST request data
+
+    if request.method == 'POST':
+        #grab information from form
+        form = CreateContestForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/index/')
+    else:
+        form = CreateContestForm()
+    return render(request, 'create_contest.html', {'form': form})
