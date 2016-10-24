@@ -94,3 +94,6 @@ ENV/
 
 # Django static root
 app/*/static/
+
+# PyCharm settings
+/.idea/*
