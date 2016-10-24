@@ -32,7 +32,7 @@ def create(request):
         form = CreateContestForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/index/')
+            return render(request, 'contests/home.html', {'form' : form})
     else:
         form = CreateContestForm()
-    return render(request, 'create_contest.html', {'form': form})
+    return render(request, 'contests/create_contest.html', {'form': form})
