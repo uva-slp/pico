@@ -11,10 +11,13 @@ def home(request):
 		{'team_form': TeamForm(), 'team_join_form': TeamJoinForm(request), 'team_leave_form': TeamLeaveForm(request)})
 
 def diff(request):
-	fromlines = ['foo', 'bar', 'flarp']
-	tolines = ['food', 'jip', 'bar', 'zoo', 'jaslkdfj;laskdjflasdlkflasdgflkjghkljcvkljadkjlfhkajsldfhlkawheuifyiasdhflkjashdjklfhkajsdhflkjashiudfyoiauwhelkfjhaslkjdfhklasjhdfkljashdkflj']
+	emptylines = 'emptylines' in request.GET
+	whitespace = 'whitespace' in request.GET
 
-	html, numChanges = _diff.HtmlFormatter(fromlines, tolines).asTable()
+	fromlines = ['foo ', 'f ', '  fs  ', '', 'bar', 'flarp']
+	tolines = ['foo', 'bar', 'zoo']
+
+	html, numChanges = _diff.HtmlFormatter(fromlines, tolines, emptylines, whitespace).asTable()
 
 	return render(
 		request,

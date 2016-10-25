@@ -85,7 +85,7 @@ class Row(Element):
 
 class Th(Element):
 	def __init__(self, content='', colSpan=1):
-		super(Th, self).__init__('th')
+		super(Th, self).__init__('th', content)
 		self.addProperty('colSpan', colSpan)
 
 class Td(Element):

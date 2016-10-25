@@ -20,6 +20,10 @@
 	font-family: monospace;
 }
 
+.diff-cell span {
+	white-space: pre-wrap;
+}
+
 .line-number {
 	text-align: right;
 	padding-left: 4px;
@@ -33,20 +37,29 @@
 	word-wrap: break-word;
 }
 
-.added-bg {
+.diff-add-bg {
 	background-color: #ddffdd;
 }
 
-.added {
+.diff-add {
 	background-color: #beffbe;
 	display: inline-block;
 }
 
-.deleted-bg {
+.diff-del-bg {
 	background-color: #ffecec;
 }
 
-.deleted {
+.diff-del {
 	background-color: #ffc5c5;
+	display: inline-block;
+}
+
+.diff-chg-bg {
+	background-color: #ffffa4;
+}
+
+.diff-chg {
+	background-color: #ffff3b;
 	display: inline-block;
 }
