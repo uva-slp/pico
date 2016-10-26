@@ -7,7 +7,7 @@ diff.py is concerned with the comparison of two string lists
 
 import difflib
 import re
-from html import Table, Row, Th, Td, Div, Span, Mark
+from .html import Table, Row, Th, Td, Div, Span, Mark
 
 """
 Generates HTML containing the diff of two string lists
