@@ -16,6 +16,8 @@ def register(request):
 			user.set_password(user.password)
 			user.save()
 
+			auth_login(request, user)
+
 			return redirect(reverse('contests:home'))
 	else:
 		user_form = UserForm()
