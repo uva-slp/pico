@@ -3,6 +3,8 @@
 {% block body_block %}
 	<a href="{% url 'users:password_change' %}">Change password</a>
 	<br/>
+	<a href="{% url 'users:password_reset' %}">Retrieve password</a>
+	<br/>
 	<a href="{% url 'users:logout' %}">Logout</a>
 	<br/>
     <a href="{% url 'contests:create' %}">Create a Contest</a>
