@@ -93,7 +93,7 @@ ENV/
 .ropeproject
 
 # Django static root
-app/*/static/
+app/static/
 
 # PyCharm settings
 /.idea/*

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from contests.forms import CreateContestForm
-from lib import diff as _diff
+from .lib import diff as _diff
 
 def home(request):
 	return render(
