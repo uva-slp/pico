@@ -86,9 +86,8 @@ class HtmlFormatter():
 			text = re.sub('^(\s*)(\0\+|\0\-|\0\^)(\s*)\1(\s*)$', lambda m: m.group(1)+m.group(3)+m.group(4), text)
 		if not self.whitespace:
 			text = re.sub('(\0\+|\0\-|\0\^)(.*)(\1)', self.unmark_whitespace, text)
-			print((text,))
-		if self.emptylines and solo and text=='':
-			text = '\0%s \1' % (marker)
+		if self.emptylines and solo and text.isspace():
+			text = '\0%s \1'%(marker)
 
 		return (line_num, text), (hasChange or '\x00' in text)
 

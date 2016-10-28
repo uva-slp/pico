@@ -14,7 +14,7 @@ def diff(request):
 	emptylines = 'emptylines' in request.GET
 	whitespace = 'whitespace' in request.GET
 
-	fromlines = ['foo ', 'f ', '  fs  ', '', 'bar', 'flarp']
+	fromlines = ['foo ', 'f ', '  fs  ', '   ', 'bar', 'flarp']
 	tolines = ['foo', 'bar', 'zoo']
 
 	html, numChanges = _diff.HtmlFormatter(fromlines, tolines, emptylines, whitespace).asTable()
