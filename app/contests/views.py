@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from .forms import CreateContestForm, CreateContestTemplate, CreateQuestionAnswer
 from django.forms.formsets import formset_factory
-from lib import diff as _diff
 from django.urls import reverse
+from .lib import diff as _diff
 
 def home(request):
 	return render(
@@ -13,10 +13,13 @@ def home(request):
 		{'team_form': TeamForm(), 'team_join_form': TeamJoinForm(request), 'team_leave_form': TeamLeaveForm(request)})
 
 def diff(request):
-	fromlines = ['foo', 'bar', 'flarp']
-	tolines = ['food', 'jip', 'bar', 'zoo', 'jaslkdfj;laskdjflasdlkflasdgflkjghkljcvkljadkjlfhkajsldfhlkawheuifyiasdhflkjashdjklfhkajsdhflkjashiudfyoiauwhelkfjhaslkjdfhklasjhdfkljashdkflj']
+	emptylines = 'emptylines' in request.GET
+	whitespace = 'whitespace' in request.GET
 
-	html, numChanges = _diff.HtmlFormatter(fromlines, tolines).asTable()
+	fromlines = ['foo ', 'f ', '  fs  ', '   ', 'bar', 'flarp']
+	tolines = ['foo', 'bar', 'zoo']
+
+	html, numChanges = _diff.HtmlFormatter(fromlines, tolines, emptylines, whitespace).asTable()
 
 	return render(
 		request,
@@ -24,17 +27,17 @@ def diff(request):
 		{'diff_table': html, 'numChanges': numChanges})
 
 def create(request):
-	#boolean to see if the contest was successfully created
-	#initally false, code will make it true it successful
-	#successfully_created_contest = False
-	#check to see if the page was loaded with POST request data
+	# boolean to see if the contest was successfully created
+	# initally false, code will make it true it successful
+	# successfully_created_contest = False
+	# check to see if the page was loaded with POST request data
 
 	if request.method == 'POST':
-		#grab information from form
+		# grab information from form
 		form = CreateContestForm(request.POST)
 		if form.is_valid():
 			form.save()
-			return render(request, 'contests/home.html', {'form' : form})
+			return render(request, 'contests/home.html', {'form': form})
 	else:
 		form = CreateContestForm()
 	return render(request, 'contests/create_contest.html', {'form': form})

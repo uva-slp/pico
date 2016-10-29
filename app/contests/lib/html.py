@@ -5,7 +5,7 @@ created: 10/18/2016
 html.py encapsulates key DOM elements and generates valid HTML given the contents of those elements
 """
 
-class Element(object):
+class Element():
 	def __init__(self, tag, content=''):
 		self.tag = tag
 		self.elid = ''
@@ -57,7 +57,7 @@ class Element(object):
 
 class Table(Element):
 	def __init__(self):
-		super(Table, self).__init__('table')
+		super().__init__('table')
 		self.headers = []
 		self.rows = []
 
@@ -74,7 +74,7 @@ class Table(Element):
 
 class Row(Element):
 	def __init__(self):
-		super(Row, self).__init__('tr')
+		super().__init__('tr')
 		self.cells = []
 
 	def innerHtml(self):
@@ -85,21 +85,21 @@ class Row(Element):
 
 class Th(Element):
 	def __init__(self, content='', colSpan=1):
-		super(Th, self).__init__('th')
+		super().__init__('th', content)
 		self.addProperty('colSpan', colSpan)
 
 class Td(Element):
 	def __init__(self, data=''):
-		super(Td, self).__init__('td', data)
+		super().__init__('td', data)
 
 class Div(Element):
 	def __init__(self, content=''):
-		super(Div, self).__init__('div', content)
+		super().__init__('div', content)
 
 class Span(Element):
 	def __init__(self, content=''):
-		super(Span, self).__init__('span', content)
+		super().__init__('span', content)
 
 class Mark(Element):
 	def __init__(self, content=''):
-		super(Mark, self).__init__('mark', content)
+		super().__init__('mark', content)

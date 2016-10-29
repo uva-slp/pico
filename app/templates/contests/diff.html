@@ -32,6 +32,10 @@
 		if (i != -1) {
 			cur = parseInt(url.substring(i+1));
 		}
+		if (cur > numChanges || Number.isNaN(cur)) {
+			cur = 0;
+			document.location = url.substring(0,i);
+		}
 
 		var first = 0;
 		var prev = cur-1;
