@@ -7,7 +7,7 @@ diff.py is concerned with the comparison of two string lists
 
 import difflib
 import re
-from .html import Table, Row, Th, Td, Div, Span, Mark
+from .html import Table, Row, Th, Td, Div, Span, Anchor
 
 """
 Generates HTML containing the diff of two string lists
@@ -36,7 +36,7 @@ class HtmlFormatter():
 			# tag
 			tag = ''
 			if hasChange:
-				tag = str(Span().setElementId(num_changes))
+				tag = str(Anchor().setName(num_changes))
 				num_changes+=1
 
 			# from
