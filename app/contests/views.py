@@ -37,20 +37,26 @@ def diff(request):
 		{'diff_table': html, 'numChanges': numChanges})
 
 def create(request):
-	# boolean to see if the contest was successfully created
-	# initally false, code will make it true it successful
-	# successfully_created_contest = False
-	# check to see if the page was loaded with POST request data
+    #boolean to see if the contest was successfully created
+    #initally false, code will make it true it successful
+    #successfully_created_contest = False
+    #check to see if the page was loaded with POST request data
 
-	if request.method == 'POST':
-		# grab information from form
-		form = CreateContestForm(request.POST)
-		if form.is_valid():
-			form.save()
-			return render(request, 'contests/home.html', {'form': form})
-	else:
-		form = CreateContestForm()
-	return render(request, 'contests/create_contest.html', {'form': form})
+    if request.method == 'POST':
+        #grab information from form
+        form = CreateContestForm(request.POST)
+        if form.is_valid():
+            c = Contest()
+            c.title = form.title
+            c.creator = 'user'
+            c.languages = form.languages
+            c.length = form.length
+            c.autojudge = form.autojudge
+            c.save()
+            return render(request, 'contests/home.html', {'form' : form})
+    else:
+        form = CreateContestForm()
+    return render(request, 'contests/create_contest.html', {'form': form})
 
 def createTemplate(request):
 
