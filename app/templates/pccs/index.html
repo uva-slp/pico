@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
 {% block body_block %}
+	<a href="{% url 'users:password_reset' %}">Retrieve password</a>
+	<br/>
     <h1>Login</h1>
-
     <form id="login_form" method="post" action="{% url 'users:login' %}">
         {% csrf_token %}
         {{ login_form.as_p }}

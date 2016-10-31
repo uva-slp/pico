@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from common.decorators import anonymous_required
 from .forms import UserForm, LoginForm
+from pccs.emailserver import SERVER_EMAIL
 
 @anonymous_required
 def register(request):

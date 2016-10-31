@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 from . import secrets
+from . import emailserver
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -145,3 +146,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Testing
 FIXTURE_DIRS = (os.path.join(BASE_DIR, 'fixtures'),)
+
+
+# Email server
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = emailserver.SERVER_EMAIL
+SERVER_EMAIL = emailserver.SERVER_EMAIL
+EMAIL_HOST = emailserver.EMAIL_HOST
+EMAIL_PORT = emailserver.EMAIL_PORT
+EMAIL_HOST_USER = emailserver.SERVER_EMAIL
+EMAIL_HOST_PASSWORD = emailserver.EMAIL_HOST_PASSWORD
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
