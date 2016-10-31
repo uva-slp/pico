@@ -14,8 +14,8 @@ AUTOJUDGE = (('1','Enabled'), ('0','Disabled'))
 class CreateContestForm(forms.Form):
     title = forms.CharField(label='Title', max_length=32)
     languages = forms.CharField(label='Languages', widget=forms.CheckboxSelectMultiple)
-    length = forms.CharField(label='Length', choices=CONTEST_LENGTH)
-    autojudge = forms.CharField(label='Autojudge', choices=AUTOJUDGE)
+    length = forms.ChoiceField(label='Length', choices=CONTEST_LENGTH)
+    autojudge = forms.ChoiceField(label='Autojudge', choices=AUTOJUDGE)
     ##file stuff - need group input on how this should be laid out
     ##problems = forms.FileField()
     ##answers = forms.FileField()
