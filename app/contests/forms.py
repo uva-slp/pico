@@ -9,6 +9,20 @@ class CreateContestForm(ModelForm):
 		model = Contest
 		fields = ['title']
 
+LANGAUGES = (
+	('Python','Python'), 
+	('Java', 'Java') , 
+	('C++', 'C++'))
+CONTEST_LENGTH = (
+	('1', '1 Hour'), 
+	('2','2 Hours'), 
+	('5','5 Hours'), 
+	('10', '10 Hours'), 
+	('24','24 Hours'))
+AUTOJUDGE = (
+	('1','Enabled'), 
+	('0','Disabled'))		
+
 LANG_LIST = (
 	('1', 'Java'),
 	('2', 'C++'),
