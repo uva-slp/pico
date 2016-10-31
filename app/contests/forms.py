@@ -1,5 +1,5 @@
 from django.forms import Form, ModelForm
-from .models import Contest, ContestTemplate
+from .models import Contest, Submission, ContestTemplate
 from django import forms
 # from bootstrap3_datetime.widgets import DateTimePicker
 
@@ -58,4 +58,8 @@ class CreateQuestionAnswer(Form):
 	solution = forms.FileField(required=True)
 
 
-
+class UploadCodeForm(forms.ModelForm):
+    class Meta:
+        model = Submission
+        fields = ['code_file', 'question']
+        widgets = {'question': forms.HiddenInput()}

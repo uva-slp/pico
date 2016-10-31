@@ -6,7 +6,7 @@ class Contest(models.Model):
 	title = models.CharField(max_length=128)
 	date_created = models.DateTimeField(auto_now_add=True)
 	creator = models.CharField(max_length=32)
-	teams = models.ManyToManyField(Team)
+	teams = models.ManyToManyField(Team, null=True)
 	
 	def __str__(self):
 		return self.title
@@ -17,12 +17,16 @@ class Question(models.Model):
 	contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return self.question_number + " " + self.question_text
+		return str(self.number)
 
-class Submissions(models.Model):
-	team = models.ForeignKey(Team)
+class Submission(models.Model):
+	team = models.ForeignKey(Team, null = True)
 	question = models.ForeignKey(Question, on_delete=models.CASCADE)
+        code_file = models.FileField(upload_to='uploads/', null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=True)
+
+        def __str__(self):
+                return str(self.submission_id)
 
 class ContestTemplate(models.Model):
 	title = models.CharField(max_length=128)

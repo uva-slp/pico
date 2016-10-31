@@ -1,10 +1,20 @@
 from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
-from .forms import CreateContestForm, CreateContestTemplate, CreateQuestionAnswer
+from .models import Question
+from .forms import CreateContestForm, CreateContestTemplate, CreateQuestionAnswer, UploadCodeForm
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
+
+#Imports used for code compilation/execution
+import os
+import subprocess, shlex
+import tempfile
+import shutil
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 
 def home(request):
 	return render(
@@ -72,3 +82,71 @@ def createTemplate(request):
 		QAFormSet = formset_factory(CreateQuestionAnswer)
 		qa_formset = QAFormSet()
 	return render(request, 'contests/create_template.html', {'form': form, 'qa_formset': qa_formset})
+
+
+def choose_question(request):
+    all_questions = Question.objects.all()
+    return render(request, 'contests/choose_question.html', {'questions': all_questions})
+
+
+def upload_code(request, question_id):
+    question = Question.objects.get(id=question_id)
+    if request.method == 'POST':
+        form = UploadCodeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            execute_code(request.FILES['code_file'], form.instance.id)
+            return render(request, 'contests/uploaded.html')
+    else:
+        form = UploadCodeForm(initial = {'question': question})
+    return render(request, 'contests/upload_page.html', {'form': form, 'question': question})
+
+
+#Returns True if executed successfully, false otherwise
+def execute_code(file, submission_id):
+    file_name = file.name
+    #Check if it's a Java file:
+    if file_name.endswith('.java'):
+        run_java(file, submission_id)
+        return True
+    #Check if it's a c++ file:
+    cpp_extensions = ['.cpp', '.cc', '.C', '.cxx', '.c++']
+    for extension in cpp_extensions:
+        if file_name.endswith(extension):
+            run_cpp(file, submission_id)
+            return True
+    #If it didn't have a proper extensions, can't compile it:
+    return False
+
+
+def run_java(file, submission_id):
+    temp_dirpath = tempfile.mkdtemp()
+    file_name = file.name
+    with open(os.path.join(temp_dirpath, file_name), 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+    retcode = subprocess.call("javac " + os.path.join(temp_dirpath, file_name), shell=True)
+    #compilation_args = shlex.split("javac " + os.path.join(temp_dirpath, file_name))
+    #result = subprocess.Popen(compilation_args)
+    compiled_file = os.path.splitext(file_name)[0]
+    #retcode = subprocess.call("java -cp " + temp_dirpath + " " + compiled_file + ' > ' + os.path.join(temp_dirpath, 'output.txt'), shell=True)
+    output = subprocess.check_output("java -cp " + temp_dirpath + " " + compiled_file, shell=True)
+    print(output)
+    #execution_args = shlex.split("java -cp " + temp_dirpath + " " + compiled_file)
+    #retcode = subprocess.Popen(execution_args)
+    shutil.rmtree(temp_dirpath)
+
+
+def run_cpp(file, submission_id):
+    temp_dirpath = tempfile.mkdtemp()
+    file_name = file.name
+    with open(os.path.join(temp_dirpath, file_name), 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+    retcode = subprocess.call("/usr/bin/g++ " + os.path.join(temp_dirpath, file_name) + " -o " + os.path.join(temp_dirpath, 'a.out'), shell=True)
+    if retcode:
+        print("failed to compile " + file_name)
+    #retcode = subprocess.call(os.path.join(temp_dirpath, './a.out') + ' > ' + os.path.join(path, 'output.txt'), shell=True)
+    output = subprocess.check_output(os.path.join(temp_dirpath, './a.out'), shell=True)
+    print(output)
+    shutil.rmtree(temp_dirpath)
