@@ -23,3 +23,20 @@ class Submissions(models.Model):
 	team = models.ForeignKey(Team)
 	question = models.ForeignKey(Question, on_delete=models.CASCADE)
 	timestamp = models.DateTimeField(auto_now=True)
+
+class ContestTemplate(models.Model):
+	title = models.CharField(max_length=128)
+	date_created = models.DateTimeField(auto_now_add=True)
+	creator = models.CharField(max_length=32)
+	languages = models.CharField(max_length=64)
+	contest_length = models.CharField(max_length=8)
+	time_penalty = models.CharField(max_length=4)
+	autojudge_enabled = models.BooleanField(max_length=1)
+	autojudge_review = models.CharField(max_length=128)
+	problem_description = models.CharField(max_length=128)
+	solutions = models.CharField(max_length=128)
+	contest_admins = models.TextField()
+	contest_participants = models.TextField()
+
+	def __str__(self):
+		return self.title

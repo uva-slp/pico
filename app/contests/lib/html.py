@@ -5,26 +5,32 @@ created: 10/18/2016
 html.py encapsulates key DOM elements and generates valid HTML given the contents of those elements
 """
 
-class Element(object):
+class Element():
 	def __init__(self, tag, content=''):
-		self.tag = tag
+		self.tag = str(tag)
 		self.elid = ''
+		self.name = ''
 		self.classes = []
 		self.style = {}
 		self.properties = {}
 		self.content = str(content)
 
 	def __str__(self):
-		return '<{0} id="{1}" class="{2}" style="{3}" {4}>{5}</{0}>'.format(
-			str(self.tag),
-			str(self.elid),
-			self.classesStr(),
-			self.styleStr(),
-			self.propertiesStr(),
+		return '<{0}{1}{2}{3}{4}{5}>{6}</{0}>'.format(
+			self.tag,
+			' id="%s"'%(self.elid) if self.elid else '',
+			' name="%s"'%(self.name) if self.name else '',
+			' class="%s"'%(self.classesStr()) if self.classes else '',
+			' style="%s"'%(self.styleStr()) if self.style else '',
+			' %s'%(self.propertiesStr()) if self.properties else '',
 			self.innerHtml())
 
 	def setElementId(self, elid):
-		self.elid = elid
+		self.elid = str(elid)
+		return self
+
+	def setName(self, name):
+		self.name = str(name)
 		return self
 
 	def classesStr(self):
@@ -57,7 +63,7 @@ class Element(object):
 
 class Table(Element):
 	def __init__(self):
-		super(Table, self).__init__('table')
+		super().__init__('table')
 		self.headers = []
 		self.rows = []
 
@@ -74,7 +80,7 @@ class Table(Element):
 
 class Row(Element):
 	def __init__(self):
-		super(Row, self).__init__('tr')
+		super().__init__('tr')
 		self.cells = []
 
 	def innerHtml(self):
@@ -85,21 +91,25 @@ class Row(Element):
 
 class Th(Element):
 	def __init__(self, content='', colSpan=1):
-		super(Th, self).__init__('th', content)
+		super().__init__('th', content)
 		self.addProperty('colSpan', colSpan)
 
 class Td(Element):
 	def __init__(self, data=''):
-		super(Td, self).__init__('td', data)
+		super().__init__('td', data)
 
 class Div(Element):
 	def __init__(self, content=''):
-		super(Div, self).__init__('div', content)
+		super().__init__('div', content)
 
 class Span(Element):
 	def __init__(self, content=''):
-		super(Span, self).__init__('span', content)
+		super().__init__('span', content)
 
 class Mark(Element):
 	def __init__(self, content=''):
-		super(Mark, self).__init__('mark', content)
+		super().__init__('mark', content)
+
+class Anchor(Element):
+	def __init__(self, content=''):
+		super().__init__('a', content)

@@ -1,11 +1,12 @@
 language: python
 
 python:
-  - "2.7"
+  - "3.5"
 
 install:
   - pip install -q Django==1.10
+  # - pip install -q django-bootstrap3-datetimepicker==2.2.3
 
-script: python app/v0/manage.py test
+script: python app/manage.py test
 
 sudo: false
