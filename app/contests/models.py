@@ -6,7 +6,10 @@ class Contest(models.Model):
 	title = models.CharField(max_length=128)
 	date_created = models.DateTimeField(auto_now_add=True)
 	creator = models.CharField(max_length=32)
-	teams = models.ManyToManyField(Team, null=True)
+	teams = models.ManyToManyField(Team)
+    	languages = models.CharField(max_length=100)
+    	length = models.CharField(max_length=10)
+    	autojudge = models.CharField(max_length=10)
 	
 	def __str__(self):
 		return self.title
