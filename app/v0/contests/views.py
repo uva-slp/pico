@@ -3,6 +3,9 @@ from django.shortcuts import render, redirect
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from contests.forms import CreateContestForm
 from lib import diff as _diff
+from models import Contest
+from models import Team
+from models import User
 
 def home(request):
 	return render(
@@ -25,17 +28,42 @@ def diff(request):
 		{'diff_table': html, 'numChanges': numChanges})
 
 def create(request):
-    #boolean to see if the contest was successfully created
+	#boolean to see if the contest was successfully created
     #initally false, code will make it true it successful
     #successfully_created_contest = False
     #check to see if the page was loaded with POST request data
 
-    if request.method == 'POST':
-        #grab information from form
-        form = CreateContestForm(request.POST)
+    #get information from form
+	if request.method == 'POST':
+
+            form = CreateContestForm(request.POST)
         if form.is_valid():
             form.save()
             return render(request, 'contests/home.html', {'form' : form})
-    else:
-        form = CreateContestForm()
-    return render(request, 'contests/create_contest.html', {'form': form})
+        else:
+            form = CreateContestForm()
+        return render(request, 'contests/create_contest.html', {'form': form})
+
+def scoreboard(request):
+    # Get number of teams for scoreboard, scores for each team at that moment, logos, questions and whether theyve been attempted, solve, or neither
+    allcontests = Contest.objects.all() #get contest objects
+    allteams = Team.objects.all() #get team objects
+    #allteams.filter(name=)
+    currentTeamName = "Get current team name" #Get requesting team's name
+    currentContestTitle = "newcontests" #get requesting team's current contest
+    numberofteams = 0
+    teamname = allteams.filter(name=currentTeamName)
+    contestname = allcontests.filter(title = currentContestTitle) # Grab current contest
+    print(allcontests)
+    print(contestname)
+
+    #for team in allcontests.teams :
+    #    numberofteams += 1
+    #    print(numberofteams)
+
+    # get query_results.numberofteams
+    # for(team in query_results.teams) { scores += team.score
+    # return object containing array of teams
+
+
+    return render(request, 'contests/scoreboard.html', {'teams' : numberofteams})
