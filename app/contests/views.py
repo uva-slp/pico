@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 
-from app.teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
+from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from .models import Question
 from .forms import CreateContestForm, CreateContestTemplate, CreateQuestionAnswer, UploadCodeForm
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
 from .models import Contest
-from app.teams.models import Team
+from teams.models import Team
 
 
 #Imports used for code compilation/execution
