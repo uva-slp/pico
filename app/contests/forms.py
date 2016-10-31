@@ -52,6 +52,15 @@ class CreateContestTemplate(ModelForm):
 			'autojudge_enabled', 'autojudge_review', 'contest_admins',
 			'contest_participants')
 
+		
+class CreateContestForm(forms.Form):
+    title = forms.CharField(label='Title', max_length=32)
+    languages = forms.CharField(label='Languages', widget=forms.CheckboxSelectMultiple)
+    length = forms.CharField(label='Length', choices=CONTEST_LENGTH)
+    autojudge = forms.CharField(label='Autojudge', choices=AUTOJUDGE)
+    ##file stuff - need group input on how this should be laid out
+    ##problems = forms.FileField()
+    ##answers = forms.FileField()
 
 class CreateQuestionAnswer(Form):
 	problem_desc = forms.FileField(required=True)
