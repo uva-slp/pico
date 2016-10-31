@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-from . import secret
+from . import secrets
 from . import emailserver
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secret.SECRET_KEY
+SECRET_KEY = secrets.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,13 +35,14 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
 	'users.apps.UsersConfig',
 	'teams.apps.TeamsConfig',
-    'contests.apps.ContestsConfig',
+	'contests.apps.ContestsConfig',
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+	# 'bootstrap3_datetime',
 ]
 
 MIDDLEWARE = [
@@ -85,9 +86,9 @@ WSGI_APPLICATION = 'pccs.wsgi.application'
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
-		'NAME': secret.DB_NAME,
-		'USER': secret.DB_USER,
-		'PASSWORD': secret.DB_PASS,
+		'NAME': secrets.DB_NAME,
+		'USER': secrets.DB_USER,
+		'PASSWORD': secrets.DB_PASS,
 		'HOST': 'localhost',
 		'PORT': '8000'
 	}

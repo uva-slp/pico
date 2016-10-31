@@ -1,0 +1,6 @@
+<h1>Submit for {{ question.name }}</h1>
+<form enctype="multipart/form-data" action="{% url 'contests:upload_code' question.id %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Submit"/>
+</form>

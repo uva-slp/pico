@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css" />
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+        {{ form.media }}
+    </head>
+
+    <body>
+
+        <h1>Contest Template Builder</h1>
+
+        <!-- Change url -->
+        <form id="create_contest_template" method="post" action="{% url 'contests:createTemplate' %}"
+                enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            {{ qa_formset.management_form }}
+
+            {% for qa_form in qa_formset %}
+                <div class="qa-formset">
+                <br /><br />
+                    <label>Problem Description:</label>
+                    {{ qa_form.problem_desc }}
+
+                    <label>Solution:</label>
+                    {{ qa_form.solution }}
+                </div>
+            {% endfor %}
+
+            <br /><br /><br />
+
+            {% for field in form %}
+                <div id="div_{{ field.html_name }}"
+                     class="form-group{% if field.errors %} has-error{% endif %}">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    <div class="text-muted pull-right">
+                        <small>{{ field.help_text }}</small>
+                    </div>
+                    <div class="help-block">
+                        {{ field.errors }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="form-group">
+                <input type="submit" name="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                    $(function () {
+                        $('#id_contest_length_pickers:has(input:not([readonly],[disabled]))').datetimepicker({"format": "HH:mm"});
+                    });
+                    $(function () {
+                        $('#id_time_penalty_pickers:has(input:not([readonly],[disabled]))').datetimepicker({"format": "mm"});
+                    });
+                });
+        </script>
+
+        <!--<script type="text/javascript">
+            (function(window) {
+                var callback = function() {
+                    $(function(){$("#id_contest_length_pickers:has(input:not([readonly],[disabled]))").datetimepicker({"language": "en-us", "format": "HH:MM"});});
+                };
+                if(window.addEventListener)
+                    window.addEventListener("load", callback, false);
+                else if (window.attachEvent)
+                    window.attachEvent("onload", callback);
+                else window.onload = callback;
+            })(window);
+        </script>-->
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
+        {% load static %}
+        <script src="{% static 'js/jquery.formset.js' %}"></script>
+        <script>
+            $('.qa-formset').formset({
+                addText: 'add question',
+                deleteText: 'remove'
+            });
+        </script>
+    </body>
+</html>

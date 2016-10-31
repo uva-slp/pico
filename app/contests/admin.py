@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Contest, Question, Submissions
+from .models import Contest, Question, Submission
 
 class TeamsInline(admin.TabularInline):
     model = Contest.teams.through
@@ -17,3 +17,6 @@ class ContestAdmin(admin.ModelAdmin):
     list_display = ('title', 'date_created')
     list_filter = ['date_created']
     search_fields = ['title', 'creator']
+
+admin.site.register(Submission)
+admin.site.register(Question)
