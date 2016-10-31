@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 
-from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
+from app.teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from .models import Question
 from .forms import CreateContestForm, CreateContestTemplate, CreateQuestionAnswer, UploadCodeForm
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
+from .models import Contest
+from app.teams.models import Team
+
 
 #Imports used for code compilation/execution
 import os
@@ -156,3 +159,27 @@ def run_cpp(file, submission_id):
     output = subprocess.check_output(os.path.join(temp_dirpath, './a.out'), shell=True)
     print(output)
     shutil.rmtree(temp_dirpath)
+
+def scoreboard(request):
+    # Get number of teams for scoreboard, scores for each team at that moment, logos, questions and whether theyve been attempted, solve, or neither
+    allcontests = Contest.objects.all() #get contest objects
+    allteams = Team.objects.all() #get team objects
+    #allteams.filter(name=)
+    currentTeamName = "Get current team name" #Get requesting team's name
+    currentContestTitle = "newcontests" #get requesting team's current contest
+    numberofteams = 0
+    teamname = allteams.filter(name=currentTeamName)
+    contestname = allcontests.filter(title = currentContestTitle) # Grab current contest
+    print(allcontests)
+    print(contestname)
+
+    #for team in allcontests.teams :
+    #    numberofteams += 1
+    #    print(numberofteams)
+
+    # get query_results.numberofteams
+    # for(team in query_results.teams) { scores += team.score
+    # return object containing array of teams
+
+
+    return render(request, 'contests/scoreboard.html', {'teams' : numberofteams})
