@@ -23,25 +23,23 @@ REVIEW_LIST = (
 
 class CreateContestTemplate(ModelForm):
 	title = forms.CharField(required=True)
-	languages = forms.CharField(required=True, widget=forms.CheckboxSelectMultiple(choices=LANG_LIST))
+	languages = forms.CharField(
+		required=True,
+		widget=forms.CheckboxSelectMultiple(choices=LANG_LIST)
+	)
 	contest_length = forms.CharField(
-										required=True,
-										label="Contest Length (hours & minutes)",
-										initial='02:00',
-										# widget=DateTimePicker()
-									)
+		required=True, label="Contest Length (hours & minutes)", initial='02:00',
+		# widget=DateTimePicker()
+	)
 	time_penalty = forms.CharField(
-										required=True,
-										label="Time Penalty (minutes)",
-										initial=20,
-										# widget=DateTimePicker()
-									)
+		required=True, label="Time Penalty (minutes)", initial=20,
+		# widget=DateTimePicker()
+	)
 	autojudge_enabled = forms.BooleanField(required=False)
 	autojudge_review = forms.CharField(
-											required=False,
-											label="Judge Review Option",
-											widget=forms.Select(choices=REVIEW_LIST)
-										)
+		required=False, label="Judge Review Option",
+		widget=forms.Select(choices=REVIEW_LIST)
+	)
 	# problem_descriptions = forms.CharField(required=True)
 	# solutions = forms.CharField(required=True)
 	contest_admins = forms.CharField(required=False, widget=forms.Textarea)
@@ -49,8 +47,10 @@ class CreateContestTemplate(ModelForm):
 
 	class Meta:
 		model = ContestTemplate
-		fields = ('title', 'languages', 'contest_length', 'time_penalty', 'autojudge_enabled',
-					'autojudge_review', 'contest_admins', 'contest_participants')
+		fields = (
+			'title', 'languages', 'contest_length', 'time_penalty',
+			'autojudge_enabled', 'autojudge_review', 'contest_admins',
+			'contest_participants')
 
 
 class CreateQuestionAnswer(Form):
