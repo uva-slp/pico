@@ -64,44 +64,44 @@ class ContestTemplateTest(TestCase):
 
 
 class SubmissionsViewsTest(TestCase):
-        fixtures = ['submission.json']
-        
-        def test_choose_question_page(self):
-                response = self.client.get(reverse('contests:choose_question'))
-                self.assertEqual(response.status_code, 200)
+		fixtures = ['submission.json']
+		
+		def test_choose_question_page(self):
+				response = self.client.get(reverse('contests:choose_question'))
+				self.assertEqual(response.status_code, 200)
 
-        def test_choose_question_page_template(self):
-                response = self.client.get(reverse('contests:choose_question'))
-                self.assertTemplateUsed(response, 'contests/choose_question.html')
+		def test_choose_question_page_template(self):
+				response = self.client.get(reverse('contests:choose_question'))
+				self.assertTemplateUsed(response, 'contests/choose_question.html')
 
-        def test_choose_question_page_title(self):
-                response = self.client.get(reverse('contests:choose_question'))
-                self.assertContains(response, 'Questions:')
+		def test_choose_question_page_title(self):
+				response = self.client.get(reverse('contests:choose_question'))
+				self.assertContains(response, 'Questions:')
 
-        def test_upload_code_page(self):
-                response = self.client.get(reverse('contests:upload_code', kwargs = {'question_id': '1'}))
-                self.assertEqual(response.status_code, 200)
+		def test_upload_code_page(self):
+				response = self.client.get(reverse('contests:upload_code', kwargs = {'question_id': '1'}))
+				self.assertEqual(response.status_code, 200)
 
-        def test_upload_code_page_title(self):
-                response = self.client.get(reverse('contests:upload_code', kwargs = {'question_id': '1'}))
-                self.assertContains(response, "Submit for QuestionExample")
+		def test_upload_code_page_title(self):
+				response = self.client.get(reverse('contests:upload_code', kwargs = {'question_id': '1'}))
+				self.assertContains(response, "Submit for QuestionExample")
 
 class ContestCreationTest(TestCase):
 
-    def testNumberofContests(self):
-        a = Contest(title="contest1")
-        b = Contest(title="contest1")
-        c = Contest(title="contest1")
-        d = Contest(title="contest1")
-        e = Contest(title="contest1")
-        a.save()
-        b.save()
-        c.save()
-        d.save()
-        e.save()
-        contests = Contest.objects.all()
-        teamnumber = contests.count()
-        self.assertEqual(teamnumber, 5)
+	def testNumberofContests(self):
+		a = Contest(title="contest1")
+		b = Contest(title="contest1")
+		c = Contest(title="contest1")
+		d = Contest(title="contest1")
+		e = Contest(title="contest1")
+		a.save()
+		b.save()
+		c.save()
+		d.save()
+		e.save()
+		contests = Contest.objects.all()
+		teamnumber = contests.count()
+		self.assertEqual(teamnumber, 5)
 
 	def testContestName(self):
 		c = Contest(title="testContest")

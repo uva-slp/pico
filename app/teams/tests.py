@@ -1,7 +1,6 @@
 from django.test import TestCase
-from models import User, Team
+from .models import Team
 
-# Create your tests here.
 class TeamTestCases(TestCase):
 
     fixtures = ['teams.json']
