@@ -145,3 +145,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Testing
 FIXTURE_DIRS = (os.path.join(BASE_DIR, 'fixtures'),)
+
+# Email Server
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = secrets.SERVER_EMAIL
+SERVER_EMAIL = secrets.SERVER_EMAIL
+EMAIL_HOST = secrets.EMAIL_HOST
+EMAIL_PORT = secrets.EMAIL_PORT
+EMAIL_HOST_USER = secrets.SERVER_EMAIL
+EMAIL_HOST_PASSWORD = secrets.EMAIL_HOST_PASSWORD
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
