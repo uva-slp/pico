@@ -34,5 +34,59 @@
         "groups": [],
         "user_permissions": []
     }
+},
+{
+    "model": "auth.user",
+    "pk": 11,
+    "fields": {
+        "password": "jam",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "jam",
+        "first_name": "jam",
+        "last_name": "jam",
+        "email": "jam@jam.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2016-10-23T17:23:35.421Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+    {
+    "model": "auth.user",
+    "pk": 12,
+    "fields": {
+        "password": "jim",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "jim",
+        "first_name": "jim",
+        "last_name": "jim",
+        "email": "jim@jim.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2016-10-23T17:23:35.421Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+    {
+    "model": "auth.user",
+    "pk": 13,
+    "fields": {
+        "password": "bob",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "bob",
+        "first_name": "bob",
+        "last_name": "bob",
+        "email": "bob@bob.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2016-10-23T17:23:35.421Z",
+        "groups": [],
+        "user_permissions": []
+    }
 }
 ]

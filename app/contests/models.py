@@ -22,6 +22,7 @@ class Question(models.Model):
 	def __str__(self):
 		return str(self.number)
 
+
 class Submission(models.Model):
 	team = models.ForeignKey(Team, null = True)
 	question = models.ForeignKey(Question, on_delete=models.CASCADE)

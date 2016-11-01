@@ -170,8 +170,6 @@ def scoreboard(request):
     numberofteams = 0
     teamname = allteams.filter(name=currentTeamName)
     contestname = allcontests.filter(title = currentContestTitle) # Grab current contest
-    print(allcontests)
-    print(contestname)
 
     #for team in allcontests.teams :
     #    numberofteams += 1

@@ -32,4 +32,4 @@ class TeamTestCases(TestCase):
         e.save()
         teams = Team.objects.all()
         teamnumber = teams.count()
-        self.assertEqual(teamnumber, 5)
+        self.assertEqual(teamnumber, 6)
