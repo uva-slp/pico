@@ -3,6 +3,7 @@ from .forms import CreateContestTemplate
 from .models import ContestTemplate
 from django.urls import reverse
 from django.shortcuts import render
+from .models import Contest
 
 
 class ContestTemplateTest(TestCase):
@@ -84,3 +85,32 @@ class SubmissionsViewsTest(TestCase):
         def test_upload_code_page_title(self):
                 response = self.client.get(reverse('contests:upload_code', kwargs = {'question_id': '1'}))
                 self.assertContains(response, "Submit for QuestionExample")
+
+class ContestCreationTest(TestCase):
+
+    def testNumberofContests(self):
+        a = Contest(title="contest1")
+        b = Contest(title="contest1")
+        c = Contest(title="contest1")
+        d = Contest(title="contest1")
+        e = Contest(title="contest1")
+        a.save()
+        b.save()
+        c.save()
+        d.save()
+        e.save()
+        contests = Contest.objects.all()
+        teamnumber = contests.count()
+        self.assertEqual(teamnumber, 5)
+
+	def testContestName(self):
+		c = Contest(title="testContest")
+		c.save()
+		contests = Contest.objects.all()
+		contests.filter(title="testContest")
+		self.assertEqual(c.title, contests.filter(title="testContest"))
+
+	def testContestCreation(self):
+		c = Contest(title="super contest", creator="james")
+		self.assertEqual(c.title, "super contest")
+		self.assertEqual(c.creator, "james")
