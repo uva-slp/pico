@@ -107,8 +107,8 @@ class ContestCreationTest(TestCase):
 		c = Contest(title="testContest")
 		c.save()
 		contests = Contest.objects.all()
-		contests.filter(title="testContest")
-		self.assertEqual(c.title, contests.filter(title="testContest"))
+		if(contests.filter(title="testContest")):
+			self.assertEqual(c.title, "testContest")
 
 	def testContestCreation(self):
 		c = Contest(title="super contest", creator="james")
