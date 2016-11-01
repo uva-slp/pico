@@ -6,6 +6,7 @@ DB_NAME = ''
 DB_USER = ''
 DB_PASS = ''
 
+# Server email info
 SERVER_EMAIL = ''
 EMAIL_HOST = ''
 EMAIL_PORT = 0
