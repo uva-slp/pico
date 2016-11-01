@@ -61,7 +61,64 @@ class ContestTemplateTest(TestCase):
 		resp = self.client.get(url)
 
 		self.assertEqual(resp.status_code, 200)
+##
+		
+class ContestTest(TestCase):
 
+	fixtures = ['contests.json']
+
+	# model test
+	def contest_template(
+			self, title="only a test", creator="admin", languages="Python",
+			length="02:00", penalty="20", autojudge="0",
+			desc="problems.pdf", solution="solutions.txt", admins="",
+			participants=""):
+		return Contest.objects.create(
+				title=title, creator=creator, languages=languages,
+				contest_length=length, time_penalty=penalty,
+				autojudge=autojudge, problem_description=desc, 
+				solutions=solution, contest_admins=admins, 
+				contest_participants=participants)
+
+	def test_contest_creation(self):
+		c = self.contest()
+		self.assertTrue(isinstance(ct, Contest))
+		self.assertEqual(ct.__str__(), ct.title)
+
+	def test_contest_db_entry(self):
+		c = Contest.objects.get(pk=1)
+		self.assertEqual(c.title, 'Contest 1')
+		c.title = "Updated Contest 1"
+		c.save()
+		self.assertEqual(c.title, 'Updated Contest 1')
+
+	# forms test
+	def test_valid_form(self):
+		data = {
+			"title": "Contest 1", "languages": "Java, Python",
+			"contest_length": "02:00", "time_penalty": "20",
+			"autojudge": "Jason", "contest_admins": "", 
+			"contest_participants": ""
+		}
+		form = CreateContest(data=data)
+		self.assertTrue(form.is_valid())
+
+	def test_empty_form_fields(self):
+		data = {
+			"title": "", "languages": "", "contest_length": "",
+			"time_penalty": "", "autojudge": "",
+			"contest_admins": "", "contest_participants": ""
+		}
+		form = CreateContest(data=data)
+		self.assertFalse(form.is_valid())
+
+	# views test
+	def test_create_view(self):
+		url = reverse("contests:create")
+		resp = self.client.get(url)
+
+		self.assertEqual(resp.status_code, 200)
+##
 
 class SubmissionsViewsTest(TestCase):
 		fixtures = ['submission.json']
