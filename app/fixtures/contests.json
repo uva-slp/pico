@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
                 "title": 1,
-                "date_created": "2016-10-30",
+                "date_created": "2016-10-30T17:47:11.38Z",
                 "creator": "jgd3hb",
                 "languages": "Python",
                 "contest_length": "10",
