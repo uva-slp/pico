@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
-from .models import Question, Problem
+from .models import Question, Problem, ContestTemplate
 from .forms import CreateContestForm, CreateContestTemplate, CreateProblem, UploadCodeForm
 from django.forms.formsets import formset_factory
 from django.urls import reverse
@@ -26,7 +26,7 @@ def home(request):
 		{
 			'team_form': TeamForm(), 'team_join_form': TeamJoinForm(request),
 			'team_leave_form': TeamLeaveForm(request),
-			'contests_created': CreateContestTemplate(request)
+			'contests_created': ContestTemplate.objects.all()
 		}
 	)
 
@@ -114,6 +114,16 @@ def createTemplate(request):
 		QAFormSet = formset_factory(CreateProblem)
 		qa_formset = QAFormSet()
 	return render(request, 'contests/create_template.html', {'form': form, 'qa_formset': qa_formset})
+
+
+def displayContest(request, contest_id):
+	contest_data = ContestTemplate.objects.get(id=contest_id)
+
+	return render(
+		request,
+		'contests/contest.html',
+		{'contest_data': contest_data, 'contest_problems': contest_data.problem_set.all()}
+	)
 
 
 def choose_question(request):

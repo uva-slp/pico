@@ -11,14 +11,14 @@
 
     <br/>
     <a href="{% url 'contests:createTemplate' %}">Create a Contest Template</a>
-
+    <br /><br />
     <table>
         <tr>
-            <th>Contest Title</th>
+            <th>Contests Created:</th>
         </tr>
         {% for contest in contests_created %}
         <tr>
-            <td>{{ contest.title }}</td>
+            <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
         </tr>
         {% endfor %}
     </table>
