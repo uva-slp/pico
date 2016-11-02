@@ -1,5 +1,5 @@
 from django.forms import Form, ModelForm
-from .models import Contest, Submission, ContestTemplate
+from .models import Contest, Submission, ContestTemplate, Problem
 from django import forms
 # from bootstrap3_datetime.widgets import DateTimePicker
 
@@ -21,7 +21,7 @@ CONTEST_LENGTH = (
 	('24','24 Hours'))
 AUTOJUDGE = (
 	('1','Enabled'), 
-	('0','Disabled'))		
+	('0','Disabled'))
 
 LANG_LIST = (
 	('1', 'Java'),
@@ -54,19 +54,33 @@ class CreateContestTemplate(ModelForm):
 		required=False, label="Judge Review Option",
 		widget=forms.Select(choices=REVIEW_LIST)
 	)
-	# problem_descriptions = forms.CharField(required=True)
+	problem_descriptions = forms.FileField(required=False, label="Problem Descriptions (.pdf)")
 	# solutions = forms.CharField(required=True)
-	contest_admins = forms.CharField(required=False, widget=forms.Textarea)
-	contest_participants = forms.CharField(required=False, widget=forms.Textarea)
+	contest_admins = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
+	contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 
 	class Meta:
 		model = ContestTemplate
 		fields = (
 			'title', 'languages', 'contest_length', 'time_penalty',
-			'autojudge_enabled', 'autojudge_review', 'contest_admins',
-			'contest_participants')
+			'autojudge_enabled', 'autojudge_review', 'problem_descriptions',
+			'contest_admins', 'contest_participants')
 
-		
+
+class CreateProblem(ModelForm):
+	solution = forms.FileField(required=False)
+	input_description = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
+	output_description = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
+	sample_input = forms.FileField(required=False)
+	sample_output = forms.FileField(required=False)
+
+	class Meta:
+		model = Problem
+		fields = (
+			'solution', 'input_description', 'output_description', 'sample_input',
+			'sample_output')
+
+
 class CreateContestForm(forms.Form):
     title = forms.CharField(label='Title', max_length=32)
     languages = forms.CharField(label='Languages', widget=forms.CheckboxSelectMultiple)
@@ -75,10 +89,6 @@ class CreateContestForm(forms.Form):
     ##file stuff - need group input on how this should be laid out
     ##problems = forms.FileField()
     ##answers = forms.FileField()
-
-class CreateQuestionAnswer(Form):
-	problem_desc = forms.FileField(required=True)
-	solution = forms.FileField(required=True)
 
 
 class UploadCodeForm(forms.ModelForm):

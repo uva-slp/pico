@@ -41,9 +41,16 @@ class ContestTemplate(models.Model):
 	autojudge_enabled = models.BooleanField(max_length=1)
 	autojudge_review = models.CharField(max_length=128)
 	problem_description = models.CharField(max_length=128)
-	solutions = models.CharField(max_length=128)
 	contest_admins = models.TextField()
 	contest_participants = models.TextField()
 
 	def __str__(self):
 		return self.title
+
+class Problem(models.Model):
+	solution = models.FileField(max_length=128)
+	input_description = models.CharField(max_length=128)
+	output_description = models.CharField(max_length=128)
+	sample_input = models.FileField(max_length=128)
+	sample_output = models.FileField(max_length=128)
+	contest = models.ForeignKey(ContestTemplate, null=True, blank=True, on_delete=models.CASCADE)

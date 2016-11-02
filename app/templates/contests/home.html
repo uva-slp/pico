@@ -12,6 +12,17 @@
     <br/>
     <a href="{% url 'contests:createTemplate' %}">Create a Contest Template</a>
 
+    <table>
+        <tr>
+            <th>Contest Title</th>
+        </tr>
+        {% for contest in contests_created %}
+        <tr>
+            <td>{{ contest.title }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
     <br/>
 	
 	<h3>Create team</h3>

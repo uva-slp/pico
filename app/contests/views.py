@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
-from .models import Question
-from .forms import CreateContestForm, CreateContestTemplate, CreateQuestionAnswer, UploadCodeForm
+from .models import Question, Problem
+from .forms import CreateContestForm, CreateContestTemplate, CreateProblem, UploadCodeForm
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
@@ -23,7 +23,12 @@ def home(request):
 	return render(
 		request,
 		'contests/home.html',
-		{'team_form': TeamForm(), 'team_join_form': TeamJoinForm(request), 'team_leave_form': TeamLeaveForm(request)})
+		{
+			'team_form': TeamForm(), 'team_join_form': TeamJoinForm(request),
+			'team_leave_form': TeamLeaveForm(request),
+			'contests_created': CreateContestTemplate(request)
+		}
+	)
 
 def diff(request):
 	emptylines = 'emptylines' in request.GET
@@ -63,22 +68,40 @@ def create(request):
 
 def createTemplate(request):
 
+	QAFormSet = formset_factory(CreateProblem)
+
 	if request.method == 'POST':
 		#grab information from form
 		form = CreateContestTemplate(request.POST)
+		#qa_formset = CreateProblem(request.POST)
 
-		#QAFormSet = formset_factory(CreateQuestionAnswer)
-		#qa_formset = QAFormSet()
-		if form.is_valid():
-			# and qa_formset.is_valid():
-			form.save()
+		qa_formset = QAFormSet(request.POST)
+		if form.is_valid() and qa_formset.is_valid():
+			form = form.save()
 
-			questions = []
-			answers = []
+			contest_id = form.id
 
-			#for qa_form in qa_formset:
-			#	problem_desc = qa_form.cleaned_data.get('problem_desc')
-			#	solution = qa_form.cleaned_data.get('solution')
+			# questions = []
+			# answers = []
+
+			for qa_form in qa_formset:
+				solution = qa_form.cleaned_data.get('solution')
+				input_desc = qa_form.cleaned_data.get('input_description')
+				output_desc = qa_form.cleaned_data.get('output_description')
+				sample_input = qa_form.cleaned_data.get('sample_input')
+				sample_output = qa_form.cleaned_data.get('sample_output')
+
+				p = Problem(
+					solution=solution, input_description=input_desc,
+					output_description=output_desc, sample_input=sample_input,
+					sample_output=sample_output, contest_id=contest_id)
+				p.save();
+				#p.solution = solution
+				#p.input_description = input_descr
+				#p.output_description = output_descr
+				#p.sample_input = sample_input
+				#p.sample_output = sample_output
+				#p.contest_id = 1
 
 			#	if problem_desc and solution:
 			#		questions.append()
@@ -88,7 +111,7 @@ def createTemplate(request):
 			# return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
 	else:
 		form = CreateContestTemplate()
-		QAFormSet = formset_factory(CreateQuestionAnswer)
+		QAFormSet = formset_factory(CreateProblem)
 		qa_formset = QAFormSet()
 	return render(request, 'contests/create_template.html', {'form': form, 'qa_formset': qa_formset})
 

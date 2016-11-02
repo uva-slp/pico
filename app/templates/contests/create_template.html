@@ -10,9 +10,9 @@
         {{ form.media }}
     </head>
 
-    <body>
+    <body style="padding-left: 30px;">
 
-        <h1>Contest Template Builder</h1>
+        <h1>Contest Template Builder</h1><br /><br />
 
         <!-- Change url -->
         <form id="create_contest_template" method="post" action="{% url 'contests:createTemplate' %}"
@@ -20,25 +20,11 @@
 
             {% csrf_token %}
 
-            {{ qa_formset.management_form }}
-
-            {% for qa_form in qa_formset %}
-                <div class="qa-formset">
-                <br /><br />
-                    <label>Problem Description:</label>
-                    {{ qa_form.problem_desc }}
-
-                    <label>Solution:</label>
-                    {{ qa_form.solution }}
-                </div>
-            {% endfor %}
-
-            <br /><br /><br />
-
             {% for field in form %}
                 <div id="div_{{ field.html_name }}"
                      class="form-group{% if field.errors %} has-error{% endif %}">
                     {{ field.label_tag }}
+                    <br />
                     {{ field }}
                     <div class="text-muted pull-right">
                         <small>{{ field.help_text }}</small>
@@ -49,6 +35,31 @@
                 </div>
             {% endfor %}
 
+            <br /><br />
+            <h3>Individual Problems</h3>
+            {{ qa_formset.management_form }}
+
+            {% for qa_form in qa_formset %}
+                <div class="qa-formset">
+                    <br /><br />
+                    <label>Solution (.txt)</label><br>
+                    {{ qa_form.solution }}
+                    <br>
+                    <label>Description of Input</label><br>
+                    {{ qa_form.input_description }}
+                    <br>
+                    <label>Description of Output</label><br>
+                    {{ qa_form.output_description }}
+                    <br>
+                    <label>Sample Input (.txt)</label><br>
+                    {{ qa_form.sample_input }}
+                    <br>
+                    <label>Sample Output (.txt)</label><br>
+                    {{ qa_form.sample_output }}
+                </div>
+            {% endfor %}
+
+            <br /><br />
             <div class="form-group">
                 <input type="submit" name="submit" value="Create" class="btn btn-primary" />
             </div>
