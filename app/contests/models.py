@@ -8,8 +8,10 @@ class Contest(models.Model):
 	creator = models.CharField(max_length=32)
 	teams = models.ManyToManyField(Team)
 	languages = models.CharField(max_length=100)
-	length = models.CharField(max_length=10)
+	contest_length = models.CharField(max_length=10)
 	autojudge = models.CharField(max_length=10)
+	contest_admins = models.CharField(max_length=100, null=True)
+	contest_participants = models.CharField(max_length=200, null=True)
 	
 	def __str__(self):
 		return self.title
@@ -21,6 +23,7 @@ class Question(models.Model):
 
 	def __str__(self):
 		return str(self.number)
+
 
 class Submission(models.Model):
 	team = models.ForeignKey(Team, null = True)

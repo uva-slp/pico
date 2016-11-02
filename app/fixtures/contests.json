@@ -1,0 +1,16 @@
+[
+    {
+        "model": "contests.contest",
+        "pk": 1,
+        "fields": {
+                "title": 1,
+                "date_created": "2016-10-30",
+                "creator": "jgd3hb",
+                "languages": "Python",
+                "contest_length": "10",
+                "autojudge": true,
+                "contest_admins": "admin",
+                "contest_participants": "jason"
+        }
+    }
+]

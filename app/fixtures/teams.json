@@ -1,0 +1,11 @@
+[
+{
+    "model": "teams.Team",
+    "pk": 1,
+    "fields": {
+        "name": "Team 1",
+        "date_created": "2016-10-29T17:47:11.38Z",
+        "members": [11, 12, 13]
+    }
+}
+]
