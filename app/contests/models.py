@@ -10,6 +10,8 @@ class Contest(models.Model):
 	languages = models.CharField(max_length=100)
 	length = models.CharField(max_length=10)
 	autojudge = models.CharField(max_length=10)
+	contest_admins = models.CharField(max_length=100)
+	contest_participants = models.CharField(max_length=200)
 	
 	def __str__(self):
 		return self.title
