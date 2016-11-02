@@ -15,14 +15,13 @@ class ContestTemplateTest(TestCase):
 	def contest_template(
 			self, title="only a test", creator="admin", languages="java, python",
 			length="02:00", penalty="20", autojudge="0", review="",
-			desc="problems.pdf", solution="solutions.txt", admins="",
-			participants=""):
+			desc="problems.pdf", admins="", participants=""):
 		return ContestTemplate.objects.create(
 			title=title, creator=creator, languages=languages,
 			contest_length=length, time_penalty=penalty,
 			autojudge_enabled=autojudge, autojudge_review=review,
-			problem_description=desc, solutions=solution,
-			contest_admins=admins, contest_participants=participants)
+			problem_description=desc, contest_admins=admins,
+			contest_participants=participants)
 
 	def test_contest_template_creation(self):
 		ct = self.contest_template()
