@@ -18,11 +18,11 @@ class ContestTemplateTest(TestCase):
 			desc="problems.pdf", solution="solutions.txt", admins="",
 			participants=""):
 		return ContestTemplate.objects.create(
-				title=title, creator=creator, languages=languages,
-				contest_length=length, time_penalty=penalty,
-				autojudge_enabled=autojudge, autojudge_review=review,
-				problem_description=desc, solutions=solution,
-				contest_admins=admins, contest_participants=participants)
+			title=title, creator=creator, languages=languages,
+			contest_length=length, time_penalty=penalty,
+			autojudge_enabled=autojudge, autojudge_review=review,
+			problem_description=desc, solutions=solution,
+			contest_admins=admins, contest_participants=participants)
 
 	def test_contest_template_creation(self):
 		ct = self.contest_template()
@@ -70,22 +70,22 @@ class ContestTest(TestCase):
 
 	# model test
 	def contest_template(
-			self, title="only a test", creator="admin", languages="Python",
-			length="02:00", autojudge="0",
-			desc="problems.pdf", solution="solutions.txt", admins="",
-			participants=""):
+		self, title="only a test", creator="admin", languages="Python",
+		length="02:00", autojudge="0",
+		desc="problems.pdf", solution="solutions.txt", admins="",
+		participants=""):
 		return Contest.objects.create(
-				title=title, creator=creator, languages=languages,
-				contest_length=length,
-				autojudge=autojudge, problem_description=desc, 
-				solutions=solution, contest_admins=admins, 
-				contest_participants=participants)
+			title=title, creator=creator, languages=languages,
+			contest_length=length,
+			autojudge=autojudge, problem_description=desc, 
+			solutions=solution, contest_admins=admins, 
+			contest_participants=participants)
 
 	def test_contest_creation(self):
 		c = Contest()
-                c.title = "Contest 1"
-                self.assertTrue(isinstance(c, Contest))
-                self.assertEqual(c.__str__(), c.title)
+        c.title = "Contest 1"
+        self.assertTrue(isinstance(c, Contest))
+        self.assertEqual(c.__str__(), c.title)
 
 	def test_contest_db_entry(self):
 		c = Contest.objects.get(pk=1)
@@ -123,27 +123,27 @@ class ContestTest(TestCase):
 ##
 
 class SubmissionsViewsTest(TestCase):
-		fixtures = ['submission.json']
-		
-		def test_choose_question_page(self):
-				response = self.client.get(reverse('contests:choose_question'))
-				self.assertEqual(response.status_code, 200)
+	fixtures = ['submission.json']
+	
+	def test_choose_question_page(self):
+		response = self.client.get(reverse('contests:choose_question'))
+		self.assertEqual(response.status_code, 200)
 
-		def test_choose_question_page_template(self):
-				response = self.client.get(reverse('contests:choose_question'))
-				self.assertTemplateUsed(response, 'contests/choose_question.html')
+	def test_choose_question_page_template(self):
+		response = self.client.get(reverse('contests:choose_question'))
+		self.assertTemplateUsed(response, 'contests/choose_question.html')
 
-		def test_choose_question_page_title(self):
-				response = self.client.get(reverse('contests:choose_question'))
-				self.assertContains(response, 'Questions:')
+	def test_choose_question_page_title(self):
+		response = self.client.get(reverse('contests:choose_question'))
+		self.assertContains(response, 'Questions:')
 
-		def test_upload_code_page(self):
-				response = self.client.get(reverse('contests:upload_code', kwargs = {'question_id': '1'}))
-				self.assertEqual(response.status_code, 200)
+	def test_upload_code_page(self):
+		response = self.client.get(reverse('contests:upload_code', kwargs = {'question_id': '1'}))
+		self.assertEqual(response.status_code, 200)
 
-		def test_upload_code_page_title(self):
-				response = self.client.get(reverse('contests:upload_code', kwargs = {'question_id': '1'}))
-				self.assertContains(response, "Submit for QuestionExample")
+	def test_upload_code_page_title(self):
+		response = self.client.get(reverse('contests:upload_code', kwargs = {'question_id': '1'}))
+		self.assertContains(response, "Submit for QuestionExample")
 
 class ContestCreationTest(TestCase):
 
