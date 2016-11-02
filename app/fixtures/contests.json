@@ -8,7 +8,6 @@
                 "creator": "jgd3hb",
                 "languages": "Python",
                 "contest_length": "10",
-                "time_penalty": "20",
                 "autojudge": true,
                 "contest_admins": "admin",
                 "contest_participants": "jason"
