@@ -84,8 +84,8 @@ class ContestTest(TestCase):
 	def test_contest_creation(self):
 		c = Contest()
                 c.title = "Contest 1"
-		self.assertTrue(isinstance(c, Contest))
-		self.assertEqual(c.__str__(), c.title)
+                self.assertTrue(isinstance(c, Contest))
+                self.assertEqual(c.__str__(), c.title)
 
 	def test_contest_db_entry(self):
 		c = Contest.objects.get(pk=1)
