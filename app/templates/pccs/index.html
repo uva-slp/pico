@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
 
 {% block body_block %}
     <a href="{% url 'users:password_reset' %}">Retrieve Password</a>
@@ -7,7 +8,7 @@
 
     <form id="login_form" method="post" action="{% url 'users:login' %}">
         {% csrf_token %}
-        {{ login_form.as_p }}
+        {% bootstrap_form login_form %}
 
         <input type="submit" value="submit" />
     </form>
@@ -18,7 +19,7 @@
             enctype="multipart/form-data">
 
         {% csrf_token %}
-        {{ user_form.as_p }}
+        {% bootstrap_form user_form %}
 
         <input type="submit" name="submit" value="Register" />
     </form>
