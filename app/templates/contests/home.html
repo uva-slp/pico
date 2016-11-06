@@ -27,7 +27,7 @@
 	
 	<h3>Create team</h3>
 
-	<form id="team_form" method="post" action="{% url 'teams:create-team' %}">
+	<form id="team_form" method="post" action="{% url 'teams:create' %}">
         {% csrf_token %}
         {{ team_form.as_p }}
 
@@ -36,7 +36,7 @@
 
 	<h3>Join team</h3>
 
-	<form id="team_join_form" method="post" action="{% url 'teams:join-team' %}">
+	<form id="team_join_form" method="post" action="{% url 'teams:join' %}">
         {% csrf_token %}
         {{ team_join_form.as_p }}
 
@@ -45,10 +45,14 @@
 
 	<h3>Leave team</h3>
 
-	<form id="team_leave_form" method="post" action="{% url 'teams:leave-team' %}">
+	<form id="team_leave_form" method="post" action="{% url 'teams:leave' %}">
         {% csrf_token %}
         {{ team_leave_form.as_p }}
 
         <input type="submit" value="submit" />
     </form>
+{% endblock %}
+
+{% block script_block %}
+    {{ team_join_form.media }}
 {% endblock %}

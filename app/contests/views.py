@@ -24,8 +24,8 @@ def home(request):
 		request,
 		'contests/home.html',
 		{
-			'team_form': TeamForm(), 'team_join_form': TeamJoinForm(request),
-			'team_leave_form': TeamLeaveForm(request),
+			'team_form': TeamForm(), 'team_join_form': TeamJoinForm(),
+			'team_leave_form': TeamLeaveForm(),
 			'contests_created': ContestTemplate.objects.all()
 		}
 	)

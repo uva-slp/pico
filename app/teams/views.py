@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from dal import autocomplete
 
-#from common.decorators import anonymous_required
+from .models import Team
 from .forms import TeamForm, TeamJoinForm, TeamLeaveForm
 
 @login_required
-def create_team(request):
+def create(request):
 	if request.method == 'POST':
 		team_form = TeamForm(data=request.POST)
 
@@ -17,7 +18,7 @@ def create_team(request):
 	return redirect(reverse('contests:home'))
 
 @login_required
-def join_team(request):
+def join(request):
 	if request.method == 'POST':
 		team_join_form = TeamJoinForm(data=request.POST)
 
@@ -28,7 +29,7 @@ def join_team(request):
 	return redirect(reverse('contests:home'))
 
 @login_required
-def leave_team(request):
+def leave(request):
 	if request.method == 'POST':
 		team_leave_form = TeamLeaveForm(data=request.POST)
 
@@ -39,3 +40,24 @@ def leave_team(request):
 				team.delete()
 
 	return redirect(reverse('contests:home'))
+
+class TeamAutocomplete(autocomplete.Select2QuerySetView):
+
+	def get_queryset(self):		
+		if not self.request.user.is_authenticated():
+			return Team.objects.none()
+		
+		qs = Team.objects.all()
+		if self.q:
+			qs = qs.filter(name__istartswith=self.q)
+
+
+		queryType = int(self.kwargs.get('type', 0))
+		if queryType == 0:
+			return qs
+		if queryType == 1: # join
+			return qs.exclude(members=self.request.user)
+		if queryType == 2: # leave
+			return qs.filter(members=self.request.user)
+		
+		return qs

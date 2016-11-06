@@ -31,18 +31,24 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
-	'users.apps.UsersConfig',
-	'teams.apps.TeamsConfig',
-	'contests.apps.ContestsConfig',
-	'django.contrib.admin',
+INSTALLED_APPS = [	
+	# Django apps
 	'django.contrib.auth',
+	'django.contrib.admin',
 	'django.contrib.contenttypes',
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+
+	# Other apps
 	'bootstrap3',
-	# 'bootstrap3_datetime',
+	'dal',
+	'dal_select2',
+
+	# Project apps
+	'users.apps.UsersConfig',
+	'teams.apps.TeamsConfig',
+	'contests.apps.ContestsConfig',
 ]
 
 MIDDLEWARE = [

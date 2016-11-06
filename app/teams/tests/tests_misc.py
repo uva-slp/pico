@@ -1,5 +1,6 @@
 from django.test import TestCase
-from .models import Team
+
+from teams.models import Team
 
 class TeamTestCases(TestCase):
 
@@ -32,3 +33,8 @@ class TeamTestCases(TestCase):
         teams = Team.objects.all()
         teamnumber = teams.count()
         self.assertEqual(teamnumber, 6)
+
+    def testTeamStr(self):
+        team = Team(name="team")
+
+        self.assertEqual(str(team), "team")

@@ -1,0 +1,2 @@
+python-coverage run --source='.' manage.py test
+python-coverage report -m
