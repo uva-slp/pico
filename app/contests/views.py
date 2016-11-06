@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
+from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 from .models import Question, Problem, ContestTemplate
 from .forms import CreateContestForm, CreateContestTemplate, CreateProblem, UploadCodeForm
 from django.forms.formsets import formset_factory
@@ -24,8 +25,12 @@ def home(request):
 		request,
 		'contests/home.html',
 		{
-			'team_form': TeamForm(), 'team_join_form': TeamJoinForm(),
+			'team_form': TeamForm(),
+            'team_join_form': TeamJoinForm(),
 			'team_leave_form': TeamLeaveForm(),
+            'organization_form': OrganizationForm(),
+            'organization_join_form': OrganizationJoinForm(),
+            'organization_leave_form': OrganizationLeaveForm(),
 			'contests_created': ContestTemplate.objects.all()
 		}
 	)

@@ -24,7 +24,7 @@ def join(request):
 
 		if team_join_form.is_valid():
 			team = team_join_form.cleaned_data['team']
-			request.user.team_set.add(team)
+			team.members.add(request.user)
 
 	return redirect(reverse('contests:home'))
 
@@ -35,7 +35,7 @@ def leave(request):
 
 		if team_leave_form.is_valid():
 			team = team_leave_form.cleaned_data['team']
-			request.user.team_set.remove(team)
+			team.members.remove(request.user)
 			if team.members.count() == 0:
 				team.delete()
 

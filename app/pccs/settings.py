@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 	# Project apps
 	'users.apps.UsersConfig',
 	'teams.apps.TeamsConfig',
+	'organizations.apps.OrganizationsConfig',
 	'contests.apps.ContestsConfig',
 ]
 
