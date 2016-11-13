@@ -45,7 +45,6 @@ def diff(request, question_id):
             form.save()
             output = exe.execute_code(request.FILES['code_file'])
             retcode = output[0]
-            
             if retcode != 0:
                     error = output[1]
                     return render(request, 'contests/error.html', {'error_message' : error})
@@ -55,7 +54,8 @@ def diff(request, question_id):
                     html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
                     return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges, 'question_id' : question_id})
         else:
-            return render(request, 'contests/uploaded.html')
+            return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
+    
 
 def create(request):
     #boolean to see if the contest was successfully created
