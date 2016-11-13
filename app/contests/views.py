@@ -43,10 +43,17 @@ def diff(request, question_id):
         form = UploadCodeForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            fromlines = exe.execute_code(request.FILES['code_file']).decode().split("\n")
-            tolines = ['Hello World from C++!']
-            html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-            return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
+            output = exe.execute_code(request.FILES['code_file'])
+            retcode = output[0]
+            
+            if retcode != 0:
+                    error = output[1]
+                    return render(request, 'contests/error.html', {'error_message' : error})
+            else:
+                    fromlines = output[1].split("\n")
+                    tolines = ['Hello World from C++!']
+                    html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
+                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges, 'question_id' : question_id})
         else:
             return render(request, 'contests/uploaded.html')
 
