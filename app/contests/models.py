@@ -28,7 +28,7 @@ class Question(models.Model):
 class Submission(models.Model):
 	team = models.ForeignKey(Team, null = True)
 	question = models.ForeignKey(Question, on_delete=models.CASCADE)
-	code_file = models.FileField(upload_to='uploads/', null=True, blank=True)
+	code_file = models.FileField(upload_to='uploads/', null=True, blank=False)
 	timestamp = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
