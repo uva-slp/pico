@@ -5,6 +5,11 @@ from .models import ContestTemplate
 from django.urls import reverse
 from django.shortcuts import render
 from .models import Contest
+from .lib import execution as exe
+import tempfile
+import shutil
+import os
+from django.core.files import File
 
 
 class ContestTemplateTest(TestCase):
@@ -131,7 +136,6 @@ class SubmissionsViewsTest(TestCase):
 	def test_choose_question_page_template(self):
 		response = self.client.get(reverse('contests:choose_question'))
 		self.assertTemplateUsed(response, 'contests/choose_question.html')
-
 	def test_choose_question_page_title(self):
 		response = self.client.get(reverse('contests:choose_question'))
 		self.assertContains(response, 'Questions:')
@@ -144,6 +148,37 @@ class SubmissionsViewsTest(TestCase):
 		response = self.client.get(reverse('contests:upload_code', kwargs = {'question_id': '1'}))
 		self.assertContains(response, "Submit for QuestionExample")
 
+	def test_cpp_execution_on_empty_file(self):
+                temp_dirpath = tempfile.mkdtemp()
+                file_path = os.path.join(temp_dirpath, 'test.cpp')
+                with open(file_path, 'w+') as destination:
+                        test_file_object = File(destination)
+                        output = exe.execute_code(test_file_object)
+                shutil.rmtree(temp_dirpath)
+                self.assertEqual(output[0], 1)
+                
+	def test_java_execution_on_empty_file(self):
+                temp_dirpath = tempfile.mkdtemp()
+                file_path = os.path.join(temp_dirpath, 'test.java')
+                with open(file_path, 'w+') as destination:
+                        test_file_object = File(destination)
+                        output = exe.execute_code(test_file_object)
+                shutil.rmtree(temp_dirpath)
+                self.assertEqual(output[0], 1)
+
+	def test_diff_with_no_file_template(self):
+                response = self.client.get(reverse('contests:diff', kwargs = {'question_id' : '1'}))
+                self.assertTemplateUsed(response, 'contests/error.html')
+
+	def test_diff_with_no_file_message(self):
+                response = self.client.get(reverse('contests:diff', kwargs = {'question_id' : '1'}))
+                self.assertContains(response, 'Invalid form.')
+
+	def test_diff_page(self):
+                response = self.client.get(reverse('contests:diff', kwargs = {'question_id' : '1'}))
+                self.assertEqual(response.status_code, 200)
+                
+                
 class ContestCreationTest(TestCase):
 
 	def testNumberofContests(self):
