@@ -123,11 +123,16 @@ def createTemplate(request):
 
 def displayContest(request, contest_id):
 	contest_data = ContestTemplate.objects.get(id=contest_id)
+	problems = contest_data.problem_set.all()
+	submissions = []
+	for p in problems:
+		submissions += list(p.submission_set.all())
+	submissions.sort(key=lambda x: x.timestamp)
 
 	return render(
 		request,
 		'contests/contest.html',
-		{'contest_data': contest_data, 'contest_problems': contest_data.problem_set.all()}
+		{'contest_data': contest_data, 'contest_problems': problems, 'contest_submissions': submissions}
 	)
 
 
