@@ -16,8 +16,7 @@ class CreateTeamTest(TestCase):
 
 class JoinTeamTest(TestCase):
 
-	fixtures = ['users.json']
+	fixtures = ['users.json', 'teams.json']
 
 	def test_post(self):
 		self.client.login(username='testuser', password='password')
-		

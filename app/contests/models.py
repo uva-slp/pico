@@ -24,20 +24,10 @@ class Question(models.Model):
 	def __str__(self):
 		return str(self.number)
 
-
-class Submission(models.Model):
-	team = models.ForeignKey(Team, null = True)
-	question = models.ForeignKey(Question, on_delete=models.CASCADE)
-	code_file = models.FileField(upload_to='uploads/', null=True, blank=True)
-	timestamp = models.DateTimeField(auto_now=True)
-
-	def __str__(self):
-		return str(self.submission_id)
-
 class ContestTemplate(models.Model):
 	title = models.CharField(max_length=128)
 	date_created = models.DateTimeField(auto_now_add=True)
-	creator = models.CharField(max_length=32)
+	creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 	languages = models.CharField(max_length=64)
 	contest_length = models.CharField(max_length=8)
 	time_penalty = models.CharField(max_length=4)
@@ -62,3 +52,20 @@ class Participant(models.Model):
 	contest = models.OneToOneField(ContestTemplate)
 	team = models.OneToOneField(Team)
 	score = models.IntegerField
+
+class Submission(models.Model):
+	run_id = models.IntegerField(null=True)
+	team = models.ForeignKey(Team, null = True)
+	question = models.ForeignKey(Question, on_delete=models.CASCADE)
+	problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True)
+	code_file = models.FileField(upload_to='uploads/', null=True, blank=True)
+	timestamp = models.DateTimeField(auto_now=True)
+	SUBMISSION_STATE_CHOICES = (
+		('NEW', 'New'),
+		('YES', 'Yes'),
+		('NO', 'No'),
+	)
+	state = models.CharField(max_length=20, choices=SUBMISSION_STATE_CHOICES, default='NEW')
+
+	def __str__(self):
+		return str(self.run_id)

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ contest_data.title }} Contest</title>
+</head>
+<body>
+    <br /><br />
+    <h1>Contest: {{ contest_data.title }}</h1>
+    <br />
+    <h3>Submissions:</h3>
+    <table>
+    {% for submission in contest_submissions %}
+        <tr>
+            <th style="padding-top: 15px;">Run ID {{ forloop.counter }}</th>
+        </tr>
+        <tr>
+            <td>Team: {{ submission.team.name }}</td>
+        </tr>
+        <tr>
+            <td>Result: {{ submission.get_state_display }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</body>
+</html>
