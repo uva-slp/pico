@@ -1,6 +1,20 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
+{% load staticfiles %}
+
+{% block head_block %}
+    <style>
+        body {
+            background: #fff url("{% static 'images/background.jpg' %}") no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+    </style>
+{% endblock %}
+
 {% block body_block %}
     <a href="{% url 'users:password_reset' %}">Retrieve Password</a>
 	<br/>
