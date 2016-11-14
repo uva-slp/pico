@@ -34,7 +34,6 @@ REVIEW_LIST = (
 	('2', 'Manual review all submissions')
 )
 
-
 class CreateContestTemplate(ModelForm):
 	title = forms.CharField(required=True)
 	languages = forms.CharField(
@@ -96,3 +95,21 @@ class UploadCodeForm(forms.ModelForm):
         model = Submission
         fields = ['code_file', 'question']
         widgets = {'question': forms.HiddenInput()}
+
+
+class ReturnJudgeResultForm(forms.ModelForm):
+    class Meta:
+        model = Submission
+        fields = ['result', 'state']
+        widgets = {'state': forms.HiddenInput()}
+    def clean(self):
+        cleaned_data = super(ReturnJudgeResultForm, self).clean()
+        result = cleaned_data.get('result')
+        if result:
+            if result == 'YES':
+                cleaned_data['state'] = 'YES'
+            else:
+                cleaned_data['state'] = 'NO'
+        else:
+            cleaned_data['state'] = 'NEW'
+        return cleaned_data

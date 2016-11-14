@@ -9,7 +9,7 @@
     <h1>Contest: {{ contest_data.title }}</h1>
     <br />
     {% if is_judge %}
-        <a href="{% url 'contests:contest_judge' contest_data.id %}">View all submissions</a>
+        <a href="{% url 'contests:contest_judge_submissions' contest_data.id %}">View all submissions</a>
     {% endif %}
     <br />
     {% for team in contest_teams %}

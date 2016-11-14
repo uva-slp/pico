@@ -3,8 +3,9 @@ from django.shortcuts import render, redirect
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 from .models import Question, Problem, ContestTemplate
-from .forms import CreateContestForm, CreateContestTemplate, CreateProblem, UploadCodeForm
+from .forms import CreateContestForm, CreateContestTemplate, CreateProblem, UploadCodeForm, ReturnJudgeResultForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
@@ -174,6 +175,38 @@ def displayMySubmissions(request, contest_id, team_id):
 		request,
 		'contests/user_submissions.html',
 		{'contest_data': contest_data, 'team': team, 'contest_submissions': submissions}
+	)
+
+@login_required
+def displayJudge(request, contest_id, run_id):
+	contest_data = ContestTemplate.objects.get(id=contest_id)
+	problems = contest_data.problem_set.all()
+	if request.user == contest_data.creator:
+		for p in problems:
+			if p.submission_set.filter(run_id=run_id).exists():
+				current_submission = p.submission_set.get(run_id=run_id)
+
+				if request.method == 'POST':
+					form = ReturnJudgeResultForm(request.POST, instance=current_submission)
+					if form.is_valid():
+						form.save()
+						return redirect(reverse('contests:contest_judge_submissions',
+							kwargs={'contest_id': contest_id}))
+					else:
+						messages.error(request, "Error")
+				else:
+					form = ReturnJudgeResultForm(instance=current_submission)
+			return render(
+				request,
+				'contests/judge.html',
+				{'contest_data': contest_data, 'is_judge': True,
+					'submission': current_submission, 'form': form}
+			)
+
+	return render(
+		request,
+		'contests/judge.html',
+		{'contest_data': contest_data, 'is_judge': False}
 	)
 
 def choose_question(request):
