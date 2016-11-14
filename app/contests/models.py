@@ -57,3 +57,8 @@ class Problem(models.Model):
 	sample_input = models.FileField(max_length=128)
 	sample_output = models.FileField(max_length=128)
 	contest = models.ForeignKey(ContestTemplate, null=True, blank=True, on_delete=models.CASCADE)
+
+class Participant(models.Model):
+	contest = models.OneToOneField(ContestTemplate)
+	team = models.OneToOneField(Team)
+	score = models.IntegerField
