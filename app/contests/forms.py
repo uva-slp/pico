@@ -1,13 +1,15 @@
 from django.forms import Form, ModelForm
-from .models import Contest, Submission, ContestTemplate, Problem
+from .models import Contest, Submission, Problem
 from django import forms
 # from bootstrap3_datetime.widgets import DateTimePicker
 
 
+'''
 class CreateContestForm(ModelForm):
 	class Meta:
 		model = Contest
 		fields = ['title']
+'''
 
 LANGAUGES = (
 	('Python','Python'), 
@@ -35,7 +37,7 @@ REVIEW_LIST = (
 )
 
 
-class CreateContestTemplate(ModelForm):
+class CreateContestForm(ModelForm):
 	title = forms.CharField(required=True)
 	languages = forms.CharField(
 		required=True,
@@ -54,25 +56,36 @@ class CreateContestTemplate(ModelForm):
 		required=False, label="Judge Review Option",
 		widget=forms.Select(choices=REVIEW_LIST)
 	)
-	problem_descriptions = forms.FileField(required=False, label="Problem Descriptions (.pdf)")
-	# solutions = forms.CharField(required=True)
+	problem_description = forms.FileField(required=True, label="Problem Descriptions (.pdf)")
 	contest_admins = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 	contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 
+	def clean(self):
+		upload_to = 'uploads/'
+		if not 'problem_description' in self.cleaned_data:
+			return self.cleaned_data
+		upload_to += self.cleaned_data['problem_description'].name
+
 	class Meta:
-		model = ContestTemplate
+		model = Contest
 		fields = (
 			'title', 'languages', 'contest_length', 'time_penalty',
-			'autojudge_enabled', 'autojudge_review', 'problem_descriptions',
+			'autojudge_enabled', 'autojudge_review', 'problem_description',
 			'contest_admins', 'contest_participants')
 
 
 class CreateProblem(ModelForm):
-	solution = forms.FileField(required=False)
+	solution = forms.FileField(required=True)
 	input_description = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 	output_description = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 	sample_input = forms.FileField(required=False)
 	sample_output = forms.FileField(required=False)
+
+	def clean(self):
+		upload_to = 'uploads/'
+		if not 'solution' in self.cleaned_data:
+			return self.cleaned_data
+		upload_to += self.cleaned_data['solution'].name
 
 	class Meta:
 		model = Problem
@@ -81,6 +94,7 @@ class CreateProblem(ModelForm):
 			'sample_output')
 
 
+'''
 class CreateContestForm(forms.Form):
     title = forms.CharField(label='Title', max_length=32)
     languages = forms.CharField(label='Languages', widget=forms.CheckboxSelectMultiple)
@@ -89,10 +103,11 @@ class CreateContestForm(forms.Form):
     ##file stuff - need group input on how this should be laid out
     ##problems = forms.FileField()
     ##answers = forms.FileField()
+'''
 
 
 class UploadCodeForm(forms.ModelForm):
     class Meta:
         model = Submission
-        fields = ['code_file', 'question']
-        widgets = {'question': forms.HiddenInput()}
+        fields = ['code_file', 'problem']
+        widgets = {'problem': forms.HiddenInput()}

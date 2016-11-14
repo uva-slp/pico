@@ -1,0 +1,4 @@
+<h1>Problems:</h1>
+{% for item in problems %}
+<a href = "{% url 'contests:upload_code' item.id %}"></a>
+{% endfor  %}

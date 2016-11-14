@@ -1,4 +1,0 @@
-<h1>Questions:</h1>
-{% for item in questions %}
-<a href = "{% url 'contests:upload_code' item.id %}">{{ item.number  }}: {{ item.name }}</a>
-{% endfor  %}
