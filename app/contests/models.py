@@ -27,7 +27,7 @@ class Question(models.Model):
 class ContestTemplate(models.Model):
 	title = models.CharField(max_length=128)
 	date_created = models.DateTimeField(auto_now_add=True)
-	creator = models.CharField(max_length=32)
+	creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 	languages = models.CharField(max_length=64)
 	contest_length = models.CharField(max_length=8)
 	time_penalty = models.CharField(max_length=4)

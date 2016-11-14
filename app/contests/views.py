@@ -4,11 +4,13 @@ from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 from .models import Question, Problem, ContestTemplate
 from .forms import CreateContestForm, CreateContestTemplate, CreateProblem, UploadCodeForm
+from django.contrib.auth.decorators import login_required
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
 from .models import Contest
 from teams.models import Team
+from users.models import User
 
 
 #Imports used for code compilation/execution
@@ -82,9 +84,11 @@ def createTemplate(request):
 
 		qa_formset = QAFormSet(request.POST)
 		if form.is_valid() and qa_formset.is_valid():
-			form = form.save()
+			contest = form.save()
+			contest.creator = request.user
+			contest.save()
 
-			contest_id = form.id
+			contest_id = contest.id
 
 			# questions = []
 			# answers = []
@@ -120,21 +124,57 @@ def createTemplate(request):
 		qa_formset = QAFormSet()
 	return render(request, 'contests/create_template.html', {'form': form, 'qa_formset': qa_formset})
 
-
+@login_required
 def displayContest(request, contest_id):
 	contest_data = ContestTemplate.objects.get(id=contest_id)
 	problems = contest_data.problem_set.all()
-	submissions = []
-	for p in problems:
-		submissions += list(p.submission_set.all())
-	submissions.sort(key=lambda x: x.timestamp)
+	is_judge = False
+	# TODO: Right now this only check contest creator. Need to update to all judges
+	if request.user == contest_data.creator:
+		is_judge = True
+
+	# TODO: Update to participants after contest model updated.
+	teams = Team.objects.all()
 
 	return render(
 		request,
 		'contests/contest.html',
-		{'contest_data': contest_data, 'contest_problems': problems, 'contest_submissions': submissions}
+		{'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge,
+			'contest_teams': teams}
 	)
 
+@login_required
+def displayAllSubmissions(request, contest_id):
+	contest_data = ContestTemplate.objects.get(id=contest_id)
+	problems = contest_data.problem_set.all()
+	submissions = []
+	if request.user == contest_data.creator:
+		for p in problems:
+			submissions += list(p.submission_set.all())
+		submissions.sort(key=lambda x: x.timestamp)
+
+	return render(
+		request,
+		'contests/all_submissions.html',
+		{'contest_data': contest_data, 'contest_submissions': submissions}
+	)
+
+@login_required
+def displayMySubmissions(request, contest_id, team_id):
+	contest_data = ContestTemplate.objects.get(id=contest_id)
+	team = Team.objects.get(id=team_id)
+	problems = contest_data.problem_set.all()
+	submissions = []
+	if request.user == contest_data.creator or request.user in team.members.all():
+		for p in problems:
+			submissions += list(p.submission_set.filter(team__pk=team_id))
+		submissions.sort(key=lambda x: x.timestamp)
+
+	return render(
+		request,
+		'contests/user_submissions.html',
+		{'contest_data': contest_data, 'team': team, 'contest_submissions': submissions}
+	)
 
 def choose_question(request):
     all_questions = Question.objects.all()
