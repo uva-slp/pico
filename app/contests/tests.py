@@ -130,7 +130,7 @@ class SubmissionsViewsTest(TestCase):
 
 	def test_choose_question_page_template(self):
 		response = self.client.get(reverse('contests:choose_question'))
-		self.assertTemplateUsed(response, 'contests/choose_question.html')
+		self.assertTemplateUsed(response, 'contests/choose_problem.html')
 
 	def test_choose_question_page_title(self):
 		response = self.client.get(reverse('contests:choose_question'))

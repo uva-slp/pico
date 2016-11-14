@@ -2,12 +2,11 @@ from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
-from .models import Question, Problem, ContestTemplate
-from .forms import CreateContestForm, CreateContestTemplate, CreateProblem, UploadCodeForm
+from .models import Problem, Contest
+from .forms import CreateContestForm, CreateProblem, UploadCodeForm
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
-from .models import Contest
 from teams.models import Team
 
 
@@ -31,7 +30,7 @@ def home(request):
             'organization_form': OrganizationForm(),
             'organization_join_form': OrganizationJoinForm(),
             'organization_leave_form': OrganizationLeaveForm(),
-			'contests_created': ContestTemplate.objects.all()
+			'contests_created': Contest.objects.all()
 		}
 	)
 
@@ -49,6 +48,7 @@ def diff(request):
 		'contests/diff.html',
 		{'diff_table': html, 'numChanges': numChanges})
 
+'''
 def create(request):
     #boolean to see if the contest was successfully created
     #initally false, code will make it true it successful
@@ -70,18 +70,21 @@ def create(request):
     else:
         form = CreateContestForm()
     return render(request, 'contests/create_contest.html', {'form': form})
+'''
 
-def createTemplate(request):
+def create(request):
 
 	QAFormSet = formset_factory(CreateProblem)
 
 	if request.method == 'POST':
 		#grab information from form
-		form = CreateContestTemplate(request.POST)
+		form = CreateContestForm(request.POST, request.FILES)
 		#qa_formset = CreateProblem(request.POST)
 
-		qa_formset = QAFormSet(request.POST)
+		qa_formset = QAFormSet(request.POST, request.FILES)
 		if form.is_valid() and qa_formset.is_valid():
+			problem_desc = Contest(problem_description=request.FILES['problem_description'])
+			problem_desc.save()
 			form = form.save()
 
 			contest_id = form.id
@@ -115,14 +118,14 @@ def createTemplate(request):
 			return redirect(reverse('contests:home'))
 			# return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
 	else:
-		form = CreateContestTemplate()
+		form = CreateContestForm()
 		QAFormSet = formset_factory(CreateProblem)
 		qa_formset = QAFormSet()
-	return render(request, 'contests/create_template.html', {'form': form, 'qa_formset': qa_formset})
+	return render(request, 'contests/create_contest.html', {'form': form, 'qa_formset': qa_formset})
 
 
 def displayContest(request, contest_id):
-	contest_data = ContestTemplate.objects.get(id=contest_id)
+	contest_data = Contest.objects.get(id=contest_id)
 	problems = contest_data.problem_set.all()
 	submissions = []
 	for p in problems:
@@ -136,13 +139,13 @@ def displayContest(request, contest_id):
 	)
 
 
-def choose_question(request):
-    all_questions = Question.objects.all()
-    return render(request, 'contests/choose_question.html', {'questions': all_questions})
+def choose_problem(request):
+    all_problems = Problem.objects.all()
+    return render(request, 'contests/choose_problem.html', {'problems': all_problems})
 
 
-def upload_code(request, question_id):
-    question = Question.objects.get(id=question_id)
+def upload_code(request, problem_id):
+    problem = Problem.objects.get(id=problem_id)
     if request.method == 'POST':
         form = UploadCodeForm(request.POST, request.FILES)
         if form.is_valid():
@@ -150,8 +153,8 @@ def upload_code(request, question_id):
             execute_code(request.FILES['code_file'], form.instance.id)
             return render(request, 'contests/uploaded.html')
     else:
-        form = UploadCodeForm(initial = {'question': question})
-    return render(request, 'contests/upload_page.html', {'form': form, 'question': question})
+        form = UploadCodeForm(initial = {'problem': problem})
+    return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
 
 
 #Returns True if executed successfully, false otherwise

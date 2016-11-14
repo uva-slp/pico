@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Create a new contest</title>
+
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css" />
@@ -12,9 +14,8 @@
 
     <body style="padding-left: 30px;">
 
-        <h1>Contest Template Builder</h1><br /><br />
+        <h1>Contest Creation</h1><br /><br />
 
-        <!-- Change url -->
         <form id="create_contest_template" method="post" action="{% url 'contests:createTemplate' %}"
                 enctype="multipart/form-data">
 
