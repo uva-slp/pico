@@ -27,19 +27,28 @@ def home(request):
 		}
 	)
 
-def diff(request):
-	emptylines = 'emptylines' in request.GET
-	whitespace = 'whitespace' in request.GET
 
-	fromlines = ['foo ', 'f ', '  fs  ', '   ', 'bar', 'flarp']
-	tolines = ['foo', 'bar', 'zoo']
+def choose_question(request):
+    all_questions = Question.objects.all()
+    return render(request, 'contests/choose_question.html', {'questions': all_questions})
 
-	html, numChanges = _diff.HtmlFormatter(fromlines, tolines, emptylines, whitespace).asTable()
 
-	return render(
-		request,
-		'contests/diff.html',
-		{'diff_table': html, 'numChanges': numChanges})
+def upload_code(request, question_id):
+    question = Question.objects.get(id=question_id)
+    form = UploadCodeForm(initial = {'question': question})
+    return render(request, 'contests/upload_page.html', {'form': form, 'question': question})
+
+
+def diff(request, question_id):
+        form = UploadCodeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            fromlines = exe.execute_code(request.FILES['code_file']).decode().split("\n")
+            tolines = ['Hello World from C++!']
+            html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
+            return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
+        else:
+            return render(request, 'contests/uploaded.html')
 
 def create(request):
     #boolean to see if the contest was successfully created
@@ -126,24 +135,6 @@ def displayContest(request, contest_id):
 		'contests/contest.html',
 		{'contest_data': contest_data, 'contest_problems': problems, 'contest_submissions': submissions}
 	)
-
-
-def choose_question(request):
-    all_questions = Question.objects.all()
-    return render(request, 'contests/choose_question.html', {'questions': all_questions})
-
-
-def upload_code(request, question_id):
-    question = Question.objects.get(id=question_id)
-    if request.method == 'POST':
-        form = UploadCodeForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            print(exe.execute_code(request.FILES['code_file']))
-            return render(request, 'contests/uploaded.html')
-    else:
-        form = UploadCodeForm(initial = {'question': question})
-    return render(request, 'contests/upload_page.html', {'form': form, 'question': question})
 
 
 def scoreboard(request):

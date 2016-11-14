@@ -33,16 +33,18 @@ def run_java(file):
     with open(os.path.join(temp_dirpath, file_name), 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
-    retcode = subprocess.call("javac " + os.path.join(temp_dirpath, file_name), shell=True)
-    #compilation_args = shlex.split("javac " + os.path.join(temp_dirpath, file_name))
-    #result = subprocess.Popen(compilation_args)
+    compilation_result = Popen("javac " + os.path.join(temp_dirpath, file_name), shell=True, stdout=PIPE, stderr=PIPE)
     compiled_file = os.path.splitext(file_name)[0]
-    #retcode = subprocess.call("java -cp " + temp_dirpath + " " + compiled_file + ' > ' + os.path.join(temp_dirpath, 'output.txt'), shell=True)
-    output = subprocess.check_output("java -cp " + temp_dirpath + " " + compiled_file, shell=True)
-    print(output)
-    #execution_args = shlex.split("java -cp " + temp_dirpath + " " + compiled_file)
-    #retcode = subprocess.Popen(execution_args)
+    output, error = compilation_result.communicate()
+    retval = ''
+    if compilation_result.returncode !=0:
+        retval = "THE ERROR IS: " + str(error.decode("utf-8"))
+    else:
+        program_output = Popen("java -cp " + temp_dirpath + " " + compiled_file, shell=True, stdout=PIPE, stderr=PIPE)
+        output, error = program_output.communicate()
+        retval = output
     shutil.rmtree(temp_dirpath)
+    return retval
 
 
 def run_cpp(file):
@@ -53,10 +55,12 @@ def run_cpp(file):
             destination.write(chunk)
     compilation_result = Popen("/usr/bin/g++ " + os.path.join(temp_dirpath, file_name) + " -o " + os.path.join(temp_dirpath, 'a.out'), shell=True, stdout=PIPE, stderr=PIPE)
     output, error = compilation_result.communicate()
+    retval = ''
     if compilation_result.returncode !=0:
-        return "THE ERROR IS: " + str(error.decode("utf-8"))
+        retval = "THE ERROR IS: " + str(error.decode("utf-8"))
     else:
         program_output = Popen(os.path.join(temp_dirpath, './a.out'), shell=True, stdout=PIPE, stderr=PIPE)
         output, error = program_output.communicate()
-        return output
+        retval = output
     shutil.rmtree(temp_dirpath)
+    return retval
