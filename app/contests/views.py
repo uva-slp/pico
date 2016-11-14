@@ -260,6 +260,8 @@ def scoreboard(request):
     # Get number of teams for scoreboard, scores for each team at that moment, logos, questions and whether theyve been attempted, solve, or neither
     userPK = request.user.pk
 
+    # Get participant based off of active team? Then pull contest based on that? Then pull other teams and view scores
+
     print("Current User PK: ")
     print(request.user.pk)
     allcontests = ContestTemplate.objects.all() #get contest objects
