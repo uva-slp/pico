@@ -1,6 +1,6 @@
 [
 {
-    "model": "contests.contesttemplate",
+    "model": "contests.contest",
     "pk": 1,
     "fields": {
         "title": "Contest 1",
@@ -10,6 +10,7 @@
         "time_penalty": "20",
         "autojudge_enabled": false,
         "autojudge_review": "",
+        "problem_description": "problems.pdf",
         "contest_admins": "",
         "contest_participants": ""
     }

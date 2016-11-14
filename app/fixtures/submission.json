@@ -9,11 +9,11 @@
 	}
     },
     {
-	"model": "contests.question",
+	"model": "contests.problem",
 	"pk": 1,
 	"fields": {
             "number": 1,
-            "name": "QuestionExample",
+            "name": "ProblemExample",
             "contest": 1
 	}
     }
