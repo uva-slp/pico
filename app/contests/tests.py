@@ -182,14 +182,14 @@ class ScoreboardTest(TestCase):
 
 	def testTeamSelection(self):
 
-		ct = ContestTemplate(contest_participants="team1")
+		ct = Contest(contest_participants="team1")
 		t = Team(name="team1")
 
 		self.assertEqual(ct.contest_participants, t.name)
 
 	def testParticipants(self):
 
-		ct = ContestTemplate(contest_participants="team1")
+		ct = Contest(contest_participants="team1")
 		t = Team("team1")
 		b = Team("team3")
 		p1 = Participant(contest=ct, team=t)
@@ -198,7 +198,7 @@ class ScoreboardTest(TestCase):
 		self.assertEqual(p1.contest, p2.contest)
 
 	def testParticipantScore(self):
-		ct = ContestTemplate(contest_participants="team1")
+		ct = Contest(contest_participants="team1")
 		t = Team("team1")
 		p1 = Participant(contest=ct, team=t)
 		p1.score = 5
@@ -206,7 +206,7 @@ class ScoreboardTest(TestCase):
 		self.assertEqual(5, p1.score)
 
 	def test_participant_creation(self):
-		ct = ContestTemplate(contest_participants="team1")
+		ct = Contest(contest_participants="team1")
 		t = Team("team1")
 		p = Participant(team=t, contest=ct)
 		self.assertTrue(isinstance(p, Participant))
