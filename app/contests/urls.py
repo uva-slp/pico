@@ -9,6 +9,9 @@ urlpatterns = [
 	url(r'^scoreboard$', views.scoreboard, name='scoreboard'),
 	url(r'^createTemplate$', views.createTemplate, name='createTemplate'),
 	url(r'^contest/(?P<contest_id>\d+)/$', views.displayContest, name='contest'),
+	url(r'^contest/(?P<contest_id>\d+)/judge$', views.displayAllSubmissions, name='contest_judge'),
+	url(r'^contest/(?P<contest_id>\d+)/(?P<team_id>\d+)/submissions$',
+		views.displayMySubmissions, name='contest_submissions'),
     url(r'^submission$', views.choose_question, name='choose_question'),
     url(r'^submission/upload/(?P<question_id>[0-9]+)/$', views.upload_code, name='upload_code'),
 ]

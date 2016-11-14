@@ -8,6 +8,14 @@
     <br /><br />
     <h1>Contest: {{ contest_data.title }}</h1>
     <br />
+    {% if is_judge %}
+        <a href="{% url 'contests:contest_judge' contest_data.id %}">View all submissions</a>
+    {% endif %}
+    <br />
+    {% for team in contest_teams %}
+        <a href="{% url 'contests:contest_submissions' contest_data.id team.id %}">View team {{team.id}}'s submissions</a>
+        <br />
+    {% endfor %}
     <h3>Contest Problems:</h3>
     <table>
     {% for problem in contest_problems %}
@@ -28,20 +36,6 @@
         </tr>
         <tr>
             <td>Sample Output: {{ problem.sample_output }}</td>
-        </tr>
-    {% endfor %}
-    </table>
-    <h3>Submissions:</h3>
-    <table>
-    {% for submission in contest_submissions %}
-        <tr>
-            <th style="padding-top: 15px;">Run ID {{ forloop.counter }}</th>
-        </tr>
-        <tr>
-            <td>Team: {{ submission.team.name }}</td>
-        </tr>
-        <tr>
-            <td>Result: {{ submission.get_state_display }}</td>
         </tr>
     {% endfor %}
     </table>

@@ -1,0 +1,57 @@
+from django.urls import reverse
+from django.test import TestCase
+
+from teams.models import Team
+from users.models import User
+
+class CreateTeamTest(TestCase):
+
+	fixtures = ['users.json']
+
+	def test_post(self):
+		self.client.login(username='testuser', password='password')
+		data = {
+			'name': 'Team 1',
+		}
+		resp = self.client.post(reverse('teams:create'), data=data)
+
+		self.assertRedirects(resp, reverse('contests:home'), status_code=302, target_status_code=200)
+
+class JoinTeamTest(TestCase):
+
+	fixtures = ['users.json', 'teams.json']
+
+	def test_post(self):
+		self.client.login(username='testuser', password='password')
+		data = {
+			'team': '1',
+		}
+		resp = self.client.post(reverse('teams:join'), data=data)
+
+		team = Team.objects.get(pk=1)
+		self.assertTrue(team.members.filter(username='testuser').exists());
+
+class LeaveTeamTest(TestCase):
+
+	fixtures = ['users.json', 'teams.json']
+
+	def test_post(self):
+		Team.objects.get(pk=1).members.add(User.objects.get(pk=1))
+		self.client.login(username='testuser', password='password')
+		data = {
+			'team': '1',
+		}
+		resp = self.client.post(reverse('teams:leave'), data=data)
+
+		team = Team.objects.get(pk=1)
+		self.assertFalse(team.members.filter(username='testuser').exists());
+
+class AutocompleteTest(TestCase):
+
+	fixtures = ['teams.json']
+
+	def test_post(self):
+		self.client.login(username='testuser', password='password')
+		resp = self.client.get(reverse('teams:autocomplete'))
+		
+		self.assertEqual(resp.status_code, 200)

@@ -38,7 +38,7 @@ class Submission(models.Model):
 class ContestTemplate(models.Model):
 	title = models.CharField(max_length=128)
 	date_created = models.DateTimeField(auto_now_add=True)
-	creator = models.CharField(max_length=32)
+	creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 	languages = models.CharField(max_length=64)
 	contest_length = models.CharField(max_length=8)
 	time_penalty = models.CharField(max_length=4)
@@ -58,6 +58,11 @@ class Problem(models.Model):
 	sample_input = models.FileField(max_length=128)
 	sample_output = models.FileField(max_length=128)
 	contest = models.ForeignKey(ContestTemplate, null=True, blank=True, on_delete=models.CASCADE)
+
+class Participant(models.Model):
+	contest = models.OneToOneField(ContestTemplate)
+	team = models.OneToOneField(Team)
+	score = models.IntegerField
 
 class Submission(models.Model):
 	run_id = models.IntegerField(null=True)

@@ -1,15 +1,14 @@
 from django.test import TestCase
 from .forms import CreateContestTemplate
 from .forms import CreateContestForm
-from .models import ContestTemplate
 from django.urls import reverse
 from django.shortcuts import render
-from .models import Contest
 from .lib import execution as exe
 import tempfile
 import shutil
 import os
 from django.core.files import File
+from .models import Team, Participant, Contest, ContestTemplate
 
 
 class ContestTemplateTest(TestCase):
@@ -18,11 +17,11 @@ class ContestTemplateTest(TestCase):
 
 	# models test
 	def contest_template(
-			self, title="only a test", creator="admin", languages="java, python",
+			self, title="only a test", languages="java, python",
 			length="02:00", penalty="20", autojudge="0", review="",
 			desc="problems.pdf", admins="", participants=""):
 		return ContestTemplate.objects.create(
-			title=title, creator=creator, languages=languages,
+			title=title, languages=languages,
 			contest_length=length, time_penalty=penalty,
 			autojudge_enabled=autojudge, autojudge_review=review,
 			problem_description=desc, contest_admins=admins,
@@ -74,12 +73,12 @@ class ContestTest(TestCase):
 
 	# model test
 	def contest_template(
-		self, title="only a test", creator="admin", languages="Python",
+		self, title="only a test", languages="Python",
 		length="02:00", autojudge="0",
 		desc="problems.pdf", solution="solutions.txt", admins="",
 		participants=""):
 		return Contest.objects.create(
-			title=title, creator=creator, languages=languages,
+			title=title, languages=languages,
 			contest_length=length,
 			autojudge=autojudge, problem_description=desc, 
 			solutions=solution, contest_admins=admins, 
@@ -204,6 +203,39 @@ class ContestCreationTest(TestCase):
 			self.assertEqual(c.title, "testContest")
 
 	def testContestCreation(self):
-		c = Contest(title="super contest", creator="james")
+		c = Contest(title="super contest")
 		self.assertEqual(c.title, "super contest")
-		self.assertEqual(c.creator, "james")
+
+class ScoreboardTest(TestCase):
+	fixtures = ['teams.json']
+
+	def testTeamSelection(self):
+
+		ct = ContestTemplate(contest_participants="team1")
+		t = Team(name="team1")
+
+		self.assertEqual(ct.contest_participants, t.name)
+
+	def testParticipants(self):
+
+		ct = ContestTemplate(contest_participants="team1")
+		t = Team("team1")
+		b = Team("team3")
+		p1 = Participant(contest=ct, team=t)
+		p2 = Participant(contest=ct, team=b)
+
+		self.assertEqual(p1.contest, p2.contest)
+
+	def testParticipantScore(self):
+		ct = ContestTemplate(contest_participants="team1")
+		t = Team("team1")
+		p1 = Participant(contest=ct, team=t)
+		p1.score = 5
+
+		self.assertEqual(5, p1.score)
+
+	def test_participant_creation(self):
+		ct = ContestTemplate(contest_participants="team1")
+		t = Team("team1")
+		p = Participant(team=t, contest=ct)
+		self.assertTrue(isinstance(p, Participant))
