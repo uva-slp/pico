@@ -1,9 +1,9 @@
 from django.test import TestCase
-from .forms import CreateContestForm
+from .forms import CreateContestForm, CreateProblem
 from django.urls import reverse
 from django.shortcuts import render
 from django.core.files.uploadedfile import SimpleUploadedFile
-from .models import Team, Participant, Contest
+from .models import Team, Participant, Contest, Problem
 
 
 class ContestTest(TestCase):
@@ -34,8 +34,43 @@ class ContestTest(TestCase):
 		ct.save()
 		self.assertEqual(ct.title, 'Updated Contest 1')
 
+	def test_problem_creation(self):
+		p = Problem(
+			solution="solution.txt", input_description="1 2 3 4",
+			output_description="5 6 7 8", sample_input="input.txt",
+			sample_output="output.txt", contest_id=1)
+		p.save()
+		self.assertTrue(isinstance(p, Problem))
+
+	def test_problems_in_contest(self):
+		ct1 = Contest.objects.get(pk=1)
+		ct2 = Contest.objects.get(pk=2)
+		ct1.save()
+		ct2.save()
+
+		p1 = Problem(
+			solution="solution.txt", input_description="1 2 3 4",
+			output_description="5 6 7 8", sample_input="input.txt",
+			sample_output="output.txt", contest_id=1)
+		p2 = Problem(
+			solution="solution.txt", input_description="1 2 3 4",
+			output_description="5 6 7 8", sample_input="input.txt",
+			sample_output="output.txt", contest_id=2)
+		p3 = Problem(
+			solution="solution.txt", input_description="1 2 3 4",
+			output_description="5 6 7 8", sample_input="input.txt",
+			sample_output="output.txt", contest_id=1)
+
+		p1.save()
+		p2.save()
+		p3.save()
+
+		self.assertEqual(Contest.objects.get(pk=p1.contest_id), ct1)
+		self.assertEqual(Contest.objects.get(pk=p2.contest_id), ct2)
+		self.assertEqual(Contest.objects.get(pk=p3.contest_id), ct1)
+
 	# forms test
-	def test_valid_form(self):
+	def test_valid_contest_form(self):
 		data = {
 			"title": "Contest 1", "creator": 1, "languages": "java, python",
 			"contest_length": "02:00", "time_penalty": "20",
@@ -47,10 +82,9 @@ class ContestTest(TestCase):
 			"problem_description": SimpleUploadedFile("problems.pdf", b"test content")
 		}
 		form = CreateContestForm(data=data, files=files)
-		print form.errors
 		self.assertTrue(form.is_valid())
 
-	def test_empty_form_fields(self):
+	def test_empty_contest_form_fields(self):
 		data = {
 			"title": "", "languages": "", "contest_length": "",
 			"time_penalty": "", "autojudge_enabled": "0", "autojudge_review": "",
@@ -59,6 +93,43 @@ class ContestTest(TestCase):
 		}
 		form = CreateContestForm(data=data)
 		self.assertFalse(form.is_valid())
+
+	def test_valid_problem_form(self):
+		data = {
+			"input_description": "1 2 3 4",
+			"output_description": "5 6 7 8",
+			"contest": ""
+		}
+		files = {
+			"solution": SimpleUploadedFile("solution.txt", b"test solution"),
+			"sample_input": SimpleUploadedFile("input.txt", b"test sample input"),
+			"sample_output": SimpleUploadedFile("output.txt", b"test sample output"),
+		}
+		problem = CreateProblem(data=data, files=files)
+		self.assertTrue(problem.is_valid())
+
+	def test_empty_problem_form_fields(self):
+		data = {
+			"input_description": "",
+			"output_description": "",
+			"contest": ""
+		}
+		files = {
+			"solution": "",
+			"sample_input": "",
+			"sample_output": "",
+		}
+		problem = CreateProblem(data=data, files=files)
+		self.assertFalse(problem.is_valid())
+
+	def test_problem_solution_content(self):
+		data = {}
+		files = {"solution": SimpleUploadedFile("solution.txt", b"test solution")}
+		problem = CreateProblem(data=data, files=files)
+
+		problem1 = problem.save()
+
+		self.assertEqual(problem1.solution.read(), "test solution")
 
 	# views test
 	def test_create_view(self):
