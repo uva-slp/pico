@@ -2,14 +2,13 @@ from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
-from .models import Question, Problem, ContestTemplate
-from .forms import CreateContestForm, CreateContestTemplate, CreateProblem, UploadCodeForm, ReturnJudgeResultForm
+from .models import Problem, Contest
+from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
-from .models import Contest
 from teams.models import Team
 from .models import Participant
 from users.models import User
@@ -35,7 +34,7 @@ def home(request):
             'organization_form': OrganizationForm(),
             'organization_join_form': OrganizationJoinForm(),
             'organization_leave_form': OrganizationLeaveForm(),
-			'contests_created': ContestTemplate.objects.all()
+			'contests_created': Contest.objects.all()
 		}
 	)
 
@@ -53,6 +52,7 @@ def diff(request):
 		'contests/diff.html',
 		{'diff_table': html, 'numChanges': numChanges})
 
+'''
 def create(request):
     #boolean to see if the contest was successfully created
     #initally false, code will make it true it successful
@@ -74,73 +74,54 @@ def create(request):
     else:
         form = CreateContestForm()
     return render(request, 'contests/create_contest.html', {'form': form})
+'''
 
-def createTemplate(request):
+def create(request):
 
-    QAFormSet = formset_factory(CreateProblem)
+	QAFormSet = formset_factory(CreateProblem)
 
-    if request.method == 'POST':
-        #grab information from form
-        form = CreateContestTemplate(request.POST)
-        #qa_formset = CreateProblem(request.POST)
+	if request.method == 'POST':
+		#grab information from form
+		form = CreateContestForm(request.POST, request.FILES)
+		#qa_formset = CreateProblem(request.POST)
 
-        qa_formset = QAFormSet(request.POST)
+		qa_formset = QAFormSet(request.POST, request.FILES)
+		if form.is_valid() and qa_formset.is_valid():
+			problem_desc = Contest(problem_description=request.FILES['problem_description'])
+			problem_desc.save()
+			contest = form.save()
+			contest.creator = request.user
+			contest.save()
 
-        if form.is_valid() and qa_formset.is_valid():
+			contest_id = form.id
 
-            form = form.save()
+			for qa_form in qa_formset:
+				solution = qa_form.cleaned_data.get('solution')
+				input_desc = qa_form.cleaned_data.get('input_description')
+				output_desc = qa_form.cleaned_data.get('output_description')
+				sample_input = qa_form.cleaned_data.get('sample_input')
+				sample_output = qa_form.cleaned_data.get('sample_output')
+				contest = qa_form.cleaned_data.get('title')
 
-            contest_id = form.id
-
-        qa_formset = QAFormSet(request.POST)
-        if form.is_valid() and qa_formset.is_valid():
-            contest = form.save()
-            contest.creator = request.user
-            contest.save()
-
-            contest_id = contest.id
-
-			# questions = []
-			# answers = []
-
-            for qa_form in qa_formset:
-                solution = qa_form.cleaned_data.get('solution')
-                input_desc = qa_form.cleaned_data.get('input_description')
-                output_desc = qa_form.cleaned_data.get('output_description')
-                sample_input = qa_form.cleaned_data.get('sample_input')
-                sample_output = qa_form.cleaned_data.get('sample_output')
-                contest = qa_form.cleaned_data.get('title')
-
-                p = Problem(
+				p = Problem(
 					solution=solution, input_description=input_desc,
 					output_description=output_desc, sample_input=sample_input,
 					sample_output=sample_output, contest_id=contest_id)
 
-                p.save()
-                #p.solution = solution
-				#p.input_description = input_descr
-				#p.output_description = output_descr
-				#p.sample_input = sample_input
-				#p.sample_output = sample_output
-				#p.contest_id = 1
+				p.save()
 
-			#	if problem_desc and solution:
-			#		questions.append()
-			#		answers.append()
+			return redirect(reverse('contests:home'))
+			# return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
+	else:
+		form = CreateContestForm()
+		QAFormSet = formset_factory(CreateProblem)
+		qa_formset = QAFormSet()
+	return render(request, 'contests/create_contest.html', {'form': form, 'qa_formset': qa_formset})
 
-            return redirect(reverse('contests:home'))
-            # return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
-    else:
-
-        form = CreateContestTemplate()
-        QAFormSet = formset_factory(CreateProblem)
-        qa_formset = QAFormSet()
-
-        return render(request, 'contests/create_template.html', {'form': form, 'qa_formset': qa_formset})
 
 @login_required
 def displayContest(request, contest_id):
-	contest_data = ContestTemplate.objects.get(id=contest_id)
+	contest_data = Contest.objects.get(id=contest_id)
 	problems = contest_data.problem_set.all()
 	is_judge = False
 	# TODO: Right now this only check contest creator. Need to update to all judges
@@ -157,9 +138,10 @@ def displayContest(request, contest_id):
 			'contest_teams': teams}
 	)
 
+
 @login_required
 def displayAllSubmissions(request, contest_id):
-	contest_data = ContestTemplate.objects.get(id=contest_id)
+	contest_data = Contest.objects.get(id=contest_id)
 	problems = contest_data.problem_set.all()
 	submissions = []
 	if request.user == contest_data.creator:
@@ -173,9 +155,10 @@ def displayAllSubmissions(request, contest_id):
 		{'contest_data': contest_data, 'contest_submissions': submissions}
 	)
 
+
 @login_required
 def displayMySubmissions(request, contest_id, team_id):
-	contest_data = ContestTemplate.objects.get(id=contest_id)
+	contest_data = Contest.objects.get(id=contest_id)
 	team = Team.objects.get(id=team_id)
 	problems = contest_data.problem_set.all()
 	submissions = []
@@ -190,9 +173,10 @@ def displayMySubmissions(request, contest_id, team_id):
 		{'contest_data': contest_data, 'team': team, 'contest_submissions': submissions}
 	)
 
+
 @login_required
 def displayJudge(request, contest_id, run_id):
-	contest_data = ContestTemplate.objects.get(id=contest_id)
+	contest_data = Contest.objects.get(id=contest_id)
 	problems = contest_data.problem_set.all()
 	if request.user == contest_data.creator:
 		for p in problems:
@@ -222,13 +206,14 @@ def displayJudge(request, contest_id, run_id):
 		{'contest_data': contest_data, 'is_judge': False}
 	)
 
-def choose_question(request):
-    all_questions = Question.objects.all()
-    return render(request, 'contests/choose_question.html', {'questions': all_questions})
+
+def choose_problem(request):
+    all_problems = Problem.objects.all()
+    return render(request, 'contests/choose_problem.html', {'problems': all_problems})
 
 
-def upload_code(request, question_id):
-    question = Question.objects.get(id=question_id)
+def upload_code(request, problem_id):
+    problem = Problem.objects.get(id=problem_id)
     if request.method == 'POST':
         form = UploadCodeForm(request.POST, request.FILES)
         if form.is_valid():
@@ -236,8 +221,8 @@ def upload_code(request, question_id):
             execute_code(request.FILES['code_file'], form.instance.id)
             return render(request, 'contests/uploaded.html')
     else:
-        form = UploadCodeForm(initial = {'question': question})
-    return render(request, 'contests/upload_page.html', {'form': form, 'question': question})
+        form = UploadCodeForm(initial = {'problem': problem})
+    return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
 
 
 #Returns True if executed successfully, false otherwise
@@ -297,7 +282,7 @@ def scoreboard(request):
 
     print("Current User PK: ")
     print(request.user.pk)
-    allcontests = ContestTemplate.objects.all() #get contest objects
+    allcontests = Contest.objects.all() #get contest objects
     allteams = Team.objects.all() #get team objects
     allteams = allteams.filter(members=userPK) #get teams that have current user in them
     print(allcontests)
