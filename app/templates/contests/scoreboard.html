@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<META HTTP-EQUIV="refresh" CONTENT="15">
-<title>HTML Tables</title>
+<META HTTP-EQUIV="refresh" CONTENT="5">
+<title>Scoreboard</title>
 </head>
 <body>
 <table>
@@ -21,15 +21,10 @@
 
 <!-- loop through teams and add a row for each team, add a TD for each question with color corresponding -->
 
-{% comment %}
-<!-- {% for team in teams %}
-        <td> <!-- {{ team }} </td>
-        <!-- {% for question in team %}
-        <td> <!-- {{ question }} </td>
-        <!-- {% endfor %}
-    </tr>
+
+{% for team in teams %}
+        <td> {{ team }} </td>
 
     <tr>
 
-<!-- {% endfor %} -->
-{% endcomment %}
+{% endfor %}

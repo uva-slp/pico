@@ -1,9 +1,9 @@
 from django.test import TestCase
 from .forms import CreateContestForm
-from .models import Contest
 from django.urls import reverse
 from django.shortcuts import render
 from django.core.files.uploadedfile import SimpleUploadedFile
+from .models import Team, Participant, Contest
 
 
 class ContestTest(TestCase):
@@ -176,3 +176,37 @@ class ContestCreationTest(TestCase):
 	def testContestCreation(self):
 		c = Contest(title="super contest")
 		self.assertEqual(c.title, "super contest")
+
+class ScoreboardTest(TestCase):
+	fixtures = ['teams.json']
+
+	def testTeamSelection(self):
+
+		ct = ContestTemplate(contest_participants="team1")
+		t = Team(name="team1")
+
+		self.assertEqual(ct.contest_participants, t.name)
+
+	def testParticipants(self):
+
+		ct = ContestTemplate(contest_participants="team1")
+		t = Team("team1")
+		b = Team("team3")
+		p1 = Participant(contest=ct, team=t)
+		p2 = Participant(contest=ct, team=b)
+
+		self.assertEqual(p1.contest, p2.contest)
+
+	def testParticipantScore(self):
+		ct = ContestTemplate(contest_participants="team1")
+		t = Team("team1")
+		p1 = Participant(contest=ct, team=t)
+		p1.score = 5
+
+		self.assertEqual(5, p1.score)
+
+	def test_participant_creation(self):
+		ct = ContestTemplate(contest_participants="team1")
+		t = Team("team1")
+		p = Participant(team=t, contest=ct)
+		self.assertTrue(isinstance(p, Participant))
