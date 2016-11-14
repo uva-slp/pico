@@ -11,6 +11,7 @@ from django.urls import reverse
 from .lib import diff as _diff
 from .models import Contest
 from teams.models import Team
+from .models import Participant
 from users.models import User
 
 
@@ -76,37 +77,47 @@ def create(request):
 
 def createTemplate(request):
 
-	QAFormSet = formset_factory(CreateProblem)
+    QAFormSet = formset_factory(CreateProblem)
 
-	if request.method == 'POST':
-		#grab information from form
-		form = CreateContestTemplate(request.POST)
-		#qa_formset = CreateProblem(request.POST)
+    if request.method == 'POST':
+        #grab information from form
+        form = CreateContestTemplate(request.POST)
+        #qa_formset = CreateProblem(request.POST)
 
-		qa_formset = QAFormSet(request.POST)
-		if form.is_valid() and qa_formset.is_valid():
-			contest = form.save()
-			contest.creator = request.user
-			contest.save()
+        qa_formset = QAFormSet(request.POST)
 
-			contest_id = contest.id
+        if form.is_valid() and qa_formset.is_valid():
+
+            form = form.save()
+
+            contest_id = form.id
+
+        qa_formset = QAFormSet(request.POST)
+        if form.is_valid() and qa_formset.is_valid():
+            contest = form.save()
+            contest.creator = request.user
+            contest.save()
+
+            contest_id = contest.id
 
 			# questions = []
 			# answers = []
 
-			for qa_form in qa_formset:
-				solution = qa_form.cleaned_data.get('solution')
-				input_desc = qa_form.cleaned_data.get('input_description')
-				output_desc = qa_form.cleaned_data.get('output_description')
-				sample_input = qa_form.cleaned_data.get('sample_input')
-				sample_output = qa_form.cleaned_data.get('sample_output')
+            for qa_form in qa_formset:
+                solution = qa_form.cleaned_data.get('solution')
+                input_desc = qa_form.cleaned_data.get('input_description')
+                output_desc = qa_form.cleaned_data.get('output_description')
+                sample_input = qa_form.cleaned_data.get('sample_input')
+                sample_output = qa_form.cleaned_data.get('sample_output')
+                contest = qa_form.cleaned_data.get('title')
 
-				p = Problem(
+                p = Problem(
 					solution=solution, input_description=input_desc,
 					output_description=output_desc, sample_input=sample_input,
 					sample_output=sample_output, contest_id=contest_id)
-				p.save();
-				#p.solution = solution
+
+                p.save()
+                #p.solution = solution
 				#p.input_description = input_descr
 				#p.output_description = output_descr
 				#p.sample_input = sample_input
@@ -117,13 +128,15 @@ def createTemplate(request):
 			#		questions.append()
 			#		answers.append()
 
-			return redirect(reverse('contests:home'))
-			# return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
-	else:
-		form = CreateContestTemplate()
-		QAFormSet = formset_factory(CreateProblem)
-		qa_formset = QAFormSet()
-	return render(request, 'contests/create_template.html', {'form': form, 'qa_formset': qa_formset})
+            return redirect(reverse('contests:home'))
+            # return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
+    else:
+
+        form = CreateContestTemplate()
+        QAFormSet = formset_factory(CreateProblem)
+        qa_formset = QAFormSet()
+
+        return render(request, 'contests/create_template.html', {'form': form, 'qa_formset': qa_formset})
 
 @login_required
 def displayContest(request, contest_id):
@@ -278,11 +291,28 @@ def run_cpp(file, submission_id):
 
 def scoreboard(request):
     # Get number of teams for scoreboard, scores for each team at that moment, logos, questions and whether theyve been attempted, solve, or neither
-    allcontests = Contest.objects.all() #get contest objects
+    userPK = request.user.pk
+
+    # Get participant based off of active team? Then pull contest based on that? Then pull other teams and view scores
+
+    print("Current User PK: ")
+    print(request.user.pk)
+    allcontests = ContestTemplate.objects.all() #get contest objects
     allteams = Team.objects.all() #get team objects
+    allteams = allteams.filter(members=userPK) #get teams that have current user in them
+    print(allcontests)
+    allcontests = allcontests.filter(contest_participants=allteams.values('name')) #Get contest with user's team
+
+    print("filter:")
+    print("teams:")
+    print(allteams)
+    print("contest:")
+    print(allcontests)
+
     #allteams.filter(name=)
     currentTeamName = "Get current team name" #Get requesting team's name
-    currentContestTitle = "newcontests" #get requesting team's current contest
+    currentContestTitle = "testcontest" #get requesting team's current contest
+
     numberofteams = 0
     teamname = allteams.filter(name=currentTeamName)
     contestname = allcontests.filter(title = currentContestTitle) # Grab current contest
@@ -295,5 +325,4 @@ def scoreboard(request):
     # for(team in query_results.teams) { scores += team.score
     # return object containing array of teams
 
-
-    return render(request, 'contests/scoreboard.html', {'teams' : numberofteams})
+    return render(request, 'contests/scoreboard.html', {'teams' : allteams})
