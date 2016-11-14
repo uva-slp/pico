@@ -171,7 +171,6 @@ class ContestCreationTest(TestCase):
 	def testContestCreation(self):
 		c = Contest(title="super contest")
 		self.assertEqual(c.title, "super contest")
-		self.assertEqual(c.creator, "james")
 
 class ScoreboardTest(TestCase):
 	fixtures = ['teams.json']
