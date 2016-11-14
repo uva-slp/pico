@@ -93,7 +93,7 @@ def create(request):
 			contest.creator = request.user
 			contest.save()
 
-			contest_id = form.id
+			contest_id = contest.id
 
 			for qa_form in qa_formset:
 				solution = qa_form.cleaned_data.get('solution')
