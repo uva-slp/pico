@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
+{% load staticfiles %}
+
 <html>
-	{% load staticfiles %}
-	
 	<head>
         <title>PCCS</title>
 
@@ -21,11 +21,6 @@
 			}
 			body {
 				margin-bottom: 50px;
-				background: #fff url("{% static '' %}") no-repeat center center fixed; 
-				-webkit-background-size: cover;
-				-moz-background-size: cover;
-				-o-background-size: cover;
-				background-size: cover;
 			}
 			.footer {
 				position: absolute;
@@ -37,18 +32,11 @@
 		</style>
 
     	{% block css_block %}{% endblock %}
+    	{% block head_block %}{% endblock %}
 
     </head>
 
     <body>
-
-		<nav class="navbar navbar-inverse navbar-static-top">
-			<div class="container">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="{% url 'index' %}">PCCS</a>
-				</div>
-			</div>
-		</nav>
 
         <div class="container">
             {% block body_block %}
@@ -88,6 +76,7 @@
     </script>
 
 	{% block script_block %}{% endblock %}
+	{% block footer_block %}{% endblock %}
 
 </html>
 
