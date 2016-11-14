@@ -129,7 +129,7 @@ class ContestTest(TestCase):
 
 		problem1 = problem.save()
 
-		self.assertEqual(problem1.solution.read(), "test solution")
+		self.assertEqual(problem1.solution.read(), b"test solution")
 
 	# views test
 	def test_create_view(self):
