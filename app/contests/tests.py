@@ -13,11 +13,11 @@ class ContestTemplateTest(TestCase):
 
 	# models test
 	def contest_template(
-			self, title="only a test", creator="admin", languages="java, python",
+			self, title="only a test", languages="java, python",
 			length="02:00", penalty="20", autojudge="0", review="",
 			desc="problems.pdf", admins="", participants=""):
 		return ContestTemplate.objects.create(
-			title=title, creator=creator, languages=languages,
+			title=title, languages=languages,
 			contest_length=length, time_penalty=penalty,
 			autojudge_enabled=autojudge, autojudge_review=review,
 			problem_description=desc, contest_admins=admins,
@@ -69,12 +69,12 @@ class ContestTest(TestCase):
 
 	# model test
 	def contest_template(
-		self, title="only a test", creator="admin", languages="Python",
+		self, title="only a test", languages="Python",
 		length="02:00", autojudge="0",
 		desc="problems.pdf", solution="solutions.txt", admins="",
 		participants=""):
 		return Contest.objects.create(
-			title=title, creator=creator, languages=languages,
+			title=title, languages=languages,
 			contest_length=length,
 			autojudge=autojudge, problem_description=desc, 
 			solutions=solution, contest_admins=admins, 
@@ -169,6 +169,5 @@ class ContestCreationTest(TestCase):
 			self.assertEqual(c.title, "testContest")
 
 	def testContestCreation(self):
-		c = Contest(title="super contest", creator="james")
+		c = Contest(title="super contest")
 		self.assertEqual(c.title, "super contest")
-		self.assertEqual(c.creator, "james")

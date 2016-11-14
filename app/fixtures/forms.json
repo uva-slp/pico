@@ -5,7 +5,6 @@
     "fields": {
         "title": "Contest 1",
         "date_created": "2016-10-29T17:47:11.38Z",
-        "creator": "admin",
         "languages": "java, python",
         "contest_length": "02:00",
         "time_penalty": "20",
