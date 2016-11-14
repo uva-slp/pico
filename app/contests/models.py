@@ -33,7 +33,7 @@ class Contest(models.Model):
 	languages = models.CharField(max_length=64)
 	contest_length = models.CharField(max_length=8)
 	time_penalty = models.CharField(max_length=4)
-	autojudge_enabled = models.BooleanField(max_length=1, default="0")
+	autojudge_enabled = models.BooleanField(max_length=1, default=False)
 	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
 	problem_description = models.FileField(upload_to='uploads/', null=True, blank=True)
 	contest_admins = models.TextField()
@@ -62,12 +62,26 @@ class Submission(models.Model):
 	problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True)
 	code_file = models.FileField(upload_to='uploads/', null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=True)
+
+	JUDGE_RESULT = (
+		('YES', 'Yes'),
+		('WRONG', 'Wrong Answer'),
+		('OFE', 'Output Format Error'),
+		('IE', 'Incomplete Error'),
+		('EO', 'Excessive Output'),
+		('CE', 'Compilation Error'),
+		('RTE', 'Run-Time Error'),
+		('TLE', 'Time-Limit Exceeded'),
+		('OTHER', 'Other-Contact Staff'),
+	)
+
 	SUBMISSION_STATE_CHOICES = (
 		('NEW', 'New'),
 		('YES', 'Yes'),
 		('NO', 'No'),
 	)
 	state = models.CharField(max_length=20, choices=SUBMISSION_STATE_CHOICES, default='NEW')
+	result = models.CharField(max_length=20, choices=JUDGE_RESULT, null=True)
 
 	def __str__(self):
 		return str(self.run_id)

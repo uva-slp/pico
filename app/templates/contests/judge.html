@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ contest_data.title }} Contest</title>
+</head>
+<body>
+    <br /><br />
+    <h1>Contest: {{ contest_data.title }}</h1>
+    <br />
+    <h2>Judging submission:</h2>
+    <br />
+    {% if is_judge %}
+    <h3>Run ID: {{ submission.run_id }} </h3>
+    <br />
+    <h3>Team: {{ submission.team.name }} </h3>
+    <br />
+    <h3>State: {{ submission.get_state_display }} </h3>
+    <br />
+    <form enctype="multipart/form-data" action="{% url 'contests:contest_judge' contest_data.id submission.run_id%}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+    <input type="submit" value="Submit"/>
+    </form>
+    {% endif %}
+
+</body>
+</html>
