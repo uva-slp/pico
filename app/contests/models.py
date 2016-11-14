@@ -33,7 +33,7 @@ class Contest(models.Model):
 	languages = models.CharField(max_length=64)
 	contest_length = models.CharField(max_length=8)
 	time_penalty = models.CharField(max_length=4)
-	autojudge_enabled = models.BooleanField(max_length=1, default="0")
+	autojudge_enabled = models.BooleanField(max_length=1, default=False)
 	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
 	problem_description = models.FileField(upload_to='uploads/', null=True, blank=True)
 	contest_admins = models.TextField()
