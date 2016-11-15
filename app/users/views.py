@@ -45,9 +45,9 @@ def login(request):
 		'users/login.html',
 		{'login_form': login_form})
 
-@login_required
 def logout(request):
-	auth_logout(request)
+	if request.user.is_authenticated():
+		auth_logout(request)
 	return redirect(reverse('index'))
 
 @login_required
