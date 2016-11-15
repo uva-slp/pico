@@ -12,29 +12,108 @@
             -o-background-size: cover;
             background-size: cover;
         }
+        .login-register-panel {
+            background: rgba(20,30,34,0.7);
+            color: #f3f3f3;
+            margin-top: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0;
+            width: 350px;
+        }
+        .login-register-panel .nav-pills {
+            margin: 0;
+            padding: 0;
+        }
+        .login-register-panel .nav-pills > li {
+            width: 50%;
+            margin: 0;
+        }
+        .login-register-panel .nav-pills a {
+            color: #f3f3f3;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .login-register-panel .nav-pills a:hover,
+        .login-register-panel .nav-pills a:focus {
+            color: black;
+        }
+        .login-register-panel .nav-pills .active a,
+        .login-register-panel .nav-pills .active a:hover,
+        .login-register-panel .nav-pills .active a:focus {
+            background: rgba(20,30,34,0.9);
+        }
+        .login-register-panel .nav-pills > li > a {
+            border-radius: 0;
+            color: #f3f3f3;
+        }
+        .login-register-panel .tab-content {
+            background: rgba(20,30,34,0.9);
+            margin: 0;
+            padding: 15px;
+        }
+        .login-register-panel .tab-content .control-label {
+            padding-right: 0;
+        }
+        .login-register-panel .form-buttons {
+            text-align: right;
+        }
+        .footer {
+            color: white;
+        }
     </style>
 {% endblock %}
 
 {% block body_block %}
-    <a href="{% url 'users:password_reset' %}">Retrieve Password</a>
-	<br/>
-    <h1>Login</h1>
+    <div class="container login-register-panel">
+        <ul class="nav nav-pills">
+            <li class="active">
+                <a href="#login" data-toggle="tab">Login</a>
+            </li>
+            <li>
+                <a href="#register" data-toggle="tab">Register</a>
+            </li>
+        </ul>
 
-    <form id="login_form" method="post" action="{% url 'users:login' %}">
-        {% csrf_token %}
-        {% bootstrap_form login_form %}
+        <div class="tab-content clearfix">
+            <div class="tab-pane active" id="login">
+                <form class="form form-horizontal" id="login_form" method="post" action="{% url 'users:login' %}">
+                    {% csrf_token %}
+                    {% bootstrap_form login_form layout='horizontal' %}
+                    
+                    {% buttons layout='horizontal' %}
+                        {% bootstrap_button 'Submit' 'submit' %}
+                        {% url 'users:password_reset' as password_reset_url %}
+                        {% bootstrap_button 'Forgot password' 'link' href=password_reset_url %}
+                    {% endbuttons %}
+                </form>
+            </div>
+            <div class="tab-pane" id="register">
+                <form class="form form-horizontal" id="user_form" method="post" action="{% url 'users:register' %}"
+                        enctype="multipart/form-data">
 
-        <input type="submit" value="submit" />
-    </form>
+                    {% csrf_token %}
+                    {% bootstrap_form user_form layout='horizontal' %}
 
-    <h1>Register</h1>
+                    {% buttons layout='horizontal' %}
+                        {% bootstrap_button 'Submit' 'submit' %}
+                    {% endbuttons %}
+                </form>
+            </div>
+        </div>
 
-    <form id="user_form" method="post" action="{% url 'users:register' %}"
-            enctype="multipart/form-data">
+    </div>
+{% endblock %}
 
-        {% csrf_token %}
-        {% bootstrap_form user_form %}
-
-        <input type="submit" name="submit" value="Register" />
-    </form>
+{% block footer_block %}
+<script>
+$('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+    localStorage.setItem('activeTab', $(e.target).attr('href'));
+});
+var activeTab = localStorage.getItem('activeTab');
+if (activeTab) {
+    $('.nav-pills a[href="' + activeTab + '"]').tab('show');
+}
+</script>
 {% endblock %}

@@ -3,10 +3,12 @@
 {% block body_block %}
     <h1>Login</h1>
 
-    <form id="login_form" method="post" action="{% url 'users:login' %}">
+    <form id="login_form" method="post" action="{% url 'users:login' %}"
+            enctype="multipart/form-data">
+
         {% csrf_token %}
         {{ login_form.as_p }}
 
-        <input type="submit" value="submit" />
+        <input type="submit" name="submit" value="Submit" />
     </form>
 {% endblock %}
