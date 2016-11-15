@@ -4,13 +4,15 @@ import tempfile
 import shutil
 import os
 from django.core.files import File
-from .forms import CreateContestForm, CreateProblem
+from .forms import CreateContestForm, CreateProblem, ReturnJudgeResultForm
 from django.urls import reverse
 from django.shortcuts import render
 from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import Team, Participant, Contest, Problem
 from datetime import datetime
 from django.utils import timezone
+from .models import Team, Participant, Contest, Problem, Submission
+
 
 
 class ContestTest(TestCase):
@@ -144,6 +146,59 @@ class ContestTest(TestCase):
 		resp = self.client.get(url)
 
 		self.assertEqual(resp.status_code, 200)
+
+
+class JudgeInterfaceTest(TestCase):
+
+	fixtures = ['judge_interface.json']
+
+	#view test
+	def test_view_all_judge(self):
+		self.client.login(username='judge', password='password')
+		url = reverse("contests:contest_judge_submissions",
+					  kwargs={'contest_id': 7})
+		resp = self.client.get(url)
+
+		self.assertEqual(resp.status_code, 200)
+
+	#view test
+	def test_view_all_notloggedin(self):
+		url = reverse("contests:contest_judge_submissions",
+					  kwargs={'contest_id': 7})
+		resp = self.client.get(url)
+
+		self.assertEqual(resp.status_code, 302)
+
+	#view test
+	def test_view_submission(self):
+		self.client.login(username='participant1', password='password')
+		url = reverse("contests:contest_submissions",
+					  kwargs={'contest_id': 7, 'team_id': 1})
+		resp = self.client.get(url)
+
+		self.assertEqual(resp.status_code, 200)
+
+	#view test
+	def test_judge(self):
+		self.client.login(username='judge', password='password')
+		url = reverse("contests:contest_judge",
+					  kwargs={'contest_id': 7, 'run_id': 1})
+		resp = self.client.get(url)
+
+		self.assertEqual(resp.status_code, 200)
+
+	#form test
+	def test_valid_return_form(self):
+		submission = Submission.objects.get(pk=3)
+		data = {
+			"result": "YES", "state": "YES"
+		}
+		form = ReturnJudgeResultForm(data=data, instance=submission)
+		self.assertTrue(isinstance(form.instance, Submission))
+		self.assertTrue(form.is_valid())
+		form.save()
+		self.assertTrue(submission.result, "YES")
+		self.assertTrue(submission.state, "YES")
 
 
 class ContestTest(TestCase):

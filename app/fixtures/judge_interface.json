@@ -1,0 +1,956 @@
+[
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "auth",
+          "model": "user"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "auth",
+          "model": "permission"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "auth",
+          "model": "group"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "admin",
+          "model": "logentry"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "contenttypes",
+          "model": "contenttype"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "sessions",
+          "model": "session"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "users",
+          "model": "user"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "teams",
+          "model": "team"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "organizations",
+          "model": "organization"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "contests",
+          "model": "contest"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "contests",
+          "model": "participant"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "contests",
+          "model": "submission"
+      }
+  },
+  {
+      "model": "contenttypes.contenttype",
+      "fields": {
+          "app_label": "contests",
+          "model": "problem"
+      }
+  },
+  {
+      "model": "sessions.session",
+      "pk": "6m57l83g0p2qtqojktmy0ppevl9entua",
+      "fields": {
+          "session_data": "NGM4YjFhNzYyOGFjMjYxMWJhMmE1NTE4OTRlNjA5ZTNhZmNmNmNlZDp7Il9hdXRoX3VzZXJfaGFzaCI6IjgyN2RhMzUxMzI3MGM5MWY2YTM3Zjg1MzM4YzVlNGQ2YWZiMTViMDYiLCJfYXV0aF91c2VyX2lkIjoiMyIsIl9hdXRoX3VzZXJfYmFja2VuZCI6InVzZXJzLmJhY2tlbmRzLk1vZGVsQmFja2VuZCJ9",
+          "expire_date": "2016-11-29T02:48:57.822Z"
+      }
+  },
+  {
+      "model": "contests.problem",
+      "pk": 1,
+      "fields": {
+          "solution": "uploads/readme.txt",
+          "input_description": "problem 1 input",
+          "output_description": "problem 1 output",
+          "sample_input": "",
+          "sample_output": "",
+          "contest": 4
+      }
+  },
+  {
+      "model": "contests.problem",
+      "pk": 2,
+      "fields": {
+          "solution": "uploads/readme_LiMAWUg.txt",
+          "input_description": "problem 1 input",
+          "output_description": "problem 1 output",
+          "sample_input": "",
+          "sample_output": "",
+          "contest": 7
+      }
+  },
+  {
+      "model": "contests.submission",
+      "pk": 2,
+      "fields": {
+          "run_id": 1,
+          "team": 1,
+          "problem": 2,
+          "code_file": "",
+          "timestamp": "2016-11-15T02:50:32.422Z",
+          "state": "YES",
+          "result": "YES"
+      }
+  },
+  {
+      "model": "contests.submission",
+      "pk": 3,
+      "fields": {
+          "run_id": 2,
+          "team": 2,
+          "problem": 2,
+          "code_file": "",
+          "timestamp": "2016-11-15T02:50:47.702Z",
+          "state": "NO",
+          "result": "WRONG"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add user",
+          "content_type": [
+              "auth",
+              "user"
+          ],
+          "codename": "add_user"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change user",
+          "content_type": [
+              "auth",
+              "user"
+          ],
+          "codename": "change_user"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete user",
+          "content_type": [
+              "auth",
+              "user"
+          ],
+          "codename": "delete_user"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add permission",
+          "content_type": [
+              "auth",
+              "permission"
+          ],
+          "codename": "add_permission"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change permission",
+          "content_type": [
+              "auth",
+              "permission"
+          ],
+          "codename": "change_permission"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete permission",
+          "content_type": [
+              "auth",
+              "permission"
+          ],
+          "codename": "delete_permission"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add group",
+          "content_type": [
+              "auth",
+              "group"
+          ],
+          "codename": "add_group"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change group",
+          "content_type": [
+              "auth",
+              "group"
+          ],
+          "codename": "change_group"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete group",
+          "content_type": [
+              "auth",
+              "group"
+          ],
+          "codename": "delete_group"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add log entry",
+          "content_type": [
+              "admin",
+              "logentry"
+          ],
+          "codename": "add_logentry"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change log entry",
+          "content_type": [
+              "admin",
+              "logentry"
+          ],
+          "codename": "change_logentry"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete log entry",
+          "content_type": [
+              "admin",
+              "logentry"
+          ],
+          "codename": "delete_logentry"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add content type",
+          "content_type": [
+              "contenttypes",
+              "contenttype"
+          ],
+          "codename": "add_contenttype"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change content type",
+          "content_type": [
+              "contenttypes",
+              "contenttype"
+          ],
+          "codename": "change_contenttype"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete content type",
+          "content_type": [
+              "contenttypes",
+              "contenttype"
+          ],
+          "codename": "delete_contenttype"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add session",
+          "content_type": [
+              "sessions",
+              "session"
+          ],
+          "codename": "add_session"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change session",
+          "content_type": [
+              "sessions",
+              "session"
+          ],
+          "codename": "change_session"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete session",
+          "content_type": [
+              "sessions",
+              "session"
+          ],
+          "codename": "delete_session"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can create contests",
+          "content_type": [
+              "auth",
+              "user"
+          ],
+          "codename": "create_contest"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add team",
+          "content_type": [
+              "teams",
+              "team"
+          ],
+          "codename": "add_team"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change team",
+          "content_type": [
+              "teams",
+              "team"
+          ],
+          "codename": "change_team"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete team",
+          "content_type": [
+              "teams",
+              "team"
+          ],
+          "codename": "delete_team"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add organization",
+          "content_type": [
+              "organizations",
+              "organization"
+          ],
+          "codename": "add_organization"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change organization",
+          "content_type": [
+              "organizations",
+              "organization"
+          ],
+          "codename": "change_organization"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete organization",
+          "content_type": [
+              "organizations",
+              "organization"
+          ],
+          "codename": "delete_organization"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add contest",
+          "content_type": [
+              "contests",
+              "contest"
+          ],
+          "codename": "add_contest"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change contest",
+          "content_type": [
+              "contests",
+              "contest"
+          ],
+          "codename": "change_contest"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete contest",
+          "content_type": [
+              "contests",
+              "contest"
+          ],
+          "codename": "delete_contest"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add participant",
+          "content_type": [
+              "contests",
+              "participant"
+          ],
+          "codename": "add_participant"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change participant",
+          "content_type": [
+              "contests",
+              "participant"
+          ],
+          "codename": "change_participant"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete participant",
+          "content_type": [
+              "contests",
+              "participant"
+          ],
+          "codename": "delete_participant"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add submission",
+          "content_type": [
+              "contests",
+              "submission"
+          ],
+          "codename": "add_submission"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change submission",
+          "content_type": [
+              "contests",
+              "submission"
+          ],
+          "codename": "change_submission"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete submission",
+          "content_type": [
+              "contests",
+              "submission"
+          ],
+          "codename": "delete_submission"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can add problem",
+          "content_type": [
+              "contests",
+              "problem"
+          ],
+          "codename": "add_problem"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can change problem",
+          "content_type": [
+              "contests",
+              "problem"
+          ],
+          "codename": "change_problem"
+      }
+  },
+  {
+      "model": "auth.permission",
+      "fields": {
+          "name": "Can delete problem",
+          "content_type": [
+              "contests",
+              "problem"
+          ],
+          "codename": "delete_problem"
+      }
+  },
+  {
+      "model": "auth.user",
+      "fields": {
+          "password": "pbkdf2_sha256$30000$3WLJbMdZSs7Q$HKctl071lIMVArCNWm/v4Eq9y4VnIZH+se/FD05RZDU=",
+          "last_login": "2016-11-14T22:53:54.504Z",
+          "is_superuser": false,
+          "username": "vivianP",
+          "first_name": "Weiran",
+          "last_name": "Liu",
+          "email": "wl2nw@virginia.edu",
+          "is_staff": false,
+          "is_active": true,
+          "date_joined": "2016-11-14T22:22:48.868Z",
+          "groups": [],
+          "user_permissions": []
+      }
+  },
+  {
+      "model": "auth.user",
+      "fields": {
+          "password": "pbkdf2_sha256$30000$4EsLuCBeHwwC$3U35rejJhtrv3TwuraRBYfZuDLR+NAeEaCphY7lA4d8=",
+          "last_login": null,
+          "is_superuser": true,
+          "username": "admin",
+          "first_name": "",
+          "last_name": "",
+          "email": "wl2nw@virginia.edu",
+          "is_staff": true,
+          "is_active": true,
+          "date_joined": "2016-11-14T22:51:12.740Z",
+          "groups": [],
+          "user_permissions": []
+      }
+  },
+  {
+      "model": "auth.user",
+      "fields": {
+          "password": "pbkdf2_sha256$30000$vhCwet4CpR5S$OQfgfJzrFi9lKGSJjqec+xa6EH7t5qvfiW6U5rdoVo8=",
+          "last_login": "2016-11-15T02:48:57.815Z",
+          "is_superuser": true,
+          "username": "vivianadmin",
+          "first_name": "",
+          "last_name": "",
+          "email": "wl2nw@virginia.edu",
+          "is_staff": true,
+          "is_active": true,
+          "date_joined": "2016-11-14T22:52:20.011Z",
+          "groups": [],
+          "user_permissions": []
+      }
+  },
+  {
+      "model": "auth.user",
+      "fields": {
+          "password": "pbkdf2_sha256$30000$l02GVUd2ow5s$W9zFNgWvNzB7sbIq/FOpKGHmPrfxhFtE3QGo+3Zr6Ts=",
+          "last_login": "2016-11-15T02:43:51.675Z",
+          "is_superuser": false,
+          "username": "participant1",
+          "first_name": "P",
+          "last_name": "T1",
+          "email": "test@gmail.com",
+          "is_staff": false,
+          "is_active": true,
+          "date_joined": "2016-11-15T02:43:51.260Z",
+          "groups": [],
+          "user_permissions": []
+      }
+  },
+  {
+      "model": "auth.user",
+      "fields": {
+          "password": "pbkdf2_sha256$30000$DpuOZ5uIqp8q$SkiBq0+7KdoD1KlzAkXLLaRnkAdrXUN9itKAAQGPbhk=",
+          "last_login": "2016-11-15T02:44:08.164Z",
+          "is_superuser": false,
+          "username": "participant2",
+          "first_name": "P",
+          "last_name": "T2",
+          "email": "test@gmail.com",
+          "is_staff": false,
+          "is_active": true,
+          "date_joined": "2016-11-15T02:44:07.952Z",
+          "groups": [],
+          "user_permissions": []
+      }
+  },
+  {
+      "model": "auth.user",
+      "fields": {
+          "password": "pbkdf2_sha256$30000$NWtumRylBSEU$1SmoAM5z0MWCjqO2OoH03De6ybrPflYYXZS8NjGhVYs=",
+          "last_login": "2016-11-15T02:45:25.540Z",
+          "is_superuser": false,
+          "username": "judge",
+          "first_name": "J",
+          "last_name": "T3",
+          "email": "test@gmail.com",
+          "is_staff": false,
+          "is_active": true,
+          "date_joined": "2016-11-15T02:44:25.609Z",
+          "groups": [],
+          "user_permissions": []
+      }
+  },
+  {
+      "model": "admin.logentry",
+      "pk": 1,
+      "fields": {
+          "action_time": "2016-11-14T22:52:56.006Z",
+          "user": [
+              "vivianadmin"
+          ],
+          "content_type": [
+              "teams",
+              "team"
+          ],
+          "object_id": "1",
+          "object_repr": "test team 1",
+          "action_flag": 1,
+          "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"team-user relationship\", \"object\": \"Team_members object\"}}]"
+      }
+  },
+  {
+      "model": "admin.logentry",
+      "pk": 2,
+      "fields": {
+          "action_time": "2016-11-14T22:53:34.827Z",
+          "user": [
+              "vivianadmin"
+          ],
+          "content_type": [
+              "contests",
+              "submission"
+          ],
+          "object_id": "1",
+          "object_repr": "1",
+          "action_flag": 1,
+          "change_message": "[{\"added\": {}}]"
+      }
+  },
+  {
+      "model": "admin.logentry",
+      "pk": 3,
+      "fields": {
+          "action_time": "2016-11-15T02:44:48.678Z",
+          "user": [
+              "vivianadmin"
+          ],
+          "content_type": [
+              "contests",
+              "contest"
+          ],
+          "object_id": "5",
+          "object_repr": "test contest",
+          "action_flag": 1,
+          "change_message": "[{\"added\": {}}]"
+      }
+  },
+  {
+      "model": "admin.logentry",
+      "pk": 4,
+      "fields": {
+          "action_time": "2016-11-15T02:45:08.524Z",
+          "user": [
+              "vivianadmin"
+          ],
+          "content_type": [
+              "contests",
+              "contest"
+          ],
+          "object_id": "5",
+          "object_repr": "test contest",
+          "action_flag": 3,
+          "change_message": ""
+      }
+  },
+  {
+      "model": "admin.logentry",
+      "pk": 5,
+      "fields": {
+          "action_time": "2016-11-15T02:49:22.934Z",
+          "user": [
+              "vivianadmin"
+          ],
+          "content_type": [
+              "contests",
+              "submission"
+          ],
+          "object_id": "1",
+          "object_repr": "1",
+          "action_flag": 3,
+          "change_message": ""
+      }
+  },
+  {
+      "model": "admin.logentry",
+      "pk": 6,
+      "fields": {
+          "action_time": "2016-11-15T02:50:02.291Z",
+          "user": [
+              "vivianadmin"
+          ],
+          "content_type": [
+              "teams",
+              "team"
+          ],
+          "object_id": "1",
+          "object_repr": "test team 1",
+          "action_flag": 2,
+          "change_message": "[{\"changed\": {\"object\": \"Team_members object\", \"name\": \"team-user relationship\", \"fields\": [\"user\"]}}]"
+      }
+  },
+  {
+      "model": "admin.logentry",
+      "pk": 7,
+      "fields": {
+          "action_time": "2016-11-15T02:50:11.756Z",
+          "user": [
+              "vivianadmin"
+          ],
+          "content_type": [
+              "teams",
+              "team"
+          ],
+          "object_id": "2",
+          "object_repr": "test team 2",
+          "action_flag": 1,
+          "change_message": "[{\"added\": {}}, {\"added\": {\"object\": \"Team_members object\", \"name\": \"team-user relationship\"}}]"
+      }
+  },
+  {
+      "model": "admin.logentry",
+      "pk": 8,
+      "fields": {
+          "action_time": "2016-11-15T02:50:32.423Z",
+          "user": [
+              "vivianadmin"
+          ],
+          "content_type": [
+              "contests",
+              "submission"
+          ],
+          "object_id": "2",
+          "object_repr": "1",
+          "action_flag": 1,
+          "change_message": "[{\"added\": {}}]"
+      }
+  },
+  {
+      "model": "admin.logentry",
+      "pk": 9,
+      "fields": {
+          "action_time": "2016-11-15T02:50:47.719Z",
+          "user": [
+              "vivianadmin"
+          ],
+          "content_type": [
+              "contests",
+              "submission"
+          ],
+          "object_id": "3",
+          "object_repr": "2",
+          "action_flag": 1,
+          "change_message": "[{\"added\": {}}]"
+      }
+  },
+  {
+      "model": "teams.team",
+      "pk": 1,
+      "fields": {
+          "name": "test team 1",
+          "date_created": "2016-11-14T22:52:55.994Z",
+          "members": [
+              [
+                  "participant1"
+              ]
+          ]
+      }
+  },
+  {
+      "model": "teams.team",
+      "pk": 2,
+      "fields": {
+          "name": "test team 2",
+          "date_created": "2016-11-15T02:50:11.748Z",
+          "members": [
+              [
+                  "participant2"
+              ]
+          ]
+      }
+  },
+  {
+      "model": "contests.contest",
+      "pk": 1,
+      "fields": {
+          "title": "",
+          "date_created": "2016-11-14T22:49:15.993Z",
+          "creator": null,
+          "languages": "",
+          "contest_length": "",
+          "time_penalty": "",
+          "autojudge_enabled": false,
+          "autojudge_review": null,
+          "problem_description": "uploads/pdf.pdf",
+          "contest_admins": "",
+          "contest_participants": ""
+      }
+  },
+  {
+      "model": "contests.contest",
+      "pk": 2,
+      "fields": {
+          "title": "Test Contest 2 by testP",
+          "date_created": "2016-11-14T22:49:16.104Z",
+          "creator": [
+              "vivianP"
+          ],
+          "languages": "['1', '2', '3']",
+          "contest_length": "02:00",
+          "time_penalty": "20",
+          "autojudge_enabled": true,
+          "autojudge_review": "1",
+          "problem_description": "uploads/pdf_KW58Evz.pdf",
+          "contest_admins": "",
+          "contest_participants": ""
+      }
+  },
+  {
+      "model": "contests.contest",
+      "pk": 3,
+      "fields": {
+          "title": "",
+          "date_created": "2016-11-14T22:50:38.755Z",
+          "creator": null,
+          "languages": "",
+          "contest_length": "",
+          "time_penalty": "",
+          "autojudge_enabled": false,
+          "autojudge_review": null,
+          "problem_description": "uploads/pdf_EW19gBG.pdf",
+          "contest_admins": "",
+          "contest_participants": ""
+      }
+  },
+  {
+      "model": "contests.contest",
+      "pk": 4,
+      "fields": {
+          "title": "Test Contest 2 by testP",
+          "date_created": "2016-11-14T22:50:38.797Z",
+          "creator": [
+              "vivianP"
+          ],
+          "languages": "['1', '2', '3']",
+          "contest_length": "02:00",
+          "time_penalty": "20",
+          "autojudge_enabled": true,
+          "autojudge_review": "1",
+          "problem_description": "uploads/pdf_9BuTTta.pdf",
+          "contest_admins": "",
+          "contest_participants": ""
+      }
+  },
+  {
+      "model": "contests.contest",
+      "pk": 6,
+      "fields": {
+          "title": "",
+          "date_created": "2016-11-15T02:48:38.464Z",
+          "creator": null,
+          "languages": "",
+          "contest_length": "",
+          "time_penalty": "",
+          "autojudge_enabled": false,
+          "autojudge_review": null,
+          "problem_description": "uploads/pdf_VFBsH2P.pdf",
+          "contest_admins": "",
+          "contest_participants": ""
+      }
+  },
+  {
+      "model": "contests.contest",
+      "pk": 7,
+      "fields": {
+          "title": "test contest by judge",
+          "date_created": "2016-11-15T02:48:38.621Z",
+          "creator": [
+              "judge"
+          ],
+          "languages": "['1', '2', '3']",
+          "contest_length": "02:00",
+          "time_penalty": "20",
+          "autojudge_enabled": true,
+          "autojudge_review": "1",
+          "problem_description": "uploads/pdf_iBWQjBk.pdf",
+          "contest_admins": "",
+          "contest_participants": ""
+      }
+  }
+]

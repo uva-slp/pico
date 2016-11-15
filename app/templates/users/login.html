@@ -1,12 +1,63 @@
-{% extends 'base.html' %}
+{% extends 'pccs/index.html' %}
+{% load bootstrap3 %}
+
+{% block head_block %}
+	{{ block.super }}
+	<style>
+		.login-register-panel .nav-pills > li {
+			width: 100%;
+		}
+		.hr-faded {
+			background-color: #f3f3f3;
+			background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), to(#f3f3f3), from(#f3f3f3), to(rgba(0, 0, 0, 0)));
+			background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), #f3f3f3, rgba(0, 0, 0, 0));
+			background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0), #f3f3f3, rgba(0, 0, 0, 0));
+			background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0), #f3f3f3, rgba(0, 0, 0, 0));
+			background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0), #f3f3f3, rgba(0, 0, 0, 0));
+			width: 90%;
+			height: 1px;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			background-color: transparent; /* add this line after the mixin call */
+		}
+		#register-link {
+			text-align: center;
+		}
+	</style>
+{% endblock %}
 
 {% block body_block %}
-    <h1>Login</h1>
+    <div class="container login-register-panel">
+        
+        <ul class="nav nav-pills">
+            <li class="active">
+                <a>Login</a>
+            </li>
+        </ul>
 
-    <form id="login_form" method="post" action="{% url 'users:login' %}">
-        {% csrf_token %}
-        {{ login_form.as_p }}
+        <div class="tab-content clearfix">
+            <div class="tab-pane active" id="login">
+                <form class="form form-horizontal" id="login_form" method="post" action="{% url 'users:login' %}">
+                    {% csrf_token %}
+                    {% bootstrap_form login_form layout='horizontal' %}
+                    
+                    {% buttons layout='horizontal' %}
+                        {% bootstrap_button 'Submit' 'submit' %}
+                        {% url 'users:password_reset' as password_reset_url %}
+                        {% bootstrap_button 'Forgot password' 'link' href=password_reset_url %}
+                    {% endbuttons %}
+                </form>
+            </div>
 
-        <input type="submit" value="submit" />
-    </form>
+            <div class="hr-faded"></div>
+
+            <div id="register-link">
+            	<a href="{% url 'users:register' %}">Create new account</a>
+            </div>
+        </div>
+
+    </div>
 {% endblock %}
+
