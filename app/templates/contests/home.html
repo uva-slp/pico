@@ -2,30 +2,12 @@
 {% load bootstrap3 %}
 
 {% block body_block %}
-    <style>
-        .colorgraph {
-        height: 7px;
-        border-top: 0;
-        border-radius: 5px;
-        background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-        background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-        background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-        background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-	}
-	
-	.navbar {
-	display: inline;
-	}
-	
-
-	
-    </style>
 
     <li class="navbar">
-	<a href="{% url 'users:password_change' %}">Change password</a>
-	<a href="{% url 'users:logout' %}">Logout</a>
-	<a href="{% url 'contests:scoreboard' %}">Scoreboard</a>
-	<a href="{% url 'contests:create' %}">Create a Contest</a>
+        <a href="{% url 'users:password_change' %}">Change password</a>
+        <a href="{% url 'users:logout' %}">Logout</a>
+        <a href="{% url 'contests:scoreboard' %}">Scoreboard</a>
+        <a href="{% url 'contests:create' %}">Create a Contest</a>
     </li>
 
     
@@ -42,28 +24,28 @@
     </table>
 
     <br/>
-	
-	<h3>Create team</h3>
+    
+    <h3>Create team</h3>
 
-	<form id="team_form" method="post" action="{% url 'teams:create' %}">
+    <form id="team_form" method="post" action="{% url 'teams:create' %}">
         {% csrf_token %}
         {{ team_form.as_p }}
 
         <input type="submit" value="submit" />
     </form>
 
-	<h3>Join team</h3>
+    <h3>Join team</h3>
 
-	<form id="team_join_form" method="post" action="{% url 'teams:join' %}">
+    <form id="team_join_form" method="post" action="{% url 'teams:join' %}">
         {% csrf_token %}
         {{ team_join_form.as_p }}
 
         <input type="submit" value="submit" />
     </form>
 
-	<h3>Leave team</h3>
+    <h3>Leave team</h3>
 
-	<form id="team_leave_form" method="post" action="{% url 'teams:leave' %}">
+    <form id="team_leave_form" method="post" action="{% url 'teams:leave' %}">
         {% csrf_token %}
         {{ team_leave_form.as_p }}
 
