@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
 	url(r'^home$', views.home, name='home'),
-	url(r'^diff$', views.diff, name='diff'),
+	url(r'^diff/(?P<question_id>[0-9]+)/$', views.diff, name='diff'),
     url(r'^create$', views.create, name='create'),
 	url(r'^scoreboard$', views.scoreboard, name='scoreboard'),
 	url(r'^contest/(?P<contest_id>\d+)/$', views.displayContest, name='contest'),

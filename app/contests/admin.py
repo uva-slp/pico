@@ -1,12 +1,6 @@
 from django.contrib import admin
 
-from .models import Contest, Submission
-
-#class TeamsInline(admin.TabularInline):
-#    model = Contest.teams.through
-
-#class QuestionInline(admin.TabularInline):
-#    model = Question
+from .models import Contest, Submission, Problem
 
 @admin.register(Contest)
 class ContestAdmin(admin.ModelAdmin):
@@ -19,4 +13,4 @@ class ContestAdmin(admin.ModelAdmin):
     search_fields = ['title', 'creator']
 
 admin.site.register(Submission)
-# admin.site.register(Question)
+admin.site.register(Problem)

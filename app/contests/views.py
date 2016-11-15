@@ -9,18 +9,11 @@ from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
+from .lib import execution as exe
+from .models import Contest
 from teams.models import Team
 from .models import Participant
 from users.models import User
-
-
-#Imports used for code compilation/execution
-import os
-import subprocess, shlex
-import tempfile
-import shutil
-
-dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 def home(request):
@@ -38,19 +31,35 @@ def home(request):
 		}
 	)
 
-def diff(request):
-	emptylines = 'emptylines' in request.GET
-	whitespace = 'whitespace' in request.GET
 
-	fromlines = ['foo ', 'f ', '  fs  ', '   ', 'bar', 'flarp']
-	tolines = ['foo', 'bar', 'zoo']
+def choose_problem(request):
+    all_problems = Problem.objects.all()
+    return render(request, 'contests/choose_problem.html', {'problems': all_problems})
 
-	html, numChanges = _diff.HtmlFormatter(fromlines, tolines, emptylines, whitespace).asTable()
 
-	return render(
-		request,
-		'contests/diff.html',
-		{'diff_table': html, 'numChanges': numChanges})
+def upload_code(request, problem_id):
+    problem = Problem.objects.get(id=problem_id)
+    form = UploadCodeForm(initial = {'problem': problem})
+    return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
+
+
+def diff(request, question_id):
+        form = UploadCodeForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            output = exe.execute_code(request.FILES['code_file'])
+            retcode = output[0]
+            if retcode != 0:
+                    error = output[1]
+                    return render(request, 'contests/error.html', {'error_message' : error})
+            else:
+                    fromlines = output[1].split("\n")
+                    tolines = ['Hello World from C++!']
+                    html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
+                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges, 'question_id' : question_id})
+        else:
+            return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
+    
 
 '''
 def create(request):
@@ -206,73 +215,6 @@ def displayJudge(request, contest_id, run_id):
 		{'contest_data': contest_data, 'is_judge': False}
 	)
 
-
-def choose_problem(request):
-    all_problems = Problem.objects.all()
-    return render(request, 'contests/choose_problem.html', {'problems': all_problems})
-
-
-def upload_code(request, problem_id):
-    problem = Problem.objects.get(id=problem_id)
-    if request.method == 'POST':
-        form = UploadCodeForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            execute_code(request.FILES['code_file'], form.instance.id)
-            return render(request, 'contests/uploaded.html')
-    else:
-        form = UploadCodeForm(initial = {'problem': problem})
-    return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
-
-
-#Returns True if executed successfully, false otherwise
-def execute_code(file, submission_id):
-    file_name = file.name
-    #Check if it's a Java file:
-    if file_name.endswith('.java'):
-        run_java(file, submission_id)
-        return True
-    #Check if it's a c++ file:
-    cpp_extensions = ['.cpp', '.cc', '.C', '.cxx', '.c++']
-    for extension in cpp_extensions:
-        if file_name.endswith(extension):
-            run_cpp(file, submission_id)
-            return True
-    #If it didn't have a proper extensions, can't compile it:
-    return False
-
-
-def run_java(file, submission_id):
-    temp_dirpath = tempfile.mkdtemp()
-    file_name = file.name
-    with open(os.path.join(temp_dirpath, file_name), 'wb+') as destination:
-        for chunk in file.chunks():
-            destination.write(chunk)
-    retcode = subprocess.call("javac " + os.path.join(temp_dirpath, file_name), shell=True)
-    #compilation_args = shlex.split("javac " + os.path.join(temp_dirpath, file_name))
-    #result = subprocess.Popen(compilation_args)
-    compiled_file = os.path.splitext(file_name)[0]
-    #retcode = subprocess.call("java -cp " + temp_dirpath + " " + compiled_file + ' > ' + os.path.join(temp_dirpath, 'output.txt'), shell=True)
-    output = subprocess.check_output("java -cp " + temp_dirpath + " " + compiled_file, shell=True)
-    print(output)
-    #execution_args = shlex.split("java -cp " + temp_dirpath + " " + compiled_file)
-    #retcode = subprocess.Popen(execution_args)
-    shutil.rmtree(temp_dirpath)
-
-
-def run_cpp(file, submission_id):
-    temp_dirpath = tempfile.mkdtemp()
-    file_name = file.name
-    with open(os.path.join(temp_dirpath, file_name), 'wb+') as destination:
-        for chunk in file.chunks():
-            destination.write(chunk)
-    retcode = subprocess.call("/usr/bin/g++ " + os.path.join(temp_dirpath, file_name) + " -o " + os.path.join(temp_dirpath, 'a.out'), shell=True)
-    if retcode:
-        print("failed to compile " + file_name)
-    #retcode = subprocess.call(os.path.join(temp_dirpath, './a.out') + ' > ' + os.path.join(path, 'output.txt'), shell=True)
-    output = subprocess.check_output(os.path.join(temp_dirpath, './a.out'), shell=True)
-    print(output)
-    shutil.rmtree(temp_dirpath)
 
 def scoreboard(request):
     # Get number of teams for scoreboard, scores for each team at that moment, logos, questions and whether theyve been attempted, solve, or neither
