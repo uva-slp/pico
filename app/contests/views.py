@@ -237,46 +237,20 @@ def scoreboard(request):
     allcontests = allcontests.filter(contest_participants=allteams.values('name')) #Get contest with user's team
 
     requestdatetime = datetime.now(timezone.utc)
-    mostrecentcontest = Contest.objects.all()
-    print("requested datetime")
     print(requestdatetime)
-    print("looping")
+    mostrecentcontest = Contest.objects.all()
+
     nearestdate = []
-    for contest in allcontests:
-        print(contest.date_created)
+
+    for contest in allcontests: # Create tuple of all contests with this user/team
         nearestdate.append(contest.date_created)
 
-    print("nearest date tuple")
-    print(nearestdate)
-
     mostrecentcontestdate = nearest(nearestdate, requestdatetime) # Get whatever contest date is nearest to request date
-    print("Most recent contest date calculated:")
-    print(mostrecentcontestdate)
-    mostrecentcontest = mostrecentcontest.filter(date_created=mostrecentcontestdate) # Filter queryset by nearest
-    print("Most recent contest:")
-    print(mostrecentcontest)
+    mostrecentcontest = mostrecentcontest.filter(date_created=mostrecentcontestdate) # Filter queryset by nearest to get relevant contest to scoreboard
 
+    for contest in mostrecentcontest:
+        print("Participant:")
+        print(contest.contest_participants)
 
-    print("filter:")
-    print("teams:")
-    print(allteams)
-    print("contest:")
-    print(allcontests)
-
-    #allteams.filter(name=)
-    currentTeamName = "Get current team name" #Get requesting team's name
-    currentContestTitle = "testcontest" #get requesting team's current contest
-
-    numberofteams = 0
-    teamname = allteams.filter(name=currentTeamName)
-    contestname = allcontests.filter(title = currentContestTitle) # Grab current contest
-
-    #for team in allcontests.teams :
-    #    numberofteams += 1
-    #    print(numberofteams)
-
-    # get query_results.numberofteams
-    # for(team in query_results.teams) { scores += team.score
-    # return object containing array of teams
 
     return render(request, 'contests/scoreboard.html', {'teams' : allteams})

@@ -9,6 +9,8 @@ from django.urls import reverse
 from django.shortcuts import render
 from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import Team, Participant, Contest, Problem
+from datetime import datetime
+from django.utils import timezone
 
 
 class ContestTest(TestCase):
@@ -256,6 +258,10 @@ class SubmissionsViewsTest(TestCase):
                 self.assertEqual(response.status_code, 200)
 
 
+# Method for getting nearest datetime
+def nearest(items, pivot):
+	return min(items, key=lambda x: abs(x - pivot))
+
 class ContestCreationTest(TestCase):
 
 	def testNumberofContests(self):
@@ -317,3 +323,19 @@ class ScoreboardTest(TestCase):
 		t = Team("team1")
 		p = Participant(team=t, contest=ct)
 		self.assertTrue(isinstance(p, Participant))
+
+
+	def testDate(self):
+
+		requestdatetime = datetime.now(timezone.utc)
+		contest = Contest(date_created=datetime.now(timezone.utc))
+		nearestdate = []
+
+		nearestdate.append(contest.date_created)
+
+		mostrecentcontestdate = nearest(nearestdate, requestdatetime)  # Get whatever contest date is nearest to request date
+		MRstring = str(mostrecentcontestdate)
+		MRstring = MRstring[:-13]
+		RDstring = str(requestdatetime)
+		RDstring = RDstring[:-13]
+		self.assertEqual(RDstring, MRstring)
