@@ -100,3 +100,6 @@ app/static/
 
 # PyCharm settings
 /.idea/*
+
+# User uploads
+app/uploads/*
