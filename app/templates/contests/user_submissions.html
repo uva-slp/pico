@@ -14,13 +14,9 @@
     {% for submission in contest_submissions %}
         <tr>
             <th style="padding-top: 15px;">Run ID {{ forloop.counter }}</th>
-        </tr>
-        <tr>
             <td>Team: {{ submission.team.name }}</td>
-        </tr>
-        <tr>
-            <td>Result: {{ submission.get_state_display }}</td>
-        </tr>
+            <td>State: {{ submission.get_state_display }}</td>
+            <td>Result: {{ submission.get_result_display}}</td>
     {% endfor %}
     </table>
 </body>

@@ -4,16 +4,15 @@
 	"pk": 1,
 	"fields": {
             "title": 1,
-            "date_created": "2016-10-29T17:47:11.38Z",
-            "creator": "admin"
+            "date_created": "2016-10-29T17:47:11.38Z"
 	}
     },
     {
-	"model": "contests.question",
+	"model": "contests.problem",
 	"pk": 1,
 	"fields": {
             "number": 1,
-            "name": "QuestionExample",
+            "name": "ProblemExample",
             "contest": 1
 	}
     }
