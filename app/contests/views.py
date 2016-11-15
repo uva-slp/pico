@@ -12,6 +12,8 @@ from .models import Contest
 from teams.models import Team
 from .models import Participant
 from users.models import User
+from datetime import datetime
+from django.utils import timezone
 
 
 #Imports used for code compilation/execution
@@ -256,6 +258,10 @@ def run_cpp(file, submission_id):
     print(output)
     shutil.rmtree(temp_dirpath)
 
+# Method for getting nearest datetime
+def nearest(items, pivot):
+    return min(items, key=lambda x: abs(x - pivot))
+
 def scoreboard(request):
     # Get number of teams for scoreboard, scores for each team at that moment, logos, questions and whether theyve been attempted, solve, or neither
     userPK = request.user.pk
@@ -269,6 +275,27 @@ def scoreboard(request):
     allteams = allteams.filter(members=userPK) #get teams that have current user in them
     print(allcontests)
     allcontests = allcontests.filter(contest_participants=allteams.values('name')) #Get contest with user's team
+
+    requestdatetime = datetime.now(timezone.utc)
+    mostrecentcontest = Contest.objects.all()
+    print("requested datetime")
+    print(requestdatetime)
+    print("looping")
+    nearestdate = []
+    for contest in allcontests:
+        print(contest.date_created)
+        nearestdate.append(contest.date_created)
+
+    print("nearest date tuple")
+    print(nearestdate)
+
+    mostrecentcontestdate = nearest(nearestdate, requestdatetime) # Get whatever contest date is nearest to request date
+    print("Most recent contest date calculated:")
+    print(mostrecentcontestdate)
+    mostrecentcontest = mostrecentcontest.filter(date_created=mostrecentcontestdate) # Filter queryset by nearest
+    print("Most recent contest:")
+    print(mostrecentcontest)
+
 
     print("filter:")
     print("teams:")
