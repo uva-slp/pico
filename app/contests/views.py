@@ -89,45 +89,58 @@ def create(request):
 
 def create(request):
 
-	QAFormSet = formset_factory(CreateProblem)
+    QAFormSet = formset_factory(CreateProblem)
 
-	if request.method == 'POST':
-		#grab information from form
-		form = CreateContestForm(request.POST, request.FILES)
-		#qa_formset = CreateProblem(request.POST)
+    if request.method == 'POST':
+        #grab information from form
+        form = CreateContestForm(request.POST, request.FILES)
+        #qa_formset = CreateProblem(request.POST)
 
-		qa_formset = QAFormSet(request.POST, request.FILES)
-		if form.is_valid() and qa_formset.is_valid():
-			problem_desc = Contest(problem_description=request.FILES['problem_description'])
-			problem_desc.save()
-			contest = form.save()
-			contest.creator = request.user
-			contest.save()
+        qa_formset = QAFormSet(request.POST, request.FILES)
+        if form.is_valid() and qa_formset.is_valid():
 
-			contest_id = contest.id
+            problem_desc = Contest(problem_description=request.FILES['problem_description'])
+            problem_desc.save()
+            contest = form.save()
+            contest.creator = request.user
+            contest.save()
 
-			for qa_form in qa_formset:
-				solution = qa_form.cleaned_data.get('solution')
-				input_desc = qa_form.cleaned_data.get('input_description')
-				output_desc = qa_form.cleaned_data.get('output_description')
-				sample_input = qa_form.cleaned_data.get('sample_input')
-				sample_output = qa_form.cleaned_data.get('sample_output')
-				contest = qa_form.cleaned_data.get('title')
+            contest_id = contest.id
 
-				p = Problem(
+            contest_participants = form.cleaned_data.get('contest_participants')
+            contest_participants = contest_participants.split()
+            print(contest_participants)
+
+            for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
+                team = Team.objects.filter(name=participant).get()
+                pt = Participant(contest=contest, team=team)
+                print(pt)
+                pt.save()
+
+            for qa_form in qa_formset:
+                solution = qa_form.cleaned_data.get('solution')
+                input_desc = qa_form.cleaned_data.get('input_description')
+                output_desc = qa_form.cleaned_data.get('output_description')
+                sample_input = qa_form.cleaned_data.get('sample_input')
+                sample_output = qa_form.cleaned_data.get('sample_output')
+                contest = qa_form.cleaned_data.get('title')
+
+                p = Problem(
 					solution=solution, input_description=input_desc,
 					output_description=output_desc, sample_input=sample_input,
 					sample_output=sample_output, contest_id=contest_id)
 
-				p.save()
+                p.save()
 
-			return redirect(reverse('contests:home'))
-			# return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
-	else:
-		form = CreateContestForm()
-		QAFormSet = formset_factory(CreateProblem)
-		qa_formset = QAFormSet()
-	return render(request, 'contests/create_contest.html', {'form': form, 'qa_formset': qa_formset})
+                # Loop through participants text box and create participant objects for a team on each line w/ contest
+
+            return redirect(reverse('contests:home'))
+            # return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
+    else:
+        form = CreateContestForm()
+        QAFormSet = formset_factory(CreateProblem)
+        qa_formset = QAFormSet()
+    return render(request, 'contests/create_contest.html', {'form': form, 'qa_formset': qa_formset})
 
 
 @login_required
@@ -223,32 +236,38 @@ def nearest(items, pivot):
     return min(items, key=lambda x: abs(x - pivot))
 
 def scoreboard(request):
-    # Get number of teams for scoreboard, scores for each team at that moment, logos, questions and whether theyve been attempted, solve, or neither
-    userPK = request.user.pk
+    userPK = request.user.pk # Get users primary key
 
-    # Get participant based off of active team? Then pull contest based on that? Then pull other teams and view scores
+    allcontests = Contest.objects.all() # Get all contest objects
+    allteams = Team.objects.all() # Get all team objects
+    allteams = allteams.filter(members=userPK) # Get teams that have current user in them
+    print("teams with requesting user")
+    print(allteams)
 
-    print("Current User PK: ")
-    print(request.user.pk)
-    allcontests = Contest.objects.all() #get contest objects
-    allteams = Team.objects.all() #get team objects
-    allteams = allteams.filter(members=userPK) #get teams that have current user in them
+    '''
+    print("Mostrecentcontest object:")
+    allcontests = allcontests.filter(title="mostrecentcontest")
+    for contest in allcontests.iterator():
+        print(contest.contest_participants)
+    '''
+
+    allcontests = allcontests.filter(contest_participants__in=allteams.values('name')) # Get all contests with user's teams
+    print("allcontests after filtering by user's teams")
     print(allcontests)
-    allcontests = allcontests.filter(contest_participants=allteams.values('name')) #Get contest with user's team
 
-    requestdatetime = datetime.now(timezone.utc)
+    requestdatetime = datetime.now(timezone.utc) # Get current time to match with most recently joined contest based on the user's team
     print(requestdatetime)
-    mostrecentcontest = Contest.objects.all()
 
     nearestdate = []
 
-    for contest in allcontests: # Create tuple of all contests with this user/team
+    for contest in allcontests.iterator(): # Create tuple of all contests with this user/team
         nearestdate.append(contest.date_created)
 
     mostrecentcontestdate = nearest(nearestdate, requestdatetime) # Get whatever contest date is nearest to request date
-    mostrecentcontest = mostrecentcontest.filter(date_created=mostrecentcontestdate) # Filter queryset by nearest to get relevant contest to scoreboard
-
-    for contest in mostrecentcontest:
+    mostrecentcontest = allcontests.filter(date_created=mostrecentcontestdate) # Filter queryset by nearest date created to get relevant contest for scoreboard request
+    print("most recent contest")
+    print(mostrecentcontest)
+    for contest in mostrecentcontest: # Should be 1 contest
         print("Participant:")
         print(contest.contest_participants)
 
