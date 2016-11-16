@@ -9,9 +9,6 @@ class InvalidUserInfoTest(TestCase):
         u.save()
         if(teams.filter(username='buddy1')):
 
-from django.test import TestCase
-from users.models import User
-
 #could be fixtures
 class InvalidUserInfoTest(TestCase):
     def invalid_email(self):

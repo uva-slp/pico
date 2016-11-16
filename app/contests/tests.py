@@ -307,8 +307,5 @@ class CreateContestRedirectTest(TestCase):
 			"problem_description": "problems.pdf",
 			"contest_admins": "", "contest_participants": ""
 		}
-		files = {
-			"problem_description": SimpleUploadedFile("problems.pdf", b"test content")
-		}
-		resp = self.client.post(reverse('contests:create'), data=data, files=files)
+		resp = self.client.post(reverse('contests:create'), data=data)
 		self.assertRedirects(resp, reverse('contests:home'), status_code=302, target_status_code=200)
