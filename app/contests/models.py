@@ -53,7 +53,7 @@ class Problem(models.Model):
 class Participant(models.Model):
 	contest = models.OneToOneField(Contest)
 	team = models.OneToOneField(Team)
-	score = models.IntegerField()
+	score = models.IntegerField
 
 class Submission(models.Model):
 	run_id = models.IntegerField(null=True)
