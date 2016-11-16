@@ -1,0 +1,25 @@
+﻿Revert "test cases?"
+
+This reverts commit fc5676706f54ec8eef029e02844dfdf9fe946b46.
+
+# Conflicts:
+#	app/users/tests/test_accounts.py
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch jason
+# Your branch is up-to-date with 'origin/jason'.
+#
+# You are currently reverting commit fc56767.
+#
+# Changes to be committed:
+#	modified:   app/contests/tests.py
+#	deleted:    app/uploads/solution_Emy9NV6.txt
+#	deleted:    app/uploads/solution_QT7Angx.txt
+#	deleted:    app/uploads/solution_T8nZsn3.txt
+#	deleted:    app/uploads/solution_nRuFcwD.txt
+#	deleted:    app/uploads/solution_s9Erb90.txt
+#	deleted:    app/uploads/solution_soF24hY.txt
+#	deleted:    app/uploads/solution_xtVcK3m.txt
+#
+

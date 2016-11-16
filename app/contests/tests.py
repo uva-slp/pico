@@ -281,8 +281,7 @@ class ScoreboardTest(TestCase):
 		t = Team("team1")
 		p = Participant(team=t, contest=ct)
 		self.assertTrue(isinstance(p, Participant))
-<<<<<<< HEAD
-'''
+
 	def team_rankings(self):
 		c1 = Contest(contest_participants='team1')
 		t1 = Team("team1")
@@ -290,7 +289,6 @@ class ScoreboardTest(TestCase):
 		t2 = Team("team2")
 		p2 = Participant(team=t2, contest=c1, score=2)
 		self.assertTrue(p2.score > p1.score)
-'''
 
 class CreateContestViewTest(TestCase):
 
@@ -314,5 +312,3 @@ class CreateContestRedirectTest(TestCase):
 		}
 		resp = self.client.post(reverse('contests:create'), data=data, files=files)
 		self.assertRedirects(resp, reverse('contests:home'), status_code=302, target_status_code=200)
-=======
->>>>>>> parent of 698c3fa... more test cases
