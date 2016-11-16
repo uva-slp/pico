@@ -8,9 +8,9 @@ class InvalidUserInfoTest(TestCase):
         u = User(username='buddy1', password='password', email='buddyatgmail.com')
         u.save()
         if(teams.filter(username='buddy1')):
-
+            self.assertTrue('@' not in u.email)
 #could be fixtures
-class InvalidUserInfoTest(TestCase):
+class InvalidUserInfoTest(TestCase):   
 
     def invalid_email(self):
         u = User(username='buddy1', password='password', email='buddyatgmail.com')
@@ -77,7 +77,7 @@ class UniqueEmailTest(TestCase):
             self.assertEqual(user_count, 2)
 
 class NoInjectionsPleaseTest(TestCase):
-    
+
     def sanitization(self):
         u = User(username='()buddy()', password='?!password?!')
         u.username.translate(None, '()?!')

@@ -309,3 +309,4 @@ class CreateContestRedirectTest(TestCase):
 		}
 		resp = self.client.post(reverse('contests:create'), data=data)
 		self.assertRedirects(resp, reverse('contests:home'), status_code=302, target_status_code=200)
+'''
