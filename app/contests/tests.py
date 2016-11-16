@@ -199,7 +199,7 @@ class ScoreboardTest(TestCase):
 		t = Team("team1")
 		p = Participant(team=t, contest=ct)
 		self.assertTrue(isinstance(p, Participant))
-
+'''
 	def team_rankings(self):
 		c1 = Contest(contest_participants='team1')
 		t1 = Team("team1")
@@ -207,6 +207,7 @@ class ScoreboardTest(TestCase):
 		t2 = Team("team2")
 		p2 = Participant(team=t2, contest=c1, score=2)
 		self.assertTrue(p2.score > p1.score)
+'''
 
 class CreateContestViewTest(TestCase):
 
