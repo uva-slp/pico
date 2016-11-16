@@ -296,7 +296,7 @@ class CreateContestViewTest(TestCase):
 		url = reverse('contests:create')
 		resp = self.client.get(url)
 		self.assertEqual(resp.status_code, 200)
-
+'''
 class CreateContestRedirectTest(TestCase):
 
 	def test_submit(self):
