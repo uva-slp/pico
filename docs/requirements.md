@@ -39,28 +39,27 @@ UVa has significant experience with programming contests, and somebody can answe
 
 ## Requirements: Minimum
 
-- Instructor accounts, user levels, and password reset
+- User accounts and password reset
 - Contest creation, setting of programming language options and contest problems
-- Creation of team accounts, and login by the teams
+- Creation of teams/participants in a contest
 - Proper execution of the problems with error detection if something goes wrong
   - Only using PC^2 format; no validators
   - Execution is handled by the web server
 - Ability to judge by human
   - Allow judge to send specific messages to competitors, whether they be custom or based on the error
-- Scoreboard creation display
+- Scoreboard display
   - Show all competitors and their scores (optional graphics)
-  - Include link to scoreboard on main page, doesn't need to be in the way of more important information
+  - Include link to scoreboard on main contest page, doesn't need to be in the way of more important information
 - Basic web interface
   - Contests page for when a contestant is participating in a contest
   - Includes simple interface that gives all pertinent information without the need for a contestant to search for anything
-  - Change question box color based on submission status (Red = wrong, yellow = waiting for judge, green = correct
-  - Summary dashboard for each individual problem, shows information for each
-  - Window flashes orange in the taskbar when an alert is given to competitors
-  - Landing Page: Show the contest(s) you're a part of at that moment, contests you've created, About Us info screen
-- The ability of the system to work for many contests: each one has it's own teams and problems (although some will be shared), and an instructor's login will show all past contests (and can pull up data about each)
+  - Change question box color based on submission status (red = wrong, yellow = waiting for judge, green = correct)
+  - Display each individual problem, can show input description, output description, sample input, and sample output
+  - Landing Page: Show the contest(s) you're a part of at that moment, pasts contests, contests you've created
+- The ability of the system to work for many contests: each one has it's own teams and problems (although some will be shared), and an contest creator's login will show all past contests (and can pull up data about each)
 - Admin Page
   - Have various settings for contest creation, allow for default settings per admin across contests so that settings don't need to be inputted for every question/contest created by that admin
-  - Timer settings for how long a contest runs, time penalties, etc.
+  - Ability to start/activate a contest
   - Autojudge option, shows judge what failed
 
 
@@ -70,6 +69,7 @@ UVa has significant experience with programming contests, and somebody can answe
 - Ability to use validators for problem judging
 - Implementation of many (if not all) of the features currently handled by PC^2
 - Fully fledged, easy to use, and nice looking web interface
+- Window flashes orange in the taskbar when an alert is given to competitors
 - Admin Page
   - Copy contest settings for new contest
   - Highlight diff of candidate submission and judge submission for easy readability by judge. Allow options such as ignore whitespace
@@ -84,6 +84,6 @@ UVa has significant experience with programming contests, and somebody can answe
 
 ## Requirements: Optional
 
-- More flexible grading, so that this type of system could be used in a class, for example.  This implies the ability to configure scoring metrics.
+- More flexible grading, so that this type of system could be used in a class, for example. This implies the ability to configure scoring metrics.
 - The ability to *theme* the web interface to mimic existing systems, or to create new themes
 - Fully sandboxed execution environments
