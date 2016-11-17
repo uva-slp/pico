@@ -28,36 +28,32 @@
 	</style>
 {% endblock %}
 
-{% block body_block %}
-    <div class="container login-register-panel">
-        
-        <ul class="nav nav-pills">
-            <li class="active">
-                <a>Register</a>
-            </li>
-        </ul>
+{% block form_block %}
+    <ul class="nav nav-pills">
+        <li class="active">
+            <a>Register</a>
+        </li>
+    </ul>
 
-        <div class="tab-content clearfix">
-            <div class="tab-pane active" id="register">
-                <form class="form form-horizontal" id="user_form" method="post" action="{% url 'users:register' %}"
-                        enctype="multipart/form-data">
+    <div class="tab-content clearfix">
+        <div class="tab-pane active" id="register">
+            <form class="form form-horizontal" id="user_form" method="post" action="{% url 'users:register' %}"
+                    enctype="multipart/form-data">
 
-                    {% csrf_token %}
-                    {% bootstrap_form user_form layout='horizontal' %}
+                {% csrf_token %}
+                {% bootstrap_form user_form layout='horizontal' %}
 
-                    {% buttons layout='horizontal' %}
-                        {% bootstrap_button 'Submit' 'submit' %}
-                    {% endbuttons %}
-                </form>
-            </div>
-
-            <div class="hr-faded"></div>
-
-            <div id="login-link">
-            	<a href="{% url 'users:login' %}">Already have an account</a>
-            </div>
+                {% buttons layout='horizontal' %}
+                    {% bootstrap_button 'Submit' 'submit' %}
+                {% endbuttons %}
+            </form>
         </div>
 
+        <div class="hr-faded"></div>
+
+        <div id="login-link">
+        	<a href="{% url 'users:login' %}">Already have an account</a>
+        </div>
     </div>
 {% endblock %}
 
