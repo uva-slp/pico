@@ -16,13 +16,14 @@
     </head>
 
     <body style="padding-left: 30px;">
-    
+
         <li class="navbar">
             <a href="{% url 'contests:home' %}" class='btn btn-primary'>Home</a>
             <a href="{% url 'contests:scoreboard' %}" class='btn btn-primary'>Scoreboard</a>
             <a href="{% url 'users:logout' %}" class='btn btn-primary'>Logout</a>
         </li>
-        <hr class='navbar'>
+
+        <hr class='colorgraph'>
         <h1>Contest Creation</h1><br />
 
         <form id="create_contest" method="post" action="{% url 'contests:create' %}"
