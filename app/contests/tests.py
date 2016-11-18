@@ -31,11 +31,13 @@ class ContestTest(TestCase):
 			problem_description=desc, contest_admins=admins,
 			contest_participants=participants)
 
+	# Austin
 	def test_contest_creation(self):
 		ct = self.contest()
 		self.assertTrue(isinstance(ct, Contest))
 		self.assertEqual(ct.__str__(), ct.title)
 
+	# Austin
 	def test_contest_db_entry(self):
 		ct = Contest.objects.get(pk=1)
 		self.assertEqual(ct.title, 'Contest 1')
@@ -43,6 +45,7 @@ class ContestTest(TestCase):
 		ct.save()
 		self.assertEqual(ct.title, 'Updated Contest 1')
 
+	# Austin
 	def test_problem_creation(self):
 		p = Problem(
 			solution="solution.txt", input_description="1 2 3 4",
@@ -51,6 +54,7 @@ class ContestTest(TestCase):
 		p.save()
 		self.assertTrue(isinstance(p, Problem))
 
+	# Austin
 	def test_problems_in_contest(self):
 		ct1 = Contest.objects.get(pk=1)
 		ct2 = Contest.objects.get(pk=2)
@@ -79,6 +83,7 @@ class ContestTest(TestCase):
 		self.assertEqual(Contest.objects.get(pk=p3.contest_id), ct1)
 
 	# forms test
+	# Austin
 	def test_valid_contest_form(self):
 		data = {
 			"title": "Contest 1", "creator": 1, "languages": "java, python",
@@ -93,6 +98,7 @@ class ContestTest(TestCase):
 		form = CreateContestForm(data=data, files=files)
 		self.assertTrue(form.is_valid())
 
+	# Austin
 	def test_empty_contest_form_fields(self):
 		data = {
 			"title": "", "languages": "", "contest_length": "",
@@ -103,6 +109,7 @@ class ContestTest(TestCase):
 		form = CreateContestForm(data=data)
 		self.assertFalse(form.is_valid())
 
+	# Austin
 	def test_valid_problem_form(self):
 		data = {
 			"input_description": "1 2 3 4",
@@ -117,6 +124,7 @@ class ContestTest(TestCase):
 		problem = CreateProblem(data=data, files=files)
 		self.assertTrue(problem.is_valid())
 
+	# Austin
 	def test_empty_problem_form_fields(self):
 		data = {
 			"input_description": "",
@@ -131,6 +139,7 @@ class ContestTest(TestCase):
 		problem = CreateProblem(data=data, files=files)
 		self.assertFalse(problem.is_valid())
 
+	# Austin
 	def test_problem_solution_content(self):
 		data = {}
 		files = {"solution": SimpleUploadedFile("solution.txt", b"test solution")}
@@ -141,6 +150,7 @@ class ContestTest(TestCase):
 		self.assertEqual(problem1.solution.read(), b"test solution")
 
 	# views test
+	# Austin
 	def test_create_view(self):
 		url = reverse("contests:create")
 		resp = self.client.get(url)
@@ -152,6 +162,7 @@ class JudgeInterfaceTest(TestCase):
 
 	fixtures = ['judge_interface.json']
 
+	# Vivian
 	#view test
 	def test_view_all_judge(self):
 		self.client.login(username='judge', password='password')
@@ -161,6 +172,7 @@ class JudgeInterfaceTest(TestCase):
 
 		self.assertEqual(resp.status_code, 200)
 
+	# Vivian
 	#view test
 	def test_view_all_notloggedin(self):
 		url = reverse("contests:contest_judge_submissions",
@@ -169,6 +181,7 @@ class JudgeInterfaceTest(TestCase):
 
 		self.assertEqual(resp.status_code, 302)
 
+	# Vivian
 	#view test
 	def test_view_submission(self):
 		self.client.login(username='participant1', password='password')
@@ -178,6 +191,7 @@ class JudgeInterfaceTest(TestCase):
 
 		self.assertEqual(resp.status_code, 200)
 
+	# Vivian
 	#view test
 	def test_judge(self):
 		self.client.login(username='judge', password='password')
@@ -187,6 +201,7 @@ class JudgeInterfaceTest(TestCase):
 
 		self.assertEqual(resp.status_code, 200)
 
+	# Vivian
 	#form test
 	def test_valid_return_form(self):
 		submission = Submission.objects.get(pk=3)
@@ -204,26 +219,32 @@ class JudgeInterfaceTest(TestCase):
 class SubmissionsViewsTest(TestCase):
 	fixtures = ['submission.json']
 	
+	#Derek
 	def test_choose_problem_page(self):
 		response = self.client.get(reverse('contests:choose_problem'))
 		self.assertEqual(response.status_code, 200)
 
+	#Derek
 	def test_choose_problem_page_template(self):
 		response = self.client.get(reverse('contests:choose_problem'))
 		self.assertTemplateUsed(response, 'contests/choose_problem.html')
 
+	#Derek
 	def test_choose_problem_page_title(self):
 		response = self.client.get(reverse('contests:choose_problem'))
 		self.assertContains(response, 'Problems:')
 
+	#Derek
 	def test_upload_code_page(self):
 		response = self.client.get(reverse('contests:upload_code', kwargs = {'problem_id': '1'}))
 		self.assertEqual(response.status_code, 200)
 
+	#Derek
 	def test_upload_code_page_title(self):
 		response = self.client.get(reverse('contests:upload_code', kwargs = {'problem_id': '1'}))
 		self.assertContains(response, "Submit for ProblemExample")
 
+	#Derek
 	def test_cpp_execution_on_empty_file(self):
                 temp_dirpath = tempfile.mkdtemp()
                 file_path = os.path.join(temp_dirpath, 'test.cpp')
@@ -232,7 +253,8 @@ class SubmissionsViewsTest(TestCase):
                         output = exe.execute_code(test_file_object)
                 shutil.rmtree(temp_dirpath)
                 self.assertEqual(output[0], 1)
-                
+         
+    #Derek      
 	def test_java_execution_on_empty_file(self):
                 temp_dirpath = tempfile.mkdtemp()
                 file_path = os.path.join(temp_dirpath, 'test.java')
@@ -242,14 +264,17 @@ class SubmissionsViewsTest(TestCase):
                 shutil.rmtree(temp_dirpath)
                 self.assertEqual(output[0], 1)
 
+    #Derek
 	def test_diff_with_no_file_template(self):
                 response = self.client.get(reverse('contests:diff', kwargs = {'question_id' : '1'}))
                 self.assertTemplateUsed(response, 'contests/error.html')
 
+    #Derek
 	def test_diff_with_no_file_message(self):
                 response = self.client.get(reverse('contests:diff', kwargs = {'question_id' : '1'}))
                 self.assertContains(response, 'Invalid form.')
 
+    #Derek
 	def test_diff_page(self):
                 response = self.client.get(reverse('contests:diff', kwargs = {'question_id' : '1'}))
                 self.assertEqual(response.status_code, 200)
@@ -260,7 +285,7 @@ def nearest(items, pivot):
 	return min(items, key=lambda x: abs(x - pivot))
 
 class ContestCreationTest(TestCase):
-
+	# Jamel
 	def testNumberofContests(self):
 		a = Contest(title="contest1")
 		b = Contest(title="contest1")
@@ -275,28 +300,28 @@ class ContestCreationTest(TestCase):
 		contests = Contest.objects.all()
 		teamnumber = contests.count()
 		self.assertEqual(teamnumber, 5)
-
+	# Jamel
 	def testContestName(self):
 		c = Contest(title="testContest")
 		c.save()
 		contests = Contest.objects.all()
 		if(contests.filter(title="testContest")):
 			self.assertEqual(c.title, "testContest")
-
+	# Jamel
 	def testContestCreation(self):
 		c = Contest(title="super contest")
 		self.assertEqual(c.title, "super contest")
 
 class ScoreboardTest(TestCase):
 	fixtures = ['teams.json']
-
+	# Jamel
 	def testTeamSelection(self):
 
 		ct = Contest(contest_participants="team1")
 		t = Team(name="team1")
 
 		self.assertEqual(ct.contest_participants, t.name)
-
+	# Jamel
 	def testParticipants(self):
 
 		ct = Contest(contest_participants="team1")
@@ -306,7 +331,7 @@ class ScoreboardTest(TestCase):
 		p2 = Participant(contest=ct, team=b)
 
 		self.assertEqual(p1.contest, p2.contest)
-
+	# Jamel
 	def testParticipantScore(self):
 		ct = Contest(contest_participants="team1")
 		t = Team("team1")
@@ -314,13 +339,14 @@ class ScoreboardTest(TestCase):
 		p1.score = 5
 
 		self.assertEqual(5, p1.score)
-
+	# Jamel
 	def test_participant_creation(self):
 		ct = Contest(contest_participants="team1")
 		t = Team("team1")
 		p = Participant(team=t, contest=ct)
 		self.assertTrue(isinstance(p, Participant))
 
+	# Jamel
 	def testDate(self):
 
 		requestdatetime = datetime.now(timezone.utc)

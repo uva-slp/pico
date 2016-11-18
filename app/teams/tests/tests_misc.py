@@ -11,14 +11,14 @@ class TeamTestCases(TestCase):
         self.assertEqual(t.name, 'Team 1')
         t.name = 'wrong name'
         t.save()
-
+    # Jamel
     def testTeamNameFilter(self):
         teams = Team.objects.all()
         c = Team(name = "testTeam")
         c.save()
         if(teams.filter(name="testTeam")) :
             self.assertEqual(c.name, "testTeam")
-
+    # Jamel
     def testNumberofTeams(self):
         a = Team(name="team1")
         b = Team(name="team2")
@@ -34,6 +34,7 @@ class TeamTestCases(TestCase):
         teamnumber = teams.count()
         self.assertEqual(teamnumber, 6)
 
+    # nathan
     def testTeamStr(self):
         team = Team(name="team")
 

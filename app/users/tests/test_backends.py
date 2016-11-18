@@ -10,11 +10,13 @@ class GetUserTest(TestCase):
 	def setUp(self):
 		self.backend = ModelBackend()
 
+	# nathan
 	def test_valid_user_id(self):
 		user = self.backend.get_user(1)
 
 		self.assertIsNotNone(user)
 
+	# nathan
 	def test_invalid_user_id(self):
 		user = self.backend.get_user(-1)
 

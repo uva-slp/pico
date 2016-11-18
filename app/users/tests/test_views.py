@@ -3,12 +3,14 @@ from django.test import TestCase
 
 class RegisterTest(TestCase):
 
+	# nathan
 	def test_get(self):
 		url = reverse('users:register')
 		resp = self.client.get(url)
 
 		self.assertEqual(resp.status_code, 200)
 
+	# nathan
 	def test_post(self):
 		data = {
 			'username': 'testuser',
@@ -22,12 +24,14 @@ class LoginTest(TestCase):
 
 	fixtures = ['users.json']
 
+	# nathan
 	def test_get(self):
 		url = reverse('users:login')
 		resp = self.client.get(url)
 
 		self.assertEqual(resp.status_code, 200)
 
+	# nathan
 	def test_post(self):
 		data = {
 			'username': 'testuser',
@@ -41,6 +45,7 @@ class LogoutTest(TestCase):
 
 	fixtures = ['users.json']
 	
+	# nathan
 	def test_logout(self):
 		self.client.login(username='testuser', password='password')
 		url = reverse('users:logout')
@@ -52,6 +57,7 @@ class PasswordChangeTest(TestCase):
 
 	fixtures = ['users.json']
 
+	# Vivian
 	def test_get(self):
 		self.client.login(username='testuser', password='password')
 		url = reverse('users:password_change')
@@ -63,24 +69,28 @@ class PasswordResetTest(TestCase):
 
 	fixtures = ['users.json']
 
+	# Vivian
 	def test_get_form(self):
 		url = reverse('users:password_reset')
 		resp = self.client.get(url)
 
 		self.assertEqual(resp.status_code, 200)
 
+	# Vivian
 	def test_get_done(self):
 		url = reverse('users:password_reset_done')
 		resp = self.client.get(url)
 
 		self.assertEqual(resp.status_code, 200)
 
+	# Vivian
 	def test_get_complete(self):
 		url = reverse('users:password_done')
 		resp = self.client.get(url)
 
 		self.assertEqual(resp.status_code, 200)
 
+	# Vivian
 	def test_post(self):
 		data = {
 			'email': 'test@test.com'

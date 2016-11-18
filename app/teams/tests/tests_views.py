@@ -8,6 +8,7 @@ class CreateTeamTest(TestCase):
 
 	fixtures = ['users.json']
 
+	# nathan
 	def test_post(self):
 		self.client.login(username='testuser', password='password')
 		data = {
@@ -21,6 +22,7 @@ class JoinTeamTest(TestCase):
 
 	fixtures = ['users.json', 'teams.json']
 
+	# nathan
 	def test_post(self):
 		self.client.login(username='testuser', password='password')
 		data = {
@@ -35,6 +37,7 @@ class LeaveTeamTest(TestCase):
 
 	fixtures = ['users.json', 'teams.json']
 
+	# nathan
 	def test_post(self):
 		Team.objects.get(pk=1).members.add(User.objects.get(pk=1))
 		self.client.login(username='testuser', password='password')
@@ -50,6 +53,7 @@ class AutocompleteTest(TestCase):
 
 	fixtures = ['teams.json']
 
+	# nathan
 	def test_post(self):
 		self.client.login(username='testuser', password='password')
 		resp = self.client.get(reverse('teams:autocomplete'))
