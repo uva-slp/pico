@@ -1,8 +1,9 @@
+from django.urls import reverse
 from django.test import TestCase
 from users.models import User
 
-#could be fixtures
-class InvalidUserInfoTest(TestCase):
+class InvalidUserInfoTest(TestCase):   
+
     def invalid_email(self):
         u = User(username='buddy1', password='password', email='buddyatgmail.com')
         u.save()
@@ -22,6 +23,7 @@ class InvalidUserInfoTest(TestCase):
             self.assertFalse(any(c.isalpha() for c in u.last_name))
 
 class ValidUserInfoTest(TestCase):
+
     def valid_email(self):
         u = User(username='buddy4', password='password', email='buddy@gmail.com')
         u.save()
@@ -43,6 +45,7 @@ class ValidUserInfoTest(TestCase):
             self.assertTrue(all(c.isalpha() for c in u.last_name))
 
 class UniqueUsersTest(TestCase):
+
     def unique_user(self):
         u1 = User(username='same', password='password')
         u2 = User(username='same', password='password')
@@ -54,6 +57,7 @@ class UniqueUsersTest(TestCase):
 
 #THIS MEANS WE NEED FORM VALIDATION FOR UNIQUE EMAILS
 class UniqueEmailTest(TestCase):
+
     def unique_email(self):
         u1 = User(username='buddy1', password='password', email='same@same.com')
         u2 = User(username='buddy2', password='password', email='same@same.com')
@@ -64,6 +68,7 @@ class UniqueEmailTest(TestCase):
             self.assertEqual(user_count, 2)
 
 class NoInjectionsPleaseTest(TestCase):
+
     def sanitization(self):
         u = User(username='()buddy()', password='?!password?!')
         u.username.translate(None, '()?!')

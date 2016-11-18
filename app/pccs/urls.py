@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 from django.contrib import admin
-
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from . import views
 
 urlpatterns = [
@@ -11,3 +12,5 @@ urlpatterns = [
 	url(r'^c/', include('contests.urls', namespace='contests')),
 	url(r'^$', views.index, name='index'),
 ]
+
+urlpatterns += staticfiles_urlpatterns()

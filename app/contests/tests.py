@@ -321,7 +321,6 @@ class ScoreboardTest(TestCase):
 		p = Participant(team=t, contest=ct)
 		self.assertTrue(isinstance(p, Participant))
 
-
 	def testDate(self):
 
 		requestdatetime = datetime.now(timezone.utc)
@@ -336,3 +335,10 @@ class ScoreboardTest(TestCase):
 		RDstring = str(requestdatetime)
 		RDstring = RDstring[:-13]
 		self.assertEqual(RDstring, MRstring)
+
+class CreateContestViewTest(TestCase):
+
+	def test_get(self):
+		url = reverse('contests:create')
+		resp = self.client.get(url)
+		self.assertEqual(resp.status_code, 200)
