@@ -1,3 +1,4 @@
+import re
 from django.urls import reverse
 from django.test import TestCase
 from users.models import User
@@ -83,8 +84,7 @@ class NoInjectionsPleaseTest(TestCase):
     #jason
     def test_sanitization(self):
         u = User(username='()buddy()', password='?!password?!')
-        u.username.translate(None, '()?!')
-        u.password.translate(None, '()?!')
+        u.username.replace(r'[$-/:-?{-~!"^_\[\]]', '')
         u.save()
         users = User.objects.all()
         if(users.filter(username='buddy')):
