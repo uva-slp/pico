@@ -1,16 +1,69 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
-{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
-<!--<head>-->
 {% block head_block %}
     <meta charset="UTF-8">
     <title>{{ contest_data.title }} Contest</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'contesttablestyles.css' %}">
+    <style>
+        table {
+            border-collapse: separate;
+            border-spacing: 20px;
+            text-align: left;
+            width: 100%;
+            margin: 10px;
+        }
+
+        {
+            font: normal 12px/150% Arial, Helvetica, sans-serif;
+            background: #fff;
+            overflow: hidden;
+            border: 1px solid #9C9899;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+        }
+
+        th {
+            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #DBD9D9), color-stop(1, #DBD9D9) );
+            background:-moz-linear-gradient( center top, #DBD9D9 5%, #DBD9D9 100% );
+            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#EAEBED', endColorstr='#EAEBED');
+            background-color:#DBD9D9;
+            color:#000000;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 10px;
+            border-color: #DBD9D9;
+            padding: 10px 10px;
+        }
+
+        th:first-child {
+            border: none;
+        }
+
+        td {
+            color: #000000;
+            font-size: 18px;
+            border-bottom: 1px solid #DBD9D9;
+            font-weight: normal;
+            padding: 3px 10px;
+        }
+
+        td:first-child {
+            border-left: none;
+        }
+
+        tr.noBorder td {
+            border-bottom: none;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+    </style>
 {% endblock %}
-<!--</head>-->
-<!--<body>-->
 {% block body_block %}
     <br /><br />
     <h1>Contest: {{ contest_data.title }}</h1>
@@ -46,6 +99,5 @@
         </tr>
     {% endfor %}
     </table>
-<!--</body>-->
 {% endblock %}
 </html>
