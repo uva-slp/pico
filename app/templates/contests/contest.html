@@ -8,8 +8,9 @@
     <title>{{ contest_data.title }} Contest</title>
     <style>
         table {
-            border-collapse: separate;
+            border-collapse: collapse;
             border-spacing: 20px;
+            border-style: hidden;
             text-align: left;
             width: 100%;
             margin: 10px;
@@ -45,7 +46,6 @@
         td {
             color: #000000;
             font-size: 18px;
-            border-bottom: 1px solid #DBD9D9;
             font-weight: normal;
             padding: 3px 10px;
         }
@@ -54,12 +54,21 @@
             border-left: none;
         }
 
-        tr.noBorder td {
+        .noBorder td {
             border-bottom: none;
+        }
+
+        .hiddenTow tr td {
+            padding: 0 !important;
         }
 
         tr:last-child td {
             border-bottom: none;
+        }
+
+        .table-borderless tr th,
+        .table-borderless tr td {
+            border: none !important;
         }
 
     </style>
@@ -77,25 +86,45 @@
         <br />
     {% endfor %}
     <h3>Contest Problems:</h3>
-    <table>
+    <table class="table table-borderless" style="border-collapse:collapse;">
     {% for problem in contest_problems %}
-        <tr>
-            <th style="padding-top: 15px;">Problem {{ forloop.counter }}</th>
+        <tr data-toggle="collapse" data-target=".{{ forloop.counter }}" class="accordion-toggle">
+            <th>Problem {{ forloop.counter }}</th>
+        </tr>
+        <tr >
+            <td class="hiddenRow">
+                <div class="accodian-body collapse {{ forloop.counter }}">
+                Solution: {{ problem.solution }}
+                </div>
+            </td>
         </tr>
         <tr>
-            <td>Solution: {{ problem.solution }}</td>
+            <td class="hiddenRow">
+                <div class="accodian-body collapse {{ forloop.counter }}">
+                Input Description: {{ problem.input_description }}
+                </div>
+            </td>
         </tr>
         <tr>
-            <td>Input Description: {{ problem.input_description }}</td>
+            <td class="hiddenRow">
+                <div class="accodian-body collapse {{ forloop.counter }}">
+                Output Description: {{ problem.output_description }}
+                </div>
+            </td>
         </tr>
         <tr>
-            <td>Output Description: {{ problem.output_description }}</td>
-        </tr>
-        <tr>
-            <td>Sample Input: {{ problem.sample_input }}</td>
+            <td class="hiddenRow">
+                <div class="accodian-body collapse {{ forloop.counter }}">
+                Sample Input: {{ problem.sample_input }}
+                </div>
+            </td>
         </tr>
         <tr class="noBorder">
-            <td>Sample Output: {{ problem.sample_output }}</td>
+            <td class="hiddenRow">
+                <div class="accodian-body collapse {{ forloop.counter }}">
+                Sample Output: {{ problem.sample_output }}
+                </div>
+            </td>
         </tr>
     {% endfor %}
     </table>
