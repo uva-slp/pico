@@ -1,12 +1,17 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<!--<head>-->
+{% block head_block %}
     <meta charset="UTF-8">
     <title>{{ contest_data.title }} Contest</title>
     <link rel="stylesheet" type="text/css" href="{% static 'contesttablestyles.css' %}">
-</head>
-<body>
+{% endblock %}
+<!--</head>-->
+<!--<body>-->
+{% block body_block %}
     <br /><br />
     <h1>Contest: {{ contest_data.title }}</h1>
     <br />
@@ -41,5 +46,6 @@
         </tr>
     {% endfor %}
     </table>
-</body>
+<!--</body>-->
+{% endblock %}
 </html>
