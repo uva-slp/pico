@@ -1,6 +1,6 @@
 table {
-    border-collapse: collapse;
-    border-spacing: 5px;
+    border-collapse: separate;
+    border-spacing: 20px;
     text-align: left;
     width: 100%;
     margin: 10px;
@@ -16,18 +16,17 @@ table {
     border-radius: 3px;
 }
 
-td, th {
-    padding: 3px 10px;
-}
-
 th {
     background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #DBD9D9), color-stop(1, #DBD9D9) );
     background:-moz-linear-gradient( center top, #DBD9D9 5%, #DBD9D9 100% );
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#DBD9D9', endColorstr='#DBD9D9');
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#EAEBED', endColorstr='#EAEBED');
     background-color:#DBD9D9;
     color:#000000;
     font-size: 24px;
     font-weight: bold;
+    border-radius: 10px;
+    border-color: #DBD9D9;
+    padding: 10px 10px;
 }
 
 th:first-child {
@@ -39,10 +38,15 @@ td {
     font-size: 18px;
     border-bottom: 1px solid #DBD9D9;
     font-weight: normal;
+    padding: 3px 10px;
 }
 
 td:first-child {
     border-left: none;
+}
+
+tr.noBorder td {
+    border-bottom: none;
 }
 
 tr:last-child td {
