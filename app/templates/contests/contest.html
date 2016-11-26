@@ -36,7 +36,15 @@
                     <h4 class="panel-title">
                         <!-- the data-parent attribute make sure only one panel is open at a time-->
                         <div data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ forloop.counter }}">
-                        Problem {{ forloop.counter }}</div>
+                            <div style="display: table; width: 100%;">
+                                <div class="col-sm-4" style="display: table-cell;">Problem {{ forloop.counter }}
+                                </div>
+                                <div class="col-sm-4" style="display: table-cell;">Submission Attempts:
+                                </div>
+                                <div class="col-sm-4" style="display: table-cell;">Status:
+                                </div>
+                            </div>
+                        </div>
                     </h4>
                 </div>
                 <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
