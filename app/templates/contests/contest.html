@@ -6,60 +6,6 @@
 {% block head_block %}
     <meta charset="UTF-8">
     <title>{{ contest_data.title }} Contest</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            border-spacing: 20px;
-            border-style: hidden;
-            text-align: left;
-            width: 100%;
-            margin: 10px;
-        }
-
-        {
-            font: normal 12px/150% Arial, Helvetica, sans-serif;
-            background: #fff;
-            overflow: hidden;
-            border: 1px solid #9C9899;
-            -webkit-border-radius: 3px;
-            -moz-border-radius: 3px;
-            border-radius: 3px;
-        }
-
-        th {
-            background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #DBD9D9), color-stop(1, #DBD9D9) );
-            background:-moz-linear-gradient( center top, #DBD9D9 5%, #DBD9D9 100% );
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#EAEBED', endColorstr='#EAEBED');
-            background-color:#DBD9D9;
-            color:#000000;
-            font-size: 24px;
-            font-weight: bold;
-            border-radius: 10px;
-            border-color: #DBD9D9;
-            padding: 10px 10px;
-        }
-
-        th:first-child {
-            border: none;
-        }
-
-        td {
-            color: #000000;
-            font-size: 18px;
-            font-weight: normal;
-            padding: 3px 10px;
-        }
-
-        .hiddenRow tr td {
-            padding: 0 !important;
-        }
-
-        .table-borderless tr th,
-        .table-borderless tr td {
-            border: none !important;
-        }
-
-    </style>
 {% endblock %}
 {% block body_block %}
     <br /><br />
@@ -74,47 +20,27 @@
         <br />
     {% endfor %}
     <h3>Contest Problems:</h3>
-    <table class="table table-borderless" style="border-collapse:collapse;">
+    <div class="panel-group" id="accordion">
     {% for problem in contest_problems %}
-        <tr data-toggle="collapse" data-target=".{{ forloop.counter }}" class="accordion-toggle">
-            <th>Problem {{ forloop.counter }}</th>
-        </tr>
-        <tr >
-            <td class="hiddenRow">
-                <div class="accodian-body collapse {{ forloop.counter }}">
-                Solution: {{ problem.solution }}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <!-- the data-parent attribute make sure only one panel is open at a time-->
+                        <div data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ forloop.counter }}">
+                        Problem {{ forloop.counter }}</div>
+                    </h4>
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="hiddenRow">
-                <div class="accodian-body collapse {{ forloop.counter }}">
-                Input Description: {{ problem.input_description }}
+                <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+                    <ul class="list-group">
+                        <li class="list-group-item">Solution: {{ problem.solution }}</li>
+                        <li class="list-group-item">Input Description: {{ problem.input_description }}</li>
+                        <li class="list-group-item">Output Description: {{ problem.output_description }}</li>
+                        <li class="list-group-item">Sample Input: {{ problem.sample_input }}</li>
+                        <li class="list-group-item">Sample Output: {{ problem.sample_output }}</li>
+                    </ul>
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="hiddenRow">
-                <div class="accodian-body collapse {{ forloop.counter }}">
-                Output Description: {{ problem.output_description }}
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="hiddenRow">
-                <div class="accodian-body collapse {{ forloop.counter }}">
-                Sample Input: {{ problem.sample_input }}
-                </div>
-            </td>
-        </tr>
-        <tr class="noBorder">
-            <td class="hiddenRow">
-                <div class="accodian-body collapse {{ forloop.counter }}">
-                Sample Output: {{ problem.sample_output }}
-                </div>
-            </td>
-        </tr>
+            </div>
     {% endfor %}
-    </table>
+    </div>
 {% endblock %}
 </html>
