@@ -9,6 +9,10 @@
     <style>
         .panel-body {
             background: #F7F7F7;
+            border-style: solid;
+            border-width: 0.5px;
+            border-color: #E5E5E5;
+            border-radius: 5px;
         }
     </style>
 {% endblock %}
@@ -37,29 +41,24 @@
                 </div>
                 <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
                     <ul class="list-group">
-                        <li class="list-group-item">Solution:
-                            <div class="panel-body">
-                                 {{ problem.solution }}
-                            </div>
-                        </li>
-                        <li class="list-group-item">Input Description:
+                        <li class="list-group-item">Description of Input
                             <div class="panel-body">
                                 {{ problem.input_description }}
                             </div>
                         </li>
-                        <li class="list-group-item">Output Description:
+                        <li class="list-group-item">Description of Output
                             <div class="panel-body">
                                 {{ problem.output_description }}
                             </div>
                         </li>
                         <li class="list-group-item">
                             <div style="display: table; width: 100%;">
-                                <div class="col-sm-6" style="display: table-cell;">Sample Input:
+                                <div class="col-sm-6" style="display: table-cell;">Sample Input
                                     <div class="panel-body">
                                          {{ problem.sample_input }}
                                     </div>
                                 </div>
-                                <div class="col-sm-6" style="display: table-cell;">Sample Output:
+                                <div class="col-sm-6" style="display: table-cell;">Sample Output
                                     <div class="panel-body">
                                          {{ problem.sample_output }}
                                     </div>
@@ -67,7 +66,7 @@
                             </div>
                         </li>
                     </ul>
-                    <!--<div class="panel-footer">Upload your file:</div>-->
+                    <div class="panel-footer">Upload your file:</div>
                 </div>
             </div>
     {% endfor %}
