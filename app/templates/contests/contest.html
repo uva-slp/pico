@@ -6,6 +6,11 @@
 {% block head_block %}
     <meta charset="UTF-8">
     <title>{{ contest_data.title }} Contest</title>
+    <style>
+        .panel-body {
+            background: #F7F7F7;
+        }
+    </style>
 {% endblock %}
 {% block body_block %}
     <br /><br />
@@ -48,19 +53,21 @@
                             </div>
                         </li>
                         <li class="list-group-item">
-                            <div style="width: 50%; float: left">Sample Input:
-                                <div class="panel-body">
-                                     {{ problem.sample_input }}
+                            <div style="display: table; width: 100%;">
+                                <div class="col-sm-6" style="display: table-cell;">Sample Input:
+                                    <div class="panel-body">
+                                         {{ problem.sample_input }}
+                                    </div>
                                 </div>
-                            </div>
-                            <div style="margin-left: 20px;">Sample Output:
-                                <div class="panel-body">
-                                     {{ problem.sample_output }}
+                                <div class="col-sm-6" style="display: table-cell;">Sample Output:
+                                    <div class="panel-body">
+                                         {{ problem.sample_output }}
+                                    </div>
                                 </div>
                             </div>
                         </li>
                     </ul>
-                    <div class="panel-footer">Upload your file:</div>
+                    <!--<div class="panel-footer">Upload your file:</div>-->
                 </div>
             </div>
     {% endfor %}
