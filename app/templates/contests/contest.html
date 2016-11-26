@@ -32,12 +32,35 @@
                 </div>
                 <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
                     <ul class="list-group">
-                        <li class="list-group-item">Solution: {{ problem.solution }}</li>
-                        <li class="list-group-item">Input Description: {{ problem.input_description }}</li>
-                        <li class="list-group-item">Output Description: {{ problem.output_description }}</li>
-                        <li class="list-group-item">Sample Input: {{ problem.sample_input }}</li>
-                        <li class="list-group-item">Sample Output: {{ problem.sample_output }}</li>
+                        <li class="list-group-item">Solution:
+                            <div class="panel-body">
+                                 {{ problem.solution }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">Input Description:
+                            <div class="panel-body">
+                                {{ problem.input_description }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">Output Description:
+                            <div class="panel-body">
+                                {{ problem.output_description }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div style="width: 50%; float: left">Sample Input:
+                                <div class="panel-body">
+                                     {{ problem.sample_input }}
+                                </div>
+                            </div>
+                            <div style="margin-left: 20px;">Sample Output:
+                                <div class="panel-body">
+                                     {{ problem.sample_output }}
+                                </div>
+                            </div>
+                        </li>
                     </ul>
+                    <div class="panel-footer">Upload your file:</div>
                 </div>
             </div>
     {% endfor %}
