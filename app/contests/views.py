@@ -143,6 +143,18 @@ def create(request):
     return render(request, 'contests/create_contest.html', {'form': form, 'qa_formset': qa_formset})
 
 
+# Helper method for getting user's team participated in a contest
+def getTeam(contest_id, user_id):
+	user = User.objects.get(id=user_id)
+	contest_data = Contest.objects.get(id=contest_id)
+	contest_participants = contest_data.participant_set.all()
+	for participant in contest_participants:
+		team = participant.team
+		if user in team.members.all():
+			return team
+	return None
+
+
 @login_required
 def displayContest(request, contest_id):
 	contest_data = Contest.objects.get(id=contest_id)
@@ -152,14 +164,42 @@ def displayContest(request, contest_id):
 	if request.user == contest_data.creator:
 		is_judge = True
 
-	# TODO: Update to participants after contest model updated.
-	teams = Team.objects.all()
+	contest_participants = contest_data.participant_set.all()
+
+	current_team = getTeam(contest_id, request.user.id)
+	submission_attempts = []
+	status = []
+	if current_team is not None:
+		for p in problems:
+			p_submissions = p.submission_set.filter(team__pk=current_team.id)
+			# number of attempts
+			current_attempts = len(p_submissions)
+			submission_attempts.append(current_attempts)
+			# status -- if have got it correct, ignore the rest
+			current_status = "-"
+			if current_attempts is not 0:
+				got_yes = False
+				for s in p_submissions:
+					if s.state == 'YES':
+						got_yes = True
+						break
+				if got_yes:
+					current_status = "Yes"
+				else:
+					submissions = list(p_submissions)
+					submissions.sort(key=lambda x: x.timestamp)
+					current_status = "No - " + submissions[-1].get_result_display()
+			status.append(current_status)
+
+
 
 	return render(
 		request,
 		'contests/contest.html',
 		{'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge,
-			'contest_teams': teams}
+			'contest_teams': contest_participants, 'submission_attempts': submission_attempts,
+		 	'submission_status':status
+		 }
 	)
 
 

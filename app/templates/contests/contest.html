@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
+{% load contest_extras %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -37,11 +38,14 @@
                         <!-- the data-parent attribute make sure only one panel is open at a time-->
                         <div data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ forloop.counter }}">
                             <div style="display: table; width: 100%;">
-                                <div class="col-sm-4" style="display: table-cell;">Problem {{ forloop.counter }}
+                                <div class="col-sm-4" style="display: table-cell;">
+                                    Problem {{ forloop.counter }}
                                 </div>
-                                <div class="col-sm-4" style="display: table-cell;">Submission Attempts:
+                                <div class="col-sm-4" style="display: table-cell;">
+                                    Submission Attempts: {{ submission_attempts|index:forloop.counter }}
                                 </div>
-                                <div class="col-sm-4" style="display: table-cell;">Status:
+                                <div class="col-sm-4" style="display: table-cell;">
+                                    Status: {{ submission_status|index:forloop.counter }}
                                 </div>
                             </div>
                         </div>
