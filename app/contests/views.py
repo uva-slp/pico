@@ -192,15 +192,14 @@ def displayContest(request, contest_id):
 					submissions = list(p_submissions)
 					submissions.sort(key=lambda x: x.timestamp)
 					latest_submission = submissions[-1]
-					current_status = "No - " + latest_submission.get_result_display()
 					if latest_submission.state == 'NEW':
 						current_color = "warning"
+						current_status = "New"
 					elif latest_submission.state == 'NO':
 						current_color = "danger"
+						current_status = "No - " + latest_submission.get_result_display()
 			status.append(current_status)
 			color_states.append(current_color)
-
-
 
 	return render(
 		request,
