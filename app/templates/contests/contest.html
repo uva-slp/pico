@@ -32,7 +32,7 @@
     <h3>Contest Problems:</h3>
     <div class="panel-group" id="accordion">
     {% for problem in contest_problems %}
-            <div class="panel panel-default">
+            <div class="panel panel-{{color_states|index:forloop.counter}}">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <!-- the data-parent attribute make sure only one panel is open at a time-->

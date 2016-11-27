@@ -169,6 +169,7 @@ def displayContest(request, contest_id):
 	current_team = getTeam(contest_id, request.user.id)
 	submission_attempts = []
 	status = []
+	color_states = []
 	if current_team is not None:
 		for p in problems:
 			p_submissions = p.submission_set.filter(team__pk=current_team.id)
@@ -177,6 +178,7 @@ def displayContest(request, contest_id):
 			submission_attempts.append(current_attempts)
 			# status -- if have got it correct, ignore the rest
 			current_status = "-"
+			current_color = "default"
 			if current_attempts is not 0:
 				got_yes = False
 				for s in p_submissions:
@@ -185,11 +187,18 @@ def displayContest(request, contest_id):
 						break
 				if got_yes:
 					current_status = "Yes"
+					current_color = "success"
 				else:
 					submissions = list(p_submissions)
 					submissions.sort(key=lambda x: x.timestamp)
-					current_status = "No - " + submissions[-1].get_result_display()
+					latest_submission = submissions[-1]
+					current_status = "No - " + latest_submission.get_result_display()
+					if latest_submission.state == 'NEW':
+						current_color = "warning"
+					elif latest_submission.state == 'NO':
+						current_color = "danger"
 			status.append(current_status)
+			color_states.append(current_color)
 
 
 
@@ -198,7 +207,7 @@ def displayContest(request, contest_id):
 		'contests/contest.html',
 		{'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge,
 			'contest_teams': contest_participants, 'submission_attempts': submission_attempts,
-		 	'submission_status':status
+		 	'submission_status': status, 'color_states': color_states
 		 }
 	)
 
