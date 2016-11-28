@@ -301,7 +301,7 @@ def scoreboard(request):
     team_contests_array = [] # Holds all contests based on each users team
 
     for team in allteams.iterator(): # Loop to filter possible contest pool down by each team the user is a part of
-        print "teamloop"
+        print("teamloop")
         print(team.name)
         testcontests = testcontests.filter(contest_participants__contains=team.name)
         #print(testcontests)
