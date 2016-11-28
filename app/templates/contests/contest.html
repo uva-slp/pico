@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ contest_data.title }} Contest</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load contest_extras %}
+
+{% block head_block %}
+    {{ block.super }}
+    {% block title_block %}<title>{{ contest_data.title }} Contest</title>{% endblock %}
+
+    <style>
+        .panel-body {
+            background: #F7F7F7;
+            border-style: solid;
+            border-width: 0.5px;
+            border-color: #E5E5E5;
+            border-radius: 5px;
+        }
+    </style>
+{% endblock %}
+{% block body_block %}
     <br /><br />
     <h1>Contest: {{ contest_data.title }}</h1>
     <br />
@@ -17,27 +29,58 @@
         <br />
     {% endfor %}
     <h3>Contest Problems:</h3>
-    <table>
+    <div class="panel-group" id="accordion">
     {% for problem in contest_problems %}
-        <tr>
-            <th style="padding-top: 15px;">Problem {{ forloop.counter }}</th>
-        </tr>
-        <tr>
-            <td>Solution: {{ problem.solution }}</td>
-        </tr>
-        <tr>
-            <td>Input Description: {{ problem.input_description }}</td>
-        </tr>
-        <tr>
-            <td>Output Description: {{ problem.output_description }}</td>
-        </tr>
-        <tr>
-            <td>Sample Input: {{ problem.sample_input }}</td>
-        </tr>
-        <tr>
-            <td>Sample Output: {{ problem.sample_output }}</td>
-        </tr>
+            <div class="panel panel-{{color_states|index:forloop.counter}}">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <!-- the data-parent attribute make sure only one panel is open at a time-->
+                        <div data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ forloop.counter }}">
+                            <div style="display: table; width: 100%;">
+                                <div class="col-sm-4" style="display: table-cell;">
+                                    Problem {{ forloop.counter }}
+                                </div>
+                                <div class="col-sm-4" style="display: table-cell;">
+                                    Submission Attempts: {{ submission_attempts|index:forloop.counter }}
+                                </div>
+                                <div class="col-sm-4" style="display: table-cell;">
+                                    Status: {{ submission_status|index:forloop.counter }}
+                                </div>
+                            </div>
+                        </div>
+                    </h4>
+                </div>
+                <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+                    <ul class="list-group">
+                        <li class="list-group-item">Description of Input
+                            <div class="panel-body">
+                                {{ problem.input_description }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">Description of Output
+                            <div class="panel-body">
+                                {{ problem.output_description }}
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div style="display: table; width: 100%;">
+                                <div class="col-sm-6" style="display: table-cell;">Sample Input
+                                    <div class="panel-body">
+                                         <pre>{{ problem.sample_input|print_file_content }}</pre>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" style="display: table-cell;">Sample Output
+                                    <div class="panel-body">
+                                         <pre>{{ problem.sample_output|print_file_content }}</pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="panel-footer">Upload your file:</div>
+                </div>
+            </div>
     {% endfor %}
-    </table>
-</body>
+    </div>
+{% endblock %}
 </html>

@@ -60,7 +60,6 @@ class Participant(models.Model):
 class Submission(models.Model):
 	run_id = models.IntegerField(null=True)
 	team = models.ForeignKey(Team, null = True)
-	# question = models.ForeignKey(Question, on_delete=models.CASCADE)
 	problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True)
 	code_file = models.FileField(upload_to='uploads/', null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=True)
