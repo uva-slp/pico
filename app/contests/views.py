@@ -204,6 +204,11 @@ def displayContest(request, contest_id):
 						current_status = "No - " + latest_submission.get_result_display()
 			status.append(current_status)
 			color_states.append(current_color)
+	else:
+		for p in problems:
+			submission_attempts.append(0)
+			status.append("-")
+			color_states.append("default")
 
 	return render(
 		request,
