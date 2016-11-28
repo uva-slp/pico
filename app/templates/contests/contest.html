@@ -1,12 +1,11 @@
-{% extends 'contests/base.html' %}
+{% extends 'base.html' %}
 {% load bootstrap3 %}
 {% load contest_extras %}
 
-<!DOCTYPE html>
-<html lang="en">
 {% block head_block %}
-    <meta charset="UTF-8">
-    <title>{{ contest_data.title }} Contest</title>
+    {{ block.super }}
+    {% block title_block %}<title>{{ contest_data.title }} Contest</title>{% endblock %}
+
     <style>
         .panel-body {
             background: #F7F7F7;
