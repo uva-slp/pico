@@ -53,8 +53,8 @@ class Problem(models.Model):
         contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
 
 class Participant(models.Model):
-	contest = models.OneToOneField(Contest)
-	team = models.OneToOneField(Team)
+	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
+	team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.CASCADE)
 	score = models.IntegerField
 
 class Submission(models.Model):

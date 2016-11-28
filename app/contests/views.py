@@ -99,7 +99,7 @@ def create(request):
         qa_formset = QAFormSet(request.POST, request.FILES)
         if form.is_valid() and qa_formset.is_valid():
 
-            problem_desc = Contest(problem_description=request.FILES['problem_description'])
+            problem_desc = Contest(problem_description=request.FILES['problem_description'], date_created=datetime.now(timezone.utc))
             problem_desc.save()
             contest = form.save()
             contest.creator = request.user
@@ -113,11 +113,15 @@ def create(request):
 
             for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
                 team = Team.objects.filter(name=participant).get()
+                print(team)
                 pt = Participant(contest=contest, team=team)
                 print(pt)
                 pt.save()
 
+            problemcount = 0
+
             for qa_form in qa_formset:
+                problemcount += 1
                 solution = qa_form.cleaned_data.get('solution')
                 input_desc = qa_form.cleaned_data.get('input_description')
                 output_desc = qa_form.cleaned_data.get('output_description')
@@ -126,7 +130,7 @@ def create(request):
                 contest = qa_form.cleaned_data.get('title')
 
                 p = Problem(
-					solution=solution, input_description=input_desc,
+					number = problemcount, solution=solution, input_description=input_desc,
 					output_description=output_desc, sample_input=sample_input,
 					sample_output=sample_output, contest_id=contest_id)
 
@@ -244,19 +248,42 @@ def scoreboard(request):
     print("teams with requesting user")
     print(allteams)
 
-    '''
-    print("Mostrecentcontest object:")
-    allcontests = allcontests.filter(title="mostrecentcontest")
-    for contest in allcontests.iterator():
-        print(contest.contest_participants)
-    '''
+    testcontests = allcontests
 
-    allcontests = allcontests.filter(contest_participants__in=allteams.values('name')) # Get all contests with user's teams
-    print("allcontests after filtering by user's teams")
-    print(allcontests)
+    team_contests_array = [] # Holds all contests based on each users team
 
+    for team in allteams.iterator(): # Loop to filter possible contest pool down by each team the user is a part of
+        print "teamloop"
+        print(team.name)
+        testcontests = testcontests.filter(contest_participants__contains=team.name)
+        #print(testcontests)
+        team_contests_array.append(testcontests)
+        #print(allcontests)
+
+    #print(team_contests_array)
     requestdatetime = datetime.now(timezone.utc) # Get current time to match with most recently joined contest based on the user's team
     print(requestdatetime)
+
+    testnearestdate = []
+    testnearestarray = []
+
+    for index in team_contests_array:
+        for contest in index:
+            testnearestdate.append(contest.date_created)
+            #print(contest)
+        testnearestarray.append(nearest(testnearestdate, requestdatetime)) # Get nearest date for each grouping regarding team
+
+    # testnearestarray now contains contest times created for the most recently created contests under each team relevant to the user requesting the scoreboard
+    print("testnearestarray: ")
+    print(testnearestarray)
+
+
+    #print "allcontests before filter"
+    #print(allcontests)
+    #print(allteams.values('name'))
+    allcontests = allcontests.filter(contest_participants__in="team3") # Get all contests with user's teams
+    #print("allcontests after filtering by user's teams")
+    #print(allcontests)
 
     nearestdate = []
 
@@ -265,11 +292,18 @@ def scoreboard(request):
 
     mostrecentcontestdate = nearest(nearestdate, requestdatetime) # Get whatever contest date is nearest to request date
     mostrecentcontest = allcontests.filter(date_created=mostrecentcontestdate) # Filter queryset by nearest date created to get relevant contest for scoreboard request
-    print("most recent contest")
+    problems = Problem.objects.all()
+    problems = problems.filter(contest=mostrecentcontest)
+    problem_count = 0
+    for problem in problems :
+        problem_count += 1
+        print("problem:")
+        print(problem.name)
+
+    print("most recent contest:")
     print(mostrecentcontest)
     for contest in mostrecentcontest: # Should be 1 contest
         print("Participant:")
         print(contest.contest_participants)
 
-
-    return render(request, 'contests/scoreboard.html', {'teams' : allteams})
+    return render(request, 'contests/scoreboard.html', {'teams' : allteams, 'problem_count' : problem_count, 'problems' : problems})

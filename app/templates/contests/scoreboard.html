@@ -37,14 +37,23 @@
         <th> Total Attempts</th>
     </tr>
 
-
+    <!-- Team row -->
     {% for team in teams %}
-        <tr> <td> {{ team }} </td> </tr>
+        <tr>
+
+        <td> {{ team }} </td>
+
+        {% for problem in problems %}
+            <td> {{ problem.number }} </td>
+        {% endfor %}
+
+        </tr>
 
     {% endfor %}
 
 
     <br> </br>
+
 
 
 </table>
