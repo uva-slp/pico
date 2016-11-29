@@ -274,12 +274,12 @@ def displayJudge(request, contest_id, run_id):
 						messages.error(request, "Error")
 				else:
 					form = ReturnJudgeResultForm(instance=current_submission)
-			return render(
-				request,
-				'contests/judge.html',
-				{'contest_data': contest_data, 'is_judge': True,
-					'submission': current_submission, 'form': form}
-			)
+		return render(
+			request,
+			'contests/judge.html',
+			{'contest_data': contest_data, 'is_judge': True,
+				'submission': current_submission, 'form': form}
+		)
 
 	return render(
 		request,
