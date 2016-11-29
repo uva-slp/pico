@@ -44,10 +44,17 @@
               <ul class="nav navbar-nav">
                 {% url 'contests:contest' contest_data.id as problems_url%}
                 {% url 'contests:contest_judge_submissions' contest_data.id as judge_url %}
+                {% url 'contests:contest_submissions' contest_data.id team.id as submission_url %}
                 <li {% if request.path == problems_url %}class="active"{% endif %}>
                     <a href="{{ problems_url }}">Problems</a></li>
+                <!-- TODO: update when contest support multiple judges-->
+                {% if request.user == contest_data.creator %}
                 <li {% if request.path == judge_url %}class="active"{% endif %}>
                     <a href="{{ judge_url }}">Submissions</a></li>
+                {% else %}
+                <li {% if request.path == submission_url %}class="active"{% endif %}>
+                    <a href="{{ submission_url }}">Submissions</a></li>
+                {% endif %}
               </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
