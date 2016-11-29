@@ -4,6 +4,7 @@ from django.forms import CheckboxInput
 from django.forms import CheckboxSelectMultiple
 import re
 
+'''
 register = template.Library()
 
 class_re = re.compile(r'(?<=class=["\'])(.*)(?=["\'])')
@@ -30,3 +31,4 @@ def add_class(value, css_class):
 def is_checkbox(field):
   return (field.field.widget.__class__.__name__ == CheckboxInput().__class__.__name__ or
   field.field.widget.__class__.__name__ == CheckboxSelectMultiple().__class__.__name__)
+'''
