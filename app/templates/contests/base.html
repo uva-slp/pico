@@ -51,7 +51,7 @@
                 {% if request.user == contest_data.creator %}
                 <li {% if request.path == judge_url %}class="active"{% endif %}>
                     <a href="{{ judge_url }}">Submissions</a></li>
-                {% else %}
+                {% elif team is not None%}
                 <li {% if request.path == submission_url %}class="active"{% endif %}>
                     <a href="{{ submission_url }}">Submissions</a></li>
                 {% endif %}
