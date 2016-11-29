@@ -1,8 +1,9 @@
-<!DOCTYPE html>
+
+
 <html>
 <head>
 <style>
-#customers {
+   #customers {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
@@ -24,27 +25,43 @@
     background-color: #4CAF50;
     color: white;
 }
+
 </style>
 </head>
 <META HTTP-EQUIV="refresh" CONTENT="5">
 <title>Scoreboard</title>
 <body>
+
+<b> {{ contest_title }}</b>
+
 <table id="scoreboard">
     <tr>
         <th> Team </th>
-        <th> Question </th>
+
+        {% for count in problem_count %}
+            <th> Question {{ count }} </th>
+        {% endfor %}
         <th> Score </th>
         <th> Total Attempts</th>
     </tr>
 
-
+    <!-- Team row -->
     {% for team in teams %}
-        <tr> <td> {{ team }} </td> </tr>
+        <tr>
+
+        <td> {{ team }} </td>
+
+        {% for problem in problems %}
+            <td> Status </td>
+        {% endfor %}
+
+        </tr>
 
     {% endfor %}
 
 
     <br> </br>
+
 
 
 </table>

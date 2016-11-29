@@ -23,11 +23,11 @@ def home(request):
 		'contests/home.html',
 		{
 			'team_form': TeamForm(),
-            'team_join_form': TeamJoinForm(),
+			'team_join_form': TeamJoinForm(),
 			'team_leave_form': TeamLeaveForm(),
-            'organization_form': OrganizationForm(),
-            'organization_join_form': OrganizationJoinForm(),
-            'organization_leave_form': OrganizationLeaveForm(),
+			'organization_form': OrganizationForm(),
+			'organization_join_form': OrganizationJoinForm(),
+			'organization_leave_form': OrganizationLeaveForm(),
 			'contests_created': Contest.objects.all()
 		}
 	)
@@ -60,88 +60,68 @@ def diff(request, question_id):
                     return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges, 'question_id' : question_id})
         else:
             return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
-    
 
-'''
-def create(request):
-    #boolean to see if the contest was successfully created
-    #initally false, code will make it true it successful
-    #successfully_created_contest = False
-    #check to see if the page was loaded with POST request data
-
-    if request.method == 'POST':
-        #grab information from form
-        form = CreateContestForm(request.POST)
-        if form.is_valid():
-            c = Contest()
-            c.title = form.title
-            c.creator = 'user'
-            c.languages = form.languages
-            c.length = form.length
-            c.autojudge = form.autojudge
-            c.save()
-            return render(request, 'contests/home.html', {'form' : form})
-    else:
-        form = CreateContestForm()
-    return render(request, 'contests/create_contest.html', {'form': form})
-'''
 
 def create(request):
 
-    QAFormSet = formset_factory(CreateProblem)
+	QAFormSet = formset_factory(CreateProblem)
 
-    if request.method == 'POST':
-        #grab information from form
-        form = CreateContestForm(request.POST, request.FILES)
-        #qa_formset = CreateProblem(request.POST)
+	if request.method == 'POST':
+		#grab information from form
+		form = CreateContestForm(request.POST, request.FILES)
+		#qa_formset = CreateProblem(request.POST)
 
-        qa_formset = QAFormSet(request.POST, request.FILES)
-        if form.is_valid() and qa_formset.is_valid():
+		qa_formset = QAFormSet(request.POST, request.FILES)
+		if form.is_valid() and qa_formset.is_valid():
 
-            problem_desc = Contest(problem_description=request.FILES['problem_description'])
-            problem_desc.save()
-            contest = form.save()
-            contest.creator = request.user
-            contest.save()
+			problem_desc = Contest(problem_description=request.FILES['problem_description'], date_created=datetime.now(timezone.utc))
+			problem_desc.save()
+			contest = form.save()
+			contest.creator = request.user
+			contest.save()
 
-            contest_id = contest.id
+			contest_id = contest.id
 
-            contest_participants = form.cleaned_data.get('contest_participants')
-            contest_participants = contest_participants.split()
-            print(contest_participants)
+			contest_participants = form.cleaned_data.get('contest_participants')
+			contest_participants = contest_participants.split()
+			print(contest_participants)
 
-            for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
-                team = Team.objects.filter(name=participant).get()
-                pt = Participant(contest=contest, team=team)
-                print(pt)
-                pt.save()
+			for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
+				team = Team.objects.filter(name=participant).get()
+				print(team)
+				pt = Participant(contest=contest, team=team)
+				print(pt)
+				pt.save()
 
-            for qa_form in qa_formset:
-                solution = qa_form.cleaned_data.get('solution')
-                input_desc = qa_form.cleaned_data.get('input_description')
-                output_desc = qa_form.cleaned_data.get('output_description')
-                sample_input = qa_form.cleaned_data.get('sample_input')
-                sample_output = qa_form.cleaned_data.get('sample_output')
-                contest = qa_form.cleaned_data.get('title')
+			problemcount = 0
 
-                p = Problem(
-					solution=solution, input_description=input_desc,
+			for qa_form in qa_formset:
+				problemcount += 1
+				solution = qa_form.cleaned_data.get('solution')
+				input_desc = qa_form.cleaned_data.get('input_description')
+				output_desc = qa_form.cleaned_data.get('output_description')
+				sample_input = qa_form.cleaned_data.get('sample_input')
+				sample_output = qa_form.cleaned_data.get('sample_output')
+				contest = qa_form.cleaned_data.get('title')
+
+				p = Problem(
+					number = problemcount, solution=solution, input_description=input_desc,
 					output_description=output_desc, sample_input=sample_input,
 					sample_output=sample_output, contest_id=contest_id)
 
-                p.save()
+				p.save()
 
-                # Loop through participants text box and create participant objects for a team on each line w/ contest
+				# Loop through participants text box and create participant objects for a team on each line w/ contest
 
-            return redirect(reverse('contests:home'))
-            # return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
-    else:
-        template_user = request.user
-        templates = ContestTemplate.objects.filter(creator=template_user)
-        form = CreateContestForm()
-        QAFormSet = formset_factory(CreateProblem)
-        qa_formset = QAFormSet()
-    return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset})
+			return redirect(reverse('contests:home'))
+			# return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
+	else:
+		template_user = request.user
+		templates = ContestTemplate.objects.filter(creator=template_user)
+		form = CreateContestForm()
+		QAFormSet = formset_factory(CreateProblem)
+		qa_formset = QAFormSet()
+	return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset})
 
 
 def create_template(request):
@@ -181,6 +161,19 @@ def load_template(request):
 			# template does not exist or no template was selected
 			create()
 
+
+# Helper method for getting user's team participated in a contest
+def getTeam(contest_id, user_id):
+	user = User.objects.get(id=user_id)
+	contest_data = Contest.objects.get(id=contest_id)
+	contest_participants = contest_data.participant_set.all()
+	for participant in contest_participants:
+		team = participant.team
+		if user in team.members.all():
+			return team
+	return None
+
+
 @login_required
 def displayContest(request, contest_id):
 	contest_data = Contest.objects.get(id=contest_id)
@@ -190,14 +183,55 @@ def displayContest(request, contest_id):
 	if request.user == contest_data.creator:
 		is_judge = True
 
-	# TODO: Update to participants after contest model updated.
-	teams = Team.objects.all()
+	contest_participants = contest_data.participant_set.all()
+
+	current_team = getTeam(contest_id, request.user.id)
+	submission_attempts = []
+	status = []
+	color_states = []
+	if current_team is not None:
+		for p in problems:
+			p_submissions = p.submission_set.filter(team__pk=current_team.id)
+			# number of attempts
+			current_attempts = len(p_submissions)
+			submission_attempts.append(current_attempts)
+			# status -- if have got it correct, ignore the rest
+			current_status = "-"
+			current_color = "default"
+			if current_attempts is not 0:
+				got_yes = False
+				for s in p_submissions:
+					if s.state == 'YES':
+						got_yes = True
+						break
+				if got_yes:
+					current_status = "Yes"
+					current_color = "success"
+				else:
+					submissions = list(p_submissions)
+					submissions.sort(key=lambda x: x.timestamp)
+					latest_submission = submissions[-1]
+					if latest_submission.state == 'NEW':
+						current_color = "warning"
+						current_status = "New"
+					elif latest_submission.state == 'NO':
+						current_color = "danger"
+						current_status = "No - " + latest_submission.get_result_display()
+			status.append(current_status)
+			color_states.append(current_color)
+	else:
+		for p in problems:
+			submission_attempts.append(0)
+			status.append("-")
+			color_states.append("default")
 
 	return render(
 		request,
 		'contests/contest.html',
 		{'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge,
-			'contest_teams': teams}
+			'contest_teams': contest_participants, 'submission_attempts': submission_attempts,
+		 	'submission_status': status, 'color_states': color_states
+		 }
 	)
 
 
@@ -282,19 +316,42 @@ def scoreboard(request):
     print("teams with requesting user")
     print(allteams)
 
-    '''
-    print("Mostrecentcontest object:")
-    allcontests = allcontests.filter(title="mostrecentcontest")
-    for contest in allcontests.iterator():
-        print(contest.contest_participants)
-    '''
+    testcontests = allcontests
 
-    allcontests = allcontests.filter(contest_participants__in=allteams.values('name')) # Get all contests with user's teams
-    print("allcontests after filtering by user's teams")
-    print(allcontests)
+    team_contests_array = [] # Holds all contests based on each users team
 
+    for team in allteams.iterator(): # Loop to filter possible contest pool down by each team the user is a part of
+        print("teamloop")
+        print(team.name)
+        testcontests = testcontests.filter(contest_participants__contains=team.name)
+        #print(testcontests)
+        team_contests_array.append(testcontests)
+        #print(allcontests)
+
+    #print(team_contests_array)
     requestdatetime = datetime.now(timezone.utc) # Get current time to match with most recently joined contest based on the user's team
     print(requestdatetime)
+
+    testnearestdate = []
+    testnearestarray = []
+
+    for index in team_contests_array:
+        for contest in index:
+            testnearestdate.append(contest.date_created)
+            #print(contest)
+        testnearestarray.append(nearest(testnearestdate, requestdatetime)) # Get nearest date for each grouping regarding team
+
+    # testnearestarray now contains contest times created for the most recently created contests under each team relevant to the user requesting the scoreboard
+    print("testnearestarray: ")
+    print(testnearestarray)
+
+
+    #print "allcontests before filter"
+    #print(allcontests)
+    #print(allteams.values('name'))
+    #allcontests = allcontests.filter(contest_participants__in="team3") # Get all contests with user's teams
+    #print("allcontests after filtering by user's teams")
+    #print(allcontests)
 
     nearestdate = []
 
@@ -303,11 +360,34 @@ def scoreboard(request):
 
     mostrecentcontestdate = nearest(nearestdate, requestdatetime) # Get whatever contest date is nearest to request date
     mostrecentcontest = allcontests.filter(date_created=mostrecentcontestdate) # Filter queryset by nearest date created to get relevant contest for scoreboard request
-    print("most recent contest")
+    problems = Problem.objects.all()
+    problems = problems.filter(contest=mostrecentcontest)
+    problem_count = 0
+    for problem in problems :
+        problem_count += 1
+        print("problem:")
+        print(problem.number)
+
+    participating_teams = []
+
+    participants_string = ""
+
+    print("most recent contest:")
     print(mostrecentcontest)
     for contest in mostrecentcontest: # Should be 1 contest
         print("Participant:")
-        print(contest.contest_participants)
+        participants_string = contest.contest_participants
+        participants_string = participants_string.split()
+
+    print(participants_string)
 
 
-    return render(request, 'contests/scoreboard.html', {'teams' : allteams})
+    problem_count_array = []
+    for i in range(1, problem_count+1):
+        problem_count_array.append(i)
+
+    contest_title = mostrecentcontest.values('title').get()
+
+
+
+    return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array, 'problems' : problems, 'contest_title' : contest_title})
