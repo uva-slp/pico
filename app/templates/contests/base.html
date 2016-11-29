@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title_block %}<title>PCCS</title>{% endblock %}
-{% block css_block %}{% endblock %}
+{% block title_block %}{{block.super}}{% endblock %}
 {% block head_block %}
     <style>
         .navbar {
@@ -17,10 +16,31 @@
             padding-left: 0px;
         }
 
+	    .navbar > a {
+	        text-decoration: none;
+	        background-color: #EEEEEE;
+	        color: #333333;
+	        padding: 2px 6px 2px 6px;
+	        border-top: 1px solid #CCCCCC;
+	        border-right: 1px solid #333333;
+	        border-bottom: 1px solid #333333;
+	        border-left: 1px solid #CCCCCC;
+	    }
+
         .navbar-default .navbar-nav > li > a:hover,
         .navbar-default .navbar-nav > li > a:focus {
             background-color: #E5E5E5;
         }
+
+        .colorgraph {
+	        height: 7px;
+	        border-top: 0;
+	        border-radius: 5px;
+	        background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	        background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	        background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	        background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	    }
     </style>
 {% endblock %}
 
@@ -66,7 +86,4 @@
     </div>
 {% endblock %}
 
-
-{% block script_block %}{% endblock %}
-{% block footer_block %}{% endblock %}
-
+{% block foot_block %}{% endblock %}

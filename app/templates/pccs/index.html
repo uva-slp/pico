@@ -36,7 +36,7 @@
             font-size: 24px;
             font-weight: bold;
         }
-        .login-register-panel {
+        .form-panel {
             background: rgba(20,30,34,0.7);
             color: #f3f3f3;
             margin-top:30px;
@@ -45,48 +45,63 @@
             padding: 0;
             width: 350px;
         }
-        .login-register-panel .nav-pills {
+        .form-panel .nav-pills {
             margin: 0;
             padding: 0;
         }
-        .login-register-panel .nav-pills > li {
+        .form-panel .nav-pills > li {
             width: 50%;
             margin: 0;
         }
-        .login-register-panel .nav-pills a {
+        .form-panel .nav-pills a {
             color: #f3f3f3;
             font-size: 16px;
             font-weight: bold;
             text-align: center;
         }
-        .login-register-panel .nav-pills a:hover,
-        .login-register-panel .nav-pills a:focus {
+        .form-panel .nav-pills a:hover,
+        .form-panel .nav-pills a:focus {
             color: black;
             outline: none;
         }
-        .login-register-panel .nav-pills .active a,
-        .login-register-panel .nav-pills .active a:hover,
-        .login-register-panel .nav-pills .active a:focus {
+        .form-panel .nav-pills .active a,
+        .form-panel .nav-pills .active a:hover,
+        .form-panel .nav-pills .active a:focus {
             background: rgba(20,30,34,0.9);
             outline: none;
         }
-        .login-register-panel .nav-pills > li > a {
+        .form-panel .nav-pills > li > a {
             border-radius: 0;
             color: #f3f3f3;
         }
-        .login-register-panel .tab-content {
+        .form-panel .tab-content {
             background: rgba(20,30,34,0.9);
             margin: 0;
             padding: 15px;
         }
-        .login-register-panel .tab-content .control-label {
+        .form-panel .tab-content .control-label {
             padding-right: 0;
         }
-        .login-register-panel .form-buttons {
+        .form-panel .form-buttons {
             text-align: right;
         }
         .footer {
             color: white;
+        }
+        .hr-faded {
+            background-color: #f3f3f3;
+            background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0)), to(#f3f3f3), from(#f3f3f3), to(rgba(0, 0, 0, 0)));
+            background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0), #f3f3f3, rgba(0, 0, 0, 0));
+            background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0), #f3f3f3, rgba(0, 0, 0, 0));
+            background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0), #f3f3f3, rgba(0, 0, 0, 0));
+            background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0), #f3f3f3, rgba(0, 0, 0, 0));
+            width: 90%;
+            height: 1px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            background-color: transparent; /* add this line after the mixin call */
         }
     </style>
 {% endblock %}
@@ -94,7 +109,7 @@
 {% block body_block %}
     <div id="logo-circle"><div id="logo"><a href="{% url 'index' %}">PCCS</a></div></div>
 
-    <div class="container login-register-panel">
+    <div class="container form-panel">
         {% block form_block %}
             <ul class="nav nav-pills">
                 <li class="active">
@@ -135,7 +150,7 @@
     </div>
 {% endblock %}
 
-{% block footer_block %}
+{% block foot_block %}
 <script>
 $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
     localStorage.setItem('activeTab', $(e.target).attr('href'));
