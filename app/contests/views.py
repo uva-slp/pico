@@ -215,7 +215,7 @@ def displayContest(request, contest_id):
 		'contests/contest.html',
 		{'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge,
 			'contest_teams': contest_participants, 'submission_attempts': submission_attempts,
-		 	'submission_status': status, 'color_states': color_states
+		 	'submission_status': status, 'color_states': color_states, 'team': current_team
 		 }
 	)
 
