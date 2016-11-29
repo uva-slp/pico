@@ -3,9 +3,10 @@
 {% load bootstrap3 %}
 {% load contest_extras %}
 
+{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
+
 {% block head_block %}
     {{ block.super }}
-    {% block title_block %}<title>{{ contest_data.title }} Contest</title>{% endblock %}
 {% endblock %}
 
 {% block content_block %}
