@@ -54,7 +54,7 @@ class CreateContestForm(ModelForm):
 	autojudge_enabled = forms.BooleanField(required=False)
 	autojudge_review = forms.CharField(
 		required=False, label="Judge Review Option",
-		widget=forms.Select(choices=REVIEW_LIST)
+		widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
 	)
 	problem_description = forms.FileField(required=True, label="Problem Descriptions (.pdf)")
 	contest_admins = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
@@ -113,7 +113,7 @@ class CreateContestTemplateForm(ModelForm):
 	autojudge_enabled = forms.BooleanField(required=False)
 	autojudge_review = forms.CharField(
 		required=False, label="Judge Review Option",
-		widget=forms.Select(choices=REVIEW_LIST)
+		widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
 	)
 	contest_admins = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 	contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
