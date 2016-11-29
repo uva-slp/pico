@@ -75,7 +75,7 @@ def create(request):
 		if form.is_valid() and qa_formset.is_valid():
 
 			problem_desc = Contest(problem_description=request.FILES['problem_description'], date_created=datetime.now(timezone.utc))
-			problem_desc.save()
+
 			contest = form.save()
 			contest.creator = request.user
 			contest.save()

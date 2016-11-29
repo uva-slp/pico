@@ -1,7 +1,7 @@
 [
     {
         "model": "contests.contest",
-        "pk": 1,
+        "pk": 8,
         "fields": {
             "title": "Contest 1",
             "date_created": "2016-10-29T17:47:11.38Z",
@@ -17,7 +17,7 @@
     },
     {
         "model": "contests.contest",
-        "pk": 2,
+        "pk": 9,
         "fields": {
             "title": "Contest 1",
             "date_created": "2016-10-29T17:47:11.38Z",
