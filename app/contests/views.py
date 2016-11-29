@@ -334,7 +334,7 @@ def scoreboard(request):
     #print "allcontests before filter"
     #print(allcontests)
     #print(allteams.values('name'))
-    allcontests = allcontests.filter(contest_participants__in="team3") # Get all contests with user's teams
+    #allcontests = allcontests.filter(contest_participants__in="team3") # Get all contests with user's teams
     #print("allcontests after filtering by user's teams")
     #print(allcontests)
 
@@ -351,12 +351,28 @@ def scoreboard(request):
     for problem in problems :
         problem_count += 1
         print("problem:")
-        print(problem.name)
+        print(problem.number)
+
+    participating_teams = []
+
+    participants_string = ""
 
     print("most recent contest:")
     print(mostrecentcontest)
     for contest in mostrecentcontest: # Should be 1 contest
         print("Participant:")
-        print(contest.contest_participants)
+        participants_string = contest.contest_participants
+        participants_string = participants_string.split()
 
-    return render(request, 'contests/scoreboard.html', {'teams' : allteams, 'problem_count' : problem_count, 'problems' : problems})
+    print(participants_string)
+
+
+    problem_count_array = []
+    for i in range(1, problem_count+1):
+        problem_count_array.append(i)
+
+    contest_title = mostrecentcontest.values('title').get()
+
+
+
+    return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array, 'problems' : problems, 'contest_title' : contest_title})
