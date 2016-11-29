@@ -1,80 +1,89 @@
 {% load bootstrap3 %}
+{% load widget_tweaks %}
 {% load static %}
+{% load filters %}
 <!DOCTYPE html>
 <html>
     <head>
         <title>Create a new contest</title>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/css/bootstrap-datetimepicker.min.css" />
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+
         <link rel="stylesheet" href="{% static 'style.css' %}">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
         {{ form.media }}
+
+        <style>
+            li {list-style-type: none;}
+            .btn-padding {margin: 5px;}
+        </style>
     </head>
 
     <body style="padding-left: 30px;">
 
-        <li class="navbar">
-            <a href="{% url 'contests:home' %}" class='btn btn-primary'>Home</a>
-            <a href="{% url 'contests:scoreboard' %}" class='btn btn-primary'>Scoreboard</a>
-            <a href="{% url 'users:logout' %}" class='btn btn-primary'>Logout</a>
-        </li>
+        {% include 'contests/navbar.html' %}
 
         <hr class='colorgraph'>
         <h1>Contest Creation</h1><br />
 
-        <form id="create_contest" method="post" action="{% url 'contests:create' %}"
-                enctype="multipart/form-data">
+        <div class="col-lg-10">
+            <div class="well bs-component">
+                <form class="form-horizontal" id="load_contest_template" method="post"
+                      action="{% url 'contests:load_template' %}">
+                    <fieldset>
+                        {% csrf_token %}
 
-            {% csrf_token %}
+                        <div class="form-group">
+                            <div class="col-lg-10">
+                                <select class="form-control" name="selected_template">
+                                    {% for field in templates %}
+                                    <option value="{{ field.id }}">{{ field.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
 
-            {% for field in form %}
-                <div id="div_{{ field.html_name }}"
-                     class="form-group{% if field.errors %} has-error{% endif %}">
-                    {{ field.label_tag }}
-                    <br />
-                    {{ field }}
-                    <div class="text-muted pull-right">
-                        <small>{{ field.help_text }}</small>
-                    </div>
-                    <div class="help-block">
-                        {{ field.errors }}
-                    </div>
-                </div>
-            {% endfor %}
-
-            <br /><br />
-            <h3>Individual Problems</h3>
-            {{ qa_formset.management_form }}
-
-            {% for qa_form in qa_formset %}
-                <div class="qa-formset">
-                    <br /><br />
-                    <label>Solution (.txt)</label><br>
-                    {{ qa_form.solution }}
-                    <br>
-                    <label>Description of Input</label><br>
-                    {{ qa_form.input_description }}
-                    <br>
-                    <label>Description of Output</label><br>
-                    {{ qa_form.output_description }}
-                    <br>
-                    <label>Sample Input (.txt)</label><br>
-                    {{ qa_form.sample_input }}
-                    <br>
-                    <label>Sample Output (.txt)</label><br>
-                    {{ qa_form.sample_output }}
-                </div>
-            {% endfor %}
-
-            <br /><br />
-            <div class="form-group">
-                <input type="submit" name="submit" value="Create" class="btn btn-primary" />
+                        <div class="col-lg-10 col-lg-offset-2">
+                            {% bootstrap_button "Load Template" button_type="submit" name="submit" button_class="btn btn-primary" %}
+                        </div>
+                    </fieldset>
+                </form>
             </div>
-        </form>
+        </div>
+
+        <div class="col-lg-10">
+            <div class="well bs-component">
+                <form class="form-horizontal" id="create_contest" method="post"
+                      action="{% url 'contests:create' %}" enctype="multipart/form-data">
+                    <fieldset>
+                        <legend>Contest Creation</legend>
+
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                            {% bootstrap_field field layout='horizontal' %}
+                        {% endfor %}
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Individual Problems</legend>
+
+                        {{ qa_formset.management_form }}
+
+                        <div class="qa-formset">
+                            {% bootstrap_formset qa_formset layout='horizontal' %}
+                        </div>
+
+                        <div class="col-lg-10 col-lg-offset-2">
+                            {% bootstrap_button "Create Contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
 
         <script type="text/javascript">
             $(document).ready(function() {
@@ -109,7 +118,9 @@
         <script>
             $('.qa-formset').formset({
                 addText: 'add question',
-                deleteText: 'remove'
+                deleteText: 'delete question',
+                addCssClass: 'add-row btn btn-primary btn-sm btn-padding',
+                deleteCssClass: 'delete-row btn btn-primary btn-sm btn-padding'
             });
         </script>
     </body>

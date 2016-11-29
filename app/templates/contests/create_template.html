@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Create a new contest</title>
+        <title>Create a new contest template</title>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" />
@@ -24,9 +24,9 @@
         </li>
 
         <hr class="colorgraph">
-        <h1>Contest Creation</h1><br />
+        <h1>Contest Template Creation</h1><br />
 
-        <form id="create_contest_template" method="post" action="{% url 'contests:createTemplate' %}"
+        <form id="create_contest_template" method="post" action="{% url 'contests:create_template' %}"
                 enctype="multipart/form-data">
 
             {% csrf_token %}
@@ -45,31 +45,6 @@
                     </div>
                 </div>
             {% endfor %}
-
-            <br /><br />
-            <h3>Individual Problems</h3>
-            {{ qa_formset.management_form }}
-
-            {% for qa_form in qa_formset %}
-                <div class="qa-formset">
-                    <br /><br />
-                    <label>Solution (.txt)</label><br>
-                    {{ qa_form.solution }}
-                    <br>
-                    <label>Description of Input</label><br>
-                    {{ qa_form.input_description }}
-                    <br>
-                    <label>Description of Output</label><br>
-                    {{ qa_form.output_description }}
-                    <br>
-                    <label>Sample Input (.txt)</label><br>
-                    {{ qa_form.sample_input }}
-                    <br>
-                    <label>Sample Output (.txt)</label><br>
-                    {{ qa_form.sample_output }}
-                </div>
-            {% endfor %}
-
             <br /><br />
             <div class="form-group">
                 <input type="submit" name="submit" value="Create" class="btn btn-primary" />
@@ -104,13 +79,5 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
-        {% load static %}
-        <script src="{% static 'js/jquery.formset.js' %}"></script>
-        <script>
-            $('.qa-formset').formset({
-                addText: 'add question',
-                deleteText: 'remove'
-            });
-        </script>
     </body>
 </html>

@@ -2,15 +2,14 @@ from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
-from .models import Problem, Contest
-from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm
+from .forms import CreateContestForm, CreateProblem, CreateContestTemplateForm, UploadCodeForm, ReturnJudgeResultForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
 from .lib import execution as exe
-from .models import Contest
+from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
 from .models import Participant
 from users.models import User
@@ -137,11 +136,50 @@ def create(request):
             return redirect(reverse('contests:home'))
             # return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
     else:
+        template_user = request.user
+        templates = ContestTemplate.objects.filter(creator=template_user)
         form = CreateContestForm()
         QAFormSet = formset_factory(CreateProblem)
         qa_formset = QAFormSet()
-    return render(request, 'contests/create_contest.html', {'form': form, 'qa_formset': qa_formset})
+    return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset})
 
+
+def create_template(request):
+	if request.method == 'POST':
+		form = CreateContestTemplateForm(request.POST)
+
+		if form.is_valid():
+			contest_template = form.save()
+			contest_template.creator = request.user
+			contest_template.save()
+
+			return redirect(reverse('contests:home'))
+	else:
+		form = CreateContestTemplateForm()
+	return render(request, 'contests/create_template.html', {'form': form})
+
+def load_template(request):
+	if request.method == 'POST':
+		selected_template = request.POST['selected_template']
+
+		if selected_template:
+			template = ContestTemplate.objects.get(pk=selected_template)
+			form = CreateContestForm(initial={'title': template.title, 'languages': template.languages,
+				'contest_length': template.contest_length, 'time_penalty': template.time_penalty,
+				'autojudge_enabled': template.autojudge_enabled, 'autojudge_review': template.autojudge_review,
+				'contest_admins': template.contest_admins, 'contest_participants': template.contest_participants
+				})
+
+			template_user = request.user
+			templates = ContestTemplate.objects.filter(creator=template_user)
+			QAFormSet = formset_factory(CreateProblem)
+			qa_formset = QAFormSet()
+
+			return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset})
+
+		else:
+			# template does not exist or no template was selected
+			create()
 
 @login_required
 def displayContest(request, contest_id):
