@@ -1,0 +1,22 @@
+{% extends 'pccs/index.html' %}
+
+{% block head_block %}
+	{{ block.super }}
+	<style>
+		.form-panel .nav-pills > li {
+			width: 100%;
+		}
+	</style>
+{% endblock %}
+
+{% block form_block %}
+    <ul class="nav nav-pills">
+        <li class="active">
+            <a>{% block heading %}{% endblock %}</a>
+        </li>
+    </ul>
+
+    <div class="tab-content clearfix">
+        {% block content_block %}{% endblock %}
+    </div>
+{% endblock %}

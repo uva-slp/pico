@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'contests/base.html' %}
 {% load bootstrap3 %}
 
-{% block body_block %}
+{% block content_block %}
 
     <li class="navbar">
         <a href="{% url 'users:password_change' %}">Change password</a>
@@ -53,6 +53,6 @@
     </form>
 {% endblock %}
 
-{% block script_block %}
+{% block foot_block %}
     {{ team_join_form.media }}
 {% endblock %}
