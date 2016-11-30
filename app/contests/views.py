@@ -162,6 +162,8 @@ def getTeam(contest_id, user_id):
 @login_required
 def displayContest(request, contest_id):
 	contest_data = Contest.objects.get(id=contest_id)
+
+
 	problems = contest_data.problem_set.all()
 
 	contest_participants = contest_data.participant_set.all()
@@ -287,8 +289,8 @@ def displayJudge(request, contest_id, run_id):
 def nearest(items, pivot):
     return min(items, key=lambda x: abs(x - pivot))
 
-def scoreboard(request):
-    userPK = request.user.pk # Get users primary key
+def scoreboard(request, contest_id):
+    userPK = request.user.pk # Get user's primary key
 
     allcontests = Contest.objects.all() # Get all contest objects
     allteams = Team.objects.all() # Get all team objects
@@ -301,45 +303,39 @@ def scoreboard(request):
     team_contests_array = [] # Holds all contests based on each users team
 
     for team in allteams.iterator(): # Loop to filter possible contest pool down by each team the user is a part of
-        print("teamloop")
+        print("Teams user is in:")
         print(team.name)
         testcontests = testcontests.filter(contest_participants__contains=team.name)
-        #print(testcontests)
         team_contests_array.append(testcontests)
-        #print(allcontests)
 
-    #print(team_contests_array)
     requestdatetime = datetime.now(timezone.utc) # Get current time to match with most recently joined contest based on the user's team
     print(requestdatetime)
 
     testnearestdate = []
     testnearestarray = []
 
+    print("Contests relevant to the teams requesting user is in: ")
+    print(team_contests_array)
+
     for index in team_contests_array:
         for contest in index:
             testnearestdate.append(contest.date_created)
-            #print(contest)
         testnearestarray.append(nearest(testnearestdate, requestdatetime)) # Get nearest date for each grouping regarding team
 
     # testnearestarray now contains contest times created for the most recently created contests under each team relevant to the user requesting the scoreboard
+    # I.E. if user is in team A and team B, testnearestarray will have 2 datetimes in it, the date_created for the most recent contest relevant to team A, and the same for team B
     print("testnearestarray: ")
     print(testnearestarray)
 
+    nearestdatetest = nearest(testnearestarray, requestdatetime)
+    print("Nearest date")
+    print(nearestdatetest)
 
-    #print "allcontests before filter"
-    #print(allcontests)
-    #print(allteams.values('name'))
-    #allcontests = allcontests.filter(contest_participants__in="team3") # Get all contests with user's teams
-    #print("allcontests after filtering by user's teams")
-    #print(allcontests)
+    # Filter allcontests by the dates retrieved in testnearestarray, pull most recent one
 
-    nearestdate = []
+    mostrecentcontest = allcontests.filter(date_created=nearestdatetest)
 
-    for contest in allcontests.iterator(): # Create tuple of all contests with this user/team
-        nearestdate.append(contest.date_created)
-
-    mostrecentcontestdate = nearest(nearestdate, requestdatetime) # Get whatever contest date is nearest to request date
-    mostrecentcontest = allcontests.filter(date_created=mostrecentcontestdate) # Filter queryset by nearest date created to get relevant contest for scoreboard request
+    mostrecentcontest = Contest.objects.get(id=contest_id)
     problems = Problem.objects.all()
     problems = problems.filter(contest=mostrecentcontest)
     problem_count = 0
@@ -348,25 +344,26 @@ def scoreboard(request):
         print("problem:")
         print(problem.number)
 
-    participating_teams = []
-
     participants_string = ""
 
     print("most recent contest:")
     print(mostrecentcontest)
-    for contest in mostrecentcontest: # Should be 1 contest
-        print("Participant:")
-        participants_string = contest.contest_participants
-        participants_string = participants_string.split()
+    #for contest in mostrecentcontest: # Should be 1 contest
+    #    print("Participant:")
+    participants_string = mostrecentcontest.contest_participants
+    participants_string = participants_string.split()
 
     print(participants_string)
 
+    #testcontest = Contest.objects.get(id=contest_id)
+    print("testcontest pk=1: ")
+    #print(testcontest)
 
     problem_count_array = []
     for i in range(1, problem_count+1):
         problem_count_array.append(i)
 
-    contest_title = mostrecentcontest.values('title').get()
+    contest_title = mostrecentcontest.title
 
 
 

@@ -33,6 +33,9 @@
 {% block content_block %}
     <br /><br />
     <h1>Contest: {{ contest_data.title }}</h1>
+
+    <a href="{% url 'contests:scoreboard' contest_data.id %}">View Scoreboard</a>
+
     {% for team in contest_teams %}
         <a href="{% url 'contests:contest_submissions' contest_data.id team.id %}">View team {{team.id}}'s submissions</a>
         <br />
