@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% load bootstrap3 %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block head_block %}
+
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    <style>
+        li {
+            list-style-type: none;
+        }
+        legend {
+            border-bottom: 1px solid #dee0df
+        }
+        .btn-margin {
+            margin: 5px;
+        }
+        .float-left {
+            float: left;
+        }
+    </style>
+{% endblock %}
+
+{% block body_block %}
+    <div class="col-md-10 col-md-offset-1">
+        {% block form_block %}{% endblock %}
+    </div>
+{% endblock %}
+
