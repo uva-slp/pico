@@ -14,10 +14,9 @@ from django.utils import timezone
 from .models import Team, Participant, Contest, Problem, Submission
 
 
-
 class ContestTest(TestCase):
 
-	fixtures = ['forms.json']
+	fixtures = ['judge_interface.json', 'forms.json']
 
 	# models test
 	def contest(
@@ -39,7 +38,7 @@ class ContestTest(TestCase):
 
 	# Austin
 	def test_contest_db_entry(self):
-		ct = Contest.objects.get(pk=1)
+		ct = Contest.objects.get(pk=8)
 		self.assertEqual(ct.title, 'Contest 1')
 		ct.title = "Updated Contest 1"
 		ct.save()
@@ -152,6 +151,7 @@ class ContestTest(TestCase):
 	# views test
 	# Austin
 	def test_create_view(self):
+		self.client.login(username='judge', password='password')
 		url = reverse("contests:create")
 		resp = self.client.get(url)
 
@@ -362,9 +362,11 @@ class ScoreboardTest(TestCase):
 		RDstring = RDstring[:-13]
 		self.assertEqual(RDstring, MRstring)
 
+'''
 class CreateContestViewTest(TestCase):
 
 	def test_get(self):
 		url = reverse('contests:create')
 		resp = self.client.get(url)
 		self.assertEqual(resp.status_code, 200)
+'''
