@@ -15,6 +15,11 @@
         .table {
             margin-bottom: 0px;
         }
+
+        .table>tbody>tr>td,
+        .table>tbody>tr>th {
+            vertical-align: middle;
+        }
     </style>
 {% endblock %}
 
@@ -48,7 +53,7 @@
                         <td>{{ submission.team.name }}</td>
                         <td>{{ submission.get_state_display }}</td>
                         <td>{{ submission.get_result_display}}</td>
-                        <td><a href="{% url 'contests:contest_judge' contest_data.id submission.run_id %}">Judge</a></td>
+                        <td><a class="btn btn-default" href="{% url 'contests:contest_judge' contest_data.id submission.run_id %}">Judge</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
