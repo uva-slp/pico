@@ -39,8 +39,16 @@
 
     <body>
 
+        {%  block navbar %}
+            <li class="navbar">
+                <a href="{% url 'contests:home' %}" class='btn btn-primary'>Home</a>
+                <a href="{% url 'contests:scoreboard' %}" class='btn btn-primary'>Scoreboard</a>
+                <a href="{% url 'users:logout' %}" class='btn btn-primary'>Logout</a>
+            </li>
+        {%  endblock %}
+
         {% block body_block %}{% endblock %}
-        
+
 		<footer class="footer navbar-static-bottom">
 			<div class="container text-center">
 				<span>Copyright © 2016</span> | <a href="">About</a> | <a href="">Contact Us</a>

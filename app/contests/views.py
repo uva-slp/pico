@@ -2,15 +2,14 @@ from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
-from .models import Problem, Contest
-from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm
+from .forms import CreateContestForm, CreateProblem, CreateContestTemplateForm, UploadCodeForm, ReturnJudgeResultForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.forms.formsets import formset_factory
 from django.urls import reverse
 from .lib import diff as _diff
 from .lib import execution as exe
-from .models import Contest
+from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
 from .models import Participant
 from users.models import User
@@ -24,11 +23,11 @@ def home(request):
 		'contests/home.html',
 		{
 			'team_form': TeamForm(),
-            'team_join_form': TeamJoinForm(),
+			'team_join_form': TeamJoinForm(),
 			'team_leave_form': TeamLeaveForm(),
-            'organization_form': OrganizationForm(),
-            'organization_join_form': OrganizationJoinForm(),
-            'organization_leave_form': OrganizationLeaveForm(),
+			'organization_form': OrganizationForm(),
+			'organization_join_form': OrganizationJoinForm(),
+			'organization_leave_form': OrganizationLeaveForm(),
 			'contests_created': Contest.objects.all()
 		}
 	)
@@ -61,90 +60,106 @@ def diff(request, question_id):
                     return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges, 'question_id' : question_id})
         else:
             return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
-    
 
-'''
-def create(request):
-    #boolean to see if the contest was successfully created
-    #initally false, code will make it true it successful
-    #successfully_created_contest = False
-    #check to see if the page was loaded with POST request data
-
-    if request.method == 'POST':
-        #grab information from form
-        form = CreateContestForm(request.POST)
-        if form.is_valid():
-            c = Contest()
-            c.title = form.title
-            c.creator = 'user'
-            c.languages = form.languages
-            c.length = form.length
-            c.autojudge = form.autojudge
-            c.save()
-            return render(request, 'contests/home.html', {'form' : form})
-    else:
-        form = CreateContestForm()
-    return render(request, 'contests/create_contest.html', {'form': form})
-'''
 
 def create(request):
 
-    QAFormSet = formset_factory(CreateProblem)
+	QAFormSet = formset_factory(CreateProblem)
 
-    if request.method == 'POST':
-        #grab information from form
-        form = CreateContestForm(request.POST, request.FILES)
-        #qa_formset = CreateProblem(request.POST)
+	if request.method == 'POST':
+		#grab information from form
+		form = CreateContestForm(request.POST, request.FILES)
+		#qa_formset = CreateProblem(request.POST)
 
-        qa_formset = QAFormSet(request.POST, request.FILES)
-        if form.is_valid() and qa_formset.is_valid():
+		qa_formset = QAFormSet(request.POST, request.FILES)
+		if form.is_valid() and qa_formset.is_valid():
 
-            problem_desc = Contest(problem_description=request.FILES['problem_description'], date_created=datetime.now(timezone.utc))
-            problem_desc.save()
-            contest = form.save()
-            contest.creator = request.user
-            contest.save()
+			problem_desc = Contest(problem_description=request.FILES['problem_description'], date_created=datetime.now(timezone.utc))
 
-            contest_id = contest.id
+			contest = form.save()
+			contest.creator = request.user
+			contest.save()
 
-            contest_participants = form.cleaned_data.get('contest_participants')
-            contest_participants = contest_participants.split()
-            print(contest_participants)
+			contest_id = contest.id
 
-            for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
-                team = Team.objects.filter(name=participant).get()
-                print(team)
-                pt = Participant(contest=contest, team=team)
-                print(pt)
-                pt.save()
+			contest_participants = form.cleaned_data.get('contest_participants')
+			contest_participants = contest_participants.split()
+			print(contest_participants)
 
-            problemcount = 0
+			for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
+				team = Team.objects.filter(name=participant).get()
+				print(team)
+				pt = Participant(contest=contest, team=team)
+				print(pt)
+				pt.save()
 
-            for qa_form in qa_formset:
-                problemcount += 1
-                solution = qa_form.cleaned_data.get('solution')
-                input_desc = qa_form.cleaned_data.get('input_description')
-                output_desc = qa_form.cleaned_data.get('output_description')
-                sample_input = qa_form.cleaned_data.get('sample_input')
-                sample_output = qa_form.cleaned_data.get('sample_output')
-                contest = qa_form.cleaned_data.get('title')
+			problemcount = 0
 
-                p = Problem(
+			for qa_form in qa_formset:
+				problemcount += 1
+				solution = qa_form.cleaned_data.get('solution')
+				input_desc = qa_form.cleaned_data.get('input_description')
+				output_desc = qa_form.cleaned_data.get('output_description')
+				sample_input = qa_form.cleaned_data.get('sample_input')
+				sample_output = qa_form.cleaned_data.get('sample_output')
+				contest = qa_form.cleaned_data.get('title')
+
+				p = Problem(
 					number = problemcount, solution=solution, input_description=input_desc,
 					output_description=output_desc, sample_input=sample_input,
 					sample_output=sample_output, contest_id=contest_id)
 
-                p.save()
+				p.save()
 
-                # Loop through participants text box and create participant objects for a team on each line w/ contest
+				# Loop through participants text box and create participant objects for a team on each line w/ contest
 
-            return redirect(reverse('contests:home'))
-            # return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
-    else:
-        form = CreateContestForm()
-        QAFormSet = formset_factory(CreateProblem)
-        qa_formset = QAFormSet()
-    return render(request, 'contests/create_contest.html', {'form': form, 'qa_formset': qa_formset})
+			return redirect(reverse('contests:home'))
+			# return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
+	else:
+		template_user = request.user
+		templates = ContestTemplate.objects.filter(creator=template_user)
+		form = CreateContestForm()
+		QAFormSet = formset_factory(CreateProblem)
+		qa_formset = QAFormSet()
+	return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset})
+
+
+def create_template(request):
+	if request.method == 'POST':
+		form = CreateContestTemplateForm(request.POST)
+
+		if form.is_valid():
+			contest_template = form.save()
+			contest_template.creator = request.user
+			contest_template.save()
+
+			return redirect(reverse('contests:home'))
+	else:
+		form = CreateContestTemplateForm()
+	return render(request, 'contests/create_template.html', {'form': form})
+
+def load_template(request):
+	if request.method == 'POST':
+		selected_template = request.POST['selected_template']
+
+		if selected_template:
+			template = ContestTemplate.objects.get(pk=selected_template)
+			form = CreateContestForm(initial={'title': template.title, 'languages': template.languages,
+				'contest_length': template.contest_length, 'time_penalty': template.time_penalty,
+				'autojudge_enabled': template.autojudge_enabled, 'autojudge_review': template.autojudge_review,
+				'contest_admins': template.contest_admins, 'contest_participants': template.contest_participants
+				})
+
+			template_user = request.user
+			templates = ContestTemplate.objects.filter(creator=template_user)
+			QAFormSet = formset_factory(CreateProblem)
+			qa_formset = QAFormSet()
+
+			return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset})
+
+		else:
+			# template does not exist or no template was selected
+			create()
 
 
 # Helper method for getting user's team participated in a contest
