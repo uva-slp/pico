@@ -12,7 +12,7 @@ from .lib import diff as _diff
 from .lib import execution as exe
 from .models import Contest
 from teams.models import Team
-from .models import Participant
+from .models import Participant, Submission
 from users.models import User
 from datetime import datetime
 from django.utils import timezone
@@ -338,7 +338,6 @@ def scoreboard(request, contest_id):
 
     # Filter allcontests by the dates retrieved in testnearestarray, pull most recent one
 
-    mostrecentcontest = allcontests.filter(date_created=nearestdatetest)
 
     mostrecentcontest = Contest.objects.get(id=contest_id)
     problems = Problem.objects.all()
@@ -360,15 +359,17 @@ def scoreboard(request, contest_id):
 
     print(participants_string)
 
-    #testcontest = Contest.objects.get(id=contest_id)
-    print("testcontest pk=1: ")
-    #print(testcontest)
-
     problem_count_array = []
     for i in range(1, problem_count+1):
         problem_count_array.append(i)
 
     contest_title = mostrecentcontest.title
+    for teamname in participants_string:
+        tempteam = Team.objects.get(name=teamname)
+        for problem in problems:
+            submissions = Submission.objects.get(team=tempteam, problem=problem)
+
+
 
 
 
