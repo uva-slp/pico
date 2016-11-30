@@ -86,3 +86,17 @@ class Submission(models.Model):
 
 	def __str__(self):
 		return str(self.run_id)
+
+class ContestTemplate(models.Model):
+	title = models.CharField(max_length=128)
+	creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+	languages = models.CharField(max_length=64)
+	contest_length = models.CharField(max_length=8)
+	time_penalty = models.CharField(max_length=4)
+	autojudge_enabled = models.BooleanField(max_length=1, default=False)
+	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
+	contest_admins = models.TextField()
+	contest_participants = models.TextField()
+
+	def __str__(self):
+		return self.title
