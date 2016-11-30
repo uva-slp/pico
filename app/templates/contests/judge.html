@@ -15,7 +15,8 @@
     <br />
     <h2>Judging submission:</h2>
     <br />
-    {% if is_judge %}
+    <!-- TODO: update when contest support multiple judges-->
+    {% if request.user == contest_data.creator %}
     <h3>Run ID: {{ submission.run_id }} </h3>
     <br />
     <h3>Team: {{ submission.team.name }} </h3>
