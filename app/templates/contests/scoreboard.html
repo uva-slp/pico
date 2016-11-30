@@ -1,74 +1,73 @@
+{% extends 'contests/base.html' %}
 
+{% load bootstrap3 %}
+{% load contest_extras %}
 
-<html>
-<head>
-<style>
-   #customers {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-}
+{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
 
-#scoreboard td, #scoreboard th {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
+{% block head_block %}
+    {{ block.super }}
+    <style>
+       #customers {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-#scoreboardtr:nth-child(even){background-color: #f2f2f2;}
+        #scoreboard td, #scoreboard th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
 
-#scoreboard tr:hover {background-color: #ddd;}
+        #scoreboardtr:nth-child(even){background-color: #f2f2f2;}
 
-#scoreboard th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #4CAF50;
-    color: white;
-}
+        #scoreboard tr:hover {background-color: #ddd;}
 
-</style>
-</head>
-<META HTTP-EQUIV="refresh" CONTENT="5">
-<title>Scoreboard</title>
-<body>
+        #scoreboard th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+{% endblock %}
 
-<b> {{ contest_title }}</b>
+{% block content_block %}
 
-<table id="scoreboard">
-    <tr>
-        <th> Team </th>
+    <b> {{ contest_title }}</b>
 
-        {% for count in problem_count %}
-            <th> Question {{ count }} </th>
-        {% endfor %}
-        <th> Score </th>
-        <th> Total Attempts</th>
-    </tr>
-
-    <!-- Team row -->
-    {% for team in teams %}
+    <table id="scoreboard">
         <tr>
+            <th> Team </th>
 
-        <td> {{ team }} </td>
-
-        {% for problem in problems %}
-            <td> Status </td>
-        {% endfor %}
-
+            {% for count in problem_count %}
+                <th> Question {{ count }} </th>
+            {% endfor %}
+            <th> Score </th>
+            <th> Total Attempts</th>
         </tr>
 
-    {% endfor %}
+        <!-- Team row -->
+        {% for team in teams %}
+            <tr>
+
+            <td> {{ team }} </td>
+
+            {% for problem in problems %}
+                <td> Status </td>
+            {% endfor %}
+
+            </tr>
+
+        {% endfor %}
 
 
-    <br> </br>
+        <br> </br>
 
+    </table>
 
-
-</table>
-
-</body>
-</html>
-
+{% endblock %}
 <!-- loop through teams and add a row for each team, add a TD for each question with color corresponding -->
 
 

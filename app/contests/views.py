@@ -367,4 +367,8 @@ def scoreboard(request, contest_id):
 
 
 
-    return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array, 'problems' : problems, 'contest_title' : contest_title})
+    return render(request, 'contests/scoreboard.html',
+				  {'teams' : participants_string, 'problem_count' : problem_count_array,
+				   'problems' : problems, 'contest_title' : contest_title,
+				   'contest_data': mostrecentcontest
+				   })
