@@ -217,7 +217,7 @@ def displayContest(request, contest_id):
 		'contests/contest.html',
 		{'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge,
 			'contest_teams': contest_participants, 'submission_attempts': submission_attempts,
-		 	'submission_status': status, 'color_states': color_states
+		 	'submission_status': status, 'color_states': color_states, 'team': current_team
 		 }
 	)
 
@@ -276,12 +276,12 @@ def displayJudge(request, contest_id, run_id):
 						messages.error(request, "Error")
 				else:
 					form = ReturnJudgeResultForm(instance=current_submission)
-			return render(
-				request,
-				'contests/judge.html',
-				{'contest_data': contest_data, 'is_judge': True,
-					'submission': current_submission, 'form': form}
-			)
+		return render(
+			request,
+			'contests/judge.html',
+			{'contest_data': contest_data, 'is_judge': True,
+				'submission': current_submission, 'form': form}
+		)
 
 	return render(
 		request,
