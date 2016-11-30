@@ -22,14 +22,6 @@
 
     <body>
 
-        {%  block navbar %}
-            <li class="navbar">
-                <a href="{% url 'contests:home' %}" class='btn btn-primary'>Home</a>
-                <a href="{% url 'contests:scoreboard' %}" class='btn btn-primary'>Scoreboard</a>
-                <a href="{% url 'users:logout' %}" class='btn btn-primary'>Logout</a>
-            </li>
-        {%  endblock %}
-
         {% block body_block %}{% endblock %}
 
     </body>
