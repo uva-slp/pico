@@ -41,7 +41,7 @@
     <br>
     <br>
     
-    <div class="container-fluid">
+    <div class="container-fluid" >
         <div class="row-fluid">
             <div class="col-sm-4">
                 <button id="create-team-toggle-button">Create Team</button>
@@ -90,32 +90,3 @@
 {% block foot_block %}
     {{ team_join_form.media }}
 {% endblock %}
-<script src='{% static "js/expandcollapse.js" %}'></script>
-<script type="text/javascript">
-    $(function() {
-      var createTeamToggleButton = $("#create-team-toggle-button");
-      var createTeamToggleWrapper = $("#create-team-toggle-wrapper");
-      var createTeamToggleForm = $("#create-team-form");
-
-      var joinTeamToggleButton = $("#join-team-toggle-button");
-      var joinTeamToggleWrapper = $("#join-team-toggle-wrapper");
-      var joinTeamToggleForm = $("#join-team-form");
-
-      var leaveTeamToggleButton = $("#leave-team-toggle-button");
-      var leaveTeamToggleWrapper = $("#leave-team-toggle-wrapper");
-      var leaveTeamToggleForm = $("#leave-team-form");
-
-      createTeamToggleButton.click(function() {
-        createTeamToggleWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
-      });
-
-      joinTeamToggleButton.click(function() {
-        joinTeamToggleWrapper.toggleClass('open');
-      });
-
-      leaveTeamToggleButton.click(function() {
-        leaveTeamToggleWrapper.toggleClass('open');
-      });
-
-    });
-</script>
