@@ -65,6 +65,7 @@
                 {% url 'contests:contest' contest_data.id as problems_url%}
                 {% url 'contests:contest_judge_submissions' contest_data.id as judge_url %}
                 {% url 'contests:contest_submissions' contest_data.id team.id as submission_url %}
+                {% url 'contests:scoreboard' contest_data.id as scoreboard_url %}
                 <li {% if request.path == problems_url %}class="active"{% endif %}>
                     <a href="{{ problems_url }}">Problems</a></li>
                 <!-- TODO: update when contest support multiple judges-->
@@ -75,6 +76,8 @@
                 <li {% if request.path == submission_url %}class="active"{% endif %}>
                     <a href="{{ submission_url }}">Submissions</a></li>
                 {% endif %}
+                <li {% if request.path == scoreboard_url %}class="active"{% endif %}>
+                    <a href="{{ scoreboard_url }}">Scoreboard</a></li>
               </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
@@ -84,6 +87,7 @@
     <div class="panel panel-default col-md-10 col-md-offset-1">
         {% block content_block %}{% endblock %}
     </div>
+
 {% endblock %}
 
 {% block foot_block %}{% endblock %}

@@ -180,10 +180,6 @@ def displayContest(request, contest_id):
 
 
 	problems = contest_data.problem_set.all()
-	is_judge = False
-	# TODO: Right now this only check contest creator. Need to update to all judges
-	if request.user == contest_data.creator:
-		is_judge = True
 
 	contest_participants = contest_data.participant_set.all()
 
@@ -230,7 +226,7 @@ def displayContest(request, contest_id):
 	return render(
 		request,
 		'contests/contest.html',
-		{'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge,
+		{'contest_data': contest_data, 'contest_problems': problems,
 			'contest_teams': contest_participants, 'submission_attempts': submission_attempts,
 		 	'submission_status': status, 'color_states': color_states, 'team': current_team
 		 }
@@ -294,14 +290,13 @@ def displayJudge(request, contest_id, run_id):
 		return render(
 			request,
 			'contests/judge.html',
-			{'contest_data': contest_data, 'is_judge': True,
-				'submission': current_submission, 'form': form}
+			{'contest_data': contest_data, 'submission': current_submission, 'form': form}
 		)
 
 	return render(
 		request,
 		'contests/judge.html',
-		{'contest_data': contest_data, 'is_judge': False}
+		{'contest_data': contest_data}
 	)
 
 
@@ -342,5 +337,6 @@ def scoreboard(request, contest_id):
 
 
 
-    return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
-		'problems' : problems, 'contest_title' : contest_title})
+    return render(request, 'contests/scoreboard.html',
+				  {'teams' : participants_string, 'problem_count' : problem_count_array,
+		'problems' : problems, 'contest_title' : contest_title, 'contest_data': mostrecentcontest})
