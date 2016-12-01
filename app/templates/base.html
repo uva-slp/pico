@@ -60,22 +60,22 @@
 
           createTeamToggleButton.click(function() {
             createTeamToggleWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
-            if (createTeamToggleButton.value=="Create Team [+]") {
-                createTeamToggleButton.value = "Create Team [-]";
-            } else createTeamToggleButton = "Create Team [+]";
+            if (document.getElementById('createTeamToggleButton').textContent == "Create Team [+]") {
+                createTeamToggleButton.textContent = "Create Team [-]";
+            } else createTeamToggleButton.textContent = "Create Team [+]";
           });
 
           joinTeamToggleButton.click(function() {
             joinTeamToggleWrapper.toggleClass('open');
-            if (joinTeamToggleButton.value=="Join Team [+]") {
-                joinTeamToggleButton.value = "Join Team [-]";
-            } else joinTeamToggleButton = "Join Team [+]";
+            if (document.getElementById('joinTeamToggleButton').textContent == "Join Team [+]") {
+                joinTeamToggleButton.textContent = "Join Team [-]";
+            } else joinTeamToggleButton.textContent = "Join Team [+]";
           });
 
           leaveTeamToggleButton.click(function() {
             leaveTeamToggleWrapper.toggleClass('open');
-            if (leaveTeamToggleButton.value=="Leave Team [+]") {
-                leaveTeamToggleButton.value = "Leave Team [-]";
+            if (document.getElementById('leaveTeamToggleButton').textContent == "Leave Team [+]") {
+                leaveTeamToggleButton.textContent = "Leave Team [-]";
             } else leaveTeamToggleButton = "Leave Team [+]";
           });
 
