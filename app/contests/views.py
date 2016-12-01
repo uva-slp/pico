@@ -28,7 +28,8 @@ def home(request):
 			'organization_form': OrganizationForm(),
 			'organization_join_form': OrganizationJoinForm(),
 			'organization_leave_form': OrganizationLeaveForm(),
-			'contests_created': Contest.objects.all()
+			'contests_created': Contest.objects.all(),
+			'teams_joined': Team.objects.all()
 		}
 	)
 
