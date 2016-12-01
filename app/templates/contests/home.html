@@ -45,11 +45,8 @@
     <hr class="colorgraph">
 
     {% if contests_created %}
-        <table>
-        
-            <tr>
-                <th>Contests Created:</th>
-            </tr>
+        <h3>Contests Created:</h3>
+        <table>  
             {% for contest in contests_created %}
                 <tr>
                     <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
@@ -57,7 +54,7 @@
             {% endfor %}
         </table>
     {% else %}
-        <h3>You are not in any contests!</h3>
+        <h3>No active contests!</h3>
     {% endif %}
 
     <a href="{% url 'contests:create' %}">Create a Contest</a>
