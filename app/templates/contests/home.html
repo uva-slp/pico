@@ -1,5 +1,8 @@
 {% extends 'contests/base.html' %}
 {% load static %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 
 <style type="text/css">
     #create-team-toggle-wrapper {
@@ -113,7 +116,7 @@
     {{ team_join_form.media }}
 {% endblock %}
 <script src='{% static "js/expandcollapse.js" %}'></script>
-<script>
+<script type="text/javascript">
     $(function() {
       var createTeamToggleButton = $("#create-team-toggle-button");
       var createTeamToggleWrapper = $("#create-team-toggle-wrapper");
