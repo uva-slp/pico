@@ -1,5 +1,6 @@
 {% extends 'contests/base.html' %}
 {% load bootstrap3 %}
+{% load static %}
 
 {% block content_block %}
 
@@ -10,39 +11,42 @@
         <a href="{% url 'contests:create_template' %}">Create a Contest Template</a>
         <a href="{% url 'contests:create' %}">Create a Contest</a>
     </li>
-
     
     <hr class="colorgraph">
-    <table>
-        <tr>
-            <th>Contests Created:</th>
-        </tr>
-        {% for contest in contests_created %}
-        <tr>
-            <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
-        </tr>
-        {% endfor %}
-    </table>
+    <span>
+        <table>
+            <tr>
+                <th>Contests Created:</th>
+            </tr>
+            {% for contest in contests_created %}
+            <tr>
+                <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </span>
 
     <br/>
     
-    <h3>Create team</h3>
+    <span>
+        <h3>Create team</h3>
+    
+        <form id="team_form" method="post" action="{% url 'teams:create' %}">
+            {% csrf_token %}
+            {{ team_form.as_p }}
+    
+            <input type="submit" value="submit" />
+        </form>
+    </span>
 
-    <form id="team_form" method="post" action="{% url 'teams:create' %}">
-        {% csrf_token %}
-        {{ team_form.as_p }}
-
-        <input type="submit" value="submit" />
-    </form>
-
-    <h3>Join team</h3>
-
-    <form id="team_join_form" method="post" action="{% url 'teams:join' %}">
-        {% csrf_token %}
-        {{ team_join_form.as_p }}
-
-        <input type="submit" value="submit" />
-    </form>
+    <span><h3>Join team</h3>
+    
+        <form id="team_join_form" method="post" action="{% url 'teams:join' %}">
+            {% csrf_token %}
+            {{ team_join_form.as_p }}
+    
+            <input type="submit" value="submit" />
+        </form></span>
 
     <h3>Leave team</h3>
 
