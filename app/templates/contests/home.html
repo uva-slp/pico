@@ -44,9 +44,9 @@
     <div class="container-fluid" >
         <div class="row-fluid">
             <div class="col-sm-4">
-                <button id="create-team-toggle-button" style="margin:auto;">Create Team [+]</button>
+                <button id="create-team-toggle-button" style="margin:auto auto auto auto;">Create Team [+]</button>
                 <div id="create-team-toggle-wrapper">
-                    <h3>Create team</h3>
+                    <h3 style="margin:auto auto auto auto;">Create team</h3>
                     
                     <form id="team_form" method="post" action="{% url 'teams:create' %}">
                         {% csrf_token %}
@@ -57,9 +57,9 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <button id="join-team-toggle-button" style="margin:auto;">Join Team [+]</button>
+                <button id="join-team-toggle-button" style="margin:auto auto auto auto;">Join Team [+]</button>
                 <div id="join-team-toggle-wrapper">
-                    <h3>Join team</h3>
+                    <h3 style="margin:auto auto auto auto;">Join team</h3>
                     
                     <form id="team_join_form" method="post" action="{% url 'teams:join' %}">
                         {% csrf_token %}
@@ -70,9 +70,9 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <button id="leave-team-toggle-button" style="margin:auto;">Leave Team [+]</button>
+                <button id="leave-team-toggle-button" style="margin:auto auto auto auto;">Leave Team [+]</button>
                 <div id="leave-team-toggle-wrapper">
-                    <h3>Leave team</h3>
+                    <h3 style="margin:auto auto auto auto;">Leave team</h3>
 
                     <form id="team_leave_form" method="post" action="{% url 'teams:leave' %}">
                         {% csrf_token %}
