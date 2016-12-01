@@ -52,7 +52,19 @@
         <td> {{ team }} </td>
 
         {% for problem in problems %}
-            <td> Status </td>
+            {% for problem in problem_status_array %}
+                {% if problem_status_array[problem] == 1 %}
+                    <td style="background-color:green"> Correct </td>
+                {% endif %}
+                {% if problem_status_array[problem] == 0 %}
+                    <td style="background-color:red"> Incorrect </td>
+                {% else %}
+                    <td style="background-color:yellow"> Pending </td>
+                {% endif %}
+
+            {% endfor %}
+            <!-- if problem/submission.status = right, color green, wrong color red, else color yellow -->
+            <td style="background-color:yellow"> Status </td>
         {% endfor %}
 
         </tr>

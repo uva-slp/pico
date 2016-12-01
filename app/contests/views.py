@@ -329,18 +329,33 @@ def scoreboard(request, contest_id):
 
     contest_title = scoreboard_contest.title
 
+    problems_status_array = {}
+
+    for problem in problems:
+        problems_status_array[problem] = [2]
 
     for teamname in participants_string:
-        print(teamname)
         tempteam = Team.objects.get(name=teamname)
+
         for problem in problems:
-            if(Submission.objects.get(team=tempteam, problem=problem)):
-                submission = Submission.objects.get(team=tempteam, problem=problem)
-                #if(submission.result == "YES"):
-                print(submission)
+            test_submission_correct = Submission(team=tempteam, problem=problem, run_id=1, code_file="", timestamp="", state = 'YES', result='YES')
+            test_submission_incorrect = Submission(team=tempteam, problem=problem, run_id=2, code_file="", timestamp="", state = 'NO', result='WRONG')
+            test_submission_pending = Submission(team=tempteam, problem=problem, run_id=3, code_file="", timestamp="", state = 'NEW', result='')
+
+            #filter submission by problem/team
+            if(test_submission_correct.result == 'YES') : #correct answer, update scoreboard with green (0 for red, 1 for green, 2 for yellow?
+                problems_status_array[problem] = 1
+            elif(test_submission_incorrect.result == 'WRONG'): # Red
+                problems_status_array[problem] = 0
+            else:
+                problems_status_array[problem] = 2 # Otherwise the submission is pending (works because the cell will just
+                # be printed blank if there isnt an available submission for this problem/team combo yet
+
+            print("problems status array: ")
+            print(problems_status_array)
 
 
 
 
     return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
-		'problems' : problems, 'contest_title' : contest_title})
+		'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array})
