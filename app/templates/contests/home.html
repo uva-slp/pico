@@ -113,7 +113,7 @@
 {% block foot_block %}
     {{ team_join_form.media }}
 {% endblock %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src='{% static "js/expandcollapse.js" %}'></script>
 <script>
     $(function() {
       var createTeamToggleButton = $("#create-team-toggle-button");
