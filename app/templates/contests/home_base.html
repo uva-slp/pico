@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title_block %}{{block.super}}{% endblock %}
+{% block head_block %}
+    <style>
+        html, body, .container-fluid, .row {
+            height: 100%;
+        }
+
+        #sidebar {
+            height: 100%;
+
+        }
+        .navbar.navbar-default.navbar-fixed-side{
+            height:100%;
+            background-color: #8C8E8F;
+            background-image: none;
+            border-color: #E5E5E5;
+        }
+    </style>
+{% endblock %}
+
+{% block body_block %}
+<div class="container-fluid">
+    <div class="row">
+      <div id="sidebar" class="col-sm-3">
+          <nav class="navbar navbar-default navbar-fixed-side">
+              <ul class="nav navbar-nav">
+                  <li class="active">
+                      <a class="nav-link" href="#">Home</a>
+                  </li>
+                  <li>
+                      <a class="nav-link" href="#">Home</a>
+                  </li>
+              </ul>
+          </nav>
+      </div>
+      <div class="col-md-10">
+            {% block content_block %}{% endblock %}
+      </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block foot_block %}{% endblock %}
