@@ -66,7 +66,7 @@
                 {% url 'contests:contest_judge_submissions' contest_data.id as judge_url %}
                 {% url 'contests:contest_submissions' contest_data.id team.id as submission_url %}
                 {% url 'contests:scoreboard' contest_data.id as scoreboard_url %}
-                {% url 'users:passwordchange' contest_data.id as passwordchange_url %}
+                {% url 'users:password_change' contest_data.id as password_change_url %}
                 <li {% if request.path == problems_url %}class="active"{% endif %}>
                     <a href="{{ problems_url }}">Problems</a></li>
                 <!-- TODO: update when contest support multiple judges-->
@@ -79,8 +79,8 @@
                 {% endif %}
                 <li {% if request.path == scoreboard_url %}class="active"{% endif %}>
                     <a href="{{ scoreboard_url }}">Scoreboard</a></li>
-                <li {% if request.path == change_password_url %}class="active"{% endif %}>
-                    <a href="{{ passwordchange_url }}">Change Password</a>
+                <li {% if request.path == password_change_url %}class="active"{% endif %}>
+                    <a href="{{ password_change_url }}">Change Password</a>
               </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->

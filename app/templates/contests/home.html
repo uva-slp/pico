@@ -36,7 +36,6 @@
     <li class="navbar">
         <a href="{% url 'users:password_change' %}">Change password</a>
         <a href="{% url 'users:logout' %}">Logout</a>
-        <a href="{% url 'contests:scoreboard' %}">Scoreboard</a>
         <a href="{% url 'contests:create_template' %}">Create a Contest Template</a>
     </li>
     
@@ -68,7 +67,7 @@
         <div class="row-fluid">
             <div class="col-sm-4">
                 <button id="create-team-toggle-button">Create Team</button>
-                <div class="create-team-toggle-wrapper">
+                <div id="create-team-toggle-wrapper">
                     <h3>Create team</h3>
                     
                     <form id="team_form" method="post" action="{% url 'teams:create' %}">
@@ -81,7 +80,7 @@
             </div>
             <div class="col-sm-4">
                 <button id="join-team-toggle-button">Join Team</button>
-                <div class="join-team-toggle-wrapper">
+                <div id="join-team-toggle-wrapper">
                     <h3>Join team</h3>
                     
                     <form id="team_join_form" method="post" action="{% url 'teams:join' %}">
@@ -94,7 +93,7 @@
             </div>
             <div class="col-sm-4">
                 <button id="leave-team-toggle-button">Leave Team</button>
-                <div class="leave-team-toggle-wrapper">
+                <div id="leave-team-toggle-wrapper">
                     <h3>Leave team</h3>
 
                     <form id="team_leave_form" method="post" action="{% url 'teams:leave' %}">
