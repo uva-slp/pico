@@ -51,14 +51,17 @@ class Problem(models.Model):
         sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
         sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
         contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
+        
+        def __str__(self):
+                return self.name + " " + str(self.id)
 
 class Participant(models.Model):
 	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
 	team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.CASCADE)
-	score = models.IntegerField
+	Score = models.IntegerField
 
+	
 class Submission(models.Model):
-	run_id = models.IntegerField(null=True)
 	team = models.ForeignKey(Team, null = True)
 	problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True)
 	code_file = models.FileField(upload_to='uploads/', null=True, blank=True)
@@ -85,4 +88,4 @@ class Submission(models.Model):
 	result = models.CharField(max_length=20, choices=JUDGE_RESULT, null=True)
 
 	def __str__(self):
-		return str(self.run_id)
+		return str(self.id)

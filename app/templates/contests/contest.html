@@ -30,7 +30,7 @@
     {% endfor %}
     <h3>Contest Problems:</h3>
     <div class="panel-group" id="accordion">
-    {% for problem in contest_problems %}
+    {% for pair in problem_form_pairs %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -54,34 +54,34 @@
                     <ul class="list-group">
                         <li class="list-group-item">Description of Input
                             <div class="panel-body">
-                                {{ problem.input_description }}
+                                {{ pair.0.input_description }}
                             </div>
                         </li>
                         <li class="list-group-item">Description of Output
                             <div class="panel-body">
-                                {{ problem.output_description }}
+                                {{ pair..output_description }}
                             </div>
                         </li>
                         <li class="list-group-item">
                             <div style="display: table; width: 100%;">
                                 <div class="col-sm-6" style="display: table-cell;">Sample Input
                                     <div class="panel-body">
-                                         <pre>{{ problem.sample_input|print_file_content }}</pre>
+                                         <pre>{{ pair.0.sample_input|print_file_content }}</pre>
                                     </div>
                                 </div>
                                 <div class="col-sm-6" style="display: table-cell;">Sample Output
                                     <div class="panel-body">
-                                         <pre>{{ problem.sample_output|print_file_content }}</pre>
+                                         <pre>{{ pair.0.sample_output|print_file_content }}</pre>
                                     </div>
                                 </div>
                             </div>
                         </li>
                     </ul>
                     <div class="panel-footer">
-		      <form enctype="multipart/form-data" action="{% url 'contests:diff' problem.id %}" method="post">
+		      <form enctype="multipart/form-data" action="{% url 'contests:diff' pair.0.id %}" method="post">
 			{% csrf_token %}
 			Upload your file:
-			{{ form.as_p }}
+			{{ pair.1.as_p }}
 			<input type="submit" value="Submit"/>
 		      </form>
 		    </div>

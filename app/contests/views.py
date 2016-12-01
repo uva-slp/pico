@@ -17,6 +17,8 @@ from users.models import User
 from datetime import datetime
 from django.utils import timezone
 
+#To render multiple forms on a contest page (since there are multiple problems in a contest)
+from django.forms.formsets import formset_factory
 
 def home(request):
 	return render(
@@ -48,7 +50,6 @@ def upload_code(request, problem_id):
 def diff(request, problem_id):
         form = UploadCodeForm(request.POST, request.FILES)
         request.POST["problem"] = problem_id
-        form.fields["problem"].initial = Problem.objects.get(id = problem_id)
         if form.is_valid():
             form.save()
             output = exe.execute_code(request.FILES['code_file'])
@@ -164,8 +165,14 @@ def getTeam(contest_id, user_id):
 def displayContest(request, contest_id):
 	contest_data = Contest.objects.get(id=contest_id)
 	problems = contest_data.problem_set.all()
+        #Handle multiple forms on the same page
+	UploadCodeFormSet = formset_factory(UploadCodeForm, extra = len(problems))
+	problem_form_pairs = []
+	for problem in problems:
+		form = UploadCodeForm(initial={'problem' : problem})
+		problem_form_pairs.append((problem, form))
 	is_judge = False
-	# TODO: Right now this only check contest creator. Need to update to all judges
+	# TODO: Right now this only checks contest creator. Need to update to all judges
 	if request.user == contest_data.creator:
 		is_judge = True
 
@@ -181,7 +188,7 @@ def displayContest(request, contest_id):
 			# number of attempts
 			current_attempts = len(p_submissions)
 			submission_attempts.append(current_attempts)
-			# status -- if have got it correct, ignore the rest
+			# status -- ignore the rest
 			current_status = "-"
 			current_color = "default"
 			if current_attempts is not 0:
@@ -205,8 +212,7 @@ def displayContest(request, contest_id):
 						current_status = "No - " + latest_submission.get_result_display()
 			status.append(current_status)
 			color_states.append(current_color)
-	form = UploadCodeForm(initial = {})
-	return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge, 'contest_teams': contest_participants, 'submission_attempts': submission_attempts, 'submission_status': status, 'color_states': color_states, 'form' : form })
+	return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge, 'contest_teams': contest_participants, 'submission_attempts': submission_attempts, 'submission_status': status, 'color_states': color_states, 'problem_form_pairs' : problem_form_pairs })
 
 
 @login_required
