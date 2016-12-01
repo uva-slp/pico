@@ -60,6 +60,8 @@
         <h3>You are not in any contests!</h3>
     {% endif %}
 
+    <a href="{% url 'contests:create' %}">Create a Contest</a>
+
     {% if teams_joined %}
         <ul>
         {% for team in teams_joined %}    
@@ -67,10 +69,9 @@
         {% endfor %}
         </ul>
     {% else %}
-        <h3>Not a part of any teams!</h3>
+        <h3>You are not on any teams!</h3>
     {% endif %}
-
-    <a href="{% url 'contests:create' %}">Create a Contest</a>
+    
     <br>
     <br>
     
