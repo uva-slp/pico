@@ -15,55 +15,55 @@
     <hr class="colorgraph">
 
     <table>
-        <tr>
-            <th>Contests Created:</th>
-        </tr>
-        {% for contest in contests_created %}
-        <tr>
-            <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
-        </tr>
-        {% endfor %}
+        {% if contests_created}
+            <tr>
+                <th>Contests Created:</th>
+            </tr>
+            {% for contest in contests_created %}
+                <tr>
+                    <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
+                </tr>
+            {% endfor %}
+        {% endif %}
     </table>
 
     <br/>
     
-    <div class="row">
-        <div class="span4">
-            <h3>Create team</h3>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="col-sm-4">
+                <h3>Create team</h3>
+                
+                <form id="team_form" method="post" action="{% url 'teams:create' %}">
+                    {% csrf_token %}
+                    {{ team_form.as_p }}
             
-            <form id="team_form" method="post" action="{% url 'teams:create' %}">
-                {% csrf_token %}
-                {{ team_form.as_p }}
-        
-                <input type="submit" value="submit" />
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="span4">
-            <h3>Join team</h3>
+                    <input type="submit" value="submit" />
+                </form>
+            </div>
+            <div class="col-sm-4">
+                <h3>Join team</h3>
+                
+                <form id="team_join_form" method="post" action="{% url 'teams:join' %}">
+                    {% csrf_token %}
+                    {{ team_join_form.as_p }}
             
-            <form id="team_join_form" method="post" action="{% url 'teams:join' %}">
-                {% csrf_token %}
-                {{ team_join_form.as_p }}
-        
-                <input type="submit" value="submit" />
-            </form>
+                    <input type="submit" value="submit" />
+                </form>
+            </div>
+            <div class="col-sm-4">
+                <h3>Leave team</h3>
+
+                <form id="team_leave_form" method="post" action="{% url 'teams:leave' %}">
+                    {% csrf_token %}
+                    {{ team_leave_form.as_p }}
+
+                    <input type="submit" value="submit" />
+                </form>
+            </div>
         </div>
     </div>
-    
-    <div class="row">
-        <div class="span4">
-            <h3>Leave team</h3>
 
-            <form id="team_leave_form" method="post" action="{% url 'teams:leave' %}">
-                {% csrf_token %}
-                {{ team_leave_form.as_p }}
-
-                <input type="submit" value="submit" />
-            </form>
-        </div>
-    </div>
 {% endblock %}
 
 {% block foot_block %}
