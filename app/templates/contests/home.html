@@ -14,8 +14,9 @@
     
     <hr class="colorgraph">
 
-    <table>
-        {% if contests_created}
+    {% if contests_created %}
+        <table>
+        
             <tr>
                 <th>Contests Created:</th>
             </tr>
@@ -24,8 +25,8 @@
                     <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
                 </tr>
             {% endfor %}
-        {% endif %}
-    </table>
+        </table>
+    {% endif %}
 
     <br/>
     
