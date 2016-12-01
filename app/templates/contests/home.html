@@ -63,7 +63,7 @@
     {% if teams_joined %}
         <ul>
         {% for team in teams_joined %}    
-            <li>{% team.name %}</li>
+            <li>{{ team.name }}</li>
         {% endfor %}
         </ul>
     {% else %}
