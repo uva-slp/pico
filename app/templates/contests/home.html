@@ -57,11 +57,19 @@
             {% endfor %}
         </table>
     {% else %}
-        <h3>
-            You are not in any contests!
-        </h3>
+        <h3>You are not in any contests!</h3>
     {% endif %}
-    
+
+    {% if teams_joined %}
+        <ul>
+        {% for team in teams_joined %}    
+            <li>{% team.name %}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <h3>Not a part of any teams!</h3>
+    {% endif %}
+
     <a href="{% url 'contests:create' %}">Create a Contest</a>
     <br>
     <br>
