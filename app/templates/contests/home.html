@@ -1,5 +1,4 @@
 {% extends 'contests/base.html' %}
-{% load bootstrap3 %}
 {% load static %}
 
 {% block content_block %}
@@ -26,8 +25,13 @@
                 </tr>
             {% endfor %}
         </table>
+    {% else %}
+        <h3>
+            You are not in any contests!
+        </h3>
     {% endif %}
-
+    
+    <a href="{% url 'contests:create' %}">Create a Contest</a>
     <br/>
     
     <div class="container-fluid">
