@@ -11,7 +11,7 @@ from .lib import diff as _diff
 from .lib import execution as exe
 from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
-from .models import Participant
+from .models import Participant, Submission
 from users.models import User
 from datetime import datetime
 from django.utils import timezone
@@ -305,53 +305,37 @@ def nearest(items, pivot):
     return min(items, key=lambda x: abs(x - pivot))
 
 def scoreboard(request, contest_id):
-    userPK = request.user.pk # Get user's primary key
 
-    allcontests = Contest.objects.all() # Get all contest objects
-    allteams = Team.objects.all() # Get all team objects
-    allteams = allteams.filter(members=userPK) # Get teams that have current user in them
-
-    team_contests_array = [] # Holds all contests based on each users team
-
-    for team in allteams.iterator(): # Loop to filter possible contest pool down by each team the user is a part of
-        allcontests = allcontests.filter(contest_participants__contains=team.name)
-        team_contests_array.append(allcontests)
-
-    requestdatetime = datetime.now(timezone.utc) # Get current time to match with most recently joined contest based on the user's team
-
-    nearest_date = []
-    nearestarray = []
-
-    for index in team_contests_array:
-        for contest in index:
-            nearest_date.append(contest.date_created)
-        nearestarray.append(nearest(nearest_date, requestdatetime)) # Get nearest date for each grouping regarding team
-
-    # nearestarray contains contest times created for the most recently created contests under each team relevant
-	# to the user requesting the scoreboard
-
-    # I.E. if user is in team A and team B, testnearestarray will have 2 datetimes in it, the date_created for the most
-	# recent contest relevant to team A, and the same for team B
-
-    # Filter allcontests by the dates retrieved in testnearestarray, pull most recent one
-
-    mostrecentcontest = Contest.objects.get(id=contest_id)
+    scoreboard_contest = Contest.objects.get(id=contest_id) # Get contest ID from URL
     problems = Problem.objects.all()
-    problems = problems.filter(contest=mostrecentcontest)
+    problems = problems.filter(contest=scoreboard_contest) # Filter problems to look at by contest
     problem_count = 0
     for problem in problems :
         problem_count += 1
         print("problem:")
         print(problem.number)
 
-    participants_string = mostrecentcontest.contest_participants
+    participants_string = scoreboard_contest.contest_participants
     participants_string = participants_string.split()
 
     problem_count_array = []
     for i in range(1, problem_count+1):
         problem_count_array.append(i)
 
-    contest_title = mostrecentcontest.title
+    contest_title = scoreboard_contest.title
+
+
+    for teamname in participants_string:
+        print(teamname)
+        tempteam = Team.objects.get(name=teamname)
+        for problem in problems:
+            if(Submission.objects.get(team=tempteam, problem=problem)):
+                submission = Submission.objects.get(team=tempteam, problem=problem)
+                #if(submission.result == "YES"):
+                print(submission)
+
+
+
 
     return render(request, 'contests/scoreboard.html',
 				  {'teams' : participants_string, 'problem_count' : problem_count_array,
