@@ -77,7 +77,14 @@
                             </div>
                         </li>
                     </ul>
-                    <div class="panel-footer">Upload your file:</div>
+                    <div class="panel-footer">
+		      <form enctype="multipart/form-data" action="{% url 'contests:diff' problem.id %}" method="post">
+			{% csrf_token %}
+			Upload your file:
+			{{ form.as_p }}
+			<input type="submit" value="Submit"/>
+		      </form>
+		    </div>
                 </div>
             </div>
     {% endfor %}

@@ -8,7 +8,7 @@ class ContestAdmin(admin.ModelAdmin):
         (None, {'fields': ['title']}),
     ]
     #inlines = [TeamsInline, QuestionInline]
-    list_display = ('title', 'date_created')
+    list_display = ('title', 'date_created', 'id')
     list_filter = ['date_created']
     search_fields = ['title', 'creator']
 

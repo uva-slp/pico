@@ -45,8 +45,10 @@ def upload_code(request, problem_id):
     return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
 
 
-def diff(request, question_id):
+def diff(request, problem_id):
         form = UploadCodeForm(request.POST, request.FILES)
+        request.POST["problem"] = problem_id
+        form.fields["problem"].initial = Problem.objects.get(id = problem_id)
         if form.is_valid():
             form.save()
             output = exe.execute_code(request.FILES['code_file'])
@@ -58,10 +60,9 @@ def diff(request, question_id):
                     fromlines = output[1].split("\n")
                     tolines = ['Hello World from C++!']
                     html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges, 'question_id' : question_id})
+                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges, 'problem_id' : problem_id})
         else:
-            return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
-    
+                return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
 
 '''
 def create(request):
@@ -204,15 +205,8 @@ def displayContest(request, contest_id):
 						current_status = "No - " + latest_submission.get_result_display()
 			status.append(current_status)
 			color_states.append(current_color)
-
-	return render(
-		request,
-		'contests/contest.html',
-		{'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge,
-			'contest_teams': contest_participants, 'submission_attempts': submission_attempts,
-		 	'submission_status': status, 'color_states': color_states
-		 }
-	)
+	form = UploadCodeForm(initial = {})
+	return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge, 'contest_teams': contest_participants, 'submission_attempts': submission_attempts, 'submission_status': status, 'color_states': color_states, 'form' : form })
 
 
 @login_required
