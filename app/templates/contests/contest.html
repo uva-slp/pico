@@ -36,10 +36,6 @@
 
     <a href="{% url 'contests:scoreboard' contest_data.id %}">View Scoreboard</a>
     <br />
-    {% if is_judge %}
-        <a href="{% url 'contests:contest_judge_submissions' contest_data.id %}">View all submissions</a>
-    {% endif %}
-    <br />
     {% for team in contest_teams %}
         <a href="{% url 'contests:contest_submissions' contest_data.id team.id %}">View team {{team.id}}'s submissions</a>
         <br />
