@@ -29,7 +29,7 @@ def home(request):
 			'organization_join_form': OrganizationJoinForm(),
 			'organization_leave_form': OrganizationLeaveForm(),
 			'contests_created': Contest.objects.all(),
-			'teams_joined': Teams.objects.filter(pk=1)
+			'teams_joined': Team.objects.filter(pk=1)
 		}
 	)
 
