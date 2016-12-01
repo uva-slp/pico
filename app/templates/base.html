@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 
 {% load staticfiles %}
@@ -9,12 +7,13 @@
         <title>{% block title_block %}PCCS{% endblock %}</title>
 
         <!-- jQuery -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{% static 'css/blog.css' %}">
 
         {% block head_block %}{% endblock %}
 
@@ -45,6 +44,42 @@
 		jQuery.fn.outerHTML = function() {
 			return jQuery('<div />').append(this.eq(0).clone()).html();
 		};
+
+        $(function() {
+          var createTeamToggleButton = $("#create-team-toggle-button");
+          var createTeamToggleWrapper = $("#create-team-toggle-wrapper");
+          var createTeamToggleForm = $("#create-team-form");
+
+          var joinTeamToggleButton = $("#join-team-toggle-button");
+          var joinTeamToggleWrapper = $("#join-team-toggle-wrapper");
+          var joinTeamToggleForm = $("#join-team-form");
+
+          var leaveTeamToggleButton = $("#leave-team-toggle-button");
+          var leaveTeamToggleWrapper = $("#leave-team-toggle-wrapper");
+          var leaveTeamToggleForm = $("#leave-team-form");
+
+          createTeamToggleButton.click(function() {
+            createTeamToggleWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
+            if (document.getElementById('create-team-toggle-button').textContent == "Create Team [+]") {
+                createTeamToggleButton.textContent = "Create Team [-]";
+            } else createTeamToggleButton.textContent = "Create Team [+]";
+          });
+
+          joinTeamToggleButton.click(function() {
+            joinTeamToggleWrapper.toggleClass('open');
+            if (document.getElementById('join-team-toggle-button').textContent == "Join Team [+]") {
+                joinTeamToggleButton.textContent = "Join Team [-]";
+            } else joinTeamToggleButton.textContent = "Join Team [+]";
+          });
+
+          leaveTeamToggleButton.click(function() {
+            leaveTeamToggleWrapper.toggleClass('open');
+            if (document.getElementById('leave-team-toggle-button').textContent == "Leave Team [+]") {
+                leaveTeamToggleButton.textContent = "Leave Team [-]";
+            } else leaveTeamToggleButton = "Leave Team [+]";
+          });
+
+        });
     </script>
 
 	{% block foot_block %}{% endblock %}
