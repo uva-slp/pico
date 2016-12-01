@@ -246,13 +246,6 @@ th {
     page-break-after: avoid;
   }
   /* custom css starts here */
-  .expanded {
-    height: auto;
-  }
-  .minimized {
-    height: 20px;
-    overflow:hidden;
-  }
   #create-team-toggle-wrapper {
     background: #ccc;
     overflow: hidden;
