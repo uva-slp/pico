@@ -7,6 +7,7 @@
 
 {% block head_block %}
     {{ block.super }}
+    <meta http-equiv="refresh" content="5" >
     <style>
        #customers {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -41,32 +42,18 @@
         <tr>
             <th> Team </th>
 
-<<<<<<< HEAD
-        <td> {{ team }} </td>
+        <!-- <td> {{ team }} </td> -->
 
         {% for problem in problems %}
-            {% for problem in problem_status_array %}
-                {% if problem_status_array[problem] == 1 %}
-                    <td style="background-color:green"> Correct </td>
-                {% endif %}
-                {% if problem_status_array[problem] == 0 %}
-                    <td style="background-color:red"> Incorrect </td>
-                {% else %}
-                    <td style="background-color:yellow"> Pending </td>
-                {% endif %}
-
-            {% endfor %}
-            <!-- if problem/submission.status = right, color green, wrong color red, else color yellow -->
-            <td style="background-color:yellow"> Status </td>
         {% endfor %}
 
-=======
+
             {% for count in problem_count %}
                 <th> Question {{ count }} </th>
             {% endfor %}
             <th> Score </th>
             <th> Total Attempts</th>
->>>>>>> 4d04363093e4e5abb87d74ed41c7d24bbd6af28e
+
         </tr>
 
         <!-- Team row -->
@@ -76,7 +63,27 @@
             <td> {{ team }} </td>
 
             {% for problem in problems %}
-                <td> Status </td>
+                {% for key, value in problem_status_array.items %}
+
+                    {% for character in value %}
+                        {{ character }}
+
+                        {% if character == "1" %}
+                            <td style="background-color:green"> Correct </td>
+                        {% endif %}
+
+                        {% if character == "0" %}
+                            <td style="background-color:red"> Incorrect </td>
+                        {% endif %}
+
+                        {% if character == "2" %}
+                            <td style="background-color:yellow"> Pending </td>
+                        {% endif %}
+
+                    {% endfor %}
+                {% endfor %}
+            <!-- if problem/submission.status = right, color green, wrong color red, else color yellow -->
+
             {% endfor %}
 
             </tr>

@@ -300,10 +300,6 @@ def displayJudge(request, contest_id, run_id):
 	)
 
 
-# Method for getting nearest datetime
-def nearest(items, pivot):
-    return min(items, key=lambda x: abs(x - pivot))
-
 def scoreboard(request, contest_id):
 
     scoreboard_contest = Contest.objects.get(id=contest_id) # Get contest ID from URL
@@ -326,26 +322,29 @@ def scoreboard(request, contest_id):
 
     problems_status_array = {}
 
-    for problem in problems:
-        problems_status_array[problem] = [2]
+    #for problem in problems:
+    #    problems_status_array[problem] = [2]
 
     for teamname in participants_string:
         tempteam = Team.objects.get(name=teamname)
 
+        # array with [teamname][121001] based on submission>?
+
         for problem in problems:
+
+            tempstring = ""
             test_submission_correct = Submission(team=tempteam, problem=problem, run_id=1, code_file="", timestamp="", state = 'YES', result='YES')
             test_submission_incorrect = Submission(team=tempteam, problem=problem, run_id=2, code_file="", timestamp="", state = 'NO', result='WRONG')
             test_submission_pending = Submission(team=tempteam, problem=problem, run_id=3, code_file="", timestamp="", state = 'NEW', result='')
 
             #filter submission by problem/team
-            if(test_submission_correct.result == 'YES') : #correct answer, update scoreboard with green (0 for red, 1 for green, 2 for yellow?
-                problems_status_array[problem] = 1
+            if(test_submission_incorrect.result == 'YES') : #correct answer, update scoreboard with green (0 for red, 1 for green, 2 for yellow?
+                problems_status_array[teamname] = tempstring + "1"
             elif(test_submission_incorrect.result == 'WRONG'): # Red
-                problems_status_array[problem] = 0
+                problems_status_array[teamname] = tempstring + "0"
             else:
-                problems_status_array[problem] = 2 # Otherwise the submission is pending (works because the cell will just
+                problems_status_array[teamname] = tempstring + "2" # Otherwise the submission is pending (works because the cell will just
                 # be printed blank if there isnt an available submission for this problem/team combo yet
-
             print("problems status array: ")
             print(problems_status_array)
 
