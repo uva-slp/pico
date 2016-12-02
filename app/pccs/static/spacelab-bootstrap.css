@@ -245,6 +245,35 @@ th {
   h3 {
     page-break-after: avoid;
   }
+  /* custom css starts here */
+  #create-team-toggle-wrapper {
+    background: #ccc;
+    overflow: hidden;
+    transition: max-height 300ms;
+    max-height: 0; /* <---hide by default */
+  }
+  #create-team-toggle-wrapper.open {
+    max-height: 100px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+  }
+  #join-team-toggle-wrapper {
+    background: #ccc;
+    overflow: hidden;
+    transition: max-height 300ms;
+    max-height: 0; /* <---hide by default */
+  }
+  #join-team-toggle-wrapper.open {
+    max-height: 100px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+  }
+  #leave-team-toggle-wrapper {
+    background: #ccc;
+    overflow: hidden;
+    transition: max-height 300ms;
+    max-height: 0; /* <---hide by default */
+  }
+  #leave-team-toggle-wrapper.open {
+    max-height: 100px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+  }
+  /* custom css ends here*/
   .navbar {
     display: none;
   }
@@ -1611,6 +1640,7 @@ pre code {
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
+  padding-bottom: 15px;
 }
 .row {
   margin-left: -15px;
