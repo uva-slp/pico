@@ -129,23 +129,11 @@ class CreateContestTemplateForm(ModelForm):
 			'contest_admins', 'contest_participants')
 
 
-'''
-class CreateContestForm(forms.Form):
-    title = forms.CharField(label='Title', max_length=32)
-    languages = forms.CharField(label='Languages', widget=forms.CheckboxSelectMultiple)
-    length = forms.ChoiceField(label='Length', choices=CONTEST_LENGTH)
-    autojudge = forms.ChoiceField(label='Autojudge', choices=AUTOJUDGE)
-    ##file stuff - need group input on how this should be laid out
-    ##problems = forms.FileField()
-    ##answers = forms.FileField()
-'''
-
-
 class UploadCodeForm(forms.ModelForm):
 	class Meta:
 		model = Submission
-		fields = ['code_file', 'problem', 'original_filename']
-		widgets = {'problem': forms.HiddenInput(), 'original_filename' : forms.HiddenInput()}
+		fields = ['code_file', 'problem']
+		widgets = {'problem': forms.HiddenInput()}
 
 
 class ReturnJudgeResultForm(forms.ModelForm):

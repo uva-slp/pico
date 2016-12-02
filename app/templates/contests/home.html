@@ -1,4 +1,5 @@
-{% extends 'contests/base.html' %}
+{% extends 'contests/home_base.html' %}
+{% load bootstrap3 %}
 {% load static %}
 
 {% block content_block %}
@@ -9,6 +10,79 @@
     </li>
     
     <hr class="colorgraph">
+
+    <div class="panel panel-default panel-table">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col col-xs-6">
+                    <h3 class="panel-title">Active Contests:</h3>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-bordered table-list">
+                <tbody>
+                {% for contest in contests_created %}
+                    {% if contest.contest_start.date <= time_now.date and contest.contest_start.time <= time_now.time %}
+                    <tr>
+                        <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+           </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default panel-table">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col col-xs-6">
+                    <h3 class="panel-title">Unstarted Contests:</h3>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-bordered table-list">
+                <tbody>
+                {% for contest in contests_created %}
+                    {% if contest.contest_start == NULL %}
+                    <tr>
+                        <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+           </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default panel-table">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col col-xs-6">
+                    <h3 class="panel-title">Past Contests:</h3>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-bordered table-list">
+                <tbody>
+                {% for contest in contests_created %}
+                    {% if contest.contest_start.date < time_now.date and contest.contest_start.time < time_now.time %}
+                    <tr>
+                        <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+           </table>
+        </div>
+    </div>
+
+    <br />
+    
+    <h3>Create team</h3>
 
     {% if contests_created %}
         <h3>Contests Created:</h3>

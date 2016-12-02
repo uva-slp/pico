@@ -30,6 +30,7 @@ class Contest(models.Model):
 	creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
 	languages = models.CharField(max_length=64)
 	contest_length = models.CharField(max_length=8)
+	contest_start = models.DateTimeField(null=True, blank=True)
 	time_penalty = models.CharField(max_length=4)
 	autojudge_enabled = models.BooleanField(max_length=1, default=False)
 	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
