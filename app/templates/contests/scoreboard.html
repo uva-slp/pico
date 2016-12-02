@@ -38,15 +38,13 @@
 
     <b> {{ contest_title }}</b>
 
+    {{ problem_status_array.items }}
+
     <table id="scoreboard">
+
+        <!-- Top Row -->
         <tr>
             <th> Team </th>
-
-        <!-- <td> {{ team }} </td> -->
-
-        {% for problem in problems %}
-        {% endfor %}
-
 
             {% for count in problem_count %}
                 <th> Question {{ count }} </th>
@@ -56,17 +54,15 @@
 
         </tr>
 
-        <!-- Team row -->
-        {% for team in teams %}
-            <tr>
+            <!-- Team Row -->
+            {% for team, status_string in problem_status_array.items %}
+                <tr>
 
-            <td> {{ team }} </td>
+                <td> {{ team }} </td>
 
-            {% for problem in problems %}
-                {% for key, value in problem_status_array.items %}
+                {% for character in status_string %}
 
-                    {% for character in value %}
-                        {{ character }}
+                    {% for problem in problems %}
 
                         {% if character == "1" %}
                             <td style="background-color:green"> Correct </td>
@@ -82,16 +78,21 @@
 
                     {% endfor %}
                 {% endfor %}
-            <!-- if problem/submission.status = right, color green, wrong color red, else color yellow -->
+
+                <td>
+                {% for key,value in problem_score_array.items %}
+                        {{ value }}
+                {% endfor %}
+                </td>
+
+                </tr>
 
             {% endfor %}
-
-            </tr>
-
-        {% endfor %}
+            <!-- if problem/submission.status = right, color green, wrong color red, else color yellow -->
 
 
-        <br> </br>
+
+
 
     </table>
 

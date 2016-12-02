@@ -15,6 +15,7 @@ from .models import Participant, Submission
 from users.models import User
 from datetime import datetime
 from django.utils import timezone
+from django.http import Http404
 
 
 def home(request):
@@ -322,34 +323,53 @@ def scoreboard(request, contest_id):
     contest_title = scoreboard_contest.title
 
     problems_status_array = {}
+    problem_score_array = {}
 
     #for problem in problems:
     #    problems_status_array[problem] = [2]
 
     for teamname in participants_string:
-        tempteam = Team.objects.get(name=teamname)
-
+        try:
+            tempteam = Team.objects.get(name=teamname)
+        except:
+            raise Http404("Team in scoreboard no longer exists")
         # array with [teamname][121001] based on submission>?
 
-        for problem in problems:
+        problem_score_array[teamname] = 0
+
+        for problem in problems: # Iterate through problems and check submissions for right/wrong answer
 
             tempstring = ""
+            #tempscore = 0
+
+            # tempsubmission = Submission.objects.get(team = tempteam, problem=problem) (or filter)
             test_submission_correct = Submission(team=tempteam, problem=problem, run_id=1, code_file="", timestamp="", state = 'YES', result='YES')
             test_submission_incorrect = Submission(team=tempteam, problem=problem, run_id=2, code_file="", timestamp="", state = 'NO', result='WRONG')
             test_submission_pending = Submission(team=tempteam, problem=problem, run_id=3, code_file="", timestamp="", state = 'NEW', result='')
 
+
+
             #filter submission by problem/team
             if(test_submission_incorrect.result == 'YES') : #correct answer, update scoreboard with green (0 for red, 1 for green, 2 for yellow?
-                problems_status_array[teamname] = tempstring + "1"
+                tempstring += "1"
+                #tempscore += 1
+                problems_status_array[teamname] = tempstring
+                problem_score_array[teamname] += 1
             elif(test_submission_incorrect.result == 'WRONG'): # Red
-                problems_status_array[teamname] = tempstring + "0"
+                tempstring += "0"
+                problems_status_array[teamname] = tempstring
             else:
-                problems_status_array[teamname] = tempstring + "2" # Otherwise the submission is pending (works because the cell will just
+                tempstring += "2"
+                problems_status_array[teamname] = tempstring # Otherwise the submission is pending (works because the cell will just
                 # be printed blank if there isnt an available submission for this problem/team combo yet
+
+            print("tempstring")
+            print(tempstring)
             print("problems status array: ")
             print(problems_status_array)
+            print(problem_score_array)
 
 
     return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
-		'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array})
+		'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array})
 
