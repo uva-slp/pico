@@ -1,11 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'contests/base.html' %}
+
 {% load bootstrap3 %}
 {% load contest_extras %}
 
+{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
+
 {% block head_block %}
     {{ block.super }}
-    {% block title_block %}<title>{{ contest_data.title }} Contest</title>{% endblock %}
-
     <style>
         .panel-body {
             background: #F7F7F7;
@@ -14,15 +15,26 @@
             border-color: #E5E5E5;
             border-radius: 5px;
         }
+        .panel-default .panel-heading:hover {
+            background: #dfdfdf;
+        }
+        .panel-success .panel-heading:hover {
+            background: #9bc79b;
+        }
+        .panel-danger .panel-heading:hover {
+            background: #ea9ea8;
+        }
+        .panel-warning .panel-heading:hover {
+            background: #f7f79e;
+        }
     </style>
 {% endblock %}
-{% block body_block %}
+
+{% block content_block %}
     <br /><br />
     <h1>Contest: {{ contest_data.title }}</h1>
-    <br />
-    {% if is_judge %}
-        <a href="{% url 'contests:contest_judge_submissions' contest_data.id %}">View all submissions</a>
-    {% endif %}
+
+    <a href="{% url 'contests:scoreboard' contest_data.id %}">View Scoreboard</a>
     <br />
     {% for team in contest_teams %}
         <a href="{% url 'contests:contest_submissions' contest_data.id team.id %}">View team {{team.id}}'s submissions</a>
@@ -41,10 +53,8 @@
                                     Problem {{ forloop.counter }}
                                 </div>
                                 <div class="col-sm-4" style="display: table-cell;">
-                                    Submission Attempts:
                                 </div>
                                 <div class="col-sm-4" style="display: table-cell;">
-                                    Status: 
                                 </div>
                             </div>
                         </div>

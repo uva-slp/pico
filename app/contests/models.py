@@ -16,12 +16,10 @@ class Contest(models.Model):
 	
 	def __str__(self):
 		return self.title
-
 class Question(models.Model):
 	number = models.IntegerField()
 	name = models.CharField(max_length=2048)
 	contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
-
 	def __str__(self):
 		return str(self.number)
 '''
@@ -51,17 +49,14 @@ class Problem(models.Model):
         sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
         sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
         contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
-        
-        def __str__(self):
-                return self.name + " " + str(self.id)
 
 class Participant(models.Model):
 	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
 	team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.CASCADE)
-	Score = models.IntegerField
+	score = models.IntegerField
 
-	
 class Submission(models.Model):
+	run_id = models.IntegerField(null=True)
 	team = models.ForeignKey(Team, null = True)
 	problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True)
 	code_file = models.FileField(upload_to='uploads/', null=True, blank=True)
@@ -88,4 +83,18 @@ class Submission(models.Model):
 	result = models.CharField(max_length=20, choices=JUDGE_RESULT, null=True)
 
 	def __str__(self):
-		return str(self.id)
+		return str(self.run_id)
+
+class ContestTemplate(models.Model):
+	title = models.CharField(max_length=128)
+	creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+	languages = models.CharField(max_length=64)
+	contest_length = models.CharField(max_length=8)
+	time_penalty = models.CharField(max_length=4)
+	autojudge_enabled = models.BooleanField(max_length=1, default=False)
+	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
+	contest_admins = models.TextField()
+	contest_participants = models.TextField()
+
+	def __str__(self):
+		return self.title

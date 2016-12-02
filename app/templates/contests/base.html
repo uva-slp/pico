@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title_block %} {{block.super}} {% endblock %}
+{% block head_block %}
+    <style>
+        .navbar {
+            display: block;
+        }
+
+        .container-fluid {
+            background: #F7F7F7;
+        }
+
+        #nav {
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+
+	    .navbar > a {
+	        text-decoration: none;
+	        background-color: #EEEEEE;
+	        color: #333333;
+	        padding: 2px 6px 2px 6px;
+	        border-top: 1px solid #CCCCCC;
+	        border-right: 1px solid #333333;
+	        border-bottom: 1px solid #333333;
+	        border-left: 1px solid #CCCCCC;
+	    }
+
+        .navbar-default .navbar-nav > li > a:hover,
+        .navbar-default .navbar-nav > li > a:focus {
+            background-color: #E5E5E5;
+        }
+
+        #create-team-toggle-wrapper {
+            background: #eee;
+            overflow: hidden;
+            transition: max-height 300ms;
+            max-height: 0; /* <---hide by default */
+          }
+          #create-team-toggle-wrapper.open {
+            max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+          }
+          #join-team-toggle-wrapper {
+            background: #eee;
+            overflow: hidden;
+            transition: max-height 300ms;
+            max-height: 0; /* <---hide by default */
+          }
+          #join-team-toggle-wrapper.open {
+            max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+          }
+          #leave-team-toggle-wrapper {
+            background: #eee;
+            overflow: hidden;
+            transition: max-height 300ms;
+            max-height: 0; /* <---hide by default */
+          }
+          #leave-team-toggle-wrapper.open {
+            max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+          }
+
+        .colorgraph {
+	        height: 7px;
+	        border-top: 0;
+	        border-radius: 5px;
+	        background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	        background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	        background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	        background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+	    }
+    </style>
+{% endblock %}
+
+{% block body_block %}
+    <div id="nav" class="col-md-10 col-md-offset-1">
+        <nav class="navbar navbar-default" id="navbar-menu">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="{% url 'contests:home' %}">PiCO</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                {% url 'contests:contest' contest_data.id as problems_url%}
+                {% url 'contests:contest_judge_submissions' contest_data.id as judge_url %}
+                {% url 'contests:contest_submissions' contest_data.id team.id as submission_url %}
+                {% url 'contests:scoreboard' contest_data.id as scoreboard_url %}
+                {% url 'users:password_change' as password_change_url %}
+                <li {% if request.path == problems_url %}class="active"{% endif %}>
+                    <a href="{{ problems_url }}">Problems</a></li>
+                <!-- TODO: update when contest support multiple judges-->
+                {% if request.user == contest_data.creator %}
+                <li {% if request.path == judge_url %}class="active"{% endif %}>
+                    <a href="{{ judge_url }}">Submissions</a></li>
+                {% elif team is not None%}
+                <li {% if request.path == submission_url %}class="active"{% endif %}>
+                    <a href="{{ submission_url }}">Submissions</a></li>
+                {% endif %}
+                <li {% if request.path == scoreboard_url %}class="active"{% endif %}>
+                    <a href="{{ scoreboard_url }}">Scoreboard</a></li>
+                <li {% if request.path == password_change_url %}class="active"{% endif %}>
+                    <a href="{{ password_change_url }}">Change Password</a></li>
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+    </div>
+
+    <div class="panel panel-default col-md-10 col-md-offset-1">
+        {% block content_block %}{% endblock %}
+    </div>
+
+{% endblock %}
+
+{% block foot_block %}{% endblock %}

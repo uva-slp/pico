@@ -1,28 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ contest_data.title }} Contest</title>
-</head>
-<body>
+{% extends 'contests/base.html' %}
+
+{% load bootstrap3 %}
+{% load contest_extras %}
+
+{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
+
+{% block head_block %}
+    {{ block.super }}
+{% endblock %}
+
+{% block content_block %}
     <br /><br />
     <h1>Contest: {{ contest_data.title }}</h1>
     <br />
     <h2>Judging submission:</h2>
     <br />
-    {% if is_judge %}
-    <h3>Run ID: {{ submission.id }} </h3>
-    <br />
-    <h3>Team: {{ submission.team.name }} </h3>
-    <br />
-    <h3>State: {{ submission.get_state_display }} </h3>
-    <br />
-    <form enctype="multipart/form-data" action="{% url 'contests:contest_judge' contest_data.id submission.id%}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-    <input type="submit" value="Submit"/>
-    </form>
-    {% endif %}
 
-</body>
-</html>
+    <!-- TODO: update when contest support multiple judges-->
+    {% if request.user == contest_data.creator %}
+    <div class="panel panel-default panel-table">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col col-xs-4">
+                    <h3 class="panel-title">Run ID: {{ submission.run_id }}</h3>
+                </div>
+                <div class="col col-xs-4">
+                    <h3 class="panel-title">Team: {{ submission.team.name }} </h3>
+                </div>
+                <div class="col col-xs-4">
+                    <h3 class="panel-title">State: {{ submission.get_state_display }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+        </div>
+        <div class="panel-footer">
+            <form class="form-inline" enctype="multipart/form-data" action="{% url 'contests:contest_judge' contest_data.id submission.run_id%}" method="post">
+                {% csrf_token %}
+                {{ form }}
+            <input class="pull-right" type="submit" value="Submit"/>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

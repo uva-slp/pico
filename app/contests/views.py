@@ -38,7 +38,6 @@ def home(request):
 
 def diff(request, problem_id):
         form = UploadCodeForm(request.POST, request.FILES)
-        request.POST["problem"] = problem_id
         if form.is_valid():
             form.save()
             output = exe.execute_code(request.FILES['code_file'])
@@ -136,6 +135,21 @@ def create(request):
         QAFormSet = formset_factory(CreateProblem)
         qa_formset = QAFormSet()
     return render(request, 'contests/create_contest.html', {'form': form, 'qa_formset': qa_formset})
+
+
+def create_template(request):
+	if request.method == 'POST':
+		form = CreateContestTemplateForm(request.POST)
+
+		if form.is_valid():
+			contest_template = form.save()
+			contest_template.creator = request.user
+			contest_template.save()
+
+			return redirect(reverse('contests:home'))
+	else:
+		form = CreateContestTemplateForm()
+	return render(request, 'contests/create_template.html', {'form': form})
 
 
 # Helper method for getting user's team participated in a contest
@@ -245,8 +259,8 @@ def displayJudge(request, contest_id, run_id):
 	problems = contest_data.problem_set.all()
 	if request.user == contest_data.creator:
 		for p in problems:
-			if p.submission_set.filter(id=run_id).exists():
-				current_submission = p.submission_set.get(id=run_id)
+			if p.submission_set.filter(run_id=run_id).exists():
+				current_submission = p.submission_set.get(run_id=run_id)
 
 				if request.method == 'POST':
 					form = ReturnJudgeResultForm(request.POST, instance=current_submission)
