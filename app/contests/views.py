@@ -336,9 +336,11 @@ def scoreboard(request, contest_id):
 
     problems_status_array = {}
     problem_score_array = {}
+    problem_attempts_array = {}
 
     #for problem in problems:
     #    problems_status_array[problem] = [2]
+
 
     for teamname in participants_string:
         try:
@@ -348,26 +350,27 @@ def scoreboard(request, contest_id):
         # array with [teamname][121001] based on submission>?
 
         problem_score_array[teamname] = 0
+        problem_attempts_array[teamname] = 0
 
         for problem in problems: # Iterate through problems and check submissions for right/wrong answer
 
             tempstring = ""
-            #tempscore = 0
 
-            # tempsubmission = Submission.objects.get(team = tempteam, problem=problem) (or filter)
+            # tempsubmission = Submission.objects.filter(team = tempteam, problem=problem)
+            # for submissions in tempsubmission:
+            #    problem_attempts_array[teamname] += 1
+
             test_submission_correct = Submission(team=tempteam, problem=problem, run_id=1, code_file="", timestamp="", state = 'YES', result='YES')
             test_submission_incorrect = Submission(team=tempteam, problem=problem, run_id=2, code_file="", timestamp="", state = 'NO', result='WRONG')
             test_submission_pending = Submission(team=tempteam, problem=problem, run_id=3, code_file="", timestamp="", state = 'NEW', result='')
 
-
-
             #filter submission by problem/team
-            if(test_submission_incorrect.result == 'YES') : #correct answer, update scoreboard with green (0 for red, 1 for green, 2 for yellow?
+            if(test_submission_pending.result == 'YES') : #correct answer, update scoreboard with green (0 for red, 1 for green, 2 for yellow?
                 tempstring += "1"
                 #tempscore += 1
                 problems_status_array[teamname] = tempstring
                 problem_score_array[teamname] += 1
-            elif(test_submission_incorrect.result == 'WRONG'): # Red
+            elif(test_submission_pending.result == 'WRONG'): # Red
                 tempstring += "0"
                 problems_status_array[teamname] = tempstring
             else:
