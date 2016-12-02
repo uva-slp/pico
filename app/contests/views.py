@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
-from .forms import CreateContestForm, CreateProblem, CreateContestTemplateForm, UploadCodeForm, ReturnJudgeResultForm
+from .models import Problem, Contest
+from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.forms.formsets import formset_factory
@@ -11,12 +12,14 @@ from .lib import diff as _diff
 from .lib import execution as exe
 from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
-from .models import Participant, Submission
+from .models import Participant
 from users.models import User
 from datetime import datetime
 from django.utils import timezone
 from django.http import Http404
 
+#To render multiple forms on a contest page (since there are multiple problems in a contest)
+from django.forms.formsets import formset_factory
 
 def home(request):
 	return render(
@@ -24,7 +27,7 @@ def home(request):
 		'contests/home.html',
 		{
 			'team_form': TeamForm(),
-			'team_join_form': TeamJoinForm(),
+            'team_join_form': TeamJoinForm(),
 			'team_leave_form': TeamLeaveForm(),
 			'organization_form': OrganizationForm(),
 			'organization_join_form': OrganizationJoinForm(),
@@ -47,7 +50,7 @@ def upload_code(request, problem_id):
     return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
 
 
-def diff(request, question_id):
+def diff(request, problem_id):
         form = UploadCodeForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
@@ -60,15 +63,38 @@ def diff(request, question_id):
                     fromlines = output[1].split("\n")
                     tolines = ['Hello World from C++!']
                     html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges, 'question_id' : question_id})
+                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
         else:
-            return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
+                return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
 
+'''
+def create(request):
+    #boolean to see if the contest was successfully created
+    #initally false, code will make it true it successful
+    #successfully_created_contest = False
+    #check to see if the page was loaded with POST request data
+
+    if request.method == 'POST':
+        #grab information from form
+        form = CreateContestForm(request.POST)
+        if form.is_valid():
+            c = Contest()
+            c.title = form.title
+            c.creator = 'user'
+            c.languages = form.languages
+            c.length = form.length
+            c.autojudge = form.autojudge
+            c.save()
+            return render(request, 'contests/home.html', {'form' : form})
+    else:
+        form = CreateContestForm()
+    return render(request, 'contests/create_contest.html', {'form': form})
+'''
 
 def create(request):
 
 	QAFormSet = formset_factory(CreateProblem)
-
+    
 	if request.method == 'POST':
 		if request.POST['submit'] == "load_template":
 			selected_template = request.POST['selected_template']
@@ -182,18 +208,34 @@ def getTeam(contest_id, user_id):
 
 @login_required
 def displayContest(request, contest_id):
-
-	# Activate Contest
+	# Activate Contest or save the submission
 	if request.method == 'POST':
-		if request.POST['submit'] == "activate_contest":
+		if 'submit' in request.POST and request.POST['submit'] == "activate_contest":
 			time = datetime.now()
 			contest = Contest.objects.get(id=contest_id)
 			contest.contest_start = time
 			contest.save()
+		else:
+			print("HERE")
+			form = UploadCodeForm(request.POST, request.FILES)
+			if form.is_valid():
+				sub = form.save(commit=False)
+				sub.original_filename = request.FILES['code_file'].name
+				sub.save()
 
 	contest_data = Contest.objects.get(id=contest_id)
 
 	problems = contest_data.problem_set.all()
+	#Handle multiple forms on the same page
+	UploadCodeFormSet = formset_factory(UploadCodeForm, extra = len(problems))
+	problem_form_pairs = []
+	for problem in problems:
+		form = UploadCodeForm(initial={'problem' : problem})
+		problem_form_pairs.append((problem, form))
+	is_judge = False
+	# TODO: Right now this only checks contest creator. Need to update to all judges
+	if request.user == contest_data.creator:
+		is_judge = True
 
 	contest_participants = contest_data.participant_set.all()
 
@@ -207,7 +249,7 @@ def displayContest(request, contest_id):
 			# number of attempts
 			current_attempts = len(p_submissions)
 			submission_attempts.append(current_attempts)
-			# status -- if have got it correct, ignore the rest
+			# status -- ignore the rest
 			current_status = "-"
 			current_color = "default"
 			if current_attempts is not 0:
@@ -231,20 +273,8 @@ def displayContest(request, contest_id):
 						current_status = "No - " + latest_submission.get_result_display()
 			status.append(current_status)
 			color_states.append(current_color)
-	else:
-		for p in problems:
-			submission_attempts.append(0)
-			status.append("-")
-			color_states.append("default")
-
-	return render(
-		request,
-		'contests/contest.html',
-		{'contest_data': contest_data, 'contest_problems': problems,
-			'contest_teams': contest_participants, 'submission_attempts': submission_attempts,
-		 	'submission_status': status, 'color_states': color_states, 'team': current_team
-		}
-	)
+                        
+	return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge, 'contest_teams': contest_participants, 'submission_attempts': submission_attempts, 'submission_status': status, 'color_states': color_states, 'problem_form_pairs' : problem_form_pairs })
 
 
 @login_required
@@ -301,16 +331,30 @@ def displayJudge(request, contest_id, run_id):
 						messages.error(request, "Error")
 				else:
 					form = ReturnJudgeResultForm(instance=current_submission)
-		return render(
-			request,
-			'contests/judge.html',
-			{'contest_data': contest_data, 'submission': current_submission, 'form': form}
-		)
+			output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'))
+			retcode = output[0]
+			if retcode != 0:
+				error = output[1]
+				return render(request, 'contests/error.html', {'error_message' : error})
+			else:
+				fromlines = output[1].split("\n")
+                                #TODO make tolines the expected output
+				# tolines = getattr(getattr(current_submission, 'problem'), 'output_description').split('\n')
+				tolines = ("Hello world from C++!").split('\n')
+				html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
+				return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True,
+					'submission': current_submission, 'form': form})
+			return render(
+				request,
+				'contests/judge.html',
+				{'contest_data': contest_data, 'is_judge': True,
+					'submission': current_submission, 'form': form}
+			)
 
 	return render(
 		request,
 		'contests/judge.html',
-		{'contest_data': contest_data}
+		{'contest_data': contest_data, 'is_judge': False}
 	)
 
 
@@ -387,4 +431,3 @@ def scoreboard(request, contest_id):
 
     return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
 		'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array})
-

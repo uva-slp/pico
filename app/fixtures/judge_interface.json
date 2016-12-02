@@ -124,7 +124,6 @@
   },
   {
       "model": "contests.submission",
-      "pk": 2,
       "fields": {
           "run_id": 1,
           "team": 1,
@@ -137,9 +136,8 @@
   },
   {
       "model": "contests.submission",
-      "pk": 3,
       "fields": {
-          "run_id": 2,
+          "run_id": 3,
           "team": 2,
           "problem": 2,
           "code_file": "",

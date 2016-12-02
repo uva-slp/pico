@@ -204,7 +204,7 @@ class JudgeInterfaceTest(TestCase):
 	# Vivian
 	#form test
 	def test_valid_return_form(self):
-		submission = Submission.objects.get(pk=3)
+		submission = Submission.objects.get(run_id=3)
 		data = {
 			"result": "YES", "state": "YES"
 		}
@@ -250,7 +250,7 @@ class SubmissionsViewsTest(TestCase):
                 file_path = os.path.join(temp_dirpath, 'test.cpp')
                 with open(file_path, 'w+') as destination:
                         test_file_object = File(destination)
-                        output = exe.execute_code(test_file_object)
+                        output = exe.execute_code(test_file_object, 'test.cpp')
                 shutil.rmtree(temp_dirpath)
                 self.assertEqual(output[0], 1)
          
@@ -260,23 +260,23 @@ class SubmissionsViewsTest(TestCase):
                 file_path = os.path.join(temp_dirpath, 'test.java')
                 with open(file_path, 'w+') as destination:
                         test_file_object = File(destination)
-                        output = exe.execute_code(test_file_object)
+                        output = exe.execute_code(test_file_object, 'test.java')
                 shutil.rmtree(temp_dirpath)
                 self.assertEqual(output[0], 1)
 
     #Derek
 	def test_diff_with_no_file_template(self):
-                response = self.client.get(reverse('contests:diff', kwargs = {'question_id' : '1'}))
+                response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
                 self.assertTemplateUsed(response, 'contests/error.html')
 
     #Derek
 	def test_diff_with_no_file_message(self):
-                response = self.client.get(reverse('contests:diff', kwargs = {'question_id' : '1'}))
+                response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
                 self.assertContains(response, 'Invalid form.')
 
     #Derek
 	def test_diff_page(self):
-                response = self.client.get(reverse('contests:diff', kwargs = {'question_id' : '1'}))
+                response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
                 self.assertEqual(response.status_code, 200)
 
 
