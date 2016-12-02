@@ -51,7 +51,7 @@
     {% endif %}
     <br />
     {% for team in contest_teams %}
-        <a href="{% url 'contests:contest_submissions' contest_data.id team.id %}">View team {{team.id}}'s submissions</a>
+        <a href="{% url 'contests:contest_submissions' contest_data.id team.id %}">View team {{team.name}}'s submissions</a>
         <br />
     {% endfor %}
     <h3>Contest Problems:</h3>
