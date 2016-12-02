@@ -359,52 +359,25 @@ def displayJudge(request, contest_id, run_id):
 
 
 def scoreboard(request, contest_id):
-        
 
-    allcontests = Contest.objects.all() # Get all contest objects
-    allteams = Team.objects.all() # Get all team objects
-    allteams = allteams.filter(members=userPK) # Get teams that have current user in them
-    print("teams with requesting user")
-    print(allteams)
+    scoreboard_contest = Contest.objects.get(id=contest_id) # Get contest ID from URL
+    problems = Problem.objects.all()
+    problems = problems.filter(contest=scoreboard_contest) # Filter problems to look at by contest
+    problem_count = 0
+    for problem in problems :
+        problem_count += 1
+        print("problem:")
+        print(problem.number)
 
-    testcontests = allcontests
+    participants_string = scoreboard_contest.contest_participants
+    participants_string = participants_string.split()
 
-    team_contests_array = [] # Holds all contests based on each users team
+    problem_count_array = []
+    for i in range(1, problem_count+1):
+        problem_count_array.append(i)
 
-    for team in allteams.iterator(): # Loop to filter possible contest pool down by each team the user is a part of
-        print("teamloop")
-        print(team.name)
-        testcontests = testcontests.filter(contest_participants__contains=team.name)
-        #print(testcontests)
-        team_contests_array.append(testcontests)
-        #print(allcontests)
+    contest_title = scoreboard_contest.title
 
-    #print(team_contests_array)
-    requestdatetime = datetime.now(timezone.utc) # Get current time to match with most recently joined contest based on the user's team
-    print(requestdatetime)
-
-    testnearestdate = []
-    testnearestarray = []
-
-    for index in team_contests_array:
-        for contest in index:
-            testnearestdate.append(contest.date_created)
-            #print(contest)
-        testnearestarray.append(nearest(testnearestdate, requestdatetime)) # Get nearest date for each grouping regarding team
-
-<<<<<<< HEAD
-    # testnearestarray now contains contest times created for the most recently created contests under each team relevant to the user requesting the scoreboard
-    print("testnearestarray: ")
-    print(testnearestarray)
-
-
-    #print "allcontests before filter"
-    #print(allcontests)
-    #print(allteams.values('name'))
-    allcontests = allcontests.filter(contest_participants__in="team3") # Get all contests with user's teams
-    #print("allcontests after filtering by user's teams")
-    #print(allcontests)
-=======
     problems_status_array = {}
     problem_score_array = {}
     problem_attempts_array = {}
@@ -454,33 +427,7 @@ def scoreboard(request, contest_id):
             print("problems status array: ")
             print(problems_status_array)
             print(problem_score_array)
->>>>>>> master
 
-    nearestdate = []
 
-    for contest in allcontests.iterator(): # Create tuple of all contests with this user/team
-        nearestdate.append(contest.date_created)
-
-    mostrecentcontestdate = nearest(nearestdate, requestdatetime) # Get whatever contest date is nearest to request date
-    mostrecentcontest = allcontests.filter(date_created=mostrecentcontestdate) # Filter queryset by nearest date created to get relevant contest for scoreboard request
-    problems = Problem.objects.all()
-    problems = problems.filter(contest=mostrecentcontest)
-    problem_count = 0
-    for problem in problems :
-        problem_count += 1
-        print("problem:")
-        print(problem.name)
-
-<<<<<<< HEAD
-    print("most recent contest:")
-    print(mostrecentcontest)
-    for contest in mostrecentcontest: # Should be 1 contest
-        print("Participant:")
-        print(contest.contest_participants)
-
-    return render(request, 'contests/scoreboard.html', {'teams' : allteams, 'problem_count' : problem_count, 'problems' : problems})
-=======
     return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
 		'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array})
-
->>>>>>> master
