@@ -10,6 +10,53 @@
     
     <hr class="colorgraph">
 
+    <table>
+        <tr>
+            <th>Active Contests:</th>
+        </tr>
+        {% for contest in contests_created %}
+            {% if contest.contest_start.date <= time_now.date and contest.contest_start.time <= time_now.time %}
+            <tr>
+                <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+
+    <br />
+
+    <table>
+        <tr>
+            <th>Unstarted Contests:</th>
+        </tr>
+        {% for contest in contests_created %}
+            {% if contest.contest_start == NULL %}
+            <tr>
+                <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+
+    <br />
+
+    <table>
+        <tr>
+            <th>Past Contests:</th>
+        </tr>
+        {% for contest in contests_created %}
+            {% if contest.contest_start.date < time_now.date and contest.contest_start.time < time_now.time %}
+            <tr>
+                <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+
+    <br />
+    
+    <h3>Create team</h3>
+
     {% if contests_created %}
         <h3>Contests Created:</h3>
         <table>  

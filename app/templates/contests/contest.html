@@ -36,6 +36,20 @@
 
     <a href="{% url 'contests:scoreboard' contest_data.id %}">View Scoreboard</a>
     <br />
+    {% if is_judge %}
+        {% if contest_data.contest_start == NULL %}
+            <form id="activate_contest_form" method="post"
+                  action="{% url 'contests:contest' contest_data.id %}">
+                {% csrf_token %}
+                {% bootstrap_button "Activate Contest" value="activate_contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
+            </form>
+        {% else %}
+            <h3>Contest Started at {{ contest_data.contest_start }}</h3>
+        {% endif %}
+        <br />
+        <a href="{% url 'contests:contest_judge_submissions' contest_data.id %}">View all submissions</a>
+    {% endif %}
+    <br />
     {% for team in contest_teams %}
         <a href="{% url 'contests:contest_submissions' contest_data.id team.id %}">View team {{team.id}}'s submissions</a>
         <br />
