@@ -82,20 +82,20 @@
     </div>
 
     <br />
-    
+    <!--
     <h3>Create team</h3>
     <br><br>
 
-    {% if teams_joined %}
+    {'% if teams_joined %'}
         <h3>You are a member of:</h3>
         <ul>
-        {% for team in teams_joined %}    
-            <li>{{ team.name }}</li>
-        {% endfor %}
+        {'% for team in teams_joined %'}
+            <li>{'{ team.name }'}</li>
+        {'% endfor %'}
         </ul>
-    {% else %}
+    {'% else %'}
         <h3>You are not on any teams!</h3>
-    {% endif %}
+    {'% endif %'}-->
 
     <br>
     <br>
