@@ -7,7 +7,7 @@
 {% block form_block %}
     <div class="well bs-component">
         <form class="form-horizontal" id="load_contest_template" method="post"
-              action="{% url 'contests:load_template' %}">
+              action="{% url 'contests:create' %}">
             <fieldset>
                 <legend>Default Templates</legend>
 
@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="col-lg-2 col-lg-offset-5">
-                    {% bootstrap_button "Load Template" button_type="submit" name="submit" button_class="btn btn-primary" %}
+                    {% bootstrap_button "Load Template" value="load_template" button_type="submit" name="submit" button_class="btn btn-primary" %}
                 </div>
             </fieldset>
         </form>
@@ -54,7 +54,7 @@
                 </div>
                 <br /><br />
                 <div class="col-lg-2 col-lg-offset-5">
-                    {% bootstrap_button "Create Contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
+                    {% bootstrap_button "Create Contest" value="create_contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
                 </div>
             </fieldset>
         </form>
