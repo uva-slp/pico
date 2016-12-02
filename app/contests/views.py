@@ -240,6 +240,9 @@ def displayContest(request, contest_id):
 		is_judge = True
 
 	contest_participants = contest_data.participant_set.all()
+	contest_teams = []
+	for participant in contest_participants:
+		contest_teams.append(participant.team)
 
 	current_team = getTeam(contest_id, request.user.id)
 	submission_attempts = []
@@ -275,8 +278,8 @@ def displayContest(request, contest_id):
 						current_status = "No - " + latest_submission.get_result_display()
 			status.append(current_status)
 			color_states.append(current_color)
-                        
-	return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge, 'contest_teams': contest_participants, 'submission_attempts': submission_attempts, 'submission_status': status, 'color_states': color_states, 'problem_form_pairs' : problem_form_pairs })
+
+	return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge, 'contest_teams': contest_teams, 'submission_attempts': submission_attempts, 'submission_status': status, 'color_states': color_states, 'problem_form_pairs' : problem_form_pairs })
 
 
 @login_required
