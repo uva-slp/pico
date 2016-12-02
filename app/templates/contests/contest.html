@@ -88,7 +88,7 @@
                         </li>
                     </ul>
                     <div class="panel-footer">
-		      <form enctype="multipart/form-data" action="{% url 'contests:diff' pair.0.id %}" method="post">
+		      <form enctype="multipart/form-data" action="{% url 'contests:contest' contest_data.id %}" method="post">
 			{% csrf_token %}
 			Upload your file:
 			{{ pair.1.as_p }}

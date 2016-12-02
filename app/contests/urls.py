@@ -15,4 +15,6 @@ urlpatterns = [
 	url(r'^contest/(?P<contest_id>\d+)/judge/(?P<run_id>\d+)/$', views.displayJudge, name='contest_judge'),
 	url(r'^contest/(?P<contest_id>\d+)/(?P<team_id>\d+)/submissions$',
 		views.displayMySubmissions, name='contest_submissions'),
+    url(r'^submission$', views.choose_problem, name='choose_problem'),
+    url(r'^submission/upload/(?P<problem_id>[0-9]+)/$', views.upload_code, name='upload_code'),
 ]

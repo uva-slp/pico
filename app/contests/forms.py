@@ -144,8 +144,8 @@ class CreateContestForm(forms.Form):
 class UploadCodeForm(forms.ModelForm):
 	class Meta:
 		model = Submission
-		fields = ['code_file', 'problem']
-		widgets = {'problem': forms.HiddenInput()}
+		fields = ['code_file', 'problem', 'original_filename']
+		widgets = {'problem': forms.HiddenInput(), 'original_filename' : forms.HiddenInput()}
 
 
 class ReturnJudgeResultForm(forms.ModelForm):

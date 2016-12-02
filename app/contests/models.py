@@ -41,14 +41,14 @@ class Contest(models.Model):
 		return self.title
 
 class Problem(models.Model):
-        number = models.IntegerField(null=True)
-        name = models.CharField(max_length=2048, null=True, blank=True)
-        solution = models.FileField(upload_to='uploads/', null=True, blank=True)
-        input_description = models.CharField(max_length=128, null=True, blank=True)
-        output_description = models.CharField(max_length=128, null=True, blank=True)
-        sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
-        sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
-        contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
+	number = models.IntegerField(null=True)
+	name = models.CharField(max_length=2048, null=True, blank=True)
+	solution = models.FileField(upload_to='uploads/', null=True, blank=True)
+	input_description = models.CharField(max_length=128, null=True, blank=True)
+	output_description = models.CharField(max_length=128, null=True, blank=True)
+	sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
+	sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
+	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
 
 class Participant(models.Model):
 	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
@@ -56,11 +56,12 @@ class Participant(models.Model):
 	score = models.IntegerField
 
 class Submission(models.Model):
-	run_id = models.IntegerField(null=True)
+	run_id = models.AutoField(primary_key = True)
 	team = models.ForeignKey(Team, null = True)
 	problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True)
 	code_file = models.FileField(upload_to='uploads/', null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=True)
+	original_filename = models.CharField(max_length=128, null=True, blank=True)
 
 	JUDGE_RESULT = (
 		('YES', 'Yes'),

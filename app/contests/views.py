@@ -36,6 +36,17 @@ def home(request):
 	)
 
 
+def choose_problem(request):
+    all_problems = Problem.objects.all()
+    return render(request, 'contests/choose_problem.html', {'problems': all_problems})
+
+
+def upload_code(request, problem_id):
+    problem = Problem.objects.get(id=problem_id)
+    form = UploadCodeForm(initial = {'problem': problem})
+    return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
+
+
 def diff(request, problem_id):
         form = UploadCodeForm(request.POST, request.FILES)
         if form.is_valid():
@@ -49,7 +60,7 @@ def diff(request, problem_id):
                     fromlines = output[1].split("\n")
                     tolines = ['Hello World from C++!']
                     html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges, 'problem_id' : problem_id})
+                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
         else:
                 return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
 
@@ -166,6 +177,12 @@ def getTeam(contest_id, user_id):
 
 @login_required
 def displayContest(request, contest_id):
+	if request.method == 'POST':
+		form = UploadCodeForm(request.POST, request.FILES)
+		if form.is_valid():
+			sub = form.save(commit=False)
+			sub.original_filename = request.FILES['code_file'].name
+			sub.save()
 	contest_data = Contest.objects.get(id=contest_id)
 	problems = contest_data.problem_set.all()
         #Handle multiple forms on the same page
@@ -272,6 +289,18 @@ def displayJudge(request, contest_id, run_id):
 						messages.error(request, "Error")
 				else:
 					form = ReturnJudgeResultForm(instance=current_submission)
+			output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'))
+			retcode = output[0]
+			if retcode != 0:
+				error = output[1]
+				return render(request, 'contests/error.html', {'error_message' : error})
+			else:
+				fromlines = output[1].split("\n")
+                                #TODO make tolines the expected output
+				tolines = getattr(getattr(current_submission, 'problem'), 'output_description').split('\n')
+				html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
+				return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True,
+					'submission': current_submission, 'form': form})
 			return render(
 				request,
 				'contests/judge.html',

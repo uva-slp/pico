@@ -15,23 +15,23 @@ from threading import Timer
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 #Returns a return code and the output of the program or an error message
-def execute_code(file, timeout=5):
+def execute_code(file, original_filename, timeout=5):
     file_name, file_extension = os.path.splitext(file.name)
     #Check if it's a Java file:
     if file_extension == '.java':
-        return run_java(file, timeout)
+        return run_java(file, original_filename, timeout)
     #Check if it's a c++ file:
     cpp_extensions = set(['.cpp', '.cc', '.C', '.cxx', '.c++'])
     if file_extension in cpp_extensions:
         return run_cpp(file, timeout)
     #If it didn't have a proper extensions, can't compile and run it:
-    return (1, "FILENAME ERROR: Must have a valid C++ or Java file extension")    
+    return (1, "FILENAME ERROR: Must have a valid C++ or Java file extension")
 
 
 #Returns the a return code and the output of the program or an error message as a tuple.
-def run_java(file, timeout):
+def run_java(file, original_filename, timeout):
     temp_dirpath = tempfile.mkdtemp()
-    file_name = file.name
+    file_name = original_filename
     with open(os.path.join(temp_dirpath, file_name), 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
@@ -55,7 +55,7 @@ def run_java(file, timeout):
 #Returns the a return code and the output of the program or an error message as a tuple.
 def run_cpp(file, timeout):
     temp_dirpath = tempfile.mkdtemp()
-    file_name = file.name
+    file_name = os.path.basename(file.name)
     with open(os.path.join(temp_dirpath, file_name), 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
