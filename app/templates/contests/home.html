@@ -4,9 +4,10 @@
 
 {% block content_block %}
     <li class="navbar">
-        <a href="{% url 'users:password_change' %}">Change password</a>
-        <a href="{% url 'users:logout' %}">Logout</a>
-        <a href="{% url 'contests:create_template' %}">Create a Contest Template</a>
+        <a href="{% url 'contests:create_template' %}" class="btn btn-primary"> Create a Contest Template </a>
+        <a href="{% url 'contests:create_template' %}" class="btn btn-primary"> Create a Contest </a>
+        <a href="{% url 'users:password_change' %}" class="btn btn-primary"> Change password </a>
+        <a href="{% url 'users:logout' %}" class="btn btn-primary"> Logout </a>
     </li>
     
     <hr class="colorgraph">
@@ -83,21 +84,6 @@
     <br />
     
     <h3>Create team</h3>
-
-    {% if contests_created %}
-        <h3>Contests Created:</h3>
-        <table>  
-            {% for contest in contests_created %}
-                <tr>
-                    <td><a href="{% url 'contests:contest' contest.id %}">{{ contest.title }}</a></td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <h3>No active contests!</h3>
-    {% endif %}
-
-    <a href="{% url 'contests:create' %}">Create a Contest</a>
     <br><br>
 
     {% if teams_joined %}
