@@ -11,13 +11,13 @@
     <h2>Judging submission:</h2>
     <br />
     {% if is_judge %}
-    <h3>Run ID: {{ submission.run_id }} </h3>
+    <h3>Run ID: {{ submission.id }} </h3>
     <br />
     <h3>Team: {{ submission.team.name }} </h3>
     <br />
     <h3>State: {{ submission.get_state_display }} </h3>
     <br />
-    <form enctype="multipart/form-data" action="{% url 'contests:contest_judge' contest_data.id submission.run_id%}" method="post">
+    <form enctype="multipart/form-data" action="{% url 'contests:contest_judge' contest_data.id submission.id%}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
     <input type="submit" value="Submit"/>

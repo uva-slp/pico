@@ -36,17 +36,6 @@ def home(request):
 	)
 
 
-def choose_problem(request):
-    all_problems = Problem.objects.all()
-    return render(request, 'contests/choose_problem.html', {'problems': all_problems})
-
-
-def upload_code(request, problem_id):
-    problem = Problem.objects.get(id=problem_id)
-    form = UploadCodeForm(initial = {'problem': problem})
-    return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
-
-
 def diff(request, problem_id):
         form = UploadCodeForm(request.POST, request.FILES)
         request.POST["problem"] = problem_id
@@ -256,8 +245,8 @@ def displayJudge(request, contest_id, run_id):
 	problems = contest_data.problem_set.all()
 	if request.user == contest_data.creator:
 		for p in problems:
-			if p.submission_set.filter(run_id=run_id).exists():
-				current_submission = p.submission_set.get(run_id=run_id)
+			if p.submission_set.filter(id=run_id).exists():
+				current_submission = p.submission_set.get(id=run_id)
 
 				if request.method == 'POST':
 					form = ReturnJudgeResultForm(request.POST, instance=current_submission)

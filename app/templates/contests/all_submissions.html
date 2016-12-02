@@ -12,11 +12,11 @@
     <table>
     {% for submission in contest_submissions %}
         <tr>
-            <th style="padding-top: 15px;">Run ID {{ submission.run_id }} </th>
+            <th style="padding-top: 15px;">Run ID {{ submission.id }} </th>
             <td>Team: {{ submission.team.name }}</td>
             <td>State: {{ submission.get_state_display }}</td>
             <td>Result: {{ submission.get_result_display}}</td>
-            <td><a href="{% url 'contests:contest_judge' contest_data.id submission.run_id %}">Judge</a></td>
+            <td><a href="{% url 'contests:contest_judge' contest_data.id submission.id %}">Judge</a></td>
         </tr>
     {% endfor %}
     </table>
