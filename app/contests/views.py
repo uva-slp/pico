@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
+
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 from .models import Problem, Contest
 from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm
@@ -12,7 +13,8 @@ from .lib import diff as _diff
 from .lib import execution as exe
 from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
-from .models import Participant
+from .forms import CreateContestTemplateForm
+from .models import Participant, Submission
 from users.models import User
 from datetime import datetime
 from django.utils import timezone
