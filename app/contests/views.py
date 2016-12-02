@@ -16,6 +16,7 @@ from .models import Participant
 from users.models import User
 from datetime import datetime
 from django.utils import timezone
+from django.http import Http404
 
 #To render multiple forms on a contest page (since there are multiple problems in a contest)
 from django.forms.formsets import formset_factory
@@ -357,12 +358,8 @@ def displayJudge(request, contest_id, run_id):
 	)
 
 
-# Method for getting nearest datetime
-def nearest(items, pivot):
-    return min(items, key=lambda x: abs(x - pivot))
-
-def scoreboard(request):
-    userPK = request.user.pk # Get users primary key
+def scoreboard(request, contest_id):
+        
 
     allcontests = Contest.objects.all() # Get all contest objects
     allteams = Team.objects.all() # Get all team objects
@@ -395,6 +392,7 @@ def scoreboard(request):
             #print(contest)
         testnearestarray.append(nearest(testnearestdate, requestdatetime)) # Get nearest date for each grouping regarding team
 
+<<<<<<< HEAD
     # testnearestarray now contains contest times created for the most recently created contests under each team relevant to the user requesting the scoreboard
     print("testnearestarray: ")
     print(testnearestarray)
@@ -406,6 +404,57 @@ def scoreboard(request):
     allcontests = allcontests.filter(contest_participants__in="team3") # Get all contests with user's teams
     #print("allcontests after filtering by user's teams")
     #print(allcontests)
+=======
+    problems_status_array = {}
+    problem_score_array = {}
+    problem_attempts_array = {}
+
+    #for problem in problems:
+    #    problems_status_array[problem] = [2]
+
+
+    for teamname in participants_string:
+        try:
+            tempteam = Team.objects.get(name=teamname)
+        except:
+            raise Http404("Team in scoreboard no longer exists")
+        # array with [teamname][121001] based on submission>?
+
+        problem_score_array[teamname] = 0
+        problem_attempts_array[teamname] = 0
+
+        for problem in problems: # Iterate through problems and check submissions for right/wrong answer
+
+            tempstring = ""
+
+            # tempsubmission = Submission.objects.filter(team = tempteam, problem=problem)
+            # for submissions in tempsubmission:
+            #    problem_attempts_array[teamname] += 1
+
+            test_submission_correct = Submission(team=tempteam, problem=problem, run_id=1, code_file="", timestamp="", state = 'YES', result='YES')
+            test_submission_incorrect = Submission(team=tempteam, problem=problem, run_id=2, code_file="", timestamp="", state = 'NO', result='WRONG')
+            test_submission_pending = Submission(team=tempteam, problem=problem, run_id=3, code_file="", timestamp="", state = 'NEW', result='')
+
+            #filter submission by problem/team
+            if(test_submission_pending.result == 'YES') : #correct answer, update scoreboard with green (0 for red, 1 for green, 2 for yellow?
+                tempstring += "1"
+                #tempscore += 1
+                problems_status_array[teamname] = tempstring
+                problem_score_array[teamname] += 1
+            elif(test_submission_pending.result == 'WRONG'): # Red
+                tempstring += "0"
+                problems_status_array[teamname] = tempstring
+            else:
+                tempstring += "2"
+                problems_status_array[teamname] = tempstring # Otherwise the submission is pending (works because the cell will just
+                # be printed blank if there isnt an available submission for this problem/team combo yet
+
+            print("tempstring")
+            print(tempstring)
+            print("problems status array: ")
+            print(problems_status_array)
+            print(problem_score_array)
+>>>>>>> master
 
     nearestdate = []
 
@@ -422,6 +471,7 @@ def scoreboard(request):
         print("problem:")
         print(problem.name)
 
+<<<<<<< HEAD
     print("most recent contest:")
     print(mostrecentcontest)
     for contest in mostrecentcontest: # Should be 1 contest
@@ -429,3 +479,8 @@ def scoreboard(request):
         print(contest.contest_participants)
 
     return render(request, 'contests/scoreboard.html', {'teams' : allteams, 'problem_count' : problem_count, 'problems' : problems})
+=======
+    return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
+		'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array})
+
+>>>>>>> master

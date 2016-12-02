@@ -7,6 +7,7 @@
 
 {% block head_block %}
     {{ block.super }}
+    <meta http-equiv="refresh" content="5" >
     <style>
        #customers {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -37,7 +38,11 @@
 
     <b> {{ contest_title }}</b>
 
+    {{ problem_status_array.items }}
+
     <table id="scoreboard">
+
+        <!-- Top Row -->
         <tr>
             <th> Team </th>
 
@@ -46,24 +51,52 @@
             {% endfor %}
             <th> Score </th>
             <th> Total Attempts</th>
+
         </tr>
 
-        <!-- Team row -->
-        {% for team in teams %}
-            <tr>
+            <!-- Team Row -->
+            {% for team, status_string in problem_status_array.items %}
+                <tr>
 
-            <td> {{ team }} </td>
+                <td> {{ team }} </td>
 
-            {% for problem in problems %}
-                <td> Status </td>
+                {% for character in status_string %}
+
+                    {% for problem in problems %}
+
+                        {% if character == "1" %}
+                            <td style="background-color:green"> Correct </td>
+                        {% endif %}
+
+                        {% if character == "0" %}
+                            <td style="background-color:red"> Incorrect </td>
+                        {% endif %}
+
+                        {% if character == "2" %}
+                            <td style="background-color:yellow"> Pending </td>
+                        {% endif %}
+
+                    {% endfor %}
+                {% endfor %}
+
+                <td>
+                {% for key,value in problem_score_array.items %}
+                        {{ value }}
+                {% endfor %}
+                </td>
+
+                <td> 1 </td>
+
+                </tr>
+
+
+
             {% endfor %}
-
-            </tr>
-
-        {% endfor %}
+            <!-- if problem/submission.status = right, color green, wrong color red, else color yellow -->
 
 
-        <br> </br>
+
+
 
     </table>
 
