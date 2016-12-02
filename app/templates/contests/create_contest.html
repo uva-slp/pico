@@ -48,10 +48,25 @@
 
                 {{ qa_formset.management_form }}
 
-                <div class="qa-formset">
-                    <br /><br />
-                    {% bootstrap_formset qa_formset layout='horizontal' %}
-                </div>
+                {% for qa_form in qa_formset %}
+                    <div class="qa-formset">
+                        <br /><br />
+                        <label>Solution (.txt)</label><br>
+                        {{ qa_form.solution }}
+                        <br>
+                        <label>Description of Input</label><br>
+                        {{ qa_form.input_description }}
+                        <br>
+                        <label>Description of Output</label><br>
+                        {{ qa_form.output_description }}
+                        <br>
+                        <label>Sample Input (.txt)</label><br>
+                        {{ qa_form.sample_input }}
+                        <br>
+                        <label>Sample Output (.txt)</label><br>
+                        {{ qa_form.sample_output }}
+                    </div>
+                {% endfor %}
                 <br /><br />
                 <div class="col-lg-2 col-lg-offset-5">
                     {% bootstrap_button "Create Contest" value="create_contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
