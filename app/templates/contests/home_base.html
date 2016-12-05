@@ -175,6 +175,9 @@
             width: 150px;
             transition: all .4s ease 0s;
         }
+        #page-content-wrapper {
+          max-width: 1500px;
+        }
     </style>
 {% endblock %}
 
@@ -197,7 +200,7 @@
         <!-- Keep all page content within the page-content inset div! -->
         <div class="page-content inset">
           <div class="row">
-              <div class="col-md-12">
+              <div class="col-sm-12">
                 {% block content_block %}{% endblock %}
               </div>
           </div>
