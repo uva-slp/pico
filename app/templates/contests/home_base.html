@@ -3,68 +3,23 @@
 {% block title_block %}{{block.super}}{% endblock %}
 {% block head_block %}
     <style>
-        .row{
-            margin-left:0px;
-            margin-right:0px;
-        }
-
         #wrapper {
             padding-left: 70px;
             transition: all .4s ease 0s;
             height: 100%;
             max-width: 1500px;
+            margin: auto;
         }
 
-        #sidebar-wrapper {
-            margin-left: -150px;
-            left: 70px;
-            width: 150px;
-            background: #222;
-            position: fixed;
-            height: 100%;
-            z-index: 10000;
-            transition: all .4s ease 0s;
-        }
-
-        .sidebar-nav {
-            display: block;
-            float: left;
-            width: 150px;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
         #page-content-wrapper {
             padding-left: 0;
             margin-left: 0;
             width: 100%;
             height: auto;
         }
-        #wrapper.active {
-            padding-left: 150px;
-        }
-        #wrapper.active #sidebar-wrapper {
-            left: 150px;
-        }
 
         #page-content-wrapper {
           max-width: 75%;
-        }
-
-        #sidebar_menu li a, .sidebar-nav li a {
-            color: #999;
-            display: block;
-            float: left;
-            text-decoration: none;
-            width: 150px;
-            background: #252525;
-            border-top: 1px solid #373737;
-            border-bottom: 1px solid #1A1A1A;
-            -webkit-transition: background .5s;
-            -moz-transition: background .5s;
-            -o-transition: background .5s;
-            -ms-transition: background .5s;
-            transition: background .5s;
         }
         #create-team-toggle-wrapper {
           background: #ccc;
@@ -110,17 +65,10 @@
             padding-left: 70px;
             transition: all .4s ease 0s;
         }
-        #sidebar-wrapper {
-            left: 70px;
+        #side-content {
+          margin: 0 0 20px 0;
         }
-        #wrapper.active {
-            padding-left: 150px;
-        }
-        #wrapper.active #sidebar-wrapper {
-            left: 150px;
-            width: 150px;
-            transition: all .4s ease 0s;
-        }
+
     </style>
 {% endblock %}
 
@@ -130,7 +78,7 @@
   <div id="page-content-wrapper" class="page-content inset">
     <!-- Keep all page content within the page-content inset div! -->
     <div class="row">
-      <div class="col-sm-3">
+      <div class="col-sm-3" id="side-content">
         <ul>
           <li>test1</li>
           <li>test2</li>
