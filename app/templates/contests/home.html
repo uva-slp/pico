@@ -5,11 +5,22 @@
 {% block content_block %}
     <ul class="nav nav-pills">
         <strong><em>Page Title</em></strong>
-        <li class="active"><a href="{% url 'contests:create_template' %}"> Create a Contest Template </a></li>
+        <li><a href="{% url 'contests:create_template' %}"> Create a Contest Template </a></li>
         <li><a href="{% url 'contests:create' %}"> Create a Contest </a><li>
         <li><a href="{% url 'users:password_change' %}"> Change password </a><li>
         <li><a href="{% url 'users:logout' %}"> Logout </a><li>
-    </ul>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+              Create <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'contests:create' %}"> Create a Contest </a><li>
+              <li><a href="{% url 'contests:create_template' %}"> Create a Contest Template </a></li>
+              <li class="divider"></li>
+              <li><a href="#">Separated link</a></li>
+            </ul>
+          </li>
+        </ul>
     
     <hr class="colorgraph">
 
