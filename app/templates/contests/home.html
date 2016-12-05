@@ -4,13 +4,11 @@
 
 {% block content_block %}
     <ul class="nav nav-pills">
-        <li class="active">
-            <strong><em>Page Title</em></strong>
-            <a href="{% url 'contests:create_template' %}" class="btn btn-primary"> Create a Contest Template </a>
-            <a href="{% url 'contests:create' %}" class="btn btn-primary"> Create a Contest </a>
-            <a href="{% url 'users:password_change' %}" class="btn btn-primary"> Change password </a>
-            <a href="{% url 'users:logout' %}" class="btn btn-primary"> Logout </a>
-        </li>
+        <strong><em>Page Title</em></strong>
+        <li class="active"><a href="{% url 'contests:create_template' %}"> Create a Contest Template </a></li>
+        <li><a href="{% url 'contests:create' %}"> Create a Contest </a><li>
+        <li><a href="{% url 'users:password_change' %}"> Change password </a><li>
+        <li><a href="{% url 'users:logout' %}"> Logout </a><li>
     </ul>
     
     <hr class="colorgraph">
