@@ -126,10 +126,11 @@
 
 {% block body_block %}
 <div id="wrapper" class="active">
-  <!-- Side content -->
-  <div id="side-content-wrapper">
+  <!-- Page content -->
+  <div id="page-content-wrapper" class="page-content inset">
+    <!-- Keep all page content within the page-content inset div! -->
     <div class="row">
-      <div class="col-sm-12">
+      <div class="col-sm-3">
         <ul>
           <li>test1</li>
           <li>test2</li>
@@ -138,13 +139,7 @@
           <li>test5</li>
         </ul>
       </div>
-    </div>
-  </div>
-  <!-- Page content -->
-  <div id="page-content-wrapper" class="page-content inset">
-    <!-- Keep all page content within the page-content inset div! -->
-    <div class="row">
-      <div class="col-sm-12">
+      <div class="col-sm-9">
         {% block content_block %}{% endblock %}
       </div>
     </div>
