@@ -92,61 +92,6 @@
         }
         #leave-team-toggle-wrapper.open {
           max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-  }
-        .sidebar_name {
-            padding-top: 25px;
-            color: #fff;
-            opacity: .7;
-        }
-
-        .sidebar-nav li {
-          line-height: 40px;
-          text-indent: 20px;
-        }
-
-        .sidebar-nav li a {
-          color: #999999;
-          display: block;
-          text-decoration: none;
-        }
-
-        .sidebar-nav li a:hover {
-          color: #fff;
-          background: rgba(255,255,255,0.2);
-          text-decoration: none;
-        }
-
-        .sidebar-nav li a:active,
-        .sidebar-nav li a:focus {
-          text-decoration: none;
-        }
-
-        .sidebar-nav > .sidebar-brand {
-          height: 65px;
-          line-height: 60px;
-          font-size: 18px;
-        }
-
-        .sidebar-nav > .sidebar-brand a {
-          color: #999999;
-        }
-
-        .sidebar-nav > .sidebar-brand a:hover {
-          color: #fff;
-          background: none;
-        }
-
-        #main_icon
-        {
-            float:right;
-           padding-right: 65px;
-           padding-top:20px;
-        }
-        .sub_icon
-        {
-            float:right;
-           padding-right: 65px;
-           padding-top:10px;
         }
         .content-header {
           height: 65px;
@@ -181,29 +126,29 @@
 
 {% block body_block %}
 <div id="wrapper" class="active">
-      <!-- Sidebar -->
-      <div id="sidebar-wrapper">
-      <ul id="sidebar_menu" class="sidebar-nav">
-           <li class="sidebar-brand"><a id="menu-toggle" href="#">Menu</a></li>
-      </ul>
-        <ul class="sidebar-nav" id="sidebar">
-          <li><a>Dashboard</a></li>
-          <li><a>Team Management</a></li>
-          <li><a>Contest Creation</a></li>
+  <!-- Side content -->
+  <div id="side-content-wrapper">
+    <div class="row">
+      <div class="col-sm-12">
+        <ul>
+          <li>test1</li>
+          <li>test2</li>
+          <li>test3</li>
+          <li>test4</li>
+          <li>test5</li>
         </ul>
       </div>
-
-      <!-- Page content -->
-      <div id="page-content-wrapper">
-        <!-- Keep all page content within the page-content inset div! -->
-        <div class="page-content inset">
-          <div class="row">
-              <div class="col-sm-12">
-                {% block content_block %}{% endblock %}
-              </div>
-          </div>
-        </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div id="page-content-wrapper" class="page-content inset">
+    <!-- Keep all page content within the page-content inset div! -->
+    <div class="row">
+      <div class="col-sm-12">
+        {% block content_block %}{% endblock %}
       </div>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
