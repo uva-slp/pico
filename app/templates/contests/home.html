@@ -3,13 +3,15 @@
 {% load static %}
 
 {% block content_block %}
-    <li class="navbar">
-        <strong><em>Page Title</em></strong>
-        <a href="{% url 'contests:create_template' %}" class="btn btn-primary"> Create a Contest Template </a>
-        <a href="{% url 'contests:create' %}" class="btn btn-primary"> Create a Contest </a>
-        <a href="{% url 'users:password_change' %}" class="btn btn-primary"> Change password </a>
-        <a href="{% url 'users:logout' %}" class="btn btn-primary"> Logout </a>
-    </li>
+    <ul class="nav nav-pills">
+        <li class="active">
+            <strong><em>Page Title</em></strong>
+            <a href="{% url 'contests:create_template' %}" class="btn btn-primary"> Create a Contest Template </a>
+            <a href="{% url 'contests:create' %}" class="btn btn-primary"> Create a Contest </a>
+            <a href="{% url 'users:password_change' %}" class="btn btn-primary"> Change password </a>
+            <a href="{% url 'users:logout' %}" class="btn btn-primary"> Logout </a>
+        </li>
+    </ul>
     
     <hr class="colorgraph">
 
