@@ -16,7 +16,8 @@ from teams.models import Team
 from .forms import CreateContestTemplateForm
 from .models import Participant, Submission
 from users.models import User
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 from django.http import Http404
 
@@ -24,6 +25,17 @@ from django.http import Http404
 from django.forms.formsets import formset_factory
 
 def home(request):
+	time_arr = Contest.objects.values_list('contest_start', 'contest_length')
+	end_time = []
+	for start, length in time_arr:
+		if start:
+			new_minute = start.minute + length.minute
+			new_hour = start.hour + length.hour
+			new_datetime = start + relativedelta(hours=new_hour, minutes=new_minute)
+			end_time.append(new_datetime)
+		else:
+			end_time.append(start)
+
 	return render(
 		request,
 		'contests/home.html',
@@ -34,7 +46,7 @@ def home(request):
 			'organization_form': OrganizationForm(),
 			'organization_join_form': OrganizationJoinForm(),
 			'organization_leave_form': OrganizationLeaveForm(),
-			'contests_created': Contest.objects.all(),
+			'contests_created': zip(Contest.objects.all(), end_time),
 			'time_now': datetime.now(timezone.utc),
 			'teams_joined': Team.objects.all()
 		}
@@ -69,29 +81,6 @@ def diff(request, problem_id):
         else:
                 return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
 
-'''
-def create(request):
-    #boolean to see if the contest was successfully created
-    #initally false, code will make it true it successful
-    #successfully_created_contest = False
-    #check to see if the page was loaded with POST request data
-
-    if request.method == 'POST':
-        #grab information from form
-        form = CreateContestForm(request.POST)
-        if form.is_valid():
-            c = Contest()
-            c.title = form.title
-            c.creator = 'user'
-            c.languages = form.languages
-            c.length = form.length
-            c.autojudge = form.autojudge
-            c.save()
-            return render(request, 'contests/home.html', {'form' : form})
-    else:
-        form = CreateContestForm()
-    return render(request, 'contests/create_contest.html', {'form': form})
-'''
 
 def create(request):
 
