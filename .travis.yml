@@ -8,7 +8,7 @@ install:
   - pip install -q django-autocomplete-light==3.2.1
   - pip install -q django-bootstrap3==7.1.0
   - pip install -q django-widget-tweaks
-  # - pip install -q django-bootstrap3-datetimepicker==2.2.3
+  - pip install -q django-bootstrap3-datetimepicker==2.2.3
 
 script: python app/manage.py test app
 
