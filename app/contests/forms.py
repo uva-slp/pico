@@ -1,7 +1,7 @@
 from django.forms import Form, ModelForm
 from .models import Contest, Submission, Problem, ContestTemplate
 from django import forms
-from bootstrap3_datetime.widgets import DateTimePicker
+#from bootstrap3_datetime.widgets import DateTimePicker
 from datetime import datetime
 
 
@@ -46,11 +46,11 @@ class CreateContestForm(ModelForm):
 	)
 	contest_length = forms.CharField(
 		required=True, label="Contest Length (hours & minutes)", initial='02:00',
-		widget=DateTimePicker()
+		#widget=DateTimePicker()
 	)
 	time_penalty = forms.CharField(
 		required=True, label="Time Penalty (minutes)", initial=20,
-		widget=DateTimePicker()
+		#widget=DateTimePicker()
 	)
 	autojudge_enabled = forms.BooleanField(required=False)
 	autojudge_review = forms.CharField(

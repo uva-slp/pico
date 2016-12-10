@@ -21,7 +21,7 @@ class ContestTest(TestCase):
 	# models test
 	def contest(
 			self, title="only a test", languages="java, python",
-			length=datetime.now(), penalty=datetime.now(), autojudge="0", review="",
+			length=datetime.now(timezone.utc), penalty=datetime.now(timezone.utc), autojudge="0", review="",
 			desc="problems.pdf", admins="", participants=""):
 		return Contest.objects.create(
 			title=title, languages=languages,
