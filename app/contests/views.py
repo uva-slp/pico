@@ -85,6 +85,7 @@ def diff(request, problem_id):
 def create(request):
 
 	QAFormSet = formset_factory(CreateProblem)
+	templates = None
     
 	if request.method == 'POST':
 		if request.POST['submit'] == "load_template":
