@@ -1,79 +1,9 @@
 {% extends 'base.html' %}
 
 {% block title_block %}{{block.super}}{% endblock %}
-{% block head_block %}
-    <style>
-        #wrapper {
-            padding-left: 70px;
-            transition: all .4s ease 0s;
-            height: 100%;
-            max-width: 1500px;
-            margin: auto;
-        }
+{% block head_block %}{{block.super}}{% endblock %}
 
-        #page-content-wrapper {
-            padding-left: 0;
-            margin-left: 0;
-            width: 100%;
-            height: auto;
-        }
-
-        #page-content-wrapper {
-          max-width: 75%;
-        }
-        #create-team-toggle-wrapper {
-          background: #ccc;
-          overflow: hidden;
-          transition: max-height 300ms;
-          max-height: 0; /* <---hide by default */
-        }
-        #create-team-toggle-wrapper.open {
-          max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-        }
-        #join-team-toggle-wrapper {
-          background: #ccc;
-          overflow: hidden;
-          transition: max-height 300ms;
-          max-height: 0; /* <---hide by default */
-        }
-        #join-team-toggle-wrapper.open {
-          max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-        }
-        #leave-team-toggle-wrapper {
-          background: #ccc;
-          overflow: hidden;
-          transition: max-height 300ms;
-          max-height: 0; /* <---hide by default */
-        }
-        #leave-team-toggle-wrapper.open {
-          max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-        }
-        .content-header {
-          height: 65px;
-          line-height: 65px;
-        }
-
-        .content-header h1 {
-          margin: 0;
-          margin-left: 20px;
-          line-height: 65px;
-          display: inline-block;
-        }
-
-        @media (max-width:767px) {
-            #wrapper {
-            padding-left: 70px;
-            transition: all .4s ease 0s;
-        }
-        #side-content ul li {
-          margin: 0 0 20px 0;
-        }
-
-    </style>
-{% endblock %}
-
-{% block navbar_block %}
-{% endblock %}
+{% block navbar_block %}{% endblock %}
 
 {% block body_block %}
 {% endblock %}

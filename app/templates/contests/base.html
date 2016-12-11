@@ -3,70 +3,81 @@
 {% block title_block %} {{block.super}} {% endblock %}
 {% block head_block %}
   <style>
-    .navbar {
-        display: block;
+    #wrapper {
+        padding-left: 70px;
+        transition: all .4s ease 0s;
+        height: 100%;
+        max-width: 1500px;
+        margin: auto;
     }
 
-    .container-fluid {
-        background: #F7F7F7;
+    #page-content-wrapper {
+        padding-left: 0;
+        margin-left: 0;
+        width: 100%;
+        height: auto;
     }
 
-    #nav {
-        padding-right: 0px;
-        padding-left: 0px;
+    #page-content-wrapper {
+      max-width: 75%;
     }
-    .navbar > a {
-        text-decoration: none;
-        background-color: #EEEEEE;
-        color: #333333;
-        padding: 2px 6px 2px 6px;
-        border-top: 1px solid #CCCCCC;
-        border-right: 1px solid #333333;
-        border-bottom: 1px solid #333333;
-        border-left: 1px solid #CCCCCC;
+    #create-team-toggle-wrapper {
+      background: #ccc;
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0; /* <---hide by default */
+    }
+    #create-team-toggle-wrapper.open {
+      max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+    }
+    #join-team-toggle-wrapper {
+      background: #ccc;
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0; /* <---hide by default */
+    }
+    #join-team-toggle-wrapper.open {
+      max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+    }
+    #leave-team-toggle-wrapper {
+      background: #ccc;
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0; /* <---hide by default */
+    }
+    #leave-team-toggle-wrapper.open {
+      max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+    }
+    .content-header {
+      height: 65px;
+      line-height: 65px;
     }
 
-      .navbar-default .navbar-nav > li > a:hover,
-      .navbar-default .navbar-nav > li > a:focus {
-          background-color: #E5E5E5;
+    .content-header h1 {
+      margin: 0;
+      margin-left: 20px;
+      line-height: 65px;
+      display: inline-block;
+    }
+
+    @media (max-width:767px) {
+      #wrapper {
+      padding-left: 70px;
+      transition: all .4s ease 0s;
       }
+      #side-content ul li {
+        margin: 0 0 20px 0;
+      }
+    }
 
-      #create-team-toggle-wrapper {
-          background: #eee;
-          overflow: hidden;
-          transition: max-height 300ms;
-          max-height: 0; /* <---hide by default */
-        }
-        #create-team-toggle-wrapper.open {
-          max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-        }
-        #join-team-toggle-wrapper {
-          background: #eee;
-          overflow: hidden;
-          transition: max-height 300ms;
-          max-height: 0; /* <---hide by default */
-        }
-        #join-team-toggle-wrapper.open {
-          max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-        }
-        #leave-team-toggle-wrapper {
-          background: #eee;
-          overflow: hidden;
-          transition: max-height 300ms;
-          max-height: 0; /* <---hide by default */
-        }
-        #leave-team-toggle-wrapper.open {
-          max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-        }
-
-      .colorgraph {
-        height: 7px;
-        border-top: 0;
-        border-radius: 5px;
-        background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-        background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-        background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-        background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+    .colorgraph {
+      height: 7px;
+      border-top: 0;
+      border-radius: 5px;
+      background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+      background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+      background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+      background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
     }
   </style>
 {% endblock %}
