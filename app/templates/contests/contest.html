@@ -57,7 +57,11 @@
     <h3>Contest Problems:</h3>
     <div class="panel-group" id="accordion">
     {% for pair in problem_form_pairs %}
+            {% if is_judge %}
             <div class="panel panel-default">
+            {% else %}
+            <div class="panel panel-{{ color_states|index:forloop.counter }}">
+            {% endif %}
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <!-- the data-parent attribute make sure only one panel is open at a time-->
@@ -66,10 +70,14 @@
                                 <div class="col-sm-4" style="display: table-cell;">
                                     Problem {{ forloop.counter }}
                                 </div>
+                                {% if not is_judge %}
                                 <div class="col-sm-4" style="display: table-cell;">
+                                    Submission Attempts
                                 </div>
                                 <div class="col-sm-4" style="display: table-cell;">
+                                    Status
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                     </h4>
