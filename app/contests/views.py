@@ -20,8 +20,8 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 from django.http import Http404
+import os
 
-#To render multiple forms on a contest page (since there are multiple problems in a contest)
 from django.forms.formsets import formset_factory
 
 def home(request):
@@ -331,7 +331,7 @@ def displayJudge(request, contest_id, run_id):
                                 solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
                                 #Use the solution file if it exists. If not, use empty expected output.
                                 tolines = []
-                                if bool(solution_file):
+                                if bool(solution_file) and os.path.isfile(solution_file.name):
                                         tolines = solution_file.read().decode().split("\n")
                                 html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
                                 return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})

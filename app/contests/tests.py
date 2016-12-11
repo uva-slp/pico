@@ -245,22 +245,22 @@ class SubmissionsViewsTest(TestCase):
 		self.assertContains(response, "Submit for ProblemExample")
 
 	#Derek
-	def test_cpp_execution_on_empty_file(self):
+	def test_cpp_execution_on_empty_files(self):
                 temp_dirpath = tempfile.mkdtemp()
                 file_path = os.path.join(temp_dirpath, 'test.cpp')
                 with open(file_path, 'w+') as destination:
                         test_file_object = File(destination)
-                        output = exe.execute_code(test_file_object, 'test.cpp')
+                        output = exe.execute_code(test_file_object, 'test.cpp', test_file_object)
                 shutil.rmtree(temp_dirpath)
                 self.assertEqual(output[0], 1)
          
     #Derek      
-	def test_java_execution_on_empty_file(self):
+	def test_java_execution_on_empty_files(self):
                 temp_dirpath = tempfile.mkdtemp()
                 file_path = os.path.join(temp_dirpath, 'test.java')
                 with open(file_path, 'w+') as destination:
                         test_file_object = File(destination)
-                        output = exe.execute_code(test_file_object, 'test.java')
+                        output = exe.execute_code(test_file_object, 'test.java', test_file_object)
                 shutil.rmtree(temp_dirpath)
                 self.assertEqual(output[0], 1)
 
