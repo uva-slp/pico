@@ -339,22 +339,25 @@ def displayMySubmissions(request, contest_id, team_id):
 @login_required
 def displayJudge(request, contest_id, run_id):
 	contest_data = Contest.objects.get(id=contest_id)
-	problems = contest_data.problem_set.all()
-	if request.user == contest_data.creator:
-		for p in problems:
-			if p.submission_set.filter(run_id=run_id).exists():
-				current_submission = p.submission_set.get(run_id=run_id)
 
-				if request.method == 'POST':
-					form = ReturnJudgeResultForm(request.POST, instance=current_submission)
-					if form.is_valid():
-						form.save()
-						return redirect(reverse('contests:contest_judge_submissions',
-							kwargs={'contest_id': contest_id}))
-					else:
-						messages.error(request, "Error")
+	is_judge = isJudge(contest_data, request.user)
+	if not is_judge:
+		return redirect(reverse('contests:home'))
+
+	problems = contest_data.problem_set.all()
+	for p in problems:
+		if p.submission_set.filter(run_id=run_id).exists():
+			current_submission = p.submission_set.get(run_id=run_id)
+			if request.method == 'POST':
+				form = ReturnJudgeResultForm(request.POST, instance=current_submission)
+				if form.is_valid():
+					form.save()
+					return redirect(reverse('contests:contest_judge_submissions',
+						kwargs={'contest_id': contest_id}))
 				else:
-					form = ReturnJudgeResultForm(instance=current_submission)
+					messages.error(request, "Error")
+			else:
+				form = ReturnJudgeResultForm(instance=current_submission)
 			output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'))
 			retcode = output[0]
 			if retcode != 0:
@@ -362,7 +365,7 @@ def displayJudge(request, contest_id, run_id):
 				return render(request, 'contests/error.html', {'error_message' : error})
 			else:
 				fromlines = output[1].split("\n")
-                                #TODO make tolines the expected output
+								#TODO make tolines the expected output
 				# tolines = getattr(getattr(current_submission, 'problem'), 'output_description').split('\n')
 				tolines = ("Hello world from C++!").split('\n')
 				html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
