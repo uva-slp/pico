@@ -200,6 +200,27 @@ def getTeam(contest_id, user_id):
 
 @login_required
 def displayContest(request, contest_id):
+	# Check if request user has permission to view the page
+	contest_data = Contest.objects.get(id=contest_id)
+	is_judge = False
+	is_participant = False
+	# TODO need to be changed after we have actual admin field
+	contest_judges = contest_data.contest_admins
+	contest_judges = contest_judges.split()
+	for judge in contest_judges:
+		if request.user.username == judge:
+			is_judge = True
+			break
+
+	current_team = getTeam(contest_id, request.user.id)
+	if current_team is not None:
+		is_participant = True
+		
+	if not is_judge and not is_participant:
+		return redirect(reverse('contests:home'))
+
+
+
 	# Activate Contest or save the submission
 	if request.method == 'POST':
 		if 'submit' in request.POST and request.POST['submit'] == "activate_contest":
@@ -214,8 +235,6 @@ def displayContest(request, contest_id):
 				sub = form.save(commit=False)
 				sub.original_filename = request.FILES['code_file'].name
 				sub.save()
-
-	contest_data = Contest.objects.get(id=contest_id)
 
 	problems = contest_data.problem_set.all()
 	#Handle multiple forms on the same page
@@ -234,7 +253,6 @@ def displayContest(request, contest_id):
 	for participant in contest_participants:
 		contest_teams.append(participant.team)
 
-	current_team = getTeam(contest_id, request.user.id)
 	submission_attempts = []
 	status = []
 	color_states = []
