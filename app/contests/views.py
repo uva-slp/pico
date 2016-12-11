@@ -322,12 +322,16 @@ def displayAllSubmissions(request, contest_id):
 def displayMySubmissions(request, contest_id, team_id):
 	contest_data = Contest.objects.get(id=contest_id)
 	team = Team.objects.get(id=team_id)
+
+	is_judge = isJudge(contest_data, request.user)
+	if not is_judge and request.user not in team.members.all():
+		return redirect(reverse('contests:home'))
+
 	problems = contest_data.problem_set.all()
 	submissions = []
-	if request.user == contest_data.creator or request.user in team.members.all():
-		for p in problems:
-			submissions += list(p.submission_set.filter(team__pk=team_id))
-		submissions.sort(key=lambda x: x.timestamp)
+	for p in problems:
+		submissions += list(p.submission_set.filter(team__pk=team_id))
+	submissions.sort(key=lambda x: x.timestamp)
 
 	return render(
 		request,
