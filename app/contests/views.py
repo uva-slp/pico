@@ -207,7 +207,6 @@ def displayContest(request, contest_id):
                         contest.contest_start = time
                         contest.save()
                 else:
-                        print("HERE")
                         form = UploadCodeForm(request.POST, request.FILES)
                         if form.is_valid():
                                 sub = form.save(commit=False)
@@ -325,7 +324,7 @@ def displayJudge(request, contest_id, run_id):
                                                 messages.error(request, "Error")
                                 else:
                                         form = ReturnJudgeResultForm(instance=current_submission)
-                                output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'))
+                                output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'))
                                 retcode = output[0]
                                 fromlines = output[1].split("\n")
                                 #TODO make tolines the expected output

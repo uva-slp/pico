@@ -24,6 +24,7 @@ class Problem(models.Model):
 	number = models.IntegerField(null=True)
 	name = models.CharField(max_length=2048, null=True, blank=True)
 	solution = models.FileField(upload_to='uploads/', null=True, blank=False)
+	program_input = models.FileField(upload_to='uploads/', null=True, blank=False)
 	input_description = models.CharField(max_length=128, null=True, blank=True)
 	output_description = models.CharField(max_length=128, null=True, blank=True)
 	sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
