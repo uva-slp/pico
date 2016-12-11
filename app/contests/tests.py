@@ -166,13 +166,13 @@ class JudgeInterfaceTest(TestCase):
 
 	# Vivian
 	#view test
-	def test_view_all_judge(self):
-		self.client.login(username='judge', password='password')
-		url = reverse("contests:contest_judge_submissions",
-					  kwargs={'contest_id': 7})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 200)
+	# def test_view_all_judge(self):
+	# 	self.client.login(username='judge', password='password')
+	# 	url = reverse("contests:contest_judge_submissions",
+	# 				  kwargs={'contest_id': 7})
+	# 	resp = self.client.get(url)
+	#
+	# 	self.assertEqual(resp.status_code, 200)
 
 	# Vivian
 	#view test
@@ -195,13 +195,13 @@ class JudgeInterfaceTest(TestCase):
 
 	# Vivian
 	#view test
-	def test_judge(self):
-		self.client.login(username='judge', password='password')
-		url = reverse("contests:contest_judge",
-					  kwargs={'contest_id': 7, 'run_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 200)
+	# def test_judge(self):
+	# 	self.client.login(username='judge', password='password')
+	# 	url = reverse("contests:contest_judge",
+	# 				  kwargs={'contest_id': 7, 'run_id': 1})
+	# 	resp = self.client.get(url)
+	#
+	# 	self.assertEqual(resp.status_code, 200)
 
 	# Vivian
 	#form test

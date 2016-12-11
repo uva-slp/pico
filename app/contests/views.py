@@ -198,144 +198,180 @@ def getTeam(contest_id, user_id):
         return None
 
 
+# Helper method for checking if user is judge of the contest
+def isJudge(contest_data, user):
+	# TODO need to be changed after we have actual admin field
+	contest_judges = contest_data.contest_admins
+	contest_judges = contest_judges.split()
+	for judge in contest_judges:
+		if user.username == judge:
+			return True
+	return False
+
+
+# Helper method for checking if user is participant in the contest
+def isParticipant(contest_id, user_id):
+	current_team = getTeam(contest_id, user_id)
+	if current_team is None:
+		return False
+	else:
+		return True
+
 @login_required
 def displayContest(request, contest_id):
-        # Activate Contest or save the submission
-        if request.method == 'POST':
-                if 'submit' in request.POST and request.POST['submit'] == "activate_contest":
-                        time = datetime.now()
-                        contest = Contest.objects.get(id=contest_id)
-                        contest.contest_start = time
-                        contest.save()
-                else:
-                        form = UploadCodeForm(request.POST, request.FILES)
-                        if form.is_valid():
-                                sub = form.save(commit=False)
-                                sub.original_filename = request.FILES['code_file'].name
-                                sub.save()
+	# Check if request user has permission to view the page
+	contest_data = Contest.objects.get(id=contest_id)
+	is_judge = isJudge(contest_data, request.user)
+	is_participant = isParticipant(contest_id, request.user.id)
 
-        contest_data = Contest.objects.get(id=contest_id)
+	if not is_judge and not is_participant:
+		return redirect(reverse('contests:home'))
 
-        problems = contest_data.problem_set.all()
-        #Handle multiple forms on the same page
-        UploadCodeFormSet = formset_factory(UploadCodeForm, extra = len(problems))
-        problem_form_pairs = []
-        for problem in problems:
-                form = UploadCodeForm(initial={'problem' : problem})
-                problem_form_pairs.append((problem, form))
-        is_judge = False
-        # TODO: Right now this only checks contest creator. Need to update to all judges
-        if request.user == contest_data.creator:
-                is_judge = True
+	# Activate Contest or save the submission
+	if request.method == 'POST':
+		if 'submit' in request.POST and request.POST['submit'] == "activate_contest":
+			time = datetime.now()
+			contest = Contest.objects.get(id=contest_id)
+			contest.contest_start = time
+			contest.save()
+		else:
+			print("HERE")
+			form = UploadCodeForm(request.POST, request.FILES)
+			if form.is_valid():
+				sub = form.save(commit=False)
+				sub.original_filename = request.FILES['code_file'].name
+				sub.save()
 
-        contest_participants = contest_data.participant_set.all()
-        contest_teams = []
-        for participant in contest_participants:
-                contest_teams.append(participant.team)
+	problems = contest_data.problem_set.all()
+	#Handle multiple forms on the same page
+	UploadCodeFormSet = formset_factory(UploadCodeForm, extra = len(problems))
+	problem_form_pairs = []
+	for problem in problems:
+		form = UploadCodeForm(initial={'problem' : problem})
+		problem_form_pairs.append((problem, form))
+	is_judge = False
+	# TODO: Right now this only checks contest creator. Need to update to all judges
+	if request.user == contest_data.creator:
+		is_judge = True
 
-        current_team = getTeam(contest_id, request.user.id)
-        submission_attempts = []
-        status = []
-        color_states = []
-        if current_team is not None:
-                for p in problems:
-                        p_submissions = p.submission_set.filter(team__pk=current_team.id)
-                        # number of attempts
-                        current_attempts = len(p_submissions)
-                        submission_attempts.append(current_attempts)
-                        # status -- ignore the rest
-                        current_status = "-"
-                        current_color = "default"
-                        if current_attempts is not 0:
-                                got_yes = False
-                                for s in p_submissions:
-                                        if s.state == 'YES':
-                                                got_yes = True
-                                                break
-                                if got_yes:
-                                        current_status = "Yes"
-                                        current_color = "success"
-                                else:
-                                        submissions = list(p_submissions)
-                                        submissions.sort(key=lambda x: x.timestamp)
-                                        latest_submission = submissions[-1]
-                                        if latest_submission.state == 'NEW':
-                                                current_color = "warning"
-                                                current_status = "New"
-                                        elif latest_submission.state == 'NO':
-                                                current_color = "danger"
-                                                current_status = "No - " + latest_submission.get_result_display()
-                        status.append(current_status)
-                        color_states.append(current_color)
+	contest_participants = contest_data.participant_set.all()
+	contest_teams = []
+	for participant in contest_participants:
+		contest_teams.append(participant.team)
 
-        return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge, 'contest_teams': contest_teams, 'submission_attempts': submission_attempts, 'submission_status': status, 'color_states': color_states, 'problem_form_pairs' : problem_form_pairs })
+	current_team = getTeam(contest_id, request.user.id)
+	submission_attempts = []
+	status = []
+	color_states = []
+	if current_team is not None:
+		for p in problems:
+			p_submissions = p.submission_set.filter(team__pk=current_team.id)
+			# number of attempts
+			current_attempts = len(p_submissions)
+			submission_attempts.append(current_attempts)
+			# status -- ignore the rest
+			current_status = "-"
+			current_color = "default"
+			if current_attempts is not 0:
+				got_yes = False
+				for s in p_submissions:
+					if s.state == 'YES':
+						got_yes = True
+						break
+				if got_yes:
+					current_status = "Yes"
+					current_color = "success"
+				else:
+					submissions = list(p_submissions)
+					submissions.sort(key=lambda x: x.timestamp)
+					latest_submission = submissions[-1]
+					if latest_submission.state == 'NEW':
+						current_color = "warning"
+						current_status = "New"
+					elif latest_submission.state == 'NO':
+						current_color = "danger"
+						current_status = "No - " + latest_submission.get_result_display()
+			status.append(current_status)
+			color_states.append(current_color)
+
+	return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge, 'contest_teams': contest_teams, 'submission_attempts': submission_attempts, 'submission_status': status, 'color_states': color_states, 'problem_form_pairs' : problem_form_pairs })
 
 
 @login_required
 def displayAllSubmissions(request, contest_id):
-        contest_data = Contest.objects.get(id=contest_id)
-        problems = contest_data.problem_set.all()
-        submissions = []
-        if request.user == contest_data.creator:
-                for p in problems:
-                        submissions += list(p.submission_set.all())
-                submissions.sort(key=lambda x: x.timestamp)
+	contest_data = Contest.objects.get(id=contest_id)
 
-        return render(
-                request,
-                'contests/all_submissions.html',
-                {'contest_data': contest_data, 'contest_submissions': submissions}
-        )
+	is_judge = isJudge(contest_data, request.user)
+	if not is_judge:
+		return redirect(reverse('contests:home'))
+
+	problems = contest_data.problem_set.all()
+	submissions = []
+	for p in problems:
+		submissions += list(p.submission_set.all())
+	submissions.sort(key=lambda x: x.timestamp)
+
+	return render(
+		request,
+		'contests/all_submissions.html',
+		{'contest_data': contest_data, 'contest_submissions': submissions}
+	)
 
 
 @login_required
 def displayMySubmissions(request, contest_id, team_id):
-        contest_data = Contest.objects.get(id=contest_id)
-        team = Team.objects.get(id=team_id)
-        problems = contest_data.problem_set.all()
-        submissions = []
-        if request.user == contest_data.creator or request.user in team.members.all():
-                for p in problems:
-                        submissions += list(p.submission_set.filter(team__pk=team_id))
-                submissions.sort(key=lambda x: x.timestamp)
+	contest_data = Contest.objects.get(id=contest_id)
+	team = Team.objects.get(id=team_id)
 
-        return render(
-                request,
-                'contests/user_submissions.html',
-                {'contest_data': contest_data, 'team': team, 'contest_submissions': submissions}
-        )
+	is_judge = isJudge(contest_data, request.user)
+	if not is_judge and request.user not in team.members.all():
+		return redirect(reverse('contests:home'))
+
+	problems = contest_data.problem_set.all()
+	submissions = []
+	for p in problems:
+		submissions += list(p.submission_set.filter(team__pk=team_id))
+	submissions.sort(key=lambda x: x.timestamp)
+
+	return render(
+		request,
+		'contests/user_submissions.html',
+		{'contest_data': contest_data, 'team': team, 'contest_submissions': submissions}
+	)
 
 
 @login_required
 def displayJudge(request, contest_id, run_id):
         contest_data = Contest.objects.get(id=contest_id)
-        problems = contest_data.problem_set.all()
-        if request.user == contest_data.creator:
-                for p in problems:
-                        if p.submission_set.filter(run_id=run_id).exists():
-                                current_submission = p.submission_set.get(run_id=run_id)
 
-                                if request.method == 'POST':
-                                        form = ReturnJudgeResultForm(request.POST, instance=current_submission)
-                                        if form.is_valid():
-                                                form.save()
-                                                return redirect(reverse('contests:contest_judge_submissions',
+        is_judge = isJudge(contest_data, request.user)
+        if not is_judge:
+                return redirect(reverse('contests:home'))
+        
+        problems = contest_data.problem_set.all()
+        for p in problems:
+                if p.submission_set.filter(run_id=run_id).exists():
+                        current_submission = p.submission_set.get(run_id=run_id)
+                        if request.method == 'POST':
+                                form = ReturnJudgeResultForm(request.POST, instance=current_submission)
+                                if form.is_valid():
+                                        form.save()
+                                        return redirect(reverse('contests:contest_judge_submissions',
                                                         kwargs={'contest_id': contest_id}))
-                                        else:
-                                                messages.error(request, "Error")
                                 else:
-                                        form = ReturnJudgeResultForm(instance=current_submission)
-                                output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'))
-                                retcode = output[0]
-                                fromlines = output[1].split("\n")
-                                #TODO make tolines the expected output
-                                solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
-                                #Use the solution file if it exists. If not, use empty expected output.
-                                tolines = []
-                                if bool(solution_file) and os.path.isfile(solution_file.name):
-                                        tolines = solution_file.read().decode().split("\n")
-                                html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-                                return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
+                                        messages.error(request, "Error")
+                        else:
+                                form = ReturnJudgeResultForm(instance=current_submission)
+                        output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'))
+                        retcode = output[0]
+                        fromlines = output[1].split("\n")
+                        solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
+                        #Use the solution file if it exists. If not, use empty expected output.
+                        tolines = []
+                        if bool(solution_file) and os.path.isfile(solution_file.name):
+                                tolines = solution_file.read().decode().split("\n")
+                        html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
+                        return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
 
         return render(
                 request,
