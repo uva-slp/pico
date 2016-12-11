@@ -92,6 +92,7 @@ class CreateContestForm(ModelForm):
 
 class CreateProblem(ModelForm):
 	solution = forms.FileField(required=True, label='Solution (.txt)')
+	program_input = forms.FileField(required=False, label= 'Program Input (.txt)')
 	input_description = forms.CharField(required=False, label='Description of Input',
 		widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 	output_description = forms.CharField(required=False, label='Description of Output',
@@ -108,7 +109,7 @@ class CreateProblem(ModelForm):
 	class Meta:
 		model = Problem
 		fields = (
-			'solution', 'input_description', 'output_description', 'sample_input',
+			'solution', 'program_input', 'input_description', 'output_description', 'sample_input',
 			'sample_output')
 
 

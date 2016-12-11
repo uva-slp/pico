@@ -281,8 +281,6 @@ class SubmissionsViewsTest(TestCase):
 		response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
 		self.assertEqual(response.status_code, 200)
 
-#####################################################################
-
     #Derek	
 	def test_java_execution_timeout(self):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "timeout_test.java"), "rb+"))

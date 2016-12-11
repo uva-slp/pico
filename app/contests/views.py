@@ -145,6 +145,7 @@ def create(request):
                                 for qa_form in qa_formset:
                                         problemcount += 1
                                         solution = qa_form.cleaned_data.get('solution')
+                                        program_input = qa_form.cleaned_data.get('program_input')
                                         input_desc = qa_form.cleaned_data.get('input_description')
                                         output_desc = qa_form.cleaned_data.get('output_description')
                                         sample_input = qa_form.cleaned_data.get('sample_input')
@@ -152,7 +153,7 @@ def create(request):
                                         contest = qa_form.cleaned_data.get('title')
 
                                         p = Problem(
-                                                number = problemcount, solution=solution, input_description=input_desc,
+                                                number = problemcount, solution=solution, program_input = program_input, input_description=input_desc,
                                                 output_description=output_desc, sample_input=sample_input,
                                                 sample_output=sample_output, contest_id=contest_id)
 
