@@ -300,12 +300,16 @@ def displayContest(request, contest_id):
 @login_required
 def displayAllSubmissions(request, contest_id):
 	contest_data = Contest.objects.get(id=contest_id)
+
+	is_judge = isJudge(contest_data, request.user)
+	if not is_judge:
+		return redirect(reverse('contests:home'))
+
 	problems = contest_data.problem_set.all()
 	submissions = []
-	if request.user == contest_data.creator:
-		for p in problems:
-			submissions += list(p.submission_set.all())
-		submissions.sort(key=lambda x: x.timestamp)
+	for p in problems:
+		submissions += list(p.submission_set.all())
+	submissions.sort(key=lambda x: x.timestamp)
 
 	return render(
 		request,
