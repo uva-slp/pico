@@ -309,7 +309,7 @@ class SubmissionsViewsTest(TestCase):
 	def test_cpp_execution_runtime_error(self):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "runtime_error_test.cpp"), "rb+"))
 		output = exe.execute_code(test_file, 'runtime_error_test.cpp', None)
-		self.assertEqual(output[0], 1)
+		self.assertEqual(output[0], 0)
 		runtime_error = output[1].startswith("EXECUTION ERROR:")
 		self.assertEqual(runtime_error, True)
 
