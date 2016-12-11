@@ -19,11 +19,12 @@
         {% block head_block %}{% endblock %}
 
     </head>
-        {% block navbar_block %}{%endblock %}
 
     <body>
 
-        {% block body_block %}{% endblock %}
+        {% block body_block %}
+            {% block navbar_block %}{%endblock %}
+        {% endblock %}
 
     </body>
     
