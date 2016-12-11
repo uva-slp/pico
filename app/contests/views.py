@@ -198,28 +198,34 @@ def getTeam(contest_id, user_id):
 	return None
 
 
-@login_required
-def displayContest(request, contest_id):
-	# Check if request user has permission to view the page
-	contest_data = Contest.objects.get(id=contest_id)
-	is_judge = False
-	is_participant = False
+# Helper method for checking if user is judge of the contest
+def isJudge(contest_data, user):
 	# TODO need to be changed after we have actual admin field
 	contest_judges = contest_data.contest_admins
 	contest_judges = contest_judges.split()
 	for judge in contest_judges:
-		if request.user.username == judge:
-			is_judge = True
-			break
+		if user.username == judge:
+			return True
+	return False
 
-	current_team = getTeam(contest_id, request.user.id)
-	if current_team is not None:
-		is_participant = True
-		
+
+# Helper method for checking if user is participant in the contest
+def isParticipant(contest_id, user_id):
+	current_team = getTeam(contest_id, user_id)
+	if current_team is None:
+		return False
+	else:
+		return True
+
+@login_required
+def displayContest(request, contest_id):
+	# Check if request user has permission to view the page
+	contest_data = Contest.objects.get(id=contest_id)
+	is_judge = isJudge(contest_data, request.user)
+	is_participant = isParticipant(contest_id, request.user.id)
+
 	if not is_judge and not is_participant:
 		return redirect(reverse('contests:home'))
-
-
 
 	# Activate Contest or save the submission
 	if request.method == 'POST':
@@ -253,6 +259,7 @@ def displayContest(request, contest_id):
 	for participant in contest_participants:
 		contest_teams.append(participant.team)
 
+	current_team = getTeam(contest_id, request.user.id)
 	submission_attempts = []
 	status = []
 	color_states = []
