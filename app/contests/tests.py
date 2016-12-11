@@ -312,7 +312,7 @@ class SubmissionsViewsTest(TestCase):
 		self.assertEqual(output[0], 0)
 		#runtime_error = output[1].startswith("EXECUTION ERROR:")
 		#self.assertEqual(runtime_error, True)
-                self.assertEqual(output[1], "The program works!\n")
+		self.assertEqual(output[1], "The program works!\n")
 
     #Derek      
 	def test_java_execution_read_input(self):
