@@ -42,7 +42,7 @@ def run_java(submission_file, original_filename, input_file, timeout):
     if compilation_result.returncode !=0:
         retval = (1, ("COMPILATION ERROR:\n" + str(error.decode("utf-8"))))
     else:
-        if input_file.name != None:
+        if input_file != None and input_file.name != None:
             program_output = Popen("timeout " + str(timeout) + " java -cp " + temp_dirpath + " " + compiled_file + " < " + input_file.name, stdout=PIPE, stderr=PIPE, shell=True)
         else:
             program_output = Popen("timeout " + str(timeout) + " java -cp " + temp_dirpath + " " + compiled_file, stdout=PIPE, stderr=PIPE, shell=True)
@@ -68,7 +68,7 @@ def run_cpp(submission_file, input_file, timeout):
     if compilation_result.returncode != 0:
         retval = (1, ("COMPILATION ERROR:\n" + str(error.decode("utf-8"))))
     else:
-        if input_file.name != None:
+        if input_file != None and input_file.name != None:
             program_output = Popen("timeout " + str(timeout) + " " + os.path.join(temp_dirpath, './a.out' + ' < ' + input_file.name), shell=True, stdout=PIPE, stderr=PIPE)
         else:
             program_output = Popen("timeout " + str(timeout) + " " + os.path.join(temp_dirpath, './a.out'), shell=True, stdout=PIPE, stderr=PIPE)

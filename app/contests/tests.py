@@ -13,6 +13,8 @@ from datetime import datetime
 from django.utils import timezone
 from .models import Team, Participant, Contest, Problem, Submission
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 
 class ContestTest(TestCase):
 
@@ -246,40 +248,104 @@ class SubmissionsViewsTest(TestCase):
 
 	#Derek
 	def test_cpp_execution_on_empty_files(self):
-                temp_dirpath = tempfile.mkdtemp()
-                file_path = os.path.join(temp_dirpath, 'test.cpp')
-                with open(file_path, 'w+') as destination:
-                        test_file_object = File(destination)
-                        output = exe.execute_code(test_file_object, 'test.cpp', test_file_object)
-                shutil.rmtree(temp_dirpath)
-                self.assertEqual(output[0], 1)
-         
-    #Derek      
+		temp_dirpath = tempfile.mkdtemp()
+		file_path = os.path.join(temp_dirpath, 'test.cpp')
+		with open(file_path, 'w+') as destination:
+			test_file_object = File(destination)
+			output = exe.execute_code(test_file_object, 'test.cpp', test_file_object)
+		shutil.rmtree(temp_dirpath)
+		self.assertEqual(output[0], 1)
+	 
+    #Derek	
 	def test_java_execution_on_empty_files(self):
-                temp_dirpath = tempfile.mkdtemp()
-                file_path = os.path.join(temp_dirpath, 'test.java')
-                with open(file_path, 'w+') as destination:
-                        test_file_object = File(destination)
-                        output = exe.execute_code(test_file_object, 'test.java', test_file_object)
-                shutil.rmtree(temp_dirpath)
-                self.assertEqual(output[0], 1)
+		temp_dirpath = tempfile.mkdtemp()
+		file_path = os.path.join(temp_dirpath, 'test.java')
+		with open(file_path, 'w+') as destination:
+			test_file_object = File(destination)
+			output = exe.execute_code(test_file_object, 'test.java', test_file_object)
+		shutil.rmtree(temp_dirpath)
+		self.assertEqual(output[0], 1)
 
     #Derek
 	def test_diff_with_no_file_template(self):
-                response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
-                self.assertTemplateUsed(response, 'contests/error.html')
-
+		response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
+		self.assertTemplateUsed(response, 'contests/error.html')
+		
     #Derek
 	def test_diff_with_no_file_message(self):
-                response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
-                self.assertContains(response, 'Invalid form.')
+		response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
+		self.assertContains(response, 'Invalid form.')
 
     #Derek
 	def test_diff_page(self):
-                response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
-                self.assertEqual(response.status_code, 200)
+		response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
+		self.assertEqual(response.status_code, 200)
 
+#####################################################################
 
+    #Derek	
+	def test_java_execution_timeout(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "timeout_test.java"), "rb+"))
+		output = exe.execute_code(test_file, 'timeout_test.java', None)
+		self.assertEqual(output[0], 1)
+		self.assertEqual(output[1], "Code timed out")
+
+    #Derek      
+	def test_cpp_execution_timeout(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "timeout_test.cpp"), "rb+"))
+		output = exe.execute_code(test_file, 'timeout_test.cpp', None)
+		self.assertEqual(output[0], 1)
+		self.assertEqual(output[1], "Code timed out")
+
+    #Derek      
+	def test_java_execution_runtime_error(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "runtime_error_test.java"), "rb+"))
+		output = exe.execute_code(test_file, 'runtime_error_test.java', None)
+		self.assertEqual(output[0], 1)
+		runtime_error = output[1].startswith("EXECUTION ERROR:")
+		self.assertEqual(runtime_error, True)
+		
+    #Derek	
+	def test_cpp_execution_runtime_error(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "runtime_error_test.cpp"), "rb+"))
+		output = exe.execute_code(test_file, 'runtime_error_test.cpp', None)
+		self.assertEqual(output[0], 1)
+		runtime_error = output[1].startswith("EXECUTION ERROR:")
+		self.assertEqual(runtime_error, True)
+
+    #Derek      
+	def test_java_execution_read_input(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "ReadInput.java"), "rb+"))
+		input_file = File(open(os.path.join(dir_path, "code_test_files", "input_test_file.txt"), "rb+"))
+		output = exe.execute_code(test_file, 'ReadInput.java', input_file)
+		self.assertEqual(output[0], 0)
+		self.assertEqual(output[1], "The program works!\n")
+
+    #Derek      
+	def test_cpp_execution_read_input(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "ReadInput.cpp"), "rb+"))
+		input_file = File(open(os.path.join(dir_path, "code_test_files", "input_test_file.txt"), "rb+"))
+		output = exe.execute_code(test_file, 'ReadInput.cpp', input_file)
+		self.assertEqual(output[0], 0)
+		self.assertEqual(output[1], "The program works!")
+
+    #Derek      
+	def test_java_execution_compilation_error(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "trash.java"), "rb+"))
+		output = exe.execute_code(test_file, 'trash.java', None)
+		self.assertEqual(output[0], 1)
+		compilation_error = output[1].startswith("COMPILATION ERROR:")
+		self.assertEqual(compilation_error, True)
+
+    #Derek      
+	def test_cpp_execution_compilation_error(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "trash.cpp"), "rb+"))
+		output = exe.execute_code(test_file, 'trash.cpp', None)
+		self.assertEqual(output[0], 1)
+		compilation_error = output[1].startswith("COMPILATION ERROR:")
+		self.assertEqual(compilation_error, True)
+
+                
 # Method for getting nearest datetime
 def nearest(items, pivot):
 	return min(items, key=lambda x: abs(x - pivot))
