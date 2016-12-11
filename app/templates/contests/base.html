@@ -2,120 +2,127 @@
 
 {% block title_block %} {{block.super}} {% endblock %}
 {% block head_block %}
-    <style>
-        .navbar {
-            display: block;
+  <style>
+    .navbar {
+        display: block;
+    }
+
+    .container-fluid {
+        background: #F7F7F7;
+    }
+
+    #nav {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+    .navbar > a {
+        text-decoration: none;
+        background-color: #EEEEEE;
+        color: #333333;
+        padding: 2px 6px 2px 6px;
+        border-top: 1px solid #CCCCCC;
+        border-right: 1px solid #333333;
+        border-bottom: 1px solid #333333;
+        border-left: 1px solid #CCCCCC;
+    }
+
+      .navbar-default .navbar-nav > li > a:hover,
+      .navbar-default .navbar-nav > li > a:focus {
+          background-color: #E5E5E5;
+      }
+
+      #create-team-toggle-wrapper {
+          background: #eee;
+          overflow: hidden;
+          transition: max-height 300ms;
+          max-height: 0; /* <---hide by default */
+        }
+        #create-team-toggle-wrapper.open {
+          max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+        }
+        #join-team-toggle-wrapper {
+          background: #eee;
+          overflow: hidden;
+          transition: max-height 300ms;
+          max-height: 0; /* <---hide by default */
+        }
+        #join-team-toggle-wrapper.open {
+          max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+        }
+        #leave-team-toggle-wrapper {
+          background: #eee;
+          overflow: hidden;
+          transition: max-height 300ms;
+          max-height: 0; /* <---hide by default */
+        }
+        #leave-team-toggle-wrapper.open {
+          max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
         }
 
-        .container-fluid {
-            background: #F7F7F7;
-        }
-
-        #nav {
-            padding-right: 0px;
-            padding-left: 0px;
-        }
-
-	    .navbar > a {
-	        text-decoration: none;
-	        background-color: #EEEEEE;
-	        color: #333333;
-	        padding: 2px 6px 2px 6px;
-	        border-top: 1px solid #CCCCCC;
-	        border-right: 1px solid #333333;
-	        border-bottom: 1px solid #333333;
-	        border-left: 1px solid #CCCCCC;
-	    }
-
-        .navbar-default .navbar-nav > li > a:hover,
-        .navbar-default .navbar-nav > li > a:focus {
-            background-color: #E5E5E5;
-        }
-
-        #create-team-toggle-wrapper {
-            background: #eee;
-            overflow: hidden;
-            transition: max-height 300ms;
-            max-height: 0; /* <---hide by default */
-          }
-          #create-team-toggle-wrapper.open {
-            max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-          }
-          #join-team-toggle-wrapper {
-            background: #eee;
-            overflow: hidden;
-            transition: max-height 300ms;
-            max-height: 0; /* <---hide by default */
-          }
-          #join-team-toggle-wrapper.open {
-            max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-          }
-          #leave-team-toggle-wrapper {
-            background: #eee;
-            overflow: hidden;
-            transition: max-height 300ms;
-            max-height: 0; /* <---hide by default */
-          }
-          #leave-team-toggle-wrapper.open {
-            max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-          }
-
-        .colorgraph {
-	        height: 7px;
-	        border-top: 0;
-	        border-radius: 5px;
-	        background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-	        background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-	        background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-	        background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-	    }
-    </style>
+      .colorgraph {
+        height: 7px;
+        border-top: 0;
+        border-radius: 5px;
+        background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+        background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+        background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+        background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+    }
+  </style>
 {% endblock %}
-
-{% block body_block %}
-
+{% block navbar_block %}
   <div class="panel panel-default col-md-10 col-md-offset-1">
-    {% block navbar_block %}
-      <ul class="nav nav-pills">
-        <li><a href="{% url 'contests:home' %}">Home <span class="glyphicon glyphicon-home"></span></a></li>
-        <li><a href="#">Submissions</a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-            Create <span class="caret"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="{% url 'contests:create' %}">Create a Contest</a><li>
-            <li><a href="{% url 'contests:create_template' %}">Create a Contest Template</a></li>
-            <li><a href="#">Create a Team</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-            Teams  <span class="glyphicon glyphicon-user"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Create a Team </a><li>
-            <li><a href="#">Join a Team</a></li>
-            <li><a href="#">Leave a Team</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-            Settings<span class="glyphicon glyphicon-cog"></span>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="{% url 'users:password_change' %}"> Change password </a><li>
-            <li class="divider"></li>
-            <li><a href="{% url 'users:logout' %}"> Logout </a><li>
-          </ul>
-        </li>
-      </ul>
-      
-      <hr class="colorgraph">
-    {% endblock %}
-  {% endblock %}
-  {% block content_block %}{% endblock %}
+    <ul class="nav nav-pills">
+      <li><a href="{% url 'contests:home' %}">Home <span class="glyphicon glyphicon-home"></span></a></li>
+      <li><a href="#">Submissions</a></li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+          Create <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'contests:create' %}">Create a Contest</a><li>
+          <li><a href="{% url 'contests:create_template' %}">Create a Contest Template</a></li>
+          <li><a href="#">Create a Team</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+          Teams  <span class="glyphicon glyphicon-user"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Create a Team </a><li>
+          <li><a href="#">Join a Team</a></li>
+          <li><a href="#">Leave a Team</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+          Settings<span class="glyphicon glyphicon-cog"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'users:password_change' %}"> Change password </a><li>
+          <li class="divider"></li>
+          <li><a href="{% url 'users:logout' %}"> Logout </a><li>
+        </ul>
+      </li>
+    </ul>
+    
+    <hr class="colorgraph">
   </div>
-
+{% endblock %}
+{% block body_block %}
+  <div class="panel panel-default col-md-10 col-md-offset-1">
+    <div id="wrapper" class="active">
+      <!-- Page content -->
+      <div id="page-content-wrapper" class="page-content inset">
+        <!-- Keep all page content within the page-content inset div! -->
+        <div class="row">
+          <div class="col-sm-12">
+            {% block content_block %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 {% block foot_block %}{% endblock %}
