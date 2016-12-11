@@ -72,10 +72,10 @@
                                 </div>
                                 {% if not is_judge %}
                                 <div class="col-sm-4" style="display: table-cell;">
-                                    Submission Attempts
+                                    Submission Attempts: {{ submission_attempts|index:forloop.counter }}
                                 </div>
                                 <div class="col-sm-4" style="display: table-cell;">
-                                    Status
+                                    Status: {{ submission_status|index:forloop.counter }}
                                 </div>
                                 {% endif %}
                             </div>
