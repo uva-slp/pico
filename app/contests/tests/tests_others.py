@@ -1,19 +1,19 @@
 from django.test import TestCase
-from .lib import execution as exe
+from contests.lib import execution as exe
 import tempfile
 import shutil
 import os
 from django.core.files import File
-from .forms import CreateContestForm, CreateProblem, ReturnJudgeResultForm
+from contests.forms import CreateContestForm, CreateProblem, ReturnJudgeResultForm
 from django.urls import reverse
 from django.shortcuts import render
 from django.core.files.uploadedfile import SimpleUploadedFile
-from .models import Team, Participant, Contest, Problem
+from contests.models import Team, Participant, Contest, Problem
 from datetime import datetime
 from django.utils import timezone
-from .models import Team, Participant, Contest, Problem, Submission
+from contests.models import Team, Participant, Contest, Problem, Submission
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+dir_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 
 class ContestTest(TestCase):
@@ -163,135 +163,6 @@ class ContestTest(TestCase):
 class JudgeInterfaceTest(TestCase):
 
 	fixtures = ['judge_interface.json']
-
-	# Vivian
-	# view test
-	def test_view_all_judge(self):
-		self.client.login(username='judge', password='password')
-		url = reverse("contests:contest_judge_submissions",
-					  kwargs={'contest_id': 7})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 200)
-
-	# Vivian
-	# view test
-	def test_view_all_notloggedin(self):
-		url = reverse("contests:contest_judge_submissions",
-					  kwargs={'contest_id': 7})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 302)
-
-	# Vivian
-	# view test
-	def test_view_all_nonparticipant(self):
-		self.client.login(username='vivianadmin', password='password')
-		url = reverse("contests:contest_judge_submissions",
-					  kwargs={'contest_id': 7})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 302)
-
-	# Vivian
-	# view test
-	def test_view_all_participant(self):
-		self.client.login(username='participant1', password='password')
-		url = reverse("contests:contest_judge_submissions",
-					  kwargs={'contest_id': 7})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 302)
-
-	# Vivian
-	# view test
-	def test_view_submission_participant(self):
-		self.client.login(username='participant1', password='password')
-		url = reverse("contests:contest_submissions",
-					  kwargs={'contest_id': 7, 'team_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 200)
-
-	# Vivian
-	# view test
-	def test_view_submission_judge(self):
-		self.client.login(username='judge', password='password')
-		url = reverse("contests:contest_submissions",
-					  kwargs={'contest_id': 7, 'team_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 200)
-
-	# Vivian
-	# view test
-	def test_view_submission_nonparticipant(self):
-		self.client.login(username='vivianadmin', password='password')
-		url = reverse("contests:contest_submissions",
-					  kwargs={'contest_id': 7, 'team_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 302)
-
-	# Vivian
-	# view test
-	def test_view_submission_nonteammember(self):
-		self.client.login(username='participant2', password='password')
-		url = reverse("contests:contest_submissions",
-					  kwargs={'contest_id': 7, 'team_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 302)
-
-	# Vivian
-	# view test
-	def test_view_submission_notloggedin(self):
-		url = reverse("contests:contest_submissions",
-					  kwargs={'contest_id': 7, 'team_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 302)
-
-	# Vivian
-	# view test
-	def test_view_judge_judge(self):
-		self.client.login(username='judge', password='password')
-		url = reverse("contests:contest_judge",
-					  kwargs={'contest_id': 7, 'run_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 200)
-
-	# Vivian
-	# view test
-	def test_view_judge_participant(self):
-		self.client.login(username='participant1', password='password')
-		url = reverse("contests:contest_judge",
-					  kwargs={'contest_id': 7, 'run_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 302)
-
-	# Vivian
-	# view test
-	def test_view_judge_nonparticipant(self):
-		self.client.login(username='vivianadmin', password='password')
-		url = reverse("contests:contest_judge",
-					  kwargs={'contest_id': 7, 'run_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 302)
-
-		# Vivian
-	# view test
-	def test_view_judge_notloggedin(self):
-		url = reverse("contests:contest_judge",
-					  kwargs={'contest_id': 7, 'run_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 302)
-
-
 
 	# Vivian
 	# form test
