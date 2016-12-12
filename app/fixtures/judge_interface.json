@@ -821,7 +821,7 @@
       "model": "teams.team",
       "pk": 1,
       "fields": {
-          "name": "test team 1",
+          "name": "team1",
           "date_created": "2016-11-14T22:52:55.994Z",
           "members": [
               [
@@ -834,7 +834,7 @@
       "model": "teams.team",
       "pk": 2,
       "fields": {
-          "name": "test team 2",
+          "name": "team2",
           "date_created": "2016-11-15T02:50:11.748Z",
           "members": [
               [
@@ -948,7 +948,7 @@
           "autojudge_review": "1",
           "problem_description": "uploads/pdf_iBWQjBk.pdf",
           "contest_admins": "judge",
-          "contest_participants": "participant1 participant2"
+          "contest_participants": "team1 team2"
       }
   }
 ]
