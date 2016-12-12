@@ -1,2 +1,2 @@
-coverage3 run --source='.' manage.py test
+coverage3 run manage.py test
 coverage3 report -m
