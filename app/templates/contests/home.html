@@ -5,7 +5,7 @@
 {% block navbar_block %}{{block.super}}{% endblock %}
 {% block content_block %}
     <div class="panel panel-default panel-table">
-        <div class="panel-heading">
+        <div class="panel-heading" id="active-contests-toggle">
             <div class="row">
                 <div class="col col-xs-6">
                     <h3 class="panel-title">Active Contests:</h3>
@@ -34,7 +34,7 @@
     </div>
 
     <div class="panel panel-default panel-table">
-        <div class="panel-heading">
+        <div class="panel-heading" id="unstarted-contests-toggle">
             <div class="row">
                 <div class="col col-xs-6">
                     <h3 class="panel-title">Unstarted Contests:</h3>
@@ -63,7 +63,7 @@
     </div>
 
     <div class="panel panel-default panel-table">
-        <div class="panel-heading">
+        <div class="panel-heading" id="past-contests-toggle">
             <div class="row">
                 <div class="col col-xs-6">
                     <h3 class="panel-title">Past Contests:</h3>

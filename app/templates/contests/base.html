@@ -3,11 +3,35 @@
 {% block title_block %} {{block.super}} {% endblock %}
 {% block head_block %}
   <style>
+    #navbar-content-wrapper {
+      margin-left: 70px;
+      height: 100%;
+      max-width: 1200px;
+      margin: auto;
+    }
     #page-content-wrapper {
       margin-left: 70px;
       height: 100%;
       max-width: 1200px;
       margin: auto;
+    }
+
+    #active-contests-panel-body {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 100%;
+    }
+
+    #unstarted-contests-panel-body {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 100%;
+    }
+
+    #past-contests-panel-body {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 100%;
     }
 
     #create-team-toggle-wrapper {
@@ -61,13 +85,13 @@
   </style>
 {% endblock %}
 {% block navbar_block %}
-  <div class="panel panel-default col-sm-10 col-sm-offset-1">
+  <div class="panel panel-default col-sm-10 col-sm-offset-1" id="navbar-content-wrapper">
     <ul class="nav nav-pills">
       <li><a href="{% url 'contests:home' %}">Home <span class="glyphicon glyphicon-home"></span></a></li>
       <li><a href="#">Submissions <span class="glyphicon glyphicon-cloud-upload"></span></a></li>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-          Create <span class="caret"></span>
+          Create <span class="glyphicon glyphicon-wrench"></span> <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
           <li><a href="{% url 'contests:create' %}">Create a Contest</a><li>

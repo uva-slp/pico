@@ -21,7 +21,7 @@
     </head>
 
     <body>
-    
+
         {% block navbar_block %}{%endblock %}
         {% block body_block %}{% endblock %}
 
@@ -48,6 +48,26 @@
 		};
 
         $(function() {
+          var activeContestsToggle = $("#active-contests-toggle");
+          var unstartedContestsToggle = $("#unstarted-contests-toggle");
+          var pastContestsToggle = $("#past-contests-toggle");
+
+          var activeContestsWrapper = $("#active-contests-panel-body");
+          var unstartedContestsWrapper = $("#unstarted-contests-panel-body");
+          var pastContestsWrapper = $("#past-contests-panel-body");
+
+          activeContestsToggle.click(function() {
+            activeContestsWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
+            });
+
+          unstartedContestsToggle.click(function() {
+            unstartedContestsWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
+            });
+
+          pastContestsToggle.click(function() {
+            pastContestsWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
+            });
+          ////////
           var createTeamToggleButton = $("#create-team-toggle-button");
           var createTeamToggleWrapper = $("#create-team-toggle-wrapper");
           var createTeamToggleForm = $("#create-team-form");
