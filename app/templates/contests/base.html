@@ -3,24 +3,12 @@
 {% block title_block %} {{block.super}} {% endblock %}
 {% block head_block %}
   <style>
-    #wrapper {
-        padding-left: 70px;
-        transition: all .4s ease 0s;
+    #page-content-wrapper {
         height: 100%;
         max-width: 1500px;
         margin: auto;
     }
 
-    #page-content-wrapper {
-        padding-left: 0;
-        margin-left: 0;
-        width: 100%;
-        height: auto;
-    }
-
-    #page-content-wrapper {
-      max-width: 75%;
-    }
     #create-team-toggle-wrapper {
       background: #ccc;
       overflow: hidden;
@@ -85,7 +73,7 @@
   <div class="panel panel-default col-md-10 col-md-offset-1">
     <ul class="nav nav-pills">
       <li><a href="{% url 'contests:home' %}">Home <span class="glyphicon glyphicon-home"></span></a></li>
-      <li><a href="#">Submissions</a></li>
+      <li><a href="#">Submissions <span class="glyphicon glyphicon-cloud-upload"></span></a></li>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
           Create <span class="caret"></span>
@@ -98,7 +86,7 @@
       </li>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-          Teams  <span class="glyphicon glyphicon-user"></span>
+          Teams  <span class="glyphicon glyphicon-user"> </span><span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
           <li><a href="#">Create a Team </a><li>
@@ -108,7 +96,7 @@
       </li>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-          Settings<span class="glyphicon glyphicon-cog"></span>
+          Settings <span class="glyphicon glyphicon-cog"> </span><span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
           <li><a href="{% url 'users:password_change' %}"> Change password </a><li>
@@ -123,16 +111,10 @@
 {% endblock %}
 
 {% block body_block %}
-  <div class="panel panel-default col-md-10 col-md-offset-1">
-    <div id="wrapper" class="active">
-      <!-- Page content -->
-      <div id="page-content-wrapper" class="page-content inset">
-        <!-- Keep all page content within the page-content inset div! -->
-        <div class="row">
-          <div class="col-sm-12">
-            {% block content_block %}{% endblock %}
-          </div>
-        </div>
+  <div class="panel panel-default col-md-10 col-md-offset-1" id="page-content-wrapper"><br>
+    <div class="row">
+      <div class="col-sm-12">
+        {% block content_block %}{% endblock %}
       </div>
     </div>
   </div>
