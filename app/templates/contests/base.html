@@ -34,6 +34,24 @@
       max-height: 100%;
     }
 
+    #active-contests-panel-body.open {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0;
+    }
+
+    #unstarted-contests-panel-body.open {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0;
+    }
+
+    #past-contests-panel-body.open {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0;
+    }
+
     #create-team-toggle-wrapper {
       background: #ccc;
       overflow: hidden;
@@ -91,7 +109,7 @@
       <li><a href="#">Submissions <span class="glyphicon glyphicon-cloud-upload"></span></a></li>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-          Create <span class="glyphicon glyphicon-wrench"></span> <span class="caret"></span>
+          Create <span class="glyphicon glyphicon-wrench"></span><span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
           <li><a href="{% url 'contests:create' %}">Create a Contest</a><li>
