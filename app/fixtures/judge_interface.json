@@ -947,8 +947,8 @@
           "autojudge_enabled": true,
           "autojudge_review": "1",
           "problem_description": "uploads/pdf_iBWQjBk.pdf",
-          "contest_admins": "",
-          "contest_participants": ""
+          "contest_admins": "judge",
+          "contest_participants": "participant1 participant2"
       }
   }
 ]
