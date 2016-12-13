@@ -111,7 +111,9 @@
         var joinTeamLink = document.getElementById("join-team-modal-link");
         var leaveTeamLink = document.getElementById("leave-team-modal-link");
 
-        var span = document.getElementsByClassName("close")[0];
+        var closeCreateTeamModal = document.getElementsByClassName("close")[0];
+        var closeJoinTeamModal = document.getElementsByClassName("close")[1];
+        var closeLeaveTeamModal = document.getElementsByClassName("close")[2];
 
         // When the user clicks the button, open the modal 
         createTeamLink.onclick = function() {
@@ -126,10 +128,16 @@
         }
 
         // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            createTeamModal.style.display = "none";
-            joinTeamModal.style.display = "none";
-            leaveTeamModal.style.display = "none";
+        closeCreateTeamModal.onclick = function() {
+          createTeamModal.style.display = "none";
+        }
+
+        closeJoinTeamModal.onclick = function() {
+          joinTeamModal.style.display = "none";
+        }
+
+        closeLeaveTeamModal.onclick = function() {
+          leaveTeamModal.style.display = "none";
         }
 
         // When the user clicks anywhere outside of the modal, close it

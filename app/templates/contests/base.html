@@ -119,7 +119,7 @@
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 40%;
+    width: 30%;
     }
 
     .close {
@@ -183,27 +183,33 @@
     <div id="createTeamModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
+        <h3>Create a Team</h3>
         <p>
           {% csrf_token %}
             {{ team_form.as_p }}</p>
+            <input type="submit" value="submit" />
       </div>
     </div>
     
     <div id="joinTeamModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
+        <h3>Join a Team</h3>
         <p>
           {% csrf_token %}
             {{ team_join_form.as_p }}</p>
+            <input type="submit" value="submit" />
       </div>
     </div>
 
     <div id="leaveTeamModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
+        <h3>Leave a Team</h3>
         <p>
           {% csrf_token %}
             {{ team_leave_form.as_p }}</p>
+            <input type="submit" value="submit" />
       </div>
     </div>
 
