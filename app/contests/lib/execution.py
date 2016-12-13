@@ -40,7 +40,7 @@ def run_java(submission_file, original_filename, input_file, timeout):
     output, error = compilation_result.communicate()
     retval = (1, 'Code timed out')
     if compilation_result.returncode !=0:
-        retval = (1, ("COMPILATION ERROR:\n" + error.decode("utf-8").encode("utf-8")))
+        retval = (1, ("COMPILATION ERROR:\n" + str(error.decode("utf-8"))))
     else:
         if input_file != None and input_file.name != None:
             program_output = Popen("timeout " + str(timeout) + " java -cp " + temp_dirpath + " " + compiled_file + " < " + input_file.name, stdout=PIPE, stderr=PIPE, shell=True)
@@ -48,8 +48,8 @@ def run_java(submission_file, original_filename, input_file, timeout):
             program_output = Popen("timeout " + str(timeout) + " java -cp " + temp_dirpath + " " + compiled_file, stdout=PIPE, stderr=PIPE, shell=True)
         output, error = program_output.communicate()
         if program_output.returncode != 0:
-            if error.decode("utf-8").encode("utf-8") != '':
-                retval = (1, ("EXECUTION ERROR:\n" + error.decode("utf-8").encode("utf-8")))
+            if str(error.decode("utf-8")) != '':
+                retval = (1, ("EXECUTION ERROR:\n" + str(error.decode("utf-8"))))
         else:
             retval = (0, output.decode())
     shutil.rmtree(temp_dirpath)
@@ -66,7 +66,7 @@ def run_cpp(submission_file, input_file, timeout):
     output, error = compilation_result.communicate()
     retval = (1, 'Code timed out')
     if compilation_result.returncode != 0:
-        retval = (1, ("COMPILATION ERROR:\n" + error.decode("utf-8").encode("utf-8")))
+        retval = (1, ("COMPILATION ERROR:\n" + str(error.decode("utf-8"))))
     else:
         if input_file != None and input_file.name != None:
             program_output = Popen("timeout " + str(timeout) + " " + os.path.join(temp_dirpath, './a.out' + ' < ' + input_file.name), shell=True, stdout=PIPE, stderr=PIPE)
@@ -74,8 +74,8 @@ def run_cpp(submission_file, input_file, timeout):
             program_output = Popen("timeout " + str(timeout) + " " + os.path.join(temp_dirpath, './a.out'), shell=True, stdout=PIPE, stderr=PIPE)
         output, error = program_output.communicate()
         if program_output.returncode != 0:
-            if error.decode("utf-8").encode("utf-8") != '':
-                retval = (1, ("EXECUTION ERROR:\n" + error.decode("utf-8").encode("utf-8")))
+            if str(error.decode("utf-8")) != '':
+                retval = (1, ("EXECUTION ERROR:\n" + str(error.decode("utf-8"))))
         else:
             retval = (0, output.decode())
     shutil.rmtree(temp_dirpath)
