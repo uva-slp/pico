@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
 
 {% block title_block %} {{block.super}} {% endblock %}
 {% block head_block %}
@@ -7,7 +9,6 @@
       margin-left: 70px;
       height: 100%;
       max-width: 1200px;
-      margin: auto;
     }
     #page-content-wrapper {
       margin-left: 70px;
@@ -100,6 +101,46 @@
       background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
       background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
     }
+    /* modals */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      padding-top: 100px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+    .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    }
+
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+
+
+
+
   </style>
 {% endblock %}
 {% block navbar_block %}
@@ -122,9 +163,9 @@
           Teams  <span class="glyphicon glyphicon-user"> </span><span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="#">Create a Team </a><li>
-          <li><a href="#">Join a Team</a></li>
-          <li><a href="#">Leave a Team</a></li>
+          <li id="create-team-modal-link">Create a Team<li>
+          <li id="join-team-modal-link">Join a Team</li>
+          <li id="leave-team-modal-link">Leave a Team</li>
         </ul>
       </li>
       <li class="dropdown">
@@ -138,11 +179,21 @@
         </ul>
       </li>
     </ul>
+
+    <!-- since modal content can only be generated through the nav bar, the modal code will go here too -->
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>{{ team_join_form.media }}</p>
+      </div>
+
+    </div>
     
     <hr class="colorgraph">
   </div>
 {% endblock %}
-
+<br>
 {% block body_block %}
   <div class="panel panel-default col-sm-10 col-sm-offset-1" id="page-content-wrapper"><br>
     <div class="row">
