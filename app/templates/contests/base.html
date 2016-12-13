@@ -6,15 +6,14 @@
 {% block head_block %}
   <style>
     #navbar-content-wrapper {
-      margin-left: 70px;
+      margin-left: 100px;
       height: 100%;
-      max-width: 1200px;
+      max-width: 800px;
     }
     #page-content-wrapper {
-      margin-left: 70px;
+      margin-left: 100px;
       height: 100%;
-      max-width: 1200px;
-      margin: auto;
+      max-width: 800px;
     }
 
     #active-contests-panel-body {
@@ -163,9 +162,9 @@
           Teams  <span class="glyphicon glyphicon-user"> </span><span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li id="create-team-modal-link">Create a Team<li>
-          <li id="join-team-modal-link">Join a Team</li>
-          <li id="leave-team-modal-link">Leave a Team</li>
+          <li id="create-team-modal-link"><a href="#">Create a Team</a><li>
+          <li id="join-team-modal-link"><a href="#">Join a Team</a></li>
+          <li id="leave-team-modal-link"><a href="#">Leave a Team</a></li>
         </ul>
       </li>
       <li class="dropdown">
@@ -181,15 +180,33 @@
     </ul>
 
     <!-- since modal content can only be generated through the nav bar, the modal code will go here too -->
-    <div id="myModal" class="modal">
-      <!-- Modal content -->
+    <div id="createTeamModal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <p>{{ team_join_form.media }}</p>
+        <p>
+          {% csrf_token %}
+            {{ team_form.as_p }}</p>
       </div>
-
     </div>
     
+    <div id="joinTeamModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>
+          {% csrf_token %}
+            {{ team_join_form.as_p }}</p>
+      </div>
+    </div>
+
+    <div id="leaveTeamModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>
+          {% csrf_token %}
+            {{ team_leave_form.as_p }}</p>
+      </div>
+    </div>
+
     <hr class="colorgraph">
   </div>
 {% endblock %}
