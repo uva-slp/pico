@@ -36,8 +36,6 @@ def leave(request):
 		if organization_leave_form.is_valid():
 			organization = organization_leave_form.cleaned_data['organization']
 			request.user.organization_set.remove(organization)
-			if organization.members.count() == 0:
-				organization.delete()
 
 	return redirect(reverse('contests:home'))
 

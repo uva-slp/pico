@@ -4,6 +4,7 @@ python:
   - "3.5"
 
 install:
+  - pip install -q coveralls
   - pip install -q Django==1.10
   - pip install -q django-autocomplete-light==3.2.1
   - pip install -q django-bootstrap3==7.1.0
@@ -11,6 +12,10 @@ install:
   - pip install -q python-dateutil
   #- pip install -q django-bootstrap3-datetimepicker==2.2.3
 
-script: python app/manage.py test app
+script:
+  coverage run app/manage.py test
+
+after_success:
+  coveralls
 
 sudo: false
