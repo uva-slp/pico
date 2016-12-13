@@ -330,14 +330,14 @@ class SubmissionsViewsTest(TestCase):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "timeout_test.java"), "rb+"))
 		output = exe.execute_code(test_file, 'timeout_test.java', None)
 		self.assertEqual(output[0], 1)
-		self.assertEqual("Code timed out", "Code timed out") # output[1], code timed out
+		self.assertEqual(output[1], "Code timed out") # output[1], code timed out
 
     #Derek      
 	def test_cpp_execution_timeout(self):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "timeout_test.cpp"), "rb+"))
 		output = exe.execute_code(test_file, 'timeout_test.cpp', None)
 		self.assertEqual(output[0], 1)
-		self.assertEqual("Code timed out", "Code timed out") #output[1], code timed out
+		self.assertEqual(output[1], "Code timed out") #output[1], code timed out
 
     #Derek      
 	def test_java_execution_runtime_error(self):
@@ -345,7 +345,7 @@ class SubmissionsViewsTest(TestCase):
 		output = exe.execute_code(test_file, 'runtime_error_test.java', None)
 		self.assertEqual(output[0], 1)
 		runtime_error = output[1].startswith("EXECUTION ERROR:")
-		self.assertEqual(True, True) # runtime_error, True
+		self.assertEqual(runtime_error, True) # runtime_error, True
 		
     #Derek	
 	#def test_cpp_execution_runtime_error(self):
@@ -360,7 +360,7 @@ class SubmissionsViewsTest(TestCase):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "ReadInput.java"), "rb+"))
 		input_file = File(open(os.path.join(dir_path, "code_test_files", "input_test_file.txt"), "rb+"))
 		output = exe.execute_code(test_file, 'ReadInput.java', input_file)
-		self.assertEqual(0, 0) # output[0], 0
+		self.assertEqual(output[0], 0) # output[0], 0
 		self.assertEqual("The program works!\n", "The program works!\n") # output[1], program works
 
     #Derek      
@@ -379,7 +379,6 @@ class SubmissionsViewsTest(TestCase):
 		compilation_error = output[1].startswith("COMPILATION ERROR:")
 		self.assertEqual(compilation_error, True)
 
-	'''
     #Derek      
 	def test_cpp_execution_compilation_error(self):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "trash.cpp"), "rb+"))
@@ -387,7 +386,7 @@ class SubmissionsViewsTest(TestCase):
 		self.assertEqual(output[0], 1)
 		compilation_error = output[1].startswith("COMPILATION ERROR:")
 		self.assertEqual(compilation_error, True)
-	'''
+
                 
 # Method for getting nearest datetime
 def nearest(items, pivot):
