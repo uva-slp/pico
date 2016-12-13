@@ -21,8 +21,8 @@
     </head>
 
     <body>
-
-      {% block body_block %}{% endblock %}
+        {% block navbar_block %}{%endblock %}
+        {% block body_block %}{% endblock %}
 
     </body>
     
@@ -47,6 +47,26 @@
 		};
 
         $(function() {
+          var activeContestsToggle = $("#active-contests-toggle");
+          var unstartedContestsToggle = $("#unstarted-contests-toggle");
+          var pastContestsToggle = $("#past-contests-toggle");
+
+          var activeContestsWrapper = $("#active-contests-panel-body");
+          var unstartedContestsWrapper = $("#unstarted-contests-panel-body");
+          var pastContestsWrapper = $("#past-contests-panel-body");
+
+          activeContestsToggle.click(function() {
+            activeContestsWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
+            });
+
+          unstartedContestsToggle.click(function() {
+            unstartedContestsWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
+            });
+
+          pastContestsToggle.click(function() {
+            pastContestsWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
+            });
+          ////////
           var createTeamToggleButton = $("#create-team-toggle-button");
           var createTeamToggleWrapper = $("#create-team-toggle-wrapper");
           var createTeamToggleForm = $("#create-team-form");
@@ -81,6 +101,57 @@
           });
 
         });
+
+        var createTeamModal = document.getElementById('createTeamModal');
+        var joinTeamModel = document.getElementById('joinTeamModal');
+        var leaveTeamModel = document.getElementById('leaveTeamModal');
+
+        var createTeamLink = document.getElementById("create-team-modal-link");
+        var joinTeamLink = document.getElementById("join-team-modal-link");
+        var leaveTeamLink = document.getElementById("leave-team-modal-link");
+
+        var closeCreateTeamModal = document.getElementsByClassName("close")[0];
+        var closeJoinTeamModal = document.getElementsByClassName("close")[1];
+        var closeLeaveTeamModal = document.getElementsByClassName("close")[2];
+
+        // When the user clicks the button, open the modal 
+        createTeamLink.onclick = function() {
+            createTeamModal.style.display = "block";
+        }
+
+        joinTeamLink.onclick = function() {
+            joinTeamModal.style.display = "block";
+        }
+        leaveTeamLink.onclick = function() {
+            leaveTeamModal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        closeCreateTeamModal.onclick = function() {
+          createTeamModal.style.display = "none";
+        }
+
+        closeJoinTeamModal.onclick = function() {
+          joinTeamModal.style.display = "none";
+        }
+
+        closeLeaveTeamModal.onclick = function() {
+          leaveTeamModal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == createTeamModal) {
+                createTeamModal.style.display = "none";
+            }
+            else if (event.target == joinTeamModal) {
+                joinTeamModal.style.display = "none";
+            }
+            else if (event.target == leaveTeamModal) {
+                leaveTeamModal.style.display = "none";
+            }
+        }
+
     </script>
 
 	{% block foot_block %}{% endblock %}

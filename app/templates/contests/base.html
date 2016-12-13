@@ -1,124 +1,230 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
 
 {% block title_block %} {{block.super}} {% endblock %}
 {% block head_block %}
-    <style>
-        .navbar {
-            display: block;
-        }
+  <style>
+    #navbar-content-wrapper {
+      margin-left: 100px;
+      height: 100%;
+      max-width: 800px;
+    }
+    #page-content-wrapper {
+      margin-left: 100px;
+      height: 100%;
+      max-width: 800px;
+    }
 
-        .container-fluid {
-            background: #F7F7F7;
-        }
+    #active-contests-panel-body {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 100%;
+    }
 
-        #nav {
-            padding-right: 0px;
-            padding-left: 0px;
-        }
+    #unstarted-contests-panel-body {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 100%;
+    }
 
-	    .navbar > a {
-	        text-decoration: none;
-	        background-color: #EEEEEE;
-	        color: #333333;
-	        padding: 2px 6px 2px 6px;
-	        border-top: 1px solid #CCCCCC;
-	        border-right: 1px solid #333333;
-	        border-bottom: 1px solid #333333;
-	        border-left: 1px solid #CCCCCC;
-	    }
+    #past-contests-panel-body {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 100%;
+    }
 
-        .navbar-default .navbar-nav > li > a:hover,
-        .navbar-default .navbar-nav > li > a:focus {
-            background-color: #E5E5E5;
-        }
+    #active-contests-panel-body.open {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0;
+    }
 
-        #create-team-toggle-wrapper {
-            background: #eee;
-            overflow: hidden;
-            transition: max-height 300ms;
-            max-height: 0; /* <---hide by default */
-          }
-          #create-team-toggle-wrapper.open {
-            max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-          }
-          #join-team-toggle-wrapper {
-            background: #eee;
-            overflow: hidden;
-            transition: max-height 300ms;
-            max-height: 0; /* <---hide by default */
-          }
-          #join-team-toggle-wrapper.open {
-            max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-          }
-          #leave-team-toggle-wrapper {
-            background: #eee;
-            overflow: hidden;
-            transition: max-height 300ms;
-            max-height: 0; /* <---hide by default */
-          }
-          #leave-team-toggle-wrapper.open {
-            max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
-          }
+    #unstarted-contests-panel-body.open {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0;
+    }
 
-        .colorgraph {
-	        height: 7px;
-	        border-top: 0;
-	        border-radius: 5px;
-	        background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-	        background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-	        background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-	        background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
-	    }
-    </style>
+    #past-contests-panel-body.open {
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0;
+    }
+
+    #create-team-toggle-wrapper {
+      background: #ccc;
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0; /* <---hide by default */
+    }
+    #create-team-toggle-wrapper.open {
+      max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+    }
+    #join-team-toggle-wrapper {
+      background: #ccc;
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0; /* <---hide by default */
+    }
+    #join-team-toggle-wrapper.open {
+      max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+    }
+    #leave-team-toggle-wrapper {
+      background: #ccc;
+      overflow: hidden;
+      transition: max-height 300ms;
+      max-height: 0; /* <---hide by default */
+    }
+    #leave-team-toggle-wrapper.open {
+      max-height: 200px; /* <---when open, allow content to expand to take up as much height as it needs, up to e.g. 100px */
+    }
+    .content-header {
+      height: 65px;
+      line-height: 65px;
+    }
+
+    .content-header h1 {
+      margin: 0;
+      margin-left: 20px;
+      line-height: 65px;
+      display: inline-block;
+    }
+
+    .colorgraph {
+      height: 7px;
+      border-top: 0;
+      border-radius: 5px;
+      background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+      background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+      background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+      background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+    }
+    /* modals */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      padding-top: 100px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+    .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 25%;
+    }
+
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+
+
+
+
+  </style>
 {% endblock %}
+{% block navbar_block %}
+  <div class="panel panel-default col-sm-10 col-sm-offset-1" id="navbar-content-wrapper">
+    <ul class="nav nav-pills">
+      <li><a href="{% url 'contests:home' %}">Home <span class="glyphicon glyphicon-home"></span></a></li>
+      <li><a href="#">Submissions <span class="glyphicon glyphicon-cloud-upload"></span></a></li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+          Create <span class="glyphicon glyphicon-wrench"></span><span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'contests:create' %}">Create a Contest</a><li>
+          <li><a href="{% url 'contests:create_template' %}">Create a Contest Template</a></li>
+          <li><a href="#">Create a Team</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+          Teams  <span class="glyphicon glyphicon-user"> </span><span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li id="create-team-modal-link"><a href="#">Create a Team</a><li>
+          <li id="join-team-modal-link"><a href="#">Join a Team</a></li>
+          <li id="leave-team-modal-link"><a href="#">Leave a Team</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+          Settings <span class="glyphicon glyphicon-cog"> </span><span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'users:password_change' %}"> Change password </a><li>
+          <li class="divider"></li>
+          <li><a href="{% url 'users:logout' %}"> Logout </a><li>
+        </ul>
+      </li>
+    </ul>
 
+    <!-- since modal content can only be generated through the nav bar, the modal code will go here too -->
+    <div id="createTeamModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Create a Team</h3>
+        <p>
+          {% csrf_token %}
+            {{ team_form.as_p }}</p>
+            <input type="submit" value="submit" />
+      </div>
+    </div>
+    
+    <div id="joinTeamModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Join a Team</h3>
+        <p>
+          {% csrf_token %}
+            {{ team_join_form.as_p }}</p>
+            <input type="submit" value="submit" />
+      </div>
+    </div>
+
+    <div id="leaveTeamModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Leave a Team</h3>
+        <p>
+          {% csrf_token %}
+            {{ team_leave_form.as_p }}</p>
+            <input type="submit" value="submit" />
+      </div>
+    </div>
+
+    <hr class="colorgraph">
+  </div>
+{% endblock %}
+<br>
 {% block body_block %}
-    <div id="nav" class="col-md-10 col-md-offset-1">
-        <nav class="navbar navbar-default" id="navbar-menu">
-          <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="{% url 'contests:home' %}">PiCO</a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav">
-                {% url 'contests:contest' contest_data.id as problems_url%}
-                {% url 'contests:contest_judge_submissions' contest_data.id as judge_url %}
-                {% url 'contests:contest_submissions' contest_data.id team.id as submission_url %}
-                {% url 'contests:scoreboard' contest_data.id as scoreboard_url %}
-                {% url 'users:password_change' as password_change_url %}
-                <li {% if request.path == problems_url %}class="active"{% endif %}>
-                    <a href="{{ problems_url }}">Problems</a></li>
-                <!-- TODO: update when contest support multiple judges-->
-                {% if request.user == contest_data.creator %}
-                <li {% if request.path == judge_url %}class="active"{% endif %}>
-                    <a href="{{ judge_url }}">Submissions</a></li>
-                {% elif team is not None%}
-                <li {% if request.path == submission_url %}class="active"{% endif %}>
-                    <a href="{{ submission_url }}">Submissions</a></li>
-                {% endif %}
-                <li {% if request.path == scoreboard_url %}class="active"{% endif %}>
-                    <a href="{{ scoreboard_url }}">Scoreboard</a></li>
-                <li {% if request.path == password_change_url %}class="active"{% endif %}>
-                    <a href="{{ password_change_url }}">Change Password</a></li>
-              </ul>
-            </div><!-- /.navbar-collapse -->
-          </div><!-- /.container-fluid -->
-        </nav>
-    </div>
-
-    <div class="panel panel-default col-md-10 col-md-offset-1">
+  <div class="panel panel-default col-sm-10 col-sm-offset-1" id="page-content-wrapper"><br>
+    <div class="row">
+      <div class="col-sm-12">
         {% block content_block %}{% endblock %}
+      </div>
     </div>
-
+  </div>
 {% endblock %}
 
 {% block foot_block %}{% endblock %}
