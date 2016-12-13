@@ -1,18 +1,74 @@
 from django.test import TestCase
-from .lib import execution as exe
+from contests.lib import execution as exe
 import tempfile
 import shutil
 import os
 from django.core.files import File
-from .forms import CreateContestForm, CreateProblem, ReturnJudgeResultForm
+from contests.forms import CreateContestForm, CreateContestTemplateForm, CreateProblem, ReturnJudgeResultForm
 from django.urls import reverse
 from django.shortcuts import render
 from django.core.files.uploadedfile import SimpleUploadedFile
-from .models import Team, Participant, Contest, Problem
 from datetime import datetime
 from django.utils import timezone
-from .models import Team, Participant, Contest, Problem, Submission
+from contests.models import Team, Participant, Contest, ContestTemplate, Problem, Submission
 
+dir_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+
+class ContestTemplateTest(TestCase):
+
+	fixtures = ['forms.json']
+
+	# models test
+	def contest_template(
+			self, title="template test", languages="java, python",
+			length=datetime.now(timezone.utc), penalty=datetime.now(timezone.utc), autojudge="1",
+			review="Manual review all submissions", admins="", participants=""):
+		return ContestTemplate.objects.create(
+			title=title, languages=languages,
+			contest_length=length, time_penalty=penalty,
+			autojudge_enabled=autojudge, autojudge_review=review,
+			contest_admins=admins, contest_participants=participants)
+
+	# Austin
+	def test_contest_template_creation(self):
+		ct = self.contest_template()
+		self.assertTrue(isinstance(ct, ContestTemplate))
+		self.assertEqual(ct.__str__(), ct.title)
+
+	# Austin
+	def test_contest_template_db_entry(self):
+		ct = ContestTemplate.objects.get(pk=1)
+		self.assertEqual(ct.title, 'Contest from template 1')
+		ct.title = "Updated Contest from template 1"
+		ct.save()
+		updated_ct = ContestTemplate.objects.get(pk=1)
+		self.assertEqual(updated_ct.title, 'Updated Contest from template 1')
+
+	# forms test
+	def contesttemplate_form(self):
+		data={
+			"title": "Contest Template 1", "creator": 1, "languages": "java, c++",
+			"contest_length": "03:00", "time_penalty": "30",
+			"autojudge_enabled": "1", "autojudge_review": "Manual review all submissions",
+			"contest_admins": "", "contest_participants": ""
+		}
+		return CreateContestTemplateForm(data=data)
+
+	# Austin
+	def test_valid_contesttemplate_form(self):
+		form = self.contesttemplate_form()
+		self.assertTrue(form.is_valid())
+
+	# Austin
+	def test_empty_contesttemplate_form_fields(self):
+		data = {
+			"title": "", "languages": "", "contest_length": "",
+			"time_penalty": "", "autojudge_enabled": "0", "autojudge_review": "",
+			"contest_admins": "", "contest_participants": ""
+		}
+		form = CreateContestTemplateForm(data=data)
+		self.assertFalse(form.is_valid())
 
 class ContestTest(TestCase):
 
@@ -20,8 +76,8 @@ class ContestTest(TestCase):
 
 	# models test
 	def contest(
-			self, title="only a test", languages="java, python",
-			length="02:00", penalty="20", autojudge="0", review="",
+			self, title="contest test", languages="java, python",
+			length=datetime.now(timezone.utc), penalty=datetime.now(timezone.utc), autojudge="0", review="",
 			desc="problems.pdf", admins="", participants=""):
 		return Contest.objects.create(
 			title=title, languages=languages,
@@ -42,7 +98,15 @@ class ContestTest(TestCase):
 		self.assertEqual(ct.title, 'Contest 1')
 		ct.title = "Updated Contest 1"
 		ct.save()
-		self.assertEqual(ct.title, 'Updated Contest 1')
+		updated_ct = Contest.objects.get(pk=8)
+		self.assertEqual(updated_ct.title, 'Updated Contest 1')
+
+	# Austin
+	def test_contest_cleaned_datetime(self):
+		contest_form = self.contest_form()
+		if contest_form.is_valid():
+			self.assertNotEqual(contest_form.cleaned_data['contest_length'], "02:00")
+			self.assertNotEqual(contest_form.cleaned_data['time_penalty'], "20")
 
 	# Austin
 	def test_problem_creation(self):
@@ -82,9 +146,8 @@ class ContestTest(TestCase):
 		self.assertEqual(Contest.objects.get(pk=p3.contest_id), ct1)
 
 	# forms test
-	# Austin
-	def test_valid_contest_form(self):
-		data = {
+	def contest_form(self):
+		data={
 			"title": "Contest 1", "creator": 1, "languages": "java, python",
 			"contest_length": "02:00", "time_penalty": "20",
 			"autojudge_enabled": "0", "autojudge_review": "",
@@ -94,7 +157,11 @@ class ContestTest(TestCase):
 		files = {
 			"problem_description": SimpleUploadedFile("problems.pdf", b"test content")
 		}
-		form = CreateContestForm(data=data, files=files)
+		return CreateContestForm(data=data, files=files)
+
+	# Austin
+	def test_valid_contest_form(self):
+		form = self.contest_form()
 		self.assertTrue(form.is_valid())
 
 	# Austin
@@ -107,6 +174,25 @@ class ContestTest(TestCase):
 		}
 		form = CreateContestForm(data=data)
 		self.assertFalse(form.is_valid())
+
+	# Austin
+	def test_valid_contest_from_template(self):
+		ct = ContestTemplate.objects.get(pk=1)
+
+		loaded_data = {
+			"title": ct.title, "creator": 1, "languages": ct.languages,
+			"contest_length": ct.contest_length, "time_penalty": ct.time_penalty,
+			"autojudge_enabled": ct.autojudge_enabled, "autojudge_review": ct.autojudge_review,
+			"problem_description": "problems.pdf",
+			"contest_admins": ct.contest_admins, "contest_participants": ct.contest_participants
+		}
+
+		files = {
+			"problem_description": SimpleUploadedFile("problems.pdf", b"test content")
+		}
+
+		form = CreateContestForm(data=loaded_data, files=files)
+		self.assertTrue(form.is_valid())
 
 	# Austin
 	def test_valid_problem_form(self):
@@ -157,52 +243,12 @@ class ContestTest(TestCase):
 
 		self.assertEqual(resp.status_code, 200)
 
-
 class JudgeInterfaceTest(TestCase):
 
 	fixtures = ['judge_interface.json']
 
 	# Vivian
-	#view test
-	def test_view_all_judge(self):
-		self.client.login(username='judge', password='password')
-		url = reverse("contests:contest_judge_submissions",
-					  kwargs={'contest_id': 7})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 200)
-
-	# Vivian
-	#view test
-	def test_view_all_notloggedin(self):
-		url = reverse("contests:contest_judge_submissions",
-					  kwargs={'contest_id': 7})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 302)
-
-	# Vivian
-	#view test
-	def test_view_submission(self):
-		self.client.login(username='participant1', password='password')
-		url = reverse("contests:contest_submissions",
-					  kwargs={'contest_id': 7, 'team_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 200)
-
-	# Vivian
-	#view test
-	def test_judge(self):
-		self.client.login(username='judge', password='password')
-		url = reverse("contests:contest_judge",
-					  kwargs={'contest_id': 7, 'run_id': 1})
-		resp = self.client.get(url)
-
-		self.assertEqual(resp.status_code, 200)
-
-	# Vivian
-	#form test
+	# form test
 	def test_valid_return_form(self):
 		submission = Submission.objects.get(run_id=3)
 		data = {
@@ -245,41 +291,103 @@ class SubmissionsViewsTest(TestCase):
 		self.assertContains(response, "Submit for ProblemExample")
 
 	#Derek
-	def test_cpp_execution_on_empty_file(self):
-                temp_dirpath = tempfile.mkdtemp()
-                file_path = os.path.join(temp_dirpath, 'test.cpp')
-                with open(file_path, 'w+') as destination:
-                        test_file_object = File(destination)
-                        output = exe.execute_code(test_file_object, 'test.cpp')
-                shutil.rmtree(temp_dirpath)
-                self.assertEqual(output[0], 1)
-         
-    #Derek      
-	def test_java_execution_on_empty_file(self):
-                temp_dirpath = tempfile.mkdtemp()
-                file_path = os.path.join(temp_dirpath, 'test.java')
-                with open(file_path, 'w+') as destination:
-                        test_file_object = File(destination)
-                        output = exe.execute_code(test_file_object, 'test.java')
-                shutil.rmtree(temp_dirpath)
-                self.assertEqual(output[0], 1)
+	def test_cpp_execution_on_empty_files(self):
+		temp_dirpath = tempfile.mkdtemp()
+		file_path = os.path.join(temp_dirpath, 'test.cpp')
+		with open(file_path, 'w+') as destination:
+			test_file_object = File(destination)
+			output = exe.execute_code(test_file_object, 'test.cpp', test_file_object)
+		shutil.rmtree(temp_dirpath)
+		self.assertEqual(output[0], 1)
+	 
+    #Derek	
+	def test_java_execution_on_empty_files(self):
+		temp_dirpath = tempfile.mkdtemp()
+		file_path = os.path.join(temp_dirpath, 'test.java')
+		with open(file_path, 'w+') as destination:
+			test_file_object = File(destination)
+			output = exe.execute_code(test_file_object, 'test.java', test_file_object)
+		shutil.rmtree(temp_dirpath)
+		self.assertEqual(output[0], 1)
 
     #Derek
 	def test_diff_with_no_file_template(self):
-                response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
-                self.assertTemplateUsed(response, 'contests/error.html')
-
+		response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
+		self.assertTemplateUsed(response, 'contests/error.html')
+		
     #Derek
 	def test_diff_with_no_file_message(self):
-                response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
-                self.assertContains(response, 'Invalid form.')
+		response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
+		self.assertContains(response, 'Invalid form.')
 
     #Derek
 	def test_diff_page(self):
-                response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
-                self.assertEqual(response.status_code, 200)
+		response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
+		self.assertEqual(response.status_code, 200)
 
+    #Derek	
+	def test_java_execution_timeout(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "timeout_test.java"), "rb+"))
+		output = exe.execute_code(test_file, 'timeout_test.java', None)
+		self.assertEqual(output[0], 1)
+		self.assertEqual(output[1], "Code timed out")
 
+    #Derek      
+	def test_cpp_execution_timeout(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "timeout_test.cpp"), "rb+"))
+		output = exe.execute_code(test_file, 'timeout_test.cpp', None)
+		self.assertEqual(output[0], 1)
+		self.assertEqual(output[1], "Code timed out")
+
+    #Derek      
+	def test_java_execution_runtime_error(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "runtime_error_test.java"), "rb+"))
+		output = exe.execute_code(test_file, 'runtime_error_test.java', None)
+		self.assertEqual(output[0], 1)
+		runtime_error = output[1].startswith("EXECUTION ERROR:")
+		self.assertEqual(runtime_error, True)
+		
+    #Derek	
+	#def test_cpp_execution_runtime_error(self):
+	#	test_file = File(open(os.path.join(dir_path, "code_test_files", "runtime_error_test.cpp"), "rb+"))
+	#	output = exe.execute_code(test_file, 'runtime_error_test.cpp', None)
+	#	self.assertEqual(output[0], 1)
+	#	runtime_error = output[1].startswith("EXECUTION ERROR:")
+	#	self.assertEqual(runtime_error, True)
+
+    #Derek      
+	def test_java_execution_read_input(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "ReadInput.java"), "rb+"))
+		input_file = File(open(os.path.join(dir_path, "code_test_files", "input_test_file.txt"), "rb+"))
+		output = exe.execute_code(test_file, 'ReadInput.java', input_file)
+		self.assertEqual(output[0], 0)
+		self.assertEqual(output[1], "The program works!\n")
+
+    #Derek      
+	def test_cpp_execution_read_input(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "ReadInput.cpp"), "rb+"))
+		input_file = File(open(os.path.join(dir_path, "code_test_files", "input_test_file.txt"), "rb+"))
+		output = exe.execute_code(test_file, 'ReadInput.cpp', input_file)
+		self.assertEqual(output[0], 0)
+		self.assertEqual(output[1], "The program works!")
+
+    #Derek      
+	def test_java_execution_compilation_error(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "trash.java"), "rb+"))
+		output = exe.execute_code(test_file, 'trash.java', None)
+		self.assertEqual(output[0], 1)
+		compilation_error = output[1].startswith("COMPILATION ERROR:")
+		self.assertEqual(compilation_error, True)
+
+    #Derek      
+	def test_cpp_execution_compilation_error(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "trash.cpp"), "rb+"))
+		output = exe.execute_code(test_file, 'trash.cpp', None)
+		self.assertEqual(output[0], 1)
+		compilation_error = output[1].startswith("COMPILATION ERROR:")
+		self.assertEqual(compilation_error, True)
+
+                
 # Method for getting nearest datetime
 def nearest(items, pivot):
 	return min(items, key=lambda x: abs(x - pivot))

@@ -1,7 +1,8 @@
 from django.forms import Form, ModelForm
 from .models import Contest, Submission, Problem, ContestTemplate
 from django import forms
-# from bootstrap3_datetime.widgets import DateTimePicker
+#from bootstrap3_datetime.widgets import DateTimePicker
+from datetime import datetime
 
 
 '''
@@ -45,11 +46,11 @@ class CreateContestForm(ModelForm):
 	)
 	contest_length = forms.CharField(
 		required=True, label="Contest Length (hours & minutes)", initial='02:00',
-		# widget=DateTimePicker()
+		#widget=DateTimePicker()
 	)
 	time_penalty = forms.CharField(
 		required=True, label="Time Penalty (minutes)", initial=20,
-		# widget=DateTimePicker()
+		#widget=DateTimePicker()
 	)
 	autojudge_enabled = forms.BooleanField(required=False)
 	autojudge_review = forms.CharField(
@@ -66,6 +67,21 @@ class CreateContestForm(ModelForm):
 			return self.cleaned_data
 		upload_to += self.cleaned_data['problem_description'].name
 
+	def clean_contest_length(self):
+		data = self.cleaned_data['contest_length']
+		separator = data.find(":")
+		cl_hours = int(data[0:separator])
+		cl_minutes = int(data[separator + 1:])
+		time = datetime.now()
+		data = time.replace(hour=cl_hours, minute=cl_minutes)
+		return data
+
+	def clean_time_penalty(self):
+		data = self.cleaned_data['time_penalty']
+		time = datetime.now()
+		data = time.replace(minute=int(data))
+		return data
+
 	class Meta:
 		model = Contest
 		fields = (
@@ -76,6 +92,7 @@ class CreateContestForm(ModelForm):
 
 class CreateProblem(ModelForm):
 	solution = forms.FileField(required=True, label='Solution (.txt)')
+	program_input = forms.FileField(required=False, label= 'Program Input (.txt)')
 	input_description = forms.CharField(required=False, label='Description of Input',
 		widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 	output_description = forms.CharField(required=False, label='Description of Output',
@@ -92,7 +109,7 @@ class CreateProblem(ModelForm):
 	class Meta:
 		model = Problem
 		fields = (
-			'solution', 'input_description', 'output_description', 'sample_input',
+			'solution', 'program_input', 'input_description', 'output_description', 'sample_input',
 			'sample_output')
 
 

@@ -31,7 +31,7 @@ class JoinTeamTest(TestCase):
 		resp = self.client.post(reverse('teams:join'), data=data)
 
 		team = Team.objects.get(pk=1)
-		self.assertTrue(team.members.filter(username='testuser').exists());
+		self.assertTrue(team.members.filter(username='testuser').exists())
 
 class LeaveTeamTest(TestCase):
 
@@ -47,7 +47,7 @@ class LeaveTeamTest(TestCase):
 		resp = self.client.post(reverse('teams:leave'), data=data)
 
 		team = Team.objects.get(pk=1)
-		self.assertFalse(team.members.filter(username='testuser').exists());
+		self.assertFalse(team.members.filter(username='testuser').exists())
 
 class AutocompleteTest(TestCase):
 

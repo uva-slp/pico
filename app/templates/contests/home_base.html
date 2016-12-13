@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title_block %}{{block.super}}{% endblock %}
 {% block head_block %}{{block.super}}{% endblock %}
 
@@ -8,4 +10,12 @@
 {% block body_block %}
 {% endblock %}
 
-{% block foot_block %}{% endblock %}
+{% block foot_block %}
+  <!-- Menu Toggle Script -->
+  <script>
+  $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+  });
+  </script>
+{% endblock %}

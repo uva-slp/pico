@@ -1,0 +1,11 @@
+[
+{
+    "model": "organizations.Organization",
+    "pk": 1,
+    "fields": {
+        "name": "Organizations 1",
+        "date_created": "2016-10-29T17:47:11.38Z",
+        "members": []
+    }
+}
+]

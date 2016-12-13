@@ -65,6 +65,19 @@ class PasswordChangeTest(TestCase):
 
 		self.assertEqual(resp.status_code, 200)
 
+	# nathan
+	def test_post(self):
+		self.client.login(username='testuser', password='password')
+		data = {
+			'old_password': 'password',
+			'new_password1': 'newpassword',
+			'new_password2': 'newpassword'
+		}
+		resp = self.client.post(reverse('users:password_change'), data=data)
+
+		self.assertEqual(resp.status_code, 302)
+		self.assertTrue(self.client.login(username='testuser', password='newpassword'))
+
 class PasswordResetTest(TestCase):
 
 	fixtures = ['users.json']

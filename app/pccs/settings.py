@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
 	# Other apps
 	'bootstrap3',
+	#'bootstrap3_datetime',
 	'dal',
 	'dal_select2',
 	'widget_tweaks',
@@ -192,7 +193,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'US/Eastern'
 
 USE_I18N = True
 

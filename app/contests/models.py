@@ -2,36 +2,15 @@ from django.db import models
 from users.models import User
 from teams.models import Team
 
-'''
-class Contest(models.Model):
-	title = models.CharField(max_length=128)
-	date_created = models.DateTimeField(auto_now_add=True)
-	creator = models.CharField(max_length=32)
-	teams = models.ManyToManyField(Team)
-	languages = models.CharField(max_length=100)
-	contest_length = models.CharField(max_length=10)
-	autojudge = models.CharField(max_length=10)
-	contest_admins = models.CharField(max_length=100, null=True)
-	contest_participants = models.CharField(max_length=200, null=True)
-	
-	def __str__(self):
-		return self.title
-class Question(models.Model):
-	number = models.IntegerField()
-	name = models.CharField(max_length=2048)
-	contest = models.ForeignKey(Contest, on_delete=models.CASCADE)
-	def __str__(self):
-		return str(self.number)
-'''
 
 class Contest(models.Model):
 	title = models.CharField(max_length=128)
 	date_created = models.DateTimeField(auto_now_add=True)
 	creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
 	languages = models.CharField(max_length=64)
-	contest_length = models.CharField(max_length=8)
+	contest_length = models.DateTimeField(null=True, blank=True)
 	contest_start = models.DateTimeField(null=True, blank=True)
-	time_penalty = models.CharField(max_length=4)
+	time_penalty = models.DateTimeField(null=True, blank=True)
 	autojudge_enabled = models.BooleanField(max_length=1, default=False)
 	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
 	problem_description = models.FileField(upload_to='uploads/', null=True, blank=True)
@@ -45,6 +24,7 @@ class Problem(models.Model):
 	number = models.IntegerField(null=True)
 	name = models.CharField(max_length=2048, null=True, blank=True)
 	solution = models.FileField(upload_to='uploads/', null=True, blank=True)
+	program_input = models.FileField(upload_to='uploads/', null=True, blank=False)
 	input_description = models.CharField(max_length=128, null=True, blank=True)
 	output_description = models.CharField(max_length=128, null=True, blank=True)
 	sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
