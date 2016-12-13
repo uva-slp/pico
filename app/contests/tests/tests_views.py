@@ -10,6 +10,7 @@ class JudgeInterfaceViewTest(TestCase):
 
 	# Vivian
 	# view test
+
 	def test_view_all_judge(self):
 		self.client.login(username='judge', password='password')
 		url = reverse("contests:contest_judge_submissions",
