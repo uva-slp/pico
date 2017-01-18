@@ -1,10 +1,10 @@
-{% extends 'contests/form.html' %}
+{% extends 'contests/base.html' %}
 
 {% load bootstrap3 %}
 
 {% block title_block %}Create a new contest template{% endblock %}
 
-{% block form_block %}
+{% block content_block %}
     <div class="well bs-component">
         <form class="form-horizontal" id="create_contest_template" method="post"
               action="{% url 'contests:create_template' %}" enctype="multipart/form-data">

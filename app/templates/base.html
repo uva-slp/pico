@@ -4,155 +4,32 @@
 
 <html>
 	<head>
-    <title>{% block title_block %}PCCS{% endblock %}</title>
+        <title>{% block title_block %}PCCS{% endblock %}</title>
 
-    <!-- jQuery -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    	<!-- Bootstrap Core CSS -->
+        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}">
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/spacelab-bootstrap.css' %}">
+        <!-- Custom Fonts -->
+        <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
 
-    {% block head_block %}{% endblock %}
+        <!-- Base CSS -->
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+        {% block head_block %}{% endblock %}
 
     </head>
 
-    <body>
-        {% block navbar_block %}{%endblock %}
-        {% block body_block %}{% endblock %}
+    <body>{% block body_block %}{% endblock %}</body>
 
-    </body>
-    
-    <script>
-		function getCookie(name) {
-			var cookieValue = null;
-			if (document.cookie && document.cookie != '') {
-				var cookies = document.cookie.split(';');
-				for (var i = 0; i < cookies.length; i++) {
-					var cookie = jQuery.trim(cookies[i]);
-					// Does this cookie string begin with the name we want?
-					if (cookie.substring(0, name.length + 1) == (name + '=')) {
-						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-						break;
-					}
-				}
-			}
-			return cookieValue;
-		}
-		jQuery.fn.outerHTML = function() {
-			return jQuery('<div />').append(this.eq(0).clone()).html();
-		};
+    <!-- jQuery -->
+    <script src="{% static 'jQuery/jquery.min.js' %}"></script>
 
-        $(function() {
-          var activeContestsToggle = $("#active-contests-toggle");
-          var unstartedContestsToggle = $("#unstarted-contests-toggle");
-          var pastContestsToggle = $("#past-contests-toggle");
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 
-          var activeContestsWrapper = $("#active-contests-panel-body");
-          var unstartedContestsWrapper = $("#unstarted-contests-panel-body");
-          var pastContestsWrapper = $("#past-contests-panel-body");
-
-          activeContestsToggle.click(function() {
-            activeContestsWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
-            });
-
-          unstartedContestsToggle.click(function() {
-            unstartedContestsWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
-            });
-
-          pastContestsToggle.click(function() {
-            pastContestsWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
-            });
-          ////////
-          var createTeamToggleButton = $("#create-team-toggle-button");
-          var createTeamToggleWrapper = $("#create-team-toggle-wrapper");
-          var createTeamToggleForm = $("#create-team-form");
-
-          var joinTeamToggleButton = $("#join-team-toggle-button");
-          var joinTeamToggleWrapper = $("#join-team-toggle-wrapper");
-          var joinTeamToggleForm = $("#join-team-form");
-
-          var leaveTeamToggleButton = $("#leave-team-toggle-button");
-          var leaveTeamToggleWrapper = $("#leave-team-toggle-wrapper");
-          var leaveTeamToggleForm = $("#leave-team-form");
-
-          createTeamToggleButton.click(function() {
-            createTeamToggleWrapper.toggleClass('open'); /* <-- toggle the application of the open class on click */
-            if (document.getElementById('create-team-toggle-button').textContent == "Create Team [+]") {
-                createTeamToggleButton.textContent = "Create Team [-]";
-            } else createTeamToggleButton.textContent = "Create Team [+]";
-          });
-
-          joinTeamToggleButton.click(function() {
-            joinTeamToggleWrapper.toggleClass('open');
-            if (document.getElementById('join-team-toggle-button').textContent == "Join Team [+]") {
-                joinTeamToggleButton.textContent = "Join Team [-]";
-            } else joinTeamToggleButton.textContent = "Join Team [+]";
-          });
-
-          leaveTeamToggleButton.click(function() {
-            leaveTeamToggleWrapper.toggleClass('open');
-            if (document.getElementById('leave-team-toggle-button').textContent == "Leave Team [+]") {
-                leaveTeamToggleButton.textContent = "Leave Team [-]";
-            } else leaveTeamToggleButton = "Leave Team [+]";
-          });
-
-        });
-
-        var createTeamModal = document.getElementById('createTeamModal');
-        var joinTeamModel = document.getElementById('joinTeamModal');
-        var leaveTeamModel = document.getElementById('leaveTeamModal');
-
-        var createTeamLink = document.getElementById("create-team-modal-link");
-        var joinTeamLink = document.getElementById("join-team-modal-link");
-        var leaveTeamLink = document.getElementById("leave-team-modal-link");
-
-        var closeCreateTeamModal = document.getElementsByClassName("close")[0];
-        var closeJoinTeamModal = document.getElementsByClassName("close")[1];
-        var closeLeaveTeamModal = document.getElementsByClassName("close")[2];
-
-        // When the user clicks the button, open the modal 
-        createTeamLink.onclick = function() {
-            createTeamModal.style.display = "block";
-        }
-
-        joinTeamLink.onclick = function() {
-            joinTeamModal.style.display = "block";
-        }
-        leaveTeamLink.onclick = function() {
-            leaveTeamModal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        closeCreateTeamModal.onclick = function() {
-          createTeamModal.style.display = "none";
-        }
-
-        closeJoinTeamModal.onclick = function() {
-          joinTeamModal.style.display = "none";
-        }
-
-        closeLeaveTeamModal.onclick = function() {
-          leaveTeamModal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == createTeamModal) {
-                createTeamModal.style.display = "none";
-            }
-            else if (event.target == joinTeamModal) {
-                joinTeamModal.style.display = "none";
-            }
-            else if (event.target == leaveTeamModal) {
-                leaveTeamModal.style.display = "none";
-            }
-        }
-
-    </script>
+    <!-- Common Lib JavaScript -->
+    <script src="{% static 'js/common.js' %}"></script>
 
 	{% block foot_block %}{% endblock %}
 

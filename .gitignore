@@ -7,9 +7,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Uploads folder
-uploads/
-app/uploads
 # C extensions
 *.so
 
@@ -103,4 +100,4 @@ app/static/
 /.idea/*
 
 # User uploads
-app/uploads/*
+app/uploads/

@@ -1,0 +1,166 @@
+{% extends 'pccs/home.html' %}
+{% load staticfiles %}
+
+{% block title_block %}{{ block.super }}{% endblock %}
+
+{% block head_block %}{{ block.super }}{% endblock %}
+
+{% block content_block %}
+
+    <div class="row">
+        <ul class="nav nav-pills nav-stacked col-md-2 stickytabs" id="side-menu">
+            <div class="text-center" style="padding-bottom:15px">
+                <a href="{% url 'contests:create' %}" class="btn btn-default"><i class="fa fa-plus"></i> New Contest</a>
+            </div>
+            <li class="active"><a href="#all-contests" data-toggle="pill">All Contests</a></li>
+            <li><a href="#active-contests" data-toggle="pill">Active</a></li>
+            <li><a href="#pending-contests" data-toggle="pill">Pending</a></li>
+            <li><a href="#past-contests" data-toggle="pill">Past</a></li>
+        </ul>
+        <!-- /.nav-pills -->
+
+        <!-- Tab panes -->
+        <div class="tab-content col-md-10">
+            <div class="tab-pane active" id="all-contests">
+                <div class="wrapper col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Active Contests</h3>
+                        </div>
+                        {% if active_contests %}
+                            <div class="list-group">
+                                {% for contest in active_contests %}
+                                    <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
+                                        <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="list-group"><div class="list-group-item">No active contests</div></div>
+                        {% endif %}
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /#active-contests -->
+
+                <div class="wrapper col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Pending Contests</h3>
+                        </div>
+                        {% if pending_contests %}
+                            <div class="list-group">
+                                {% for contest in pending_contests %}
+                                    <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
+                                        <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="list-group"><div class="list-group-item">No pending contests</div></div>
+                        {% endif %}
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /#pending-contests -->
+
+                <div class="wrapper col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Past Contests</h3>
+                        </div>
+                        {% if past_contests %}
+                            <div class="list-group">
+                                {% for contest in past_contests %}
+                                    <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
+                                        <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="list-group"><div class="list-group-item">No past contests</div></div>
+                        {% endif %}
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /#past-contests -->
+            </div>
+            <!-- /#all-contests -->
+
+            <div class="tab-pane" id="active-contests">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Active Contests</h3>
+                    </div>
+                    {% if active_contests %}
+                        <div class="list-group">
+                            {% for contest in active_contests %}
+                                <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
+                                    <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No active contests</div></div>
+                    {% endif %}
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /#active-contests -->
+
+            <div class="tab-pane" id="pending-contests">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Pending contests</h3>
+                    </div>
+                    {% if pending_contests %}
+                        <div class="list-group">
+                            {% for contest in pending_contests %}
+                                <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
+                                    <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No pending contests</div></div>
+                    {% endif %}
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /#pending-contests -->
+
+            <div class="tab-pane" id="past-contests">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Past Contests</h3>
+                    </div>
+                    {% if past_contests %}
+                        <div class="list-group">
+                            {% for contest in past_contests %}
+                                <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
+                                    <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No past contests</div></div>
+                    {% endif %}
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /#past-contests -->
+        </div>
+        <!-- /.tab-content -->
+    </div>
+    <!-- /.row -->
+
+{% endblock %}
+
+{% block foot_block %}
+    
+    {{ block.super }}
+
+    <!-- Stickytabs JavaScript -->
+    <script src="{% static 'stickytabs/jquery.stickytabs.js' %}"></script>
+
+{% endblock %}

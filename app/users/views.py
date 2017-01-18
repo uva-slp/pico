@@ -19,7 +19,7 @@ def register(request):
 
 			auth_login(request, user)
 
-			return redirect(reverse('contests:home'))
+			return redirect(reverse('home'))
 	else:
 		user_form = UserForm()
 
@@ -35,7 +35,7 @@ def login(request):
 
 		if login_form.is_valid():
 			auth_login(request, login_form.user_cache)
-			return redirect(reverse('contests:home'))
+			return redirect(reverse('home'))
 
 	else:
 		login_form = LoginForm()
@@ -58,7 +58,7 @@ def password_change(request):
 		if password_change_form.is_valid():
 			password_change_form.save()
 			update_session_auth_hash(request, password_change_form.user)
-			return redirect(reverse('contests:home'))
+			return redirect(reverse('home'))
 
 	else:
 		password_change_form = PasswordChangeForm(request.user)

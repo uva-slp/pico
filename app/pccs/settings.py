@@ -26,7 +26,7 @@ SECRET_KEY = secrets.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*'] # []
 
 
 # Application definition
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 	'teams.apps.TeamsConfig',
 	'organizations.apps.OrganizationsConfig',
 	'contests.apps.ContestsConfig',
+	'alerts.apps.AlertsConfig',
 ]
 
 MIDDLEWARE = [
@@ -204,7 +205,7 @@ USE_TZ = True
 
 # Login urls
 LOGIN_URL = 'users:login'
-LOGIN_REDIRECT_URL = 'contests:home'
+LOGIN_REDIRECT_URL = 'home'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -212,7 +213,8 @@ LOGIN_REDIRECT_URL = 'contests:home'
 STATIC_URL = '/pccs/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-	os.path.join(BASE_DIR, os.path.join('pccs', 'static'))
+	os.path.join(BASE_DIR, os.path.join('pccs', 'static')),
+	os.path.join(BASE_DIR, 'vendor')
 ]
 
 # Testing

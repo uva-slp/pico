@@ -16,7 +16,8 @@ class CreateTeamTest(TestCase):
 		}
 		resp = self.client.post(reverse('teams:create'), data=data)
 
-		self.assertRedirects(resp, reverse('contests:home'), status_code=302, target_status_code=200)
+		self.assertTrue(Team.objects.filter(name='Team 1').exists())
+		self.assertEqual(resp.status_code, 200)
 
 class JoinTeamTest(TestCase):
 

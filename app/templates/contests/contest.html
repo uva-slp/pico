@@ -3,35 +3,11 @@
 {% load bootstrap3 %}
 {% load contest_extras %}
 
-{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
+{% block title_block %}{{ contest_data.title }} | Contest{% endblock %}
 
-{% block head_block %}
-    {{ block.super }}
-    <style>
-        .panel-body {
-            background: #F7F7F7;
-            border-style: solid;
-            border-width: 0.5px;
-            border-color: #E5E5E5;
-            border-radius: 5px;
-        }
-        .panel-default .panel-heading:hover {
-            background: #dfdfdf;
-        }
-        .panel-success .panel-heading:hover {
-            background: #9bc79b;
-        }
-        .panel-danger .panel-heading:hover {
-            background: #ea9ea8;
-        }
-        .panel-warning .panel-heading:hover {
-            background: #f7f79e;
-        }
-    </style>
-{% endblock %}
+{% block head_block %}{{ block.super }}{% endblock %}
 
 {% block content_block %}
-    <br /><br />
     <h1>Contest: {{ contest_data.title }}</h1>
 
     <a href="{% url 'contests:scoreboard' contest_data.id %}">View Scoreboard</a>

@@ -1,0 +1,228 @@
+{% extends 'pccs/home.html' %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block title_block %}{{ block.super }}{% endblock %}
+
+{% block head_block %}
+
+    {{ block.super }}
+
+    <!-- Team Search CSS -->
+    {{ team_search_form.media.css }}
+    <style>
+        #team-search-form .select2-container {
+            min-width: 0;
+            width: 100% !important;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content_block %}
+
+    <div class="row">
+        <div class="col-md-2" id="side-menu" style="padding-left:0">
+            <!-- New team -->
+            <div class="text-center" style="padding-bottom:15px">
+                <a href="#" data-toggle="modal" data-target="#create-team" class="btn btn-default"><i class="fa fa-plus"></i> New Team</a>
+            </div>
+            
+            <!-- Team search -->
+            <div class="text-center" style="padding-bottom:15px">
+                <form id="team-search-form" method="post" action="{% url 'teams:get' %}">
+                    {% csrf_token %}
+                    {{ team_search_form.team }}
+                </form>
+            </div>
+            
+            <!-- Team tabs -->
+            <li class="hidden {% if not teams %}active{% endif %}"><a href="#no-teams" data-toggle="pill"></a></li>
+            <ul class="nav nav-pills nav-stacked stickytabs" id="team-tabs">
+                {% for team in teams %}
+                    {% if current is None %}
+                        {% include 'teams/team-tab.html' with team=team active=forloop.first %}
+                    {% elif team == current %}
+                        {% include 'teams/team-tab.html' with team=team active=True %}
+                    {% else %}
+                        {% include 'teams/team-tab.html' with team=team active=False %}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Create Team Modal -->
+        <div class="modal fade" id="create-team" role="dialog">
+            <div class="modal-dialog">
+                <form class="form form-horizontal" id="team-form" method="post" action="{% url 'teams:create' %}" enctype="multipart form-data">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">New Team</h4>
+                    </div>
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <div id="team-form-contents">
+                        {% bootstrap_form team_form layout='horizontal' %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+                </form>
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /#create-team -->
+
+        <!-- Tab panes -->
+        <div class="tab-content col-md-10" id="team-panels">
+            <div class="tab-pane {% if not teams %}active{% endif %}" id="no-teams">
+                <h1>Well this is awkward!</h1>
+                <p>You are not on any teams. Try joining one or creating your own.</p>
+            </div>
+            {% for team in teams %}
+                {% if current is None %}
+                    {% include 'teams/team-panel.html' with team=team active=forloop.first %}
+                {% elif team == current %}
+                    {% include 'teams/team-panel.html' with team=team active=True %}
+                {% else %}
+                    {% include 'teams/team-panel.html' with team=team active=False %}
+                {% endif %}
+            {% endfor %}
+            {% if current is not None and current not in teams %}
+                {% include 'teams/team-panel.html' with team=current active=True %}
+            {% endif %}
+        </div>
+        <!-- /.tab-content -->
+    </div>
+    <!-- /.row -->
+
+{% endblock %}
+
+{% block foot_block %}
+    
+    {{ block.super }}
+
+    <!-- Stickytabs JavaScript -->
+    <!-- <script src="{% static 'stickytabs/jquery.stickytabs.js' %}"></script> -->
+    <script>
+        $(document).on('click', '#team-tabs a', function(event) {
+            history.replaceState('data', '', '{% url "teams:index" %}' + this.href.split('#team-')[1] + '/');
+        });
+    </script>
+
+    <!-- Create Team JavaScript -->
+    <script>        
+        $('#create-team.modal').on('shown.bs.modal', function () {
+            $(this).find('input:text:visible:first').focus();
+        });
+
+        // Backup clean form
+        var team_form_clean = $('#team-form-contents').html();
+
+        $('#team-form').on('submit', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url : $(this).attr('action'),
+                type : $(this).attr('method'),
+                data : $(this).serialize(),
+                success : function(data, textStatus, xhr) {
+                    if (xhr.status == 200) {
+                        // Clear form
+                        $('#team-form-contents').html(team_form_clean);
+                        // Add item to sidemenu and re-sticky
+                        $('#team-tabs').append(data.tab).stickyTabs();
+                        // Add tab-pane
+                        $('#team-panels').append(data.panel);
+                        // Show tab that was added
+                        $('#team-tabs a').last().click();
+                        // Close modal
+                        $('#create-team.modal').modal('hide');
+                    } else if (xhr.status == 201) {
+                        // Update form and focus on input
+                        $('#team-form-contents').html(data.form).find('input:text:visible:first').focus();
+                    }
+                },
+                error : function(data) {
+                    console.log('Create team failed.');
+                }
+            });
+        });
+    </script>
+
+    <!-- Leave Team JavaScript -->
+    <script>
+        $(document).on('submit', '.team-leave-form', function(event) {
+            event.preventDefault();
+            var frm = $(this);
+            $.ajax({
+                url : $(this).attr('action'),
+                type : $(this).attr('method'),
+                data : $(this).serialize(),
+                success : function(data, textStatus, xhr) {
+                    var team_id = frm.children('input#id_team').val();
+                    console.log(frm.children('input#id_team'));
+                    // Show first tab that is not the one being deleted or no teams if there are not any anymore
+                    var next = $('#team-tabs').find('a[href!="#"][href!="#no-teams"][href!="#team-'+team_id+'"]').first();
+                    if (next.exists()) {
+                        next.click();
+                    } else {
+                        $('#side-menu').find('a[href="#no-teams"]').click();
+                    }
+                    // Destory tab
+                    $('#team-tabs').find('a[href="#team-'+team_id+'"]').parent().remove();
+                    // Destory tab panel
+                    $('#team-'+team_id).remove();
+                },
+                error : function(data) {
+                    console.log('Leave team failed.');
+                }
+            });
+        });
+    </script>
+
+    <!-- Team Search JavaScript -->
+    {{ team_search_form.media.js }}
+    <script>
+        $('#team-search-form').change(function() {
+            $.ajax({
+                url : $(this).attr('action'),
+                type : $(this).attr('method'),
+                data : $(this).serialize(),
+                success : function(data, textStatus, xhr) {
+                    if (xhr.status == 200) {
+                        // Use existing tab if present
+                        var tab = $(data.tab);
+                        var href = tab.children().first('a').attr('href');
+                        var target = $('#team-tabs a[href="'+href+'"]');
+                        if (target.exists()) {
+                            target.click();
+                        } else {
+                            // Remove other search panels
+                            $('#team-panels .search-panel').remove();
+                            // Add tab-pane
+                            $('#team-panels').append($(data.panel).addClass('search-panel'));
+                            // Clear search tabs
+                            $('#team-tabs .search-tab').remove();
+                            // Add new tab
+                            $('#team-tabs').append(tab.addClass('search-tab hidden'));
+                            // Show new tab
+                            $('#team-tabs li.search-tab:last a').click();
+                        }
+                    } else if (xhr.status == 201) {
+                        console.log('Get team failed.');
+                    }
+                },
+                error : function(data) {
+                    console.log('Get team failed.');
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

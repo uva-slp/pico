@@ -11,18 +11,20 @@ class TeamForm(forms.ModelForm):
 		model = Team
 		fields = ('name',)
 
-class TeamJoinForm(forms.ModelForm):
-	team = forms.ModelChoiceField(queryset=Team.objects.all(),
-		widget=autocomplete.ModelSelect2(url=reverse_lazy('teams:autocomplete', kwargs={'type':1}))
-	)
+class TeamSelectForm(forms.ModelForm):
+	team = forms.ModelChoiceField(queryset=Team.objects.all())
 
 	class Meta:
 		model = Team
 		fields = ('team',)
 
-class TeamLeaveForm(forms.ModelForm):
+class TeamSearchForm(forms.ModelForm):
 	team = forms.ModelChoiceField(queryset=Team.objects.all(),
-		widget=autocomplete.ModelSelect2(url=reverse_lazy('teams:autocomplete', kwargs={'type':2}))
+		widget=autocomplete.ModelSelect2(
+			url=reverse_lazy('teams:autocomplete'),
+			attrs={
+				'data-placeholder': 'Search',
+			})
 	)
 
 	class Meta:

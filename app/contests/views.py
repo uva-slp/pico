@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from teams.forms import TeamForm, TeamJoinForm, TeamLeaveForm
+from teams.forms import TeamForm, TeamSelectForm
 
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 from .models import Problem, Contest
@@ -24,34 +24,16 @@ import os
 
 from django.forms.formsets import formset_factory
 
-def home(request):
-	time_arr = Contest.objects.values_list('contest_start', 'contest_length')
-	end_time = []
-	for start, length in time_arr:
-		if start:
-			new_minute = start.minute + length.minute
-			new_hour = start.hour + length.hour
-			new_datetime = start + relativedelta(hours=new_hour, minutes=new_minute)
-			end_time.append(new_datetime)
-		else:
-			end_time.append(start)
-
-	return render(
-		request,
-		'contests/home.html',
-		{
-			'team_form': TeamForm(),
-            'team_join_form': TeamJoinForm(),
-			'team_leave_form': TeamLeaveForm(),
-			'organization_form': OrganizationForm(),
-			'organization_join_form': OrganizationJoinForm(),
-			'organization_leave_form': OrganizationLeaveForm(),
-			'contests_created': zip(Contest.objects.all(), end_time),
-			'time_now': datetime.now(timezone.utc),
-			'teams_joined': Team.objects.all()
-		}
-	)
-
+def index(request):
+    return render(
+        request,
+        'contests/index.html',
+        {
+            'active_contests': Contest.objects.active(),
+            'pending_contests': Contest.objects.pending(),
+            'past_contests': Contest.objects.past(),
+        }
+    )
 
 def choose_problem(request):
     all_problems = Problem.objects.all()
@@ -161,8 +143,7 @@ def create(request):
 
                                         # Loop through participants text box and create participant objects for a team on each line w/ contest
 
-                                return redirect(reverse('contests:home'))
-                                # return render(request, 'contests/home.html', {'form': form, 'qa_formset': qa_formset})
+                                return redirect(reverse('home'))
         else:
                 template_user = request.user
                 templates = ContestTemplate.objects.filter(creator=template_user)
@@ -181,7 +162,7 @@ def create_template(request):
                         contest_template.creator = request.user
                         contest_template.save()
 
-                        return redirect(reverse('contests:home'))
+                        return redirect(reverse('home'))
         else:
                 form = CreateContestTemplateForm()
         return render(request, 'contests/create_template.html', {'form': form})
@@ -225,8 +206,8 @@ def displayContest(request, contest_id):
 	is_judge = isJudge(contest_data, request.user)
 	is_participant = isParticipant(contest_id, request.user.id)
 
-	if not is_judge and not is_participant:
-		return redirect(reverse('contests:home'))
+	if not is_judge and not is_participant and not request.user.is_superuser:
+		return redirect(reverse('home'))
 
 	# Activate Contest or save the submission
 	if request.method == 'POST':
@@ -304,7 +285,7 @@ def displayAllSubmissions(request, contest_id):
 
 	is_judge = isJudge(contest_data, request.user)
 	if not is_judge:
-		return redirect(reverse('contests:home'))
+		return redirect(reverse('home'))
 
 	problems = contest_data.problem_set.all()
 	submissions = []
@@ -326,7 +307,7 @@ def displayMySubmissions(request, contest_id, team_id):
 
 	is_judge = isJudge(contest_data, request.user)
 	if not is_judge and request.user not in team.members.all():
-		return redirect(reverse('contests:home'))
+		return redirect(reverse('home'))
 
 	problems = contest_data.problem_set.all()
 	submissions = []
@@ -347,7 +328,7 @@ def displayJudge(request, contest_id, run_id):
 
         is_judge = isJudge(contest_data, request.user)
         if not is_judge:
-                return redirect(reverse('contests:home'))
+                return redirect(reverse('home'))
         
         problems = contest_data.problem_set.all()
         for p in problems:

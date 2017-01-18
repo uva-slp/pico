@@ -1,0 +1,19 @@
+<div class="tab-pane {% if active %}active{% endif %}" id="team-{{ team.id }}">
+    <h2>{{ team.name }}</h2>
+
+    {% if team in request.user.teams.all %}
+        <form class="form form-horizontal team-leave-form"  method="post" action="{% url 'teams:leave' %}" enctype="multipart form-data">
+            {% csrf_token %}
+            <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
+            <button type="submit" class="btn btn-danger">Leave Team</button>
+        </form>
+        <!-- /#team-leave-form -->
+    {% else %}
+        <form class="form form-horizontal team-join-form"  method="post" action="{% url 'teams:join' %}" enctype="multipart form-data">
+            {% csrf_token %}
+            <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
+            <button type="submit" class="btn btn-success">Join Team</button>
+        </form>
+        <!-- /#team-leave-form -->
+    {% endif %}
+</div>

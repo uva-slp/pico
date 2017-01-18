@@ -18,7 +18,7 @@ class RegisterTest(TestCase):
 		}
 		resp = self.client.post(reverse('users:register'), data=data)
 
-		self.assertRedirects(resp, reverse('contests:home'), status_code=302, target_status_code=200)
+		self.assertRedirects(resp, reverse('home'), status_code=302, target_status_code=200)
 
 class LoginTest(TestCase):
 
@@ -39,7 +39,7 @@ class LoginTest(TestCase):
 		}
 		resp = self.client.post(reverse('users:login'), data=data)
 
-		self.assertRedirects(resp, reverse('contests:home'), status_code=302, target_status_code=200)
+		self.assertRedirects(resp, reverse('home'), status_code=302, target_status_code=200)
 
 class LogoutTest(TestCase):
 

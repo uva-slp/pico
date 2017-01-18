@@ -1,7 +1,32 @@
 from django.db import models
+from django.utils import timezone
+
 from users.models import User
 from teams.models import Team
 
+from datetime import datetime, timedelta
+
+class ContestManager(models.Manager):
+	def pending(self):
+		pending_contests = set()
+		for contest in super(ContestManager, self).get_queryset():
+			if contest.contest_start is None:
+				pending_contests.add(contest)
+		return pending_contests
+
+	def active(self):
+		active_contests = set()
+		for contest in super(ContestManager, self).get_queryset():
+			if contest.contest_start is not None and contest.contest_end() > timezone.now():
+				active_contests.add(contest)
+		return active_contests
+	
+	def past(self):
+		past_contests = set()
+		for contest in super(ContestManager, self).get_queryset():
+			if contest.contest_start is not None and contest.contest_end() <= timezone.now():
+				past_contests.add(contest)
+		return past_contests
 
 class Contest(models.Model):
 	title = models.CharField(max_length=128)
@@ -16,6 +41,19 @@ class Contest(models.Model):
 	problem_description = models.FileField(upload_to='uploads/', null=True, blank=True)
 	contest_admins = models.TextField()
 	contest_participants = models.TextField()
+
+	objects = ContestManager()
+
+	def contest_end(self):
+		if self.contest_start is None:
+			return datetime.max.replace(tzinfo=timezone.utc)
+		return self.contest_start + timedelta(seconds=self.contest_length.hour*3600+self.contest_length.minute*60)
+
+	def time_remaining(self):
+		if self.contest_start is None:
+			return "Not started"
+		seconds = (self.contest_end() - timezone.now()).seconds
+		return "%d:%02d:%02d remaining"%(seconds//3600, seconds%3600//60, seconds%60)
 
 	def __str__(self):
 		return self.title

@@ -7,6 +7,10 @@ from .models import Organization
 from .forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 
 @login_required
+def index(request):
+	return render(request, 'pccs/_construction.html')
+
+@login_required
 def create(request):
 	if request.method == 'POST':
 		organization_form = OrganizationForm(data=request.POST)
@@ -15,7 +19,7 @@ def create(request):
 			organization = organization_form.save()
 			organization.members.add(request.user)
 	
-	return redirect(reverse('contests:home'))
+	return redirect(reverse('home'))
 
 @login_required
 def join(request):
@@ -26,7 +30,7 @@ def join(request):
 			organization = organization_join_form.cleaned_data['organization']
 			request.user.organization_set.add(organization)
 
-	return redirect(reverse('contests:home'))
+	return redirect(reverse('home'))
 
 @login_required
 def leave(request):
@@ -37,7 +41,7 @@ def leave(request):
 			organization = organization_leave_form.cleaned_data['organization']
 			request.user.organization_set.remove(organization)
 
-	return redirect(reverse('contests:home'))
+	return redirect(reverse('home'))
 
 class OrganizationAutocomplete(autocomplete.Select2QuerySetView):
 

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}{{ block.super }}{% endblock %}
+
+{% block head_block %}
+
+    <!-- Navigation CSS -->
+    <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
+
+{% endblock %}
+
+{% block body_block %}
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" id="main-navbar" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header pull-left">
+            <a class="navbar-brand" href="{% url 'home' %}">PiCO</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <div class="navbar-header pull-right">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <ul class="nav navbar-top-links pull-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                        <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right dropdown-alerts">
+                        {% if request.user.alerts %}
+                            {% for alert in request.user.alerts.all %}
+                                {% if not forloop.first %}<li class="divider"></li>{% endif %}
+                                <li>
+                                    <a href="{{ alert.href }}">
+                                        <div>
+                                            {% if alert.subject %}<strong>{{ alert.subject }}</strong>{% endif %}
+                                            <span class="pull-right text-muted small">4 minutes</span>
+                                        </div>
+                                        <div>
+                                            {% if not alert.subject and not alert.body %}
+                                                <em>No content</em>
+                                            {% else %}
+                                                {{ alert.body }}
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                        <li class="text-center">No alerts</li>
+                        {% endif %}
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right dropdown-user">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{% url 'users:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+        </div>
+        <!-- /.navbar-header -->
+
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{% url 'contests:index' %}">Contests</a></li>
+                <li><a href="{% url 'teams:index' %}">Teams</a></li> 
+                <li><a href="{% url 'organizations:index' %}">Organizations</a></li> 
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
+    <div class="spacer" style="margin-top:15px"></div>
+    
+    <div class="container" id="content">
+        {% block content_block %}
+            <div class="row col-md-5" id="active-contests">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Active Contests</h3>
+                    </div>
+                    {% if active_contests %}
+                        <div class="list-group">
+                            {% for contest in active_contests %}
+                                <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
+                                    <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No active contests</div></div>
+                    {% endif %}
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /#active-contests -->
+
+        {% endblock %}
+    </div>
+    <!-- /.container -->
+
+{% endblock %}
+
+{% block foot_block %}
+
+    <!-- Navigation JavaScript -->
+    <script src="{% static 'js/navigation.js' %}"></script>
+
+{% endblock %}
