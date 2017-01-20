@@ -32,7 +32,7 @@
                         <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right dropdown-alerts">
-                        {% if request.user.alerts %}
+                        {% if request.user.alerts.all %}
                             {% for alert in request.user.alerts.all %}
                                 {% if not forloop.first %}<li class="divider"></li>{% endif %}
                                 <li>
@@ -52,7 +52,7 @@
                                 </li>
                             {% endfor %}
                         {% else %}
-                        <li class="text-center">No alerts</li>
+                            <li class="text-center">No alerts</li>
                         {% endif %}
                     </ul>
                     <!-- /.dropdown-alerts -->
