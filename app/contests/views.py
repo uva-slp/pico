@@ -1,3 +1,5 @@
+from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamSelectForm
@@ -14,7 +16,7 @@ from .lib import execution as exe
 from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
 from .forms import CreateContestTemplateForm
-from .models import Participant, Submission
+from .models import Participant, Submission, Notification
 from users.models import User
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -350,8 +352,9 @@ def displayJudge(request, contest_id, run_id):
                                         result = form.cleaned_data['result']
                                         print(result)
                                         form.save()
-                                        print("form:")
-                                        print(form.cleaned_data)
+                                        # create a new notification
+                                        notification = Notification(submission=current_submission)
+                                        notification.save()
                                         return redirect(reverse('contests:contest_judge_submissions',
                                                         kwargs={'contest_id': contest_id}))
                                 else:
@@ -456,3 +459,30 @@ def scoreboard(request, contest_id):
 
     return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
 		'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array})
+
+
+def show_notification(request):
+    l = []
+
+    all_notifications = Notification.objects.all()
+    for noti in all_notifications:
+        submission = noti.submission
+        team = submission.team
+        if request.user in team.members.all():
+            # data needed for showing notification
+            # contest title, problem, run id, and result
+            current_data = (submission.problem.contest.title, submission.problem.number,
+                            submission.run_id, submission.get_result_display(), noti.id)
+            l.append(current_data)
+
+    d = {'data': l}
+    return JsonResponse(d)
+
+
+def close_notification(request):
+    modal_id = request.POST['id']
+    print("modal id: " + modal_id)
+    if Notification.objects.filter(id=modal_id).exists():
+        current_notification = Notification.objects.get(id=modal_id)
+        current_notification.delete()
+    return HttpResponse('OK')

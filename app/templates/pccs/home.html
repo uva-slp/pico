@@ -65,7 +65,7 @@
                                 <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right dropdown-user">
-                                <li><a href="#"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
+                                <li><a href="{% url 'users:index' user_id=request.user.id %}"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
                                 <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
                                 <li class="divider"></li>
                                 <li><a href="{% url 'users:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
@@ -93,7 +93,7 @@
     </nav>
 
     <div class="spacer" style="margin-top:15px"></div>
-    
+
     <div class="container" id="content">
         {% block content_block %}
             <div class="row col-md-5" id="active-contests">

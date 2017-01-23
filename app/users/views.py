@@ -4,8 +4,28 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
+from dal import autocomplete
+
 from common.decorators import anonymous_required
 from .forms import UserForm, LoginForm
+from .models import User
+
+@login_required
+def index(request, user_id=None):
+    user = None
+    if user_id is not None:
+        if User.objects.filter(id=user_id).exists():
+            user = User.objects.get(id=user_id)
+        else:
+            return redirect(reverse('users:index'))
+
+    return render(
+        request,
+        'users/index.html',
+        {
+            'user': user,
+        },
+    )
 
 @anonymous_required
 def register(request):
@@ -67,3 +87,16 @@ def password_change(request):
 		request,
 		'users/password_change.html',
 		{'password_change_form': password_change_form})
+
+
+class UserAutocomplete(autocomplete.Select2QuerySetView):
+
+    def get_queryset(self):     
+        if not self.request.user.is_authenticated():
+            return User.objects.none()
+        
+        qs = User.objects.all()
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+        
+        return qs

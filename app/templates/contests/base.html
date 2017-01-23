@@ -6,6 +6,14 @@
 
 {% block head_block %}{{ block.super }}{% endblock %}
 
-{% block content_block %}{% endblock %} 
+{% block content_block %}
+    <div id="notificationModal"></div>
+{% endblock %}
 
-{% block foot_block %}{{ block.super }}{% endblock %}
+{% block foot_block %}
+    {{ block.super }}
+
+    <script src="{% static 'js/ajax.js' %}"></script>
+    <script src="{% static 'js/notification.js' %}"></script>
+
+{% endblock %}

@@ -17,12 +17,38 @@
         }
     </style>
 
+    <!-- Team Panel CSS -->
+    <style>
+        .tab-content {
+            padding-left: 30px;
+        }
+        .team-panel .header {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .team-panel .header h2 {
+            float: left;
+            margin: 0;
+            margin-right: 25px;
+        }
+        .team-panel .header form {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+        .team-panel .content .panel-heading {
+            cursor: pointer;
+        }
+    </style>
+
+    <!-- User Search CSS -->
+    {{ user_search_form.media.css }}
+
 {% endblock %}
 
 {% block content_block %}
 
     <div class="row">
-        <div class="col-md-2" id="side-menu" style="padding-left:0">
+        <div class="col-md-2" id="side-menu" style="padding-left:0;">
             <!-- New team -->
             <div class="text-center" style="padding-bottom:15px">
                 <a href="#" data-toggle="modal" data-target="#create-team" class="btn btn-default"><i class="fa fa-plus"></i> New Team</a>
@@ -81,7 +107,7 @@
 
         <!-- Tab panes -->
         <div class="tab-content col-md-10" id="team-panels">
-            <div class="tab-pane {% if not teams %}active{% endif %}" id="no-teams">
+            <div class="tab-pane {% if not teams and current is None %}active{% endif %}" id="no-teams">
                 <h1>Well this is awkward!</h1>
                 <p>You are not on any teams. Try joining one or creating your own.</p>
             </div>
@@ -224,5 +250,17 @@
             });
         });
     </script>
+
+    <!-- Team Invite JavaScript -->
+    <script>
+        $('.panel-heading a').click(function( event ) {
+            // Open modal
+            $($(this).attr('data-target')).modal();
+            event.stopPropagation();
+        });
+    </script>
+
+    <!-- User Search JavaScript -->
+    {{ user_search_form.media.js }}
 
 {% endblock %}

@@ -3,7 +3,10 @@
 
 {% block title_block %}{{ block.super }}{% endblock %}
 
-{% block head_block %}{{ block.super }}{% endblock %}
+{% block head_block %}{{ block.super }}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{% endblock %}
 
 {% block content_block %}
 
@@ -28,7 +31,6 @@
                             <h3 class="panel-title">Active Contests</h3>
                         </div>
                         {% if active_contests %}
-                            <div class="list-group">
                                 {% for contest in active_contests %}
                                     <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
                                         <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
