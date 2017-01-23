@@ -149,7 +149,7 @@ class CreateContestTemplateForm(ModelForm):
 class UploadCodeForm(forms.ModelForm):
 	class Meta:
 		model = Submission
-		fields = ['code_file', 'problem']
+		fields = ['code_file', 'problem', 'team', 'run_id']
 		widgets = {'problem': forms.HiddenInput()}
 
 
