@@ -1,0 +1,11 @@
+<div id="notifications"></div>
+<script>
+$.ajax({
+    url: "/api/get_notification/",
+    data: {
+    },
+    success: function (data) {
+        alert(data);
+    }
+});
+</script>

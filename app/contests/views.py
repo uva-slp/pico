@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from teams.forms import TeamForm, TeamSelectForm
@@ -435,3 +436,8 @@ def scoreboard(request, contest_id):
 
     return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
 		'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array})
+
+
+def show_notification(request):
+    d = {'a':1,'b':2}
+    return JsonResponse(d)
