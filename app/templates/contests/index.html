@@ -3,7 +3,10 @@
 
 {% block title_block %}{{ block.super }}{% endblock %}
 
-{% block head_block %}{{ block.super }}{% endblock %}
+{% block head_block %}{{ block.super }}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{% endblock %}
 
 {% block content_block %}
 
@@ -18,6 +21,30 @@
             <li><a href="#past-contests" data-toggle="pill">Past</a></li>
         </ul>
         <!-- /.nav-pills -->
+
+        <button href="" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            Launch demo modal
+        </button>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                ...
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Tab panes -->
         <div class="tab-content col-md-10">
