@@ -15,7 +15,7 @@ from .lib import execution as exe
 from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
 from .forms import CreateContestTemplateForm
-from .models import Participant, Submission
+from .models import Participant, Submission, Notification
 from users.models import User
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -339,6 +339,9 @@ def displayJudge(request, contest_id, run_id):
                                 form = ReturnJudgeResultForm(request.POST, instance=current_submission)
                                 if form.is_valid():
                                         form.save()
+                                        # create a new notification
+                                        notification = Notification(submission=current_submission)
+                                        notification.save()
                                         return redirect(reverse('contests:contest_judge_submissions',
                                                         kwargs={'contest_id': contest_id}))
                                 else:
@@ -439,5 +442,7 @@ def scoreboard(request, contest_id):
 
 
 def show_notification(request):
-    d = {'a':1,'b':2}
+    # l = ['a', 'b']
+    l = []
+    d = {'data': l}
     return JsonResponse(d)
