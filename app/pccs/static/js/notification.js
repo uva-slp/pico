@@ -26,7 +26,16 @@ function renderNotification(data) {
 
     for (var i = 0; i < listLenth; i++){
         notiString += "<li>";
-        notiString += l[i];
+        var curData = l[i];
+        notiString += "Result for Contest[ " + curData[0] + " ] Problem[ "
+            + curData[1] + " ] Submission[ " + curData[2] + " ] :";
+        if (curData[3] === "Yes") {
+            notiString += "<b style=\"color:green;\">" + curData[3] + "</b>";
+        } else {
+            notiString += "<b style=\"color:red;\">" + curData[3] + "</b>";
+        }
+
+
         notiString += "</li>";
     }
     notiString += "<ul>";

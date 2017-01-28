@@ -442,7 +442,18 @@ def scoreboard(request, contest_id):
 
 
 def show_notification(request):
-    # l = ['a', 'b']
     l = []
+
+    all_notifications = Notification.objects.all()
+    for noti in all_notifications:
+        submission = noti.submission
+        team = submission.team
+        if request.user in team.members.all():
+            # data needed for showing notification
+            # contest title, problem, run id, and result
+            current_data = (submission.problem.contest.title, submission.problem.number,
+                            submission.run_id, submission.get_result_display())
+            l.append(current_data)
+
     d = {'data': l}
     return JsonResponse(d)
