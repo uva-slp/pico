@@ -463,6 +463,7 @@ def show_notification(request):
 def close_notification(request):
     modal_id = request.POST['id']
     print("modal id: " + modal_id)
-    current_notification = Notification.objects.get(id=modal_id)
-    current_notification.delete()
+    if Notification.objects.filter(id=modal_id).exists():
+        current_notification = Notification.objects.get(id=modal_id)
+        current_notification.delete()
     return HttpResponse('OK')
