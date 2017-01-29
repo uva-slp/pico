@@ -1,19 +1,154 @@
-<div class="tab-pane {% if active %}active{% endif %}" id="team-{{ team.id }}">
-    <h2>{{ team.name }}</h2>
+{% load team_extras %}
 
-    {% if team in request.user.teams.all %}
-        <form class="form form-horizontal team-leave-form"  method="post" action="{% url 'teams:leave' %}" enctype="multipart form-data">
-            {% csrf_token %}
-            <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
-            <button type="submit" class="btn btn-danger">Leave Team</button>
-        </form>
-        <!-- /#team-leave-form -->
-    {% else %}
-        <form class="form form-horizontal team-join-form"  method="post" action="{% url 'teams:join' %}" enctype="multipart form-data">
-            {% csrf_token %}
-            <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
-            <button type="submit" class="btn btn-success">Join Team</button>
-        </form>
-        <!-- /#team-leave-form -->
-    {% endif %}
+<div class="tab-pane team-panel {% if active %}active{% endif %}" id="team-{{ team.id }}">
+    <div class="row header">
+        <h2>{{ team.name }}</h2>
+
+        {% if team in request.user.teams.all %}
+            <form class="form form-horizontal team-leave-form"  method="post" action="{% url 'teams:leave' %}" enctype="multipart form-data">
+                {% csrf_token %}
+                <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
+                <button type="submit" class="btn btn-xs btn-danger">Leave</button>
+            </form>
+            <!-- /#team-leave-form -->
+        {% else %}
+            <form class="form form-horizontal team-join-form"  method="post" action="{% url 'teams:join' %}" enctype="multipart form-data">
+                {% csrf_token %}
+                <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
+                <button type="submit" class="btn btn-xs btn-success">
+                    {% if team.public %}
+                        Join
+                    {% elif request.user|has_invite:team %}
+                        Accept Invite
+                    {% else %}
+                        Send Join Request
+                    {% endif %}
+                </button>
+            </form>
+            <!-- /#team-join-form -->
+        {% endif %}
+    </div>
+    <!-- /.header -->
+
+    <div class="row content">
+        <div class="col-md-7" style="padding-left:0">
+            <div class="panel panel-default" id="panel1">
+                <div class="panel-heading" data-toggle="collapse" data-target="#team-{{team.id}}-members">
+                    <h4 class="panel-title">Members</h4>
+                </div>
+                <div id="team-{{team.id}}-members" class="panel-collapse collapse in">
+                    {% if team.members.all %}
+                        <div class="list-group">
+                            {% for member in team.members.all %}
+                                <a href="{% url 'users:index' member.id %}" class="list-group-item">
+                                    {{ member.username }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No members</div></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5" style="padding-right:0">
+            
+            <div class="panel panel-default" id="panel1">
+                <div class="panel-heading" data-toggle="collapse" data-target="#team-{{team.id}}-requests">
+                    <h4 class="panel-title">Join Requests</h4>
+                </div>
+                <div id="team-{{team.id}}-requests" class="panel-collapse collapse in">
+                    {% if team.join_requests.all %}
+                        <div class="list-group">
+                            {% for join_request in team.join_requests.all %}
+                                <a href="{% url 'users:index' join_request.user.id %}" class="list-group-item">
+                                    {{ join_request.user.username }}
+                                    <div class="pull-right input-group" style="top:-10px">
+
+                                        <form style="display:inline" class="form approve-join-request-form" method="post" action="{% url 'teams:join-request' 'approve' %}" enctype="multipart form-data">
+                                            {% csrf_token %}
+                                            <input type="hidden" id="id_request" name="request" value="{{ join_request.id }}"/>
+                                            <button type="submit" class="btn btn-link" style="padding-left:0;padding-right:0;margin-right:5px;"><i class="fa fa-check fa-2x"></i></button>
+                                        </form>
+                                        <!-- /#accept-join-request-form -->
+
+                                        <form style="display:inline" class="form reject-join-request-form" method="post" action="{% url 'teams:join-request' action='approve' %}" enctype="multipart form-data">
+                                            {% csrf_token %}
+                                            <input type="hidden" id="id_request" name="request" value="{{ join_request.id }}"/>
+                                            <button type="submit" class="btn btn-link" style="padding-left:0;padding-right:0;"><i class="fa fa-times fa-2x"></i></button>
+                                        </form>
+                                        <!-- /#reject-join-request-form -->
+
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No pending requests</div></div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- ./join-requests -->
+
+            <div class="panel panel-default" id="panel1">
+                <div class="panel-heading" data-toggle="collapse" data-target="#team-{{team.id}}-invites">
+                    <h4 class="panel-title" style="display:inline;margin-right:4px;">Invites</h4>
+                    <a href="#" class="small" data-toggle="modal" data-target="#new-invite-team-{{team.id}}">New</a>
+                </div>
+                <div id="team-{{team.id}}-invites" class="panel-collapse collapse in">
+                    {% if team.invites.all %}
+                        <div class="list-group">
+                            {% for invite in team.invites.all %}
+                                <a href="{% url 'users:index' invite.user.id %}" class="list-group-item">
+                                    {{ invite.user.username }}
+                                    <div class="pull-right input-group" style="top:-10px">
+
+                                        <form style="display:inline" class="form cancel-invite-form" method="post" action="{% url 'teams:cancel-invite' %}" enctype="multipart form-data">
+                                            {% csrf_token %}
+                                            <input type="hidden" id="id_invite" name="invite" value="{{ invite.id }}"/>
+                                            <button type="submit" class="btn btn-link" style="padding-left:0;padding-right:0;"><i class="fa fa-times fa-2x"></i></button>
+                                        </form>
+                                        <!-- /#cancel-invite-form -->
+
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No pending invites</div></div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- ./invites -->
+
+            <!-- Send Invite Modal -->
+            <div class="modal fade" id="new-invite-team-{{team.id}}" role="dialog">
+                <div class="modal-dialog">
+                    <form class="form form-horizontal" id="team-form" method="post" action="{% url 'teams:invite' %}" enctype="multipart form-data">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">New Invite</h4>
+                        </div>
+                        <div class="modal-body">
+                            {% csrf_token %}
+                            <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
+                            {{ user_search_form.user }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal" class="btn">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                    </form>
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /#new-invite -->
+
+        </div>
+    </div>
+    <!-- /.content -->
 </div>
