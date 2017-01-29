@@ -24,7 +24,13 @@ function renderNotification(data) {
     if (listLenth == 0) return;
 
     for (var i = 0; i < listLenth; i++){
-        formatSingleNotification(l[i]);
+        var currentData = l[i];
+        if (($("#myModal" + currentData[4]).data('bs.modal') || {}).isShown == true) {
+            console.log("modal " + currentData[4] + " is open" );
+        } else {
+            console.log("modal " + currentData[4] + " is not open, show new modal" );
+            formatSingleNotification(l[i]);
+        }
     }
 
     $('.notificationClass').modal('show');
