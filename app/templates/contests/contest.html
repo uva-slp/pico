@@ -8,6 +8,8 @@
 {% block head_block %}{{ block.super }}{% endblock %}
 
 {% block content_block %}
+    {{ block.super }}
+
     <h1>Contest: {{ contest_data.title }}</h1>
 
     <a href="{% url 'contests:scoreboard' contest_data.id %}">View Scoreboard</a>
