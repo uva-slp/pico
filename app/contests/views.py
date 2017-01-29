@@ -452,7 +452,7 @@ def show_notification(request):
             # data needed for showing notification
             # contest title, problem, run id, and result
             current_data = (submission.problem.contest.title, submission.problem.number,
-                            submission.run_id, submission.get_result_display())
+                            submission.run_id, submission.get_result_display(), noti.id)
             l.append(current_data)
 
     d = {'data': l}
