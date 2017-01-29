@@ -28,6 +28,12 @@ function renderNotification(data) {
     }
 
     $('.notificationClass').modal('show');
+
+    $('.notificationClass').on('hidden.bs.modal', function (e) {
+        var stringId = $(this).attr('id');
+        var id = parseInt(stringId.slice(-1));
+        closeNotification(id);
+    })
 }
 
 function formatSingleNotification(data){
@@ -67,4 +73,17 @@ function formatSingleNotification(data){
         + '</div>';
 
     $('#notificationModal').append(modalHtml);
+}
+
+function closeNotification(data) {
+
+
+    $.ajax({
+        url: "/c/api/close_notification/",
+        data: {id: data},
+        method: 'post',
+        success: function (data) {
+            console.log(data);
+        },
+    });
 }

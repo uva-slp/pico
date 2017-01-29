@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
@@ -457,3 +458,11 @@ def show_notification(request):
 
     d = {'data': l}
     return JsonResponse(d)
+
+
+def close_notification(request):
+    modal_id = request.POST['id']
+    print("modal id: " + modal_id)
+    current_notification = Notification.objects.get(id=modal_id)
+    current_notification.delete()
+    return HttpResponse('OK')
