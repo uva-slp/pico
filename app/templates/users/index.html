@@ -1,0 +1,27 @@
+{% extends 'pccs/home.html' %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block title_block %}{{ block.super }}{% endblock %}
+
+{% block head_block %}
+
+    {{ block.super }}
+
+{% endblock %}
+
+{% block content_block %}
+
+    <div class="row">
+        <h1>{{ user.firstname }} {{ user.lastname }}</h1>({{ user.username }})
+        {% if user == request.user %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block foot_block %}
+    
+    {{ block.super }}
+
+{% endblock %}

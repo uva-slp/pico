@@ -5,6 +5,7 @@ from django.contrib.auth.views import password_reset, password_reset_done, passw
 from . import views
 
 urlpatterns = [
+	url(r'^(?P<user_id>[0-9]*)/$', views.index, name='index'),
 	url(r'^register$', views.register, name='register'),
 	url(r'^login$', views.login, name='login'),
 	url(r'^logout$', views.logout, name='logout'),
@@ -26,4 +27,5 @@ urlpatterns = [
 		password_reset_complete,
 		{'template_name': 'users/password_reset/password_reset_complete.html'},
 		name='password_done'),
+	url(r'^autocomplete$', views.UserAutocomplete.as_view(), name='autocomplete'),
 ]

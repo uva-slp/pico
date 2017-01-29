@@ -101,3 +101,6 @@ app/static/
 
 # User uploads
 app/uploads/
+
+# OS related
+.DS_Store

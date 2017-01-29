@@ -2,7 +2,7 @@ from django import forms
 from django.urls import reverse_lazy
 from dal import autocomplete
 
-from .models import Team
+from .models import Team, JoinRequest, Invite
 
 class TeamForm(forms.ModelForm):
 	name = forms.CharField(required=True)
@@ -30,3 +30,17 @@ class TeamSearchForm(forms.ModelForm):
 	class Meta:
 		model = Team
 		fields = ('team',)
+
+class JoinRequestForm(forms.ModelForm):
+	request = forms.ModelChoiceField(queryset=JoinRequest.objects.all())
+
+	class Meta:
+		model = JoinRequest
+		fields = ('request',)
+
+class InviteForm(forms.ModelForm):
+	invite = forms.ModelChoiceField(queryset=Invite.objects.all())
+
+	class Meta:
+		model = Invite
+		fields = ('invite',)
