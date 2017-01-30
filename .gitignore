@@ -98,6 +98,10 @@ app/static/
 
 # PyCharm settings
 /.idea/*
+app/.idea/*
 
 # User uploads
 app/uploads/
+
+# OS related
+.DS_Store

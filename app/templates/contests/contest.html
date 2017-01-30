@@ -36,6 +36,8 @@
 {% endblock %}
 
 {% block content_block %}
+    {{ block.super }}
+
     {% if contest_data.contest_start != NULL %}
         <!-- Time Remaining Bar -->
         <div class="progress">
