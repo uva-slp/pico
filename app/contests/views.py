@@ -70,7 +70,7 @@ def create(request):
 
         QAFormSet = formset_factory(CreateProblem)
         templates = None
-
+    
         if request.method == 'POST':
                 if request.POST['submit'] == "load_template":
                         selected_template = request.POST['selected_template']
@@ -203,18 +203,16 @@ def isParticipant(contest_id, user_id):
 
 @login_required
 def displayContest(request, contest_id):
-    # Check if request user has permission to view the page
-    contest_data = Contest.objects.get(id=contest_id)
-    is_judge = isJudge(contest_data, request.user)
-    is_participant = isParticipant(contest_id, request.user.id)
+	# Check if request user has permission to view the page
+	contest_data = Contest.objects.get(id=contest_id)
+	is_judge = isJudge(contest_data, request.user)
+	is_participant = isParticipant(contest_id, request.user.id)
 
-	#if not is_judge and not is_participant and not request.user.is_superuser:
-	#	return redirect(reverse('home'))
-    global current_team
-    current_team = getTeam(contest_id, request.user.id)
+	if not is_judge and not is_participant and not request.user.is_superuser:
+		return redirect(reverse('home'))
 
 	# Activate Contest or save the submission
-    if request.method == 'POST':
+	if request.method == 'POST':
 		if 'submit' in request.POST and request.POST['submit'] == "activate_contest":
 			time = datetime.now()
 			contest = Contest.objects.get(id=contest_id)
@@ -226,18 +224,15 @@ def displayContest(request, contest_id):
 			if form.is_valid():
 				sub = form.save(commit=False)
 				sub.original_filename = request.FILES['code_file'].name
-                print("current team:")
-                print(current_team)
-                sub.team = current_team
-                sub.save()
+				sub.save()
 
-    problems = contest_data.problem_set.all()
-    #Handle multiple forms on the same page
-    UploadCodeFormSet = formset_factory(UploadCodeForm, extra = len(problems))
-    problem_form_pairs = []
-    for problem in problems:
-        form = UploadCodeForm(initial={'problem' : problem})
-        problem_form_pairs.append((problem, form))
+	problems = contest_data.problem_set.all()
+	#Handle multiple forms on the same page
+	UploadCodeFormSet = formset_factory(UploadCodeForm, extra = len(problems))
+	problem_form_pairs = []
+	for problem in problems:
+		form = UploadCodeForm(initial={'problem' : problem})
+		problem_form_pairs.append((problem, form))
 	is_judge = False
 	# TODO: Right now this only checks contest creator. Need to update to all judges
 	if request.user == contest_data.creator:
@@ -248,7 +243,7 @@ def displayContest(request, contest_id):
 	for participant in contest_participants:
 		contest_teams.append(participant.team)
 
-
+	current_team = getTeam(contest_id, request.user.id)
 	submission_attempts = []
 	status = []
 	color_states = []
@@ -334,23 +329,16 @@ def displayJudge(request, contest_id, run_id):
         contest_data = Contest.objects.get(id=contest_id)
 
         is_judge = isJudge(contest_data, request.user)
-        #if not is_judge:
-        #        return redirect(reverse('home'))
-
+        if not is_judge:
+                return redirect(reverse('home'))
+        
         problems = contest_data.problem_set.all()
         for p in problems:
-                print("in problems loop")
                 if p.submission_set.filter(run_id=run_id).exists():
                         current_submission = p.submission_set.get(run_id=run_id)
-
-                        print(current_submission)
                         if request.method == 'POST':
                                 form = ReturnJudgeResultForm(request.POST, instance=current_submission)
-                                print("form data: ")
-                                #print(form)
                                 if form.is_valid():
-                                        result = form.cleaned_data['result']
-                                        print(result)
                                         form.save()
                                         # create a new notification
                                         notification = Notification(submission=current_submission)
@@ -361,8 +349,6 @@ def displayJudge(request, contest_id, run_id):
                                         messages.error(request, "Error")
                         else:
                                 form = ReturnJudgeResultForm(instance=current_submission)
-
-                        print("after POST")
                         output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'))
                         retcode = output[0]
                         fromlines = output[1].split("\n")
@@ -372,7 +358,7 @@ def displayJudge(request, contest_id, run_id):
                         if bool(solution_file) and os.path.isfile(solution_file.name):
                                 tolines = solution_file.read().decode().split("\n")
                         html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-                        return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form })
+                        return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
 
         return render(
                 request,
@@ -420,29 +406,24 @@ def scoreboard(request, contest_id):
         problem_attempts_array[teamname] = 0
 
         for problem in problems: # Iterate through problems and check submissions for right/wrong answer
-            newteam = getTeam(contest_id, request.user.id)
-            # pull problem ID and team ID, match to submission, get result, alter scoreboard
-            #problemid = problem.get
+
             tempstring = ""
-            print("problem: ")
-            print(problem)
-            submission = Submission.objects.all()
 
-            tempsubmission = Submission.objects.filter(team = tempteam, problem=problem)
-            tempsubmission = Submission.objects.latest("run_id")
+            # tempsubmission = Submission.objects.filter(team = tempteam, problem=problem)
+            # for submissions in tempsubmission:
+            #    problem_attempts_array[teamname] += 1
 
-            print("tempsubmission: ")
-            print(tempsubmission)
-            #for submissions in tempsubmission:
-            #   problem_attempts_array[teamname] += 1
+            test_submission_correct = Submission(team=tempteam, problem=problem, run_id=1, code_file="", timestamp="", state = 'YES', result='YES')
+            test_submission_incorrect = Submission(team=tempteam, problem=problem, run_id=2, code_file="", timestamp="", state = 'NO', result='WRONG')
+            test_submission_pending = Submission(team=tempteam, problem=problem, run_id=3, code_file="", timestamp="", state = 'NEW', result='')
 
             #filter submission by problem/team
-            if(tempsubmission.result == 'YES') : #correct answer, update scoreboard with green (0 for red, 1 for green, 2 for yellow?
+            if(test_submission_pending.result == 'YES') : #correct answer, update scoreboard with green (0 for red, 1 for green, 2 for yellow?
                 tempstring += "1"
                 #tempscore += 1
                 problems_status_array[teamname] = tempstring
                 problem_score_array[teamname] += 1
-            elif(tempsubmission.result == 'WRONG'): # Red
+            elif(test_submission_pending.result == 'WRONG'): # Red
                 tempstring += "0"
                 problems_status_array[teamname] = tempstring
             else:
