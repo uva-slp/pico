@@ -3,6 +3,13 @@ language: python
 python:
   - "3.5"
 
+before_install:
+  - docker pull dmm7aj/pccs
+  - groupadd docker
+  - gpasswd -a ${USER} docker
+  - service docker restart
+  - newgrp docker
+
 install:
   - pip install -q coveralls
   - pip install -q Django==1.10
@@ -18,4 +25,7 @@ script:
 after_success:
   coveralls
 
-sudo: false
+sudo: required
+
+services:
+  - docker
