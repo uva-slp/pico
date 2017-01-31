@@ -5,9 +5,9 @@ python:
 
 before_install:
   - docker pull dmm7aj/pccs
-  - gpasswd -a ${USER} docker
-  - service docker restart
-  - newgrp docker
+  - sudo gpasswd -a ${USER} docker
+  - sudo service docker restart
+  - sudo newgrp docker
 
 install:
   - pip install -q coveralls
