@@ -5,7 +5,6 @@ python:
 
 before_install:
   - docker pull dmm7aj/pccs
-  - groupadd docker
   - gpasswd -a ${USER} docker
   - service docker restart
   - newgrp docker
