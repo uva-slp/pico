@@ -2,12 +2,17 @@ language: python
 
 python:
   - "3.5"
+  
+sudo: required
+
+services:
+  - docker
 
 before_install:
-  - docker pull dmm7aj/pccs
   - sudo gpasswd -a ${USER} docker
   - sudo service docker restart
   - sudo newgrp docker
+  - docker pull dmm7aj/pccs
 
 install:
   - pip install -q coveralls
@@ -23,8 +28,4 @@ script:
 
 after_success:
   coveralls
-
-sudo: required
-
-services:
-  - docker
+  
