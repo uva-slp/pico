@@ -11,8 +11,7 @@ services:
 before_install:
   - sudo gpasswd -a ${USER} docker
   - sudo service docker restart
-  #- sudo newgrp docker
-  - sudo -E su $USER -c 'newgrp docker'
+  - sudo usermod -a -G docker $USER
   - docker pull dmm7aj/pccs
 
 install:
