@@ -5,9 +5,47 @@
 
 {% block title_block %}{{ contest_data.title }} | Contest{% endblock %}
 
-{% block head_block %}{{ block.super }}{% endblock %}
+{% block head_block %}
+    {{ block.super }}
+    <style>
+        .progress {
+            text-align:center;
+            height: 35px;
+        }
+        .time_remaining_div {
+            position:absolute;
+            right:0;
+            left:0;
+            height: 35px;
+            line-height: 35px;
+        }
+        .time_remaining_text {
+            padding: 2px 15px;
+            font-size:14px;
+            font-weight: bold;
+            background-color: #eff1f0;
+            border: 1px solid #c1c3c2;
+            border-radius: 15px;
+        }
+        .fixed {
+            display: block;
+            position: fixed;
+            top: 0;
+        }
+    </style>
+{% endblock %}
 
 {% block content_block %}
+    {{ block.super }}
+
+    {% if contest_data.contest_start != NULL %}
+        <!-- Time Remaining Bar -->
+        <div class="progress">
+            <div class="time_remaining_div"><span class="time_remaining_text"></span></div>
+            <div class="progress-bar progress-bar-striped active live_timer_div" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height:170px; width:100%"></div>
+        </div>
+    {% endif %}
+
     <h1>Contest: {{ contest_data.title }}</h1>
 
     <a href="{% url 'contests:scoreboard' contest_data.id %}">View Scoreboard</a>
@@ -19,13 +57,12 @@
                 {% csrf_token %}
                 {% bootstrap_button "Activate Contest" value="activate_contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
             </form>
-        {% else %}
-            <h3>Contest Started at {{ contest_data.contest_start }}</h3>
         {% endif %}
         <br />
         <a href="{% url 'contests:contest_judge_submissions' contest_data.id %}">View all submissions</a>
     {% endif %}
     <br />
+
     {% for team in contest_teams %}
         <a href="{% url 'contests:contest_submissions' contest_data.id team.id %}">View team {{team.name}}'s submissions</a>
         <br />
@@ -97,5 +134,84 @@
             </div>
     {% endfor %}
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+
+    <script type="text/javascript">
+        var start_time = '{{ contest_data.contest_start }}';
+        var length_datetime = moment('{{ contest_data.contest_length }}', 'MMM DD, YYYY, hh:mm a');
+        var length = length_datetime.hour() * 60 + length_datetime.minute();
+
+        var percentage_increment = 100 / length; // the amount to increase the percentage bar per minute
+        var progress_bar_percentage;
+
+        var live_timer_div = $(".live_timer_div");
+        var time_remaining_text = $(".time_remaining_text");
+
+        var update = function() {
+
+            function updateDuration(start_time, curr_time) {
+              var ms = moment(curr_time, 'YYYY/MM/DD HH:mm').diff(moment(start_time, 'MMM DD, YYYY, hh:mm a'));
+              var dt = moment.duration(ms);
+              var hours_elapsed = Math.floor(dt.asHours());
+              var minutes_elapsed = moment.utc(ms).format('mm');
+
+              var time_left = length - (hours_elapsed * 60 + Number(minutes_elapsed));
+              if(time_left >= 0) {
+                  var hours_left = Math.floor(time_left / 60);
+                  var minutes_left = time_left % 60;
+
+                  var hour_string = hours_left == 1 ? 'hour' : 'hours';
+                  var minute_string = minutes_left == 1 ? 'minute' : 'minutes';
+                  if(hours_left >= 1) {
+                      time_remaining_text.html(hours_left + ' ' + hour_string + ' ' + minutes_left + ' ' + minute_string + ' remaining');
+                  } else {
+                      time_remaining_text.html(minutes_left + ' ' + minute_string + ' remaining');
+                  }
+
+                  progress_bar_percentage = time_left * percentage_increment;
+                  live_timer_div.css("width", progress_bar_percentage + "%");
+
+                  if (time_left <= 30) {
+                    live_timer_div.removeClass("progress-bar-success progress-bar-warning");
+                    live_timer_div.addClass("progress-bar-danger");
+                  } else if (time_left <= 60) {
+                    live_timer_div.removeClass("progress-bar-success progress-bar-danger");
+                    live_timer_div.addClass("progress-bar-warning");
+                  }
+              } else {
+                  // contest is over
+                  window.location.replace("{% url 'contests:index' %}");
+              }
+            }
+
+            updateDuration(start_time, moment().format('YYYY/MM/DD HH:mm'));
+        };
+
+        $(document).ready(function() {
+          {% if contest_data.contest_start != NULL %}
+              update();
+              setInterval(update, 1000);
+          {% endif %}
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(window).scroll(function() {
+                var distanceFromTop = $(document).scrollTop();
+                var navbar_height = $('#main-navbar').height();
+                var progress_width = $('.progress').width();
+                if (distanceFromTop >= navbar_height) {
+                    $('.progress').fadeIn(400).addClass('fixed');
+                    $('.progress').width(progress_width);
+                } else {
+                    $('.progress').fadeIn(400).removeClass('fixed');
+                    $('.progress').width(progress_width);
+                }
+            });
+        });
+    </script>
+
 {% endblock %}
-</html>

@@ -1,5 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.urls import reverse_lazy
+
+from dal import autocomplete
+
 from .models import User
 
 class UserForm(forms.ModelForm):
@@ -16,3 +20,23 @@ class UserForm(forms.ModelForm):
 class LoginForm(AuthenticationForm):
 	# See https://docs.djangoproject.com/en/1.10/topics/auth/default/#django.contrib.auth.forms.AuthenticationForm
 	pass
+
+class UserSelectForm(forms.ModelForm):
+	user = forms.ModelChoiceField(queryset=User.objects.all())
+
+	class Meta:
+		model = User
+		fields = ('user',)
+
+class UserSearchForm(forms.ModelForm):
+	user = forms.ModelChoiceField(queryset=User.objects.all(),
+		widget=autocomplete.ModelSelect2(
+			url=reverse_lazy('users:autocomplete'),
+			attrs={
+				'data-placeholder': 'User',
+			})
+	)
+
+	class Meta:
+		model = User
+		fields = ('user',)

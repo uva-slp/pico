@@ -105,6 +105,9 @@ class Submission(models.Model):
 	def __str__(self):
 		return str(self.run_id)
 
+class Notification(models.Model):
+	submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+
 class ContestTemplate(models.Model):
 	title = models.CharField(max_length=128)
 	creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
