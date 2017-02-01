@@ -31,7 +31,8 @@ def execute_code(submission_file, original_filename, input_file, timeout=5):
             for chunk in input_file.chunks():
                 destination.write(chunk)
         Popen("cp " + os.path.join(dir_path, "execution.py") + " " + temp_dirpath, shell=True, stdout=PIPE, stderr=PIPE)
-        docker_command = ("docker run -v " + temp_dirpath + ":/code --stop-timeout 10 pccs python /code/execution.py " + file_name + " input.txt").split()
+        #docker_command = ("docker run -v " + temp_dirpath + ":/code --stop-timeout 10 pccs python /code/execution.py " + file_name + " input.txt").split()
+        docker_command = ("docker run -v " + temp_dirpath + ":/code pccs python /code/execution.py " + file_name + " input.txt").split()
         command = Popen(docker_command, stdin=PIPE, stderr=PIPE, stdout=PIPE, universal_newlines=True)
     #If this problem does not have an input file:
     else:
