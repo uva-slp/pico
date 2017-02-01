@@ -9,8 +9,8 @@ services:
   - docker
 
 before_install:
-  - sudo gpasswd -a ${USER} docker
-  - sudo service docker restart
+  #- sudo gpasswd -a ${USER} docker
+  #- sudo service docker restart
   #- sudo usermod -a -G docker $USER
   - docker pull dmm7aj/pccs
 
