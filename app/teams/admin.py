@@ -8,7 +8,7 @@ class MembersInline(admin.TabularInline):
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
 	fieldsets = [
-		(None, {'fields': ['name']}),
+		(None, {'fields': ['name', 'public']}),
 	]
 	inlines = [MembersInline]
 	list_display = ('name', 'date_created')
