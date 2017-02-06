@@ -100,7 +100,7 @@ def create(request):
                 if request.POST['submit'] == "create_contest":
                         #grab information from form
                         form = CreateContestForm(request.POST, request.FILES)
-                        #qa_formset = CreateProblem(request.POST)
+                        #qa_formset = CreateProblem(request.POST, request.FILES)
 
                         qa_formset = QAFormSet(request.POST, request.FILES)
                         if form.is_valid() and qa_formset.is_valid():
