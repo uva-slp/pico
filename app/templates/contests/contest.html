@@ -32,6 +32,10 @@
             position: fixed;
             top: 0;
         }
+
+        .slower {
+          animation-duration: 20s;
+        }
     </style>
 {% endblock %}
 
@@ -40,9 +44,9 @@
 
     {% if contest_data.contest_start != NULL %}
         <!-- Time Remaining Bar -->
-        <div class="progress">
+        <div class="progress slower">
             <div class="time_remaining_div"><span class="time_remaining_text"></span></div>
-            <div class="progress-bar progress-bar-striped active live_timer_div" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height:170px; width:100%"></div>
+            <div id="progress-slow" class="progress-bar progress-bar-striped active live_timer_div" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height:170px; width:100%"></div>
         </div>
     {% endif %}
 
@@ -139,6 +143,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
 
     <script type="text/javascript">
+        var secondFraction = '5'; // determines progress-bar animation speed
+        $('#progress-slow').css('animation', secondFraction + 's linear 0s normal none infinite progress-bar-stripes');
+
         var start_time = '{{ contest_data.contest_start }}';
         var length_datetime = moment('{{ contest_data.contest_length }}', 'MMM DD, YYYY, hh:mm a');
         var length = length_datetime.hour() * 60 + length_datetime.minute();

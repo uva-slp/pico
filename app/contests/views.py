@@ -207,8 +207,12 @@ def displayContest(request, contest_id):
 	contest_data = Contest.objects.get(id=contest_id)
 	is_judge = isJudge(contest_data, request.user)
 	is_participant = isParticipant(contest_id, request.user.id)
+	if request.user == contest_data.creator:
+		is_creator = True
+	else:
+		is_creator = False
 
-	if not is_judge and not is_participant and not request.user.is_superuser:
+	if not is_judge and not is_participant and not is_creator and not request.user.is_superuser:
 		return redirect(reverse('home'))
 
 	# Activate Contest or save the submission
