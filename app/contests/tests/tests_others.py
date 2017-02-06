@@ -330,14 +330,14 @@ class SubmissionsViewsTest(TestCase):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "timeout_test.java"), "rb+"))
 		output = exe.execute_code(test_file, 'timeout_test.java', None)
 		self.assertEqual(output[0], 1)
-		self.assertEqual(output[1], "Code timed out") # output[1], code timed out
+		self.assertEqual(output[1], "CODE TIMED OUT") # output[1], code timed out
 
     #Derek      
 	def test_cpp_execution_timeout(self):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "timeout_test.cpp"), "rb+"))
 		output = exe.execute_code(test_file, 'timeout_test.cpp', None)
 		self.assertEqual(output[0], 1)
-		self.assertEqual(output[1], "Code timed out") #output[1], code timed out
+		self.assertEqual(output[1], "CODE TIMED OUT") #output[1], code timed out
 
     #Derek      
 	def test_java_execution_runtime_error(self):
