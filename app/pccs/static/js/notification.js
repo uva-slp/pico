@@ -5,11 +5,9 @@ function fetchNotification() {
         url: getNotificationUrl,
         success: function (data) {
             renderNotification(data);
-            console.log(data);
         },
         complete: function () {
             setTimeout(fetchNotification, 5000);
-            console.log(getNotificationUrl)
         },
     });
 }
@@ -89,7 +87,6 @@ function closeNotification(data) {
         data: {id: data},
         method: 'post',
         success: function (data) {
-            console.log(data);
         },
     });
 }
