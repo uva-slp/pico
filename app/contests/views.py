@@ -222,6 +222,7 @@ def displayContest(request, contest_id):
 			contest = Contest.objects.get(id=contest_id)
 			contest.contest_start = time
 			contest.save()
+			return redirect(reverse('home'))
 		else:
 			print("HERE")
 			form = UploadCodeForm(request.POST, request.FILES)

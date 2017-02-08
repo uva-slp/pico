@@ -36,6 +36,10 @@
         .slower {
           animation-duration: 20s;
         }
+
+        .panel-heading {
+            cursor: pointer;
+        }
     </style>
 {% endblock %}
 
@@ -79,23 +83,21 @@
             {% else %}
             <div class="panel panel-{{ color_states|index:forloop.counter }}">
             {% endif %}
-                <div class="panel-heading">
+                <!-- the data-parent attribute make sure only one panel is open at a time-->
+                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ forloop.counter }}">
                     <h4 class="panel-title">
-                        <!-- the data-parent attribute make sure only one panel is open at a time-->
-                        <div data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ forloop.counter }}">
-                            <div style="display: table; width: 100%;">
-                                <div class="col-sm-4" style="display: table-cell;">
-                                    Problem {{ forloop.counter }}
-                                </div>
-                                {% if not is_judge %}
-                                <div class="col-sm-4" style="display: table-cell;">
-                                    Submission Attempts: {{ submission_attempts|index:forloop.counter }}
-                                </div>
-                                <div class="col-sm-4" style="display: table-cell;">
-                                    Status: {{ submission_status|index:forloop.counter }}
-                                </div>
-                                {% endif %}
+                        <div style="display: table; width: 100%;">
+                            <div class="col-sm-4" style="display: table-cell;">
+                                Problem {{ forloop.counter }}
                             </div>
+                            {% if not is_judge %}
+                            <div class="col-sm-4" style="display: table-cell;">
+                                Submission Attempts: {{ submission_attempts|index:forloop.counter }}
+                            </div>
+                            <div class="col-sm-4" style="display: table-cell;">
+                                Status: {{ submission_status|index:forloop.counter }}
+                            </div>
+                            {% endif %}
                         </div>
                     </h4>
                 </div>
@@ -142,6 +144,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
 
+    <!-- Update contest time remaining bar -->
     <script type="text/javascript">
         var secondFraction = '5'; // determines progress-bar animation speed
         $('#progress-slow').css('animation', secondFraction + 's linear 0s normal none infinite progress-bar-stripes');
@@ -204,6 +207,7 @@
         });
     </script>
 
+    <!-- Lock time remaining bar to top of visible frame when scrolling down -->
     <script type="text/javascript">
         $(document).ready(function() {
             $(window).scroll(function() {
