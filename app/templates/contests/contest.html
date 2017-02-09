@@ -78,7 +78,7 @@
     <h3>Contest Problems:</h3>
     <div class="panel-group" id="accordion">
     {% for pair in problem_form_pairs %}
-            {% if is_judge %}
+            {% if not is_participant %}
             <div class="panel panel-default">
             {% else %}
             <div class="panel panel-{{ color_states|index:forloop.counter }}">
@@ -90,7 +90,7 @@
                             <div class="col-sm-4" style="display: table-cell;">
                                 Problem {{ forloop.counter }}
                             </div>
-                            {% if not is_judge %}
+                            {% if is_participant %}
                             <div class="col-sm-4" style="display: table-cell;">
                                 Submission Attempts: {{ submission_attempts|index:forloop.counter }}
                             </div>
