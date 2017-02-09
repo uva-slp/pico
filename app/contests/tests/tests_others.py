@@ -12,7 +12,7 @@ from datetime import datetime
 from django.utils import timezone
 from contests.models import Team, Participant, Contest, ContestTemplate, Problem, Submission
 
-dir_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 class ContestTemplateTest(TestCase):
@@ -309,6 +309,17 @@ class SubmissionsViewsTest(TestCase):
 			output = exe.execute_code(test_file_object, 'test.java', test_file_object)
 		shutil.rmtree(temp_dirpath)
 		self.assertEqual(output[0], 1)
+		
+    #Derek	
+	def test_python_execution_on_empty_files(self):
+		temp_dirpath = tempfile.mkdtemp()
+		file_path = os.path.join(temp_dirpath, 'test.py')
+		with open(file_path, 'w+') as destination:
+			test_file_object = File(destination)
+			output = exe.execute_code(test_file_object, 'test.py', test_file_object)
+		shutil.rmtree(temp_dirpath)
+		#An empty file is actually a valid python file, so 0 should be retcode
+		self.assertEqual(output[0], 0)
 
     #Derek
 	def test_diff_with_no_file_template(self):
