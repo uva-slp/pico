@@ -48,8 +48,8 @@ def execute_code(submission_file, original_filename, input_file, timeout=5):
     index = 1
     while index < len(output):
         if ord(output[index])-ord('0') > 9 or ord(output[index])-ord('0') < 0:
-            retcode = int(output[1:index])
-            program_output = output[index+3:len(output)-3]
+            retcode = int(output[0:index])
+            program_output = output[index+1:len(output)-1]
             break
         index += 1
     return (retcode, program_output)
@@ -76,6 +76,7 @@ def run_java(file_name, input_file, timeout):
             retval = (0, output.decode())
     return retval
 
+
 #Returns the a return code and the output of the program or an error message as a tuple.
 def run_cpp(file_name, input_file, timeout):
     compilation_result = Popen("/usr/bin/g++ " + os.path.join("code", file_name) + " -o " + os.path.join("code", 'a.out'), shell=True, stdout=PIPE, stderr=PIPE)
@@ -97,22 +98,42 @@ def run_cpp(file_name, input_file, timeout):
     return retval
 
 
+#Returns the a return code and the output of the program or an error message as a tuple.
+def run_python(file_name, input_file, timeout):
+    if input_file:
+        execution_result = Popen("timeout " + str(timeout) + " python " + os.path.join("code", file_name) + " < " + os.path.join("code", input_file), shell=True, stdout=PIPE, stderr=PIPE)
+    else:
+        execution_result = Popen("timeout " + str(timeout) + " python " + os.path.join("code", file_name), shell=True, stdout=PIPE, stderr=PIPE)
+    output, error = execution_result.communicate()
+    retval = (1, 'CODE TIMED OUT')
+    if execution_result.returncode:
+        if str(error.decode("utf-8")) != '':
+            retval = (1, ("EXECUTION ERROR:\n" + str(error.decode("utf-8"))))
+    else:
+        retval = (0, output.decode())
+    return retval
+
+
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    if len( sys.argv) < 2:
         print((1, "FILENAME ERROR: No file name given."))
-    input_file = None
-    if len(sys.argv) > 2:
-        input_file = sys.argv[2]
-    file_name = sys.argv[1]
-    file_prefix, file_extension = os.path.splitext(file_name)
-    timeout = 5
-    #If it didn't have a proper extensions, have a default error:
-    result = (1, "FILENAME ERROR: Must have a valid C++ or Java file extension")
-    #Check if it's a Java file:
-    if file_extension == '.java':
-        result = run_java(file_name, input_file, timeout)
-    #Check if it's a c++ file:
-    cpp_extensions = {'.cpp', '.cc', '.C', '.cxx', '.c++'}
-    if file_extension in cpp_extensions:
-        result = run_cpp(file_name, input_file, timeout)
-    print(result)
+    else:
+        input_file = None
+        if len(sys.argv) > 2:
+            input_file = sys.argv[2]
+        file_name = sys.argv[1]
+        file_prefix, file_extension = os.path.splitext(file_name)
+        timeout = 5
+        #If it didn't have a proper extensions, have a default error:
+        result = (1, "FILENAME ERROR: Must have a valid C++ or Java file extension")
+        #Check if it's a Java file:
+        if file_extension == '.java':
+            result = run_java(file_name, input_file, timeout)
+        #Check if it's a c++ file:
+        cpp_extensions = {'.cpp', '.cc', '.C', '.cxx', '.c++'}
+        if file_extension in cpp_extensions:
+            result = run_cpp(file_name, input_file, timeout)
+        #Check if it's a python file:
+        if file_extension == '.py':
+            result = run_python(file_name, input_file, timeout)
+        print(str(result[0]) + ',' + str(result[1]))
