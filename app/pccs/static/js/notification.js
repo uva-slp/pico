@@ -1,15 +1,14 @@
 function fetchNotification() {
-
+    var getNotificationUrl = $('#getNotificationUrl').html();
 
     $.ajax({
-        url: "/c/api/get_notification/",
+        url: getNotificationUrl,
         success: function (data) {
             renderNotification(data);
-            console.log(data);
         },
         complete: function () {
             setTimeout(fetchNotification, 5000);
-        }
+        },
     });
 }
 
@@ -81,14 +80,13 @@ function formatSingleNotification(data){
 }
 
 function closeNotification(data) {
-
+    var closeNotificationUrl = $('#closeNotificationUrl').html();
 
     $.ajax({
-        url: "/c/api/close_notification/",
+        url: closeNotificationUrl,
         data: {id: data},
         method: 'post',
         success: function (data) {
-            console.log(data);
         },
     });
 }

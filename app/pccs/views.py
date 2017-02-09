@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 
@@ -16,10 +17,5 @@ def index(request):
 
 @login_required
 def home(request):
-	return render(
-		request,
-		'pccs/home.html',
-		{
-			'active_contests': Contest.objects.active(),
-		}
-	)
+	return redirect(reverse('contests:index'))
+	# return render(request, 'pccs/home.html', {})

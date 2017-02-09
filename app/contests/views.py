@@ -100,7 +100,7 @@ def create(request):
                 if request.POST['submit'] == "create_contest":
                         #grab information from form
                         form = CreateContestForm(request.POST, request.FILES)
-                        #qa_formset = CreateProblem(request.POST)
+                        #qa_formset = CreateProblem(request.POST, request.FILES)
 
                         qa_formset = QAFormSet(request.POST, request.FILES)
                         if form.is_valid() and qa_formset.is_valid():
@@ -193,6 +193,13 @@ def isJudge(contest_data, user):
 	return False
 
 
+# Helper method for checking if user is creator of the contest
+def isCreator(contest_data, user):
+    if user == contest_data.creator:
+        return True
+    return False
+
+
 # Helper method for checking if user is participant in the contest
 def isParticipant(contest_id, user_id):
 	current_team = getTeam(contest_id, user_id)
@@ -201,14 +208,16 @@ def isParticipant(contest_id, user_id):
 	else:
 		return True
 
+
 @login_required
 def displayContest(request, contest_id):
 	# Check if request user has permission to view the page
 	contest_data = Contest.objects.get(id=contest_id)
 	is_judge = isJudge(contest_data, request.user)
 	is_participant = isParticipant(contest_id, request.user.id)
+	is_creator = isCreator(contest_data, request.user)
 
-	if not is_judge and not is_participant and not request.user.is_superuser:
+	if not is_judge and not is_participant and not is_creator and not request.user.is_superuser:
 		return redirect(reverse('home'))
 
 	# Activate Contest or save the submission
@@ -218,6 +227,7 @@ def displayContest(request, contest_id):
 			contest = Contest.objects.get(id=contest_id)
 			contest.contest_start = time
 			contest.save()
+			return redirect(reverse('home'))
 		else:
 			print("HERE")
 			form = UploadCodeForm(request.POST, request.FILES)
@@ -233,10 +243,6 @@ def displayContest(request, contest_id):
 	for problem in problems:
 		form = UploadCodeForm(initial={'problem' : problem})
 		problem_form_pairs.append((problem, form))
-	is_judge = False
-	# TODO: Right now this only checks contest creator. Need to update to all judges
-	if request.user == contest_data.creator:
-		is_judge = True
 
 	contest_participants = contest_data.participant_set.all()
 	contest_teams = []
@@ -278,7 +284,12 @@ def displayContest(request, contest_id):
 			status.append(current_status)
 			color_states.append(current_color)
 
-	return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge, 'contest_teams': contest_teams, 'submission_attempts': submission_attempts, 'submission_status': status, 'color_states': color_states, 'problem_form_pairs' : problem_form_pairs })
+
+	return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems,
+                                                      'is_judge': (is_judge or is_creator), 'is_participant': is_participant,
+                                                      'contest_teams': contest_teams, 'submission_attempts': submission_attempts,
+                                                      'submission_status': status, 'color_states': color_states,
+                                                      'problem_form_pairs' : problem_form_pairs })
 
 
 @login_required

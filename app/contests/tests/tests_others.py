@@ -5,7 +5,7 @@ import shutil
 import os
 from django.core.files import File
 from contests.forms import CreateContestForm, CreateContestTemplateForm, CreateProblem, ReturnJudgeResultForm
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.shortcuts import render
 from django.core.files.uploadedfile import SimpleUploadedFile
 from datetime import datetime
@@ -267,27 +267,27 @@ class SubmissionsViewsTest(TestCase):
 	
 	#Derek
 	def test_choose_problem_page(self):
-		response = self.client.get(reverse('contests:choose_problem'))
+		response = self.client.get(reverse_lazy('contests:choose_problem'))
 		self.assertEqual(response.status_code, 200)
 
 	#Derek
 	def test_choose_problem_page_template(self):
-		response = self.client.get(reverse('contests:choose_problem'))
+		response = self.client.get(reverse_lazy('contests:choose_problem'))
 		self.assertTemplateUsed(response, 'contests/choose_problem.html')
 
 	#Derek
 	def test_choose_problem_page_title(self):
-		response = self.client.get(reverse('contests:choose_problem'))
+		response = self.client.get(reverse_lazy('contests:choose_problem'))
 		self.assertContains(response, 'Problems:')
 
 	#Derek
 	def test_upload_code_page(self):
-		response = self.client.get(reverse('contests:upload_code', kwargs = {'problem_id': '1'}))
+		response = self.client.get(reverse_lazy('contests:upload_code', kwargs = {'problem_id': '1'}))
 		self.assertEqual(response.status_code, 200)
 
 	#Derek
 	def test_upload_code_page_title(self):
-		response = self.client.get(reverse('contests:upload_code', kwargs = {'problem_id': '1'}))
+		response = self.client.get(reverse_lazy('contests:upload_code', kwargs = {'problem_id': '1'}))
 		self.assertContains(response, "Submit for ProblemExample")
 
 	#Derek
@@ -323,17 +323,17 @@ class SubmissionsViewsTest(TestCase):
 
     #Derek
 	def test_diff_with_no_file_template(self):
-		response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
+		response = self.client.get(reverse_lazy('contests:diff', kwargs = {'problem_id' : '1'}))
 		self.assertTemplateUsed(response, 'contests/error.html')
 		
     #Derek
 	def test_diff_with_no_file_message(self):
-		response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
+		response = self.client.get(reverse_lazy('contests:diff', kwargs = {'problem_id' : '1'}))
 		self.assertContains(response, 'Invalid form.')
 
     #Derek
 	def test_diff_page(self):
-		response = self.client.get(reverse('contests:diff', kwargs = {'problem_id' : '1'}))
+		response = self.client.get(reverse_lazy('contests:diff', kwargs = {'problem_id' : '1'}))
 		self.assertEqual(response.status_code, 200)
 
     #Derek	
