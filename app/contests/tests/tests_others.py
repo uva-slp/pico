@@ -340,6 +340,13 @@ class SubmissionsViewsTest(TestCase):
 		self.assertEqual(output[1], "CODE TIMED OUT") #output[1], code timed out
 
     #Derek      
+	def test_python_execution_timeout(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "timeout_test.py"), "rb+"))
+		output = exe.execute_code(test_file, 'timeout_test.py', None)
+		self.assertEqual(output[0], 1)
+		self.assertEqual(output[1], "CODE TIMED OUT") #output[1], code timed out
+
+    #Derek	
 	def test_java_execution_runtime_error(self):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "runtime_error_test.java"), "rb+"))
 		output = exe.execute_code(test_file, 'runtime_error_test.java', None)
@@ -348,29 +355,66 @@ class SubmissionsViewsTest(TestCase):
 		self.assertEqual(runtime_error, True) # runtime_error, True
 		
     #Derek	
-	#def test_cpp_execution_runtime_error(self):
-	#	test_file = File(open(os.path.join(dir_path, "code_test_files", "runtime_error_test.cpp"), "rb+"))
-	#	output = exe.execute_code(test_file, 'runtime_error_test.cpp', None)
-	#	self.assertEqual(output[0], 1)
-	#	runtime_error = output[1].startswith("EXECUTION ERROR:")
-	#	self.assertEqual(runtime_error, True)
+	def test_cpp_execution_runtime_error(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "runtime_error_test.cpp"), "rb+"))
+		output = exe.execute_code(test_file, 'runtime_error_test.cpp', None)
+		self.assertEqual(output[0], 1)
+		runtime_error = output[1].startswith("EXECUTION ERROR:")
+		self.assertEqual(runtime_error, True)
 
-    #Derek      
+#Derek	
+	def test_python_execution_runtime_error(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "runtime_error_test.py"), "rb+"))
+		output = exe.execute_code(test_file, 'runtime_error_test.py', None)
+		self.assertEqual(output[0], 1)
+		runtime_error = output[1].startswith("EXECUTION ERROR:")
+		self.assertEqual(runtime_error, True)
+
+    #Derek	
 	def test_java_execution_read_input(self):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "ReadInput.java"), "rb+"))
 		input_file = File(open(os.path.join(dir_path, "code_test_files", "input_test_file.txt"), "rb+"))
 		output = exe.execute_code(test_file, 'ReadInput.java', input_file)
 		self.assertEqual(output[0], 0) # output[0], 0
-		self.assertEqual("The program works!\n", "The program works!\n") # output[1], program works
+		self.assertEqual(output[1], "The program works!\n") # output[1], program works
 
-    #Derek      
+    #Derek	
 	def test_cpp_execution_read_input(self):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "ReadInput.cpp"), "rb+"))
 		input_file = File(open(os.path.join(dir_path, "code_test_files", "input_test_file.txt"), "rb+"))
 		output = exe.execute_code(test_file, 'ReadInput.cpp', input_file)
 		self.assertEqual(output[0], 0)
 		self.assertEqual(output[1], "The program works!")
+		
+    #Derek	
+	def test_python_execution_read_input(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "ReadInput.py"), "rb+"))
+		input_file = File(open(os.path.join(dir_path, "code_test_files", "input_test_file.txt"), "rb+"))
+		output = exe.execute_code(test_file, 'ReadInput.py', input_file)
+		self.assertEqual(output[0], 0)
+		self.assertEqual(output[1], "The program works!\n")
 
+    #Derek      
+	def test_java_execution_no_input(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.java"), "rb+"))
+		output = exe.execute_code(test_file, 'HelloWorld.java', None)
+		self.assertEqual(output[0], 0)
+		self.assertEqual(output[1], "Hello World from Java!\n")
+                
+#Derek      
+	def test_cpp_execution_no_input(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.cpp"), "rb+"))
+		output = exe.execute_code(test_file, 'HelloWorld.cpp', None)
+		self.assertEqual(output[0], 0)
+		self.assertEqual(output[1], "Hello World from C++!\n")
+                
+    #Derek      
+	def test_python_execution_no_input(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.py"), "rb+"))
+		output = exe.execute_code(test_file, 'HelloWorld.py', None)
+		self.assertEqual(output[0], 0)
+		self.assertEqual(output[1], "Hello World from Python!\n")
+                
     #Derek      
 	def test_java_execution_compilation_error(self):
 		test_file = File(open(os.path.join(dir_path, "code_test_files", "trash.java"), "rb+"))
@@ -385,6 +429,14 @@ class SubmissionsViewsTest(TestCase):
 		output = exe.execute_code(test_file, 'trash.cpp', None)
 		self.assertEqual(output[0], 1)
 		compilation_error = output[1].startswith("COMPILATION ERROR:")
+		self.assertEqual(compilation_error, True)
+
+#Derek      
+	def test_python_execution_compilation_error(self):
+		test_file = File(open(os.path.join(dir_path, "code_test_files", "trash.py"), "rb+"))
+		output = exe.execute_code(test_file, 'trash.py', None)
+		self.assertEqual(output[0], 1)
+		compilation_error = output[1].startswith("EXECUTION ERROR:")
 		self.assertEqual(compilation_error, True)
 
                 
