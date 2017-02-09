@@ -116,7 +116,7 @@ def run_python(file_name, input_file, timeout):
 
 if __name__ == "__main__":
     if len( sys.argv) < 2:
-        print((1, "FILENAME ERROR: No file name given."))
+        print("1,FILENAME ERROR: No file name given.")
     else:
         input_file = None
         if len(sys.argv) > 2:
