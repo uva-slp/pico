@@ -81,14 +81,18 @@ def invite(request):
             team = team_select_form.cleaned_data['team']
             user = user_select_form.cleaned_data['user']
 
-            if user in team.members.all():
-                # User already on team
-                pass
-            elif Invite.objects.filter(team=team, user=user).exists():
-                # Invite already exists
-                pass
+            if request.user in team.members.all():
+                if user in team.members.all():
+                    # User already on team
+                    pass
+                elif Invite.objects.filter(team=team, user=user).exists():
+                    # Invite already exists
+                    pass
+                else:
+                    Invite(team=team, user=user).save()
             else:
-                Invite(team=team, user=user).save()
+                # User does not have permission to send invite
+                pass                
 
     return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
 
@@ -110,6 +114,7 @@ def cancel_invite(request):
 @login_required
 def join_request(request, action):
     if request.method == 'POST':
+        print(request.POST)
         join_request_form = JoinRequestForm(data=request.POST)
 
         if join_request_form.is_valid():
@@ -121,6 +126,8 @@ def join_request(request, action):
                     join_request.delete()
                 elif action == 'reject':
                     join_request.delete()
+            elif request.user == join_request.user and action == 'cancel':
+                join_request.delete()
 
             return redirect(reverse('teams:index', kwargs={'team_id':join_request.team.id}))
 
@@ -137,6 +144,27 @@ def leave(request):
             if team.members.count() == 0:
                 team.delete()
             return JsonResponse({}, status=200)
+
+    return redirect(reverse('teams:index'))
+
+@login_required
+def is_public(request):
+    if request.method == 'POST':
+        print(request.POST)
+        team_select_form = TeamSelectForm(data=request.POST)
+
+        if team_select_form.is_valid():
+            team = team_select_form.cleaned_data['team']
+
+            if request.POST.get('public', 'off') == 'on':
+                team.public = True
+            else:
+                team.public = False
+            team.save()
+
+            return JsonResponse({'public': team.public})
+
+        return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
 
     return redirect(reverse('teams:index'))
 

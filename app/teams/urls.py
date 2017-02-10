@@ -8,9 +8,10 @@ urlpatterns = [
 	url(r'^create$', views.create, name='create'),
 	url(r'^join$', views.join, name='join'),
     url(r'^invite$', views.invite, name='invite'),
-    url(r'^join-request/(?P<action>(approve|reject))$', views.join_request, name='join-request'),
+    url(r'^join-request/(?P<action>(approve|reject|cancel))$', views.join_request, name='join-request'),
     url(r'^invite/cancel$', views.cancel_invite, name='cancel-invite'),
 	url(r'^leave$', views.leave, name='leave'),
+    url(r'^public$', views.is_public, name='public'),
     url(r'^get$', views.get, name='get'),
 	url(r'^autocomplete$', views.TeamAutocomplete.as_view(), name='autocomplete'),
 ]
