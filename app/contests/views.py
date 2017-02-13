@@ -27,13 +27,32 @@ import os
 from django.forms.formsets import formset_factory
 
 def index(request):
+    all_active_contests = Contest.objects.active()
+    my_active_contests = []
+    for contest in all_active_contests:
+        if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
+            my_active_contests.append(contest)
+
+    all_pending_contests = Contest.objects.pending()
+    my_pending_contests = []
+    for contest in all_pending_contests:
+        if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
+            my_pending_contests.append(contest)
+
+    all_past_contests = Contest.objects.past()
+    my_past_contests = []
+    for contest in all_past_contests:
+        if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
+            my_past_contests.append(contest)
+
+
     return render(
         request,
         'contests/index.html',
         {
-            'active_contests': Contest.objects.active(),
-            'pending_contests': Contest.objects.pending(),
-            'past_contests': Contest.objects.past(),
+            'active_contests': my_active_contests,
+            'pending_contests': my_pending_contests,
+            'past_contests': my_past_contests,
         }
     )
 
@@ -171,9 +190,9 @@ def create_template(request):
 
 
 # Helper method for getting user's team participated in a contest
-def getTeam(contest_id, user_id):
-        user = User.objects.get(id=user_id)
-        contest_data = Contest.objects.get(id=contest_id)
+def getTeam(contest_data, user):
+        user = User.objects.get(id=user.id)
+        contest_data = Contest.objects.get(id=contest_data.id)
         contest_participants = contest_data.participant_set.all()
         for participant in contest_participants:
                 team = participant.team
@@ -201,8 +220,8 @@ def isCreator(contest_data, user):
 
 
 # Helper method for checking if user is participant in the contest
-def isParticipant(contest_id, user_id):
-	current_team = getTeam(contest_id, user_id)
+def isParticipant(contest_data, user):
+	current_team = getTeam(contest_data, user)
 	if current_team is None:
 		return False
 	else:
@@ -214,7 +233,7 @@ def displayContest(request, contest_id):
 	# Check if request user has permission to view the page
 	contest_data = Contest.objects.get(id=contest_id)
 	is_judge = isJudge(contest_data, request.user)
-	is_participant = isParticipant(contest_id, request.user.id)
+	is_participant = isParticipant(contest_data, request.user)
 	is_creator = isCreator(contest_data, request.user)
 
 	if not is_judge and not is_participant and not is_creator and not request.user.is_superuser:
@@ -249,7 +268,7 @@ def displayContest(request, contest_id):
 	for participant in contest_participants:
 		contest_teams.append(participant.team)
 
-	current_team = getTeam(contest_id, request.user.id)
+	current_team = getTeam(contest_data, request.user)
 	submission_attempts = []
 	status = []
 	color_states = []
