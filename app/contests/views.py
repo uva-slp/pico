@@ -478,3 +478,7 @@ def close_notification(request):
         current_notification = Notification.objects.get(id=modal_id)
         current_notification.delete()
     return HttpResponse('OK')
+
+def stats(request):
+    contest_participation = Participant.objects.all()
+    return render(request, 'contests/stats.html', {'contest_participation' : contest_participation})

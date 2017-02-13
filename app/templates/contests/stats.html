@@ -1,0 +1,32 @@
+{% extends 'contests/base.html' %}
+
+{% load bootstrap3 %}
+{% load contest_extras %}
+
+{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
+
+{% block content_block %}
+    {% if user.is_authenticated %}
+        Statistics for: {{ user.username }}
+        <br>
+        <table>
+            <tr>
+                <th>Contest Participation</th>
+                    {% for c in contest_participation %}
+                        <tr> 
+                            <td>
+                                {{ c.contest.title }} 
+                            </td>
+                        </tr>
+                    {% endfor %}
+            </tr>
+        </table>
+    {% else %}
+        Log in to see statistics!
+    {% endif %}
+
+{% endblock %}
+
+
+
+
