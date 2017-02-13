@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
-from contests.forms import ReturnJudgeResultForm
-from contests.models import Team, Participant, Contest, Problem, Submission
+from contests.forms import ReturnJudgeResultForm, CreateContestForm
+from contests.models import Team, Participant, Contest, Problem, Submission, ContestTemplate
 
 
 class JudgeInterfaceViewTest(TestCase):
@@ -135,3 +135,53 @@ class JudgeInterfaceViewTest(TestCase):
 		resp = self.client.get(url)
 
 		self.assertEqual(resp.status_code, 302)
+
+
+class LoadTemplateTest(TestCase):
+
+	fixtures = ['users.json', 'forms.json']
+
+	#Austin
+	def test_load_valid_template(self):
+		self.client.login(username='testuser', password='password')
+
+		data = {"selected_template": 1, "submit": "load_template"}
+		resp = self.client.post(reverse('contests:create'), data=data)
+		self.assertEqual(resp.status_code, 200)
+
+	#Austin
+	def test_redirect_create_template_page(self):
+		self.client.login(username='testuser', password='password')
+
+		resp = self.client.get(reverse('contests:create_template'))
+		self.assertEqual(resp.status_code, 200)
+
+	#Austin
+	def test_create_template(self):
+		self.client.login(username='testuser', password='password')
+
+		data = {
+			"title": "Contest test 1", "languages": "java, python",
+			"contest_length": "02:00", "time_penalty": "20",
+			"autojudge_enabled": "0", "autojudge_review": "",
+			"contest_admins": "", "contest_participants": ""
+		}
+		resp = self.client.post(reverse('contests:create_template'), follow=True, data=data)
+		self.assertRedirects(resp, reverse('contests:index'), target_status_code=200)
+
+	# Austin
+	def test_create_contest(self):
+		self.client.login(username='testuser', password='password')
+
+		data = {
+			"title": "Contest test 1", "creator": 1, "languages": "java, python",
+			"contest_length": "02:00", "time_penalty": "20",
+			"autojudge_enabled": "0", "autojudge_review": "",
+			"problem_description": "problems.pdf",
+			"contest_admins": "", "contest_participants": "",
+			"submit": "create_contest",
+			"form-TOTAL_FORMS": 1, "form-INITIAL_FORMS": 0,
+			"form-MIN_NUM_FORMS": 0, "form-MAX_NUM_FORMS": 1000
+		}
+		resp = self.client.post(reverse('contests:create'), data=data)
+		self.assertEqual(resp.status_code, 200)
