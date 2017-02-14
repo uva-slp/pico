@@ -7,7 +7,7 @@ These instructions outline the process of installing PCCS. Note that the process
 1. Fork the [PCCS Repository](https://github.com/uva-slp/pccs) using [this tutorial](https://help.github.com/articles/fork-a-repo/)
 
 2. Install required Python packages
-  - `pip install -r app/packages.txt`
+  - `pip install -r app/docs/packages.txt`
 
 3. Setup a MySQL Database for PCCS to use
   - Ensure that database permissions are granted to the host user
