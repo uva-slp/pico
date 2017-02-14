@@ -15,7 +15,7 @@
             <form class="form form-horizontal team-public-form"  method="post" action="{% url 'teams:public' %}" enctype="multipart form-data" style="margin-left:10px;">
                 {% csrf_token %}
                 <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
-                <input type="checkbox" name="public" {% if team.public %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Public" data-off="Private">
+                <input type="checkbox" name="public" {% if team.public %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Public" data-off="Private" data-width="55px">
             </form>
             <!-- /#team-leave-form -->
         {% elif team|has_request:request.user %}

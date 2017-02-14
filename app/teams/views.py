@@ -62,12 +62,13 @@ def join(request):
         if team_select_form.is_valid():
             team = team_select_form.cleaned_data['team']
 
-            if team.public or Invite.objects.filter(team=team, user=request.user).exists():
-                team.members.add(request.user)
-                Invite.objects.filter(team=team, user=request.user).delete()
-                JoinRequest.objects.filter(team=team, user=request.user).delete()
-            else:
-                JoinRequest(team=team, user=request.user).save()
+            if request.user not in team.members.all():
+                if team.public or Invite.objects.filter(team=team, user=request.user).exists():
+                    team.members.add(request.user)
+                    Invite.objects.filter(team=team, user=request.user).delete()
+                    JoinRequest.objects.filter(team=team, user=request.user).delete()
+                else:
+                    JoinRequest(team=team, user=request.user).save()
 
     return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
 

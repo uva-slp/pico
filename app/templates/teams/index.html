@@ -273,6 +273,13 @@
         });
     </script>
 
+    <!-- Stickytabs JavaScript -->
+    <script>
+        $(document).on('click', '#team-tabs a', function(event) {
+            history.replaceState('data', '', '{% url "teams:index" %}' + this.href.split('#team-')[1] + '/');
+        });
+    </script>
+
     <!-- User Search JavaScript -->
     {{ user_search_form.media.js }}
 
