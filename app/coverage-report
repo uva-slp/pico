@@ -1,2 +1,2 @@
 coverage3 run manage.py test
-coverage3 report -m
+coverage3 report --include="$PWD/*" -m
