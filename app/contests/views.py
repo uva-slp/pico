@@ -27,13 +27,32 @@ import os
 from django.forms.formsets import formset_factory
 
 def index(request):
+    all_active_contests = Contest.objects.active()
+    my_active_contests = []
+    for contest in all_active_contests:
+        if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
+            my_active_contests.append(contest)
+
+    all_pending_contests = Contest.objects.pending()
+    my_pending_contests = []
+    for contest in all_pending_contests:
+        if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
+            my_pending_contests.append(contest)
+
+    all_past_contests = Contest.objects.past()
+    my_past_contests = []
+    for contest in all_past_contests:
+        if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
+            my_past_contests.append(contest)
+
+
     return render(
         request,
         'contests/index.html',
         {
-            'active_contests': Contest.objects.active(),
-            'pending_contests': Contest.objects.pending(),
-            'past_contests': Contest.objects.past(),
+            'active_contests': my_active_contests,
+            'pending_contests': my_pending_contests,
+            'past_contests': my_past_contests,
         }
     )
 
@@ -171,9 +190,9 @@ def create_template(request):
 
 
 # Helper method for getting user's team participated in a contest
-def getTeam(contest_id, user_id):
-        user = User.objects.get(id=user_id)
-        contest_data = Contest.objects.get(id=contest_id)
+def getTeam(contest_data, user):
+        user = User.objects.get(id=user.id)
+        contest_data = Contest.objects.get(id=contest_data.id)
         contest_participants = contest_data.participant_set.all()
         for participant in contest_participants:
                 team = participant.team
@@ -193,7 +212,15 @@ def isJudge(contest_data, user):
     return False
 
 
+# Helper method for checking if user is creator of the contest
+def isCreator(contest_data, user):
+    if user == contest_data.creator:
+        return True
+    return False
+
+
 # Helper method for checking if user is participant in the contest
+
 def isParticipant(contest_id, user_id):
     current_team = getTeam(contest_id, user_id)
     if current_team is None:
@@ -203,19 +230,16 @@ def isParticipant(contest_id, user_id):
 
 @login_required
 def displayContest(request, contest_id):
+
     # Check if request user has permission to view the page
     contest_data = Contest.objects.get(id=contest_id)
     is_judge = isJudge(contest_data, request.user)
-    is_participant = isParticipant(contest_id, request.user.id)
-    if request.user == contest_data.creator:
-        is_creator = True
-    else:
-        is_creator = False
+    is_participant = isParticipant(contest_data, request.user)
+    is_creator = isCreator(contest_data, request.user)
+    current_team = getTeam(contest_id, request.user)
 
     if not is_judge and not is_participant and not is_creator and not request.user.is_superuser:
         return redirect(reverse('home'))
-
-    current_team = getTeam(contest_id, request.user.id)
 
     # Activate Contest or save the submission
     if request.method == 'POST':
@@ -224,6 +248,7 @@ def displayContest(request, contest_id):
             contest = Contest.objects.get(id=contest_id)
             contest.contest_start = time
             contest.save()
+            return redirect(reverse('home'))
         else:
             print("HERE")
             form = UploadCodeForm(request.POST, request.FILES)
@@ -240,17 +265,13 @@ def displayContest(request, contest_id):
     for problem in problems:
         form = UploadCodeForm(initial={'problem' : problem})
         problem_form_pairs.append((problem, form))
-    is_judge = False
-    # TODO: Right now this only checks contest creator. Need to update to all judges
-    if request.user == contest_data.creator:
-        is_judge = True
 
     contest_participants = contest_data.participant_set.all()
     contest_teams = []
     for participant in contest_participants:
         contest_teams.append(participant.team)
 
-    current_team = getTeam(contest_id, request.user.id)
+    current_team = getTeam(contest_data, request.user)
     submission_attempts = []
     status = []
     color_states = []
@@ -285,7 +306,12 @@ def displayContest(request, contest_id):
             status.append(current_status)
             color_states.append(current_color)
 
-    return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems, 'is_judge': is_judge, 'contest_teams': contest_teams, 'submission_attempts': submission_attempts, 'submission_status': status, 'color_states': color_states, 'problem_form_pairs' : problem_form_pairs })
+
+    return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems,
+                                                      'is_judge': (is_judge or is_creator), 'is_participant': is_participant,
+                                                      'contest_teams': contest_teams, 'submission_attempts': submission_attempts,
+                                                      'submission_status': status, 'color_states': color_states,
+                                                      'problem_form_pairs' : problem_form_pairs })
 
 
 @login_required
@@ -486,3 +512,7 @@ def close_notification(request):
         current_notification = Notification.objects.get(id=modal_id)
         current_notification.delete()
     return HttpResponse('OK')
+
+def stats(request):
+    contest_participation = Participant.objects.all()
+    return render(request, 'contests/stats.html', {'contest_participation' : contest_participation})

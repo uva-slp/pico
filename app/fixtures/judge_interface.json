@@ -559,10 +559,10 @@
           "password": "pbkdf2_sha256$30000$3WLJbMdZSs7Q$HKctl071lIMVArCNWm/v4Eq9y4VnIZH+se/FD05RZDU=",
           "last_login": "2016-11-14T22:53:54.504Z",
           "is_superuser": false,
-          "username": "vivianP",
-          "first_name": "Weiran",
-          "last_name": "Liu",
-          "email": "wl2nw@virginia.edu",
+          "username": "judgeP",
+          "first_name": "j",
+          "last_name": "p",
+          "email": "@virginia.edu",
           "is_staff": false,
           "is_active": true,
           "date_joined": "2016-11-14T22:22:48.868Z",
@@ -573,13 +573,13 @@
   {
       "model": "auth.user",
       "fields": {
-          "password": "pbkdf2_sha256$30000$4EsLuCBeHwwC$3U35rejJhtrv3TwuraRBYfZuDLR+NAeEaCphY7lA4d8=",
+          "password": "pbkdf2_sha256$30000$l02GVUd2ow5s$W9zFNgWvNzB7sbIq/FOpKGHmPrfxhFtE3QGo+3Zr6Ts=",
           "last_login": null,
           "is_superuser": true,
           "username": "admin",
           "first_name": "",
           "last_name": "",
-          "email": "wl2nw@virginia.edu",
+          "email": "admin@virginia.edu",
           "is_staff": true,
           "is_active": true,
           "date_joined": "2016-11-14T22:51:12.740Z",
@@ -590,13 +590,13 @@
   {
       "model": "auth.user",
       "fields": {
-          "password": "pbkdf2_sha256$30000$vhCwet4CpR5S$OQfgfJzrFi9lKGSJjqec+xa6EH7t5qvfiW6U5rdoVo8=",
+          "password": "pbkdf2_sha256$30000$l02GVUd2ow5s$W9zFNgWvNzB7sbIq/FOpKGHmPrfxhFtE3QGo+3Zr6Ts=",
           "last_login": "2016-11-15T02:48:57.815Z",
           "is_superuser": true,
-          "username": "vivianadmin",
+          "username": "myadmin",
           "first_name": "",
           "last_name": "",
-          "email": "wl2nw@virginia.edu",
+          "email": "myadmin@virginia.edu",
           "is_staff": true,
           "is_active": true,
           "date_joined": "2016-11-14T22:52:20.011Z",
@@ -656,12 +656,29 @@
       }
   },
   {
+      "model": "auth.user",
+      "fields": {
+          "password": "pbkdf2_sha256$30000$NWtumRylBSEU$1SmoAM5z0MWCjqO2OoH03De6ybrPflYYXZS8NjGhVYs=",
+          "last_login": "2016-11-15T02:45:25.540Z",
+          "is_superuser": false,
+          "username": "nonparticipant",
+          "first_name": "J",
+          "last_name": "T3",
+          "email": "test@gmail.com",
+          "is_staff": false,
+          "is_active": true,
+          "date_joined": "2016-11-15T02:44:25.609Z",
+          "groups": [],
+          "user_permissions": []
+      }
+  },
+  {
       "model": "admin.logentry",
       "pk": 1,
       "fields": {
           "action_time": "2016-11-14T22:52:56.006Z",
           "user": [
-              "vivianadmin"
+              "myadmin"
           ],
           "content_type": [
               "teams",
@@ -679,7 +696,7 @@
       "fields": {
           "action_time": "2016-11-14T22:53:34.827Z",
           "user": [
-              "vivianadmin"
+              "myadmin"
           ],
           "content_type": [
               "contests",
@@ -697,7 +714,7 @@
       "fields": {
           "action_time": "2016-11-15T02:44:48.678Z",
           "user": [
-              "vivianadmin"
+              "myadmin"
           ],
           "content_type": [
               "contests",
@@ -715,7 +732,7 @@
       "fields": {
           "action_time": "2016-11-15T02:45:08.524Z",
           "user": [
-              "vivianadmin"
+              "myadmin"
           ],
           "content_type": [
               "contests",
@@ -733,7 +750,7 @@
       "fields": {
           "action_time": "2016-11-15T02:49:22.934Z",
           "user": [
-              "vivianadmin"
+              "myadmin"
           ],
           "content_type": [
               "contests",
@@ -751,7 +768,7 @@
       "fields": {
           "action_time": "2016-11-15T02:50:02.291Z",
           "user": [
-              "vivianadmin"
+              "myadmin"
           ],
           "content_type": [
               "teams",
@@ -769,7 +786,7 @@
       "fields": {
           "action_time": "2016-11-15T02:50:11.756Z",
           "user": [
-              "vivianadmin"
+              "myadmin"
           ],
           "content_type": [
               "teams",
@@ -787,7 +804,7 @@
       "fields": {
           "action_time": "2016-11-15T02:50:32.423Z",
           "user": [
-              "vivianadmin"
+              "myadmin"
           ],
           "content_type": [
               "contests",
@@ -805,7 +822,7 @@
       "fields": {
           "action_time": "2016-11-15T02:50:47.719Z",
           "user": [
-              "vivianadmin"
+              "myadmin"
           ],
           "content_type": [
               "contests",
@@ -867,7 +884,7 @@
           "title": "Test Contest 2 by testP",
           "date_created": "2016-11-14T22:49:16.104Z",
           "creator": [
-              "vivianP"
+              "judgeP"
           ],
           "languages": "['1', '2', '3']",
           "contest_length": "2016-11-14T22:49:16.104Z",
@@ -903,7 +920,7 @@
           "title": "Test Contest 2 by testP",
           "date_created": "2016-11-14T22:50:38.797Z",
           "creator": [
-              "vivianP"
+              "judgeP"
           ],
           "languages": "['1', '2', '3']",
           "contest_length": "2016-11-14T22:50:38.797Z",
@@ -939,7 +956,7 @@
           "title": "test contest by judge",
           "date_created": "2016-11-15T02:48:38.621Z",
           "creator": [
-              "judge"
+              "myadmin"
           ],
           "languages": "['1', '2', '3']",
           "contest_length": "2016-11-15T02:48:38.621Z",
