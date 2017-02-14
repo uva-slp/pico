@@ -573,7 +573,7 @@
   {
       "model": "auth.user",
       "fields": {
-          "password": "pbkdf2_sha256$30000$4EsLuCBeHwwC$3U35rejJhtrv3TwuraRBYfZuDLR+NAeEaCphY7lA4d8=",
+          "password": "pbkdf2_sha256$30000$l02GVUd2ow5s$W9zFNgWvNzB7sbIq/FOpKGHmPrfxhFtE3QGo+3Zr6Ts=",
           "last_login": null,
           "is_superuser": true,
           "username": "admin",
@@ -645,6 +645,23 @@
           "last_login": "2016-11-15T02:45:25.540Z",
           "is_superuser": false,
           "username": "judge",
+          "first_name": "J",
+          "last_name": "T3",
+          "email": "test@gmail.com",
+          "is_staff": false,
+          "is_active": true,
+          "date_joined": "2016-11-15T02:44:25.609Z",
+          "groups": [],
+          "user_permissions": []
+      }
+  },
+  {
+      "model": "auth.user",
+      "fields": {
+          "password": "pbkdf2_sha256$30000$NWtumRylBSEU$1SmoAM5z0MWCjqO2OoH03De6ybrPflYYXZS8NjGhVYs=",
+          "last_login": "2016-11-15T02:45:25.540Z",
+          "is_superuser": false,
+          "username": "nonparticipant",
           "first_name": "J",
           "last_name": "T3",
           "email": "test@gmail.com",
