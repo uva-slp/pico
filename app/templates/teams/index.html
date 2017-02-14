@@ -176,7 +176,9 @@
                             // Remove other search panels
                             $('#team-panels .search-panel').remove();
                             // Add tab-pane
-                            $('#team-panels').append($(data.panel).addClass('search-panel'));
+                            var panel = $(data.panel).addClass('search-panel');
+                            panel.find('input[type=checkbox][data-toggle^=toggle]').bootstrapToggle();
+                            $('#team-panels').append(panel);
                             // Clear search tabs
                             $('#team-tabs .search-tab').remove();
                             // Add new tab
@@ -217,7 +219,9 @@
                         // Add item to sidemenu and re-sticky
                         $('#team-tabs').append(data.tab);
                         // Add tab-pane
-                        $('#team-panels').append(data.panel);
+                        var panel = $(data.panel);
+                        panel.find('input[type=checkbox][data-toggle^=toggle]').bootstrapToggle();
+                        $('#team-panels').append(panel);
                         // Show tab that was added
                         $('#team-tabs a').last().click();
                         // Close modal
