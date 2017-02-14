@@ -220,13 +220,13 @@ def isCreator(contest_data, user):
 
 
 # Helper method for checking if user is participant in the contest
+def isParticipant(contest_data, user):
+	current_team = getTeam(contest_data, user)
+	if current_team is None:
+		return False
+	else:
+		return True
 
-def isParticipant(contest_id, user_id):
-    current_team = getTeam(contest_id, user_id)
-    if current_team is None:
-        return False
-    else:
-        return True
 
 @login_required
 def displayContest(request, contest_id):
@@ -236,7 +236,7 @@ def displayContest(request, contest_id):
     is_judge = isJudge(contest_data, request.user)
     is_participant = isParticipant(contest_data, request.user)
     is_creator = isCreator(contest_data, request.user)
-    current_team = getTeam(contest_id, request.user)
+    current_team = getTeam(contest_data, request.user)
 
     if not is_judge and not is_participant and not is_creator and not request.user.is_superuser:
         return redirect(reverse('home'))
@@ -441,7 +441,7 @@ def scoreboard(request, contest_id):
         # need to iterate through submissions for each team and only edit html per team
 
         for problem in problems: # Iterate through problems and check submissions for right/wrong answer
-            newteam = getTeam(contest_id, request.user.id)
+            newteam = getTeam(scoreboard_contest, request.user)
             # pull problem ID and team ID, match to submission, get result, alter scoreboard
             #problemid = problem.get
             tempstring = ""
