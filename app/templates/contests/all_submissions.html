@@ -29,7 +29,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col col-xs-6">
-                    <h3 class="panel-title">Submissions</h3>
+                    <h3 class="panel-title">New Submissions</h3>
                 </div>
             </div>
         </div>
@@ -45,7 +45,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for submission in contest_submissions %}
+                {% for submission in new_submissions %}
+                    <tr>
+                        <th>{{ submission.run_id }} </th>
+                        <td>{{ submission.team.name }}</td>
+                        <td>{{ submission.get_state_display }}</td>
+                        <td>{{ submission.get_result_display}}</td>
+                        <td><a class="btn btn-default" href="{% url 'contests:contest_judge' contest_data.id submission.run_id %}">Judge</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+           </table>
+        </div>
+    </div>
+
+        <div class="panel panel-default panel-table">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col col-xs-6">
+                    <h3 class="panel-title">Judged Submissions</h3>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-bordered table-list">
+                <thead>
+                    <tr>
+                        <th>Run ID</th>
+                        <th>Team</th>
+                        <th>State</th>
+                        <th>Result</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for submission in judged_submissions %}
                     <tr>
                         <th>{{ submission.run_id }} </th>
                         <td>{{ submission.team.name }}</td>
