@@ -34,7 +34,7 @@
             </div>
         </div>
         <div id="collapse1" class="panel-collapse collapse in">
-            <table class="table table-striped table-bordered table-list">
+            <table class="table table-striped table-bordered table-list" id="mydata1">
                 <thead>
                     <tr>
                         <th>Run ID</th>
@@ -68,7 +68,7 @@
             </div>
         </div>
         <div id="collapse2" class="panel-collapse collapse in">
-            <table class="table table-striped table-bordered table-list">
+            <table class="table table-striped table-bordered table-list" id="mydata2">
                 <thead>
                     <tr>
                         <th>Run ID</th>
@@ -92,4 +92,25 @@
            </table>
         </div>
     </div>
+{% endblock %}
+
+{% block foot_block %}
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
+
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
+
+    <script>
+        $('#mydata1').DataTable({
+            "searching": false,
+            "lengthChange": false,
+            "info": false,
+            "paging": false
+        });
+        $('#mydata2').DataTable({
+            "searching": false,
+            "lengthChange": false,
+            "info": false,
+            "paging": false
+        });
+    </script>
 {% endblock %}
