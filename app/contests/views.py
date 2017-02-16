@@ -438,49 +438,45 @@ def scoreboard(request, contest_id):
         problem_score_array[teamname] = 0
         problem_attempts_array[teamname] = 0
 
+        templist = []
         # need to iterate through submissions for each team and only edit html per team
 
         for problem in problems: # Iterate through problems and check submissions for right/wrong answer
-            newteam = getTeam(scoreboard_contest, request.user)
-            # pull problem ID and team ID, match to submission, get result, alter scoreboard
-            #problemid = problem.get
-            tempstring = ""
+            #newteam = getTeam(scoreboard_contest, request.user)
+
+
             print("problem: ")
             print(problem)
-            submission = Submission.objects.all()
 
-            tempsubmission = Submission.objects.filter(team = newteam, problem=problem).last()
-
-            #tempsubmission = tempsubmission.objects.latest("run_id")
-            print("tempsubmission after first filter")
-            print(tempsubmission)
-            #tempsubmission = Submission.objects.latest("run_id")
+            tempsubmission = Submission.objects.filter(team = tempteam, problem=problem).last()
 
             print("tempsubmission: ")
             print(tempsubmission)
-            #for submissions in tempsubmission:
-            #   problem_attempts_array[teamname] += 1
 
             #filter submission by problem/team
-            if(tempsubmission.result == 'YES') : #correct answer, update scoreboard with green (0 for red, 1 for green, 2 for yellow?
-                tempstring += "1"
+            if(tempsubmission is None): # no submission given for this problem
+                templist.append("3")
+                problems_status_array[teamname] = templist
+                break
+            elif(tempsubmission.result == 'YES') : # Correct answer
+                templist.append("1")
                 #tempscore += 1
-                problems_status_array[teamname] = tempstring
+                problems_status_array[teamname] = templist
                 problem_score_array[teamname] += 1
-            elif(tempsubmission.result == 'WRONG'): # Red
-                tempstring += "0"
-                problems_status_array[teamname] = tempstring
+            elif(tempsubmission.result == 'WRONG' or tempsubmission.result == 'OFE' or tempsubmission.result == 'IE' or tempsubmission.result == 'EO' or tempsubmission.result == 'CE' or tempsubmission.result == 'RTE' or tempsubmission.result == 'TLE' or tempsubmission.result == 'OTHER'): # Red
+                templist.append("0")
+                problems_status_array[teamname] = templist
             else:
-                tempstring += "2"
-                problems_status_array[teamname] = tempstring # Otherwise the submission is pending (works because the cell will just
-                # be printed blank if there isnt an available submission for this problem/team combo yet
-
+                templist.append("2")
+                problems_status_array[teamname] = templist # Otherwise the submission is pending
 
             print("tempstring")
-            print(tempstring)
+            print(templist)
             print("problems status array: ")
             print(problems_status_array)
             #print(problem_score_array)
+
+    
 
 
     return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,

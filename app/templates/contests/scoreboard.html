@@ -18,6 +18,7 @@
         #scoreboard td, #scoreboard th {
             border: 1px solid #ddd;
             padding: 8px;
+
         }
 
         #scoreboardtr:nth-child(even){background-color: #f2f2f2;}
@@ -56,28 +57,35 @@
         </tr>
 
             <!-- Team Row -->
-            {% for team, status_string in problem_status_array.items %}
+            {% for team, status_list in problem_status_array.items %}
                 <tr>
 
                 <td> {{ team }} </td>
 
-                {% for character in status_string %}
+                {% for character in status_list %}
 
-                    {% for problem in problems %}
+
+                    <!-- {% for problem in problems %} -->
+
+
 
                         {% if character == "1" %}
-                            <td style="background-color:green"> Correct </td>
+                            <td style="background-color:green; font-weight:bold"> Correct </td>
                         {% endif %}
 
                         {% if character == "0" %}
-                            <td style="background-color:red"> Incorrect </td>
+                            <td style="background-color:red; font-weight:bold"> Incorrect </td>
                         {% endif %}
 
                         {% if character == "2" %}
-                            <td style="background-color:yellow"> Pending </td>
+                            <td style="background-color:yellow; font-weight:bold"> Pending </td>
                         {% endif %}
 
-                    {% endfor %}
+                        {% if character == "3" %}
+                            <td style="font-weight:bold"> No Submission </td>
+                        {% endif %}
+
+                    <!-- {% endfor %} -->
                 {% endfor %}
 
                 <td>
