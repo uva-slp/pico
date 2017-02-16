@@ -308,7 +308,7 @@ def displayContest(request, contest_id):
 
 
     return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems,
-                                                      'is_judge': (is_judge or is_creator), 'is_participant': is_participant,
+                                                      'is_judge': is_judge, 'is_participant': is_participant,
                                                       'contest_teams': contest_teams, 'submission_attempts': submission_attempts,
                                                       'submission_status': status, 'color_states': color_states,
                                                       'problem_form_pairs' : problem_form_pairs })
@@ -323,15 +323,22 @@ def displayAllSubmissions(request, contest_id):
         return redirect(reverse('home'))
 
     problems = contest_data.problem_set.all()
-    submissions = []
+    new_submissions = []
+    judged_submissions = []
     for p in problems:
-        submissions += list(p.submission_set.all())
-    submissions.sort(key=lambda x: x.timestamp)
+        submissions = list(p.submission_set.all())
+        for sub in submissions:
+            if sub.state == 'NEW':
+                new_submissions.append(sub)
+            else:
+                judged_submissions.append(sub)
+    new_submissions.sort(key=lambda x: x.timestamp)
+    judged_submissions.sort(key=lambda x: x.timestamp)
 
     return render(
         request,
         'contests/all_submissions.html',
-        {'contest_data': contest_data, 'contest_submissions': submissions}
+        {'contest_data': contest_data, 'new_submissions': new_submissions, 'judged_submissions': judged_submissions}
     )
 
 
