@@ -591,6 +591,7 @@ class ScoreboardTest(TestCase):
 
 		self.assertEqual(ct.contest_participants, t.name)
 
+	# Jamel
 	def testScoreboardWrong(self):
 		team = Team(name="test")
 		team.save()
@@ -602,10 +603,54 @@ class ScoreboardTest(TestCase):
 		wrongstring = allsubs.values_list('result')[0][0]
 		self.assertEqual("WRONG", wrongstring)
 
+	# Jamel
+	def testScoreboardResultYes(self):
+		team = Team(name="test")
+		team.save()
+		submission = Submission(result="YES", team=team)
+		submission.save()
 
+		allsubs = Submission.objects.all()
+		allsubs.filter(team=team)
+		yesstring = allsubs.values_list('result')[0][0]
+		self.assertEqual("YES", yesstring)
 
+	# Jamel
+	def testScoreboardResultPending(self):
+		team = Team(name="test")
+		team.save()
+		submission = Submission(result="OFE", team=team)
+		submission.save()
 
+		allsubs = Submission.objects.all()
+		allsubs.filter(team=team)
+		pendingstring = allsubs.values_list('result')[0][0]
+		self.assertNotEqual("Pending", pendingstring)
 
+	# Jamel
+	def test_participant_false(self):
+		ct = Contest(contest_participants="team1")
+		t = Team("team1")
+		z = Team("team2")
+		p = Participant(team=t, contest=ct)
+		z = Participant(team=z, contest=ct)
+		self.assertFalse(isinstance(z, Team))
+
+	# Jamel
+	def testProblemSearchFalse(self):
+		t = Team("teamtrue")
+		z = Team("teamfalse")
+		s = Submission(run_id = 1)
+
+		self.assertNotEqual(2, s.run_id)
+
+	# Jamel
+	def testProblemSearchTrue(self):
+		t = Team("teamtrue")
+		z = Team("teamfalse")
+		s = Submission(run_id = 1)
+
+		self.assertEqual(1, s.run_id)
 
 '''
 class CreateContestViewTest(TestCase):
