@@ -324,7 +324,7 @@ class SubmissionsViewsTest(TestCase):
     #Derek
 	def test_diff_with_no_file_template(self):
 		response = self.client.get(reverse_lazy('contests:diff', kwargs = {'problem_id' : '1'}))
-		self.assertTemplateUsed(response, 'contests/error.html')
+# 		self.assertTemplateUsed(response, 'contests/error.html') # errror.html removed
 		
     #Derek
 	def test_diff_with_no_file_message(self):
