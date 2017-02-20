@@ -13,6 +13,7 @@ def print_file_content(f):
 		return ''
 	else:
 		try:
-			return f.read()
+			output = f.read()
+			return output.encode('utf-8').strip()
 		except IOError:
 			return ''
