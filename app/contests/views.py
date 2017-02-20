@@ -75,14 +75,14 @@ def diff(request, problem_id):
             retcode = output[0]
             if retcode != 0:
                     error = output[1]
-                    return render(request, 'contests/error.html', {'error_message' : error})
+                    return HttpResponse(error)
             else:
                     fromlines = output[1].split("\n")
                     tolines = ['Hello World from C++!']
                     html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
                     return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
         else:
-                return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
+                return HttpResponse("Invalid form.")
 
 
 def create(request):

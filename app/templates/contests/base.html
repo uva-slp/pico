@@ -6,6 +6,34 @@
 
 {% block head_block %}{{ block.super }}{% endblock %}
 
+{% block nav_block %}
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" id="main-navbar" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-inner">
+            <div class="container" style="padding:0">
+                <div class="navbar-header pull-left">
+                    <a class="navbar-brand" href="{% url 'home' %}">PiCO</a>
+                </div>
+                <!-- /.navbar-header -->
+
+                <ul class="nav navbar-nav" style="margin:7px 0;">
+                    <ul class="breadcrumb list-inline" style="margin: 0 7px;float:left;">
+                        {% block breadcrumb %}
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">Library</a></li>
+                            <li class="active">Data</li>
+                        {% endblock %}
+                    </ul>
+                    <!-- /.breadcrumb -->
+                </ul>
+                <!-- /.navbar-nav -->
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /.navbar-inner -->
+    </nav>
+{% endblock %}
+
 {% block content_block %}
     <div id="notificationModal"></div>
     <div id="getNotificationUrl" style="display: none;">{% url 'contests:show_notification'%}</div>
