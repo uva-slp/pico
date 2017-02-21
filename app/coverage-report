@@ -1,2 +1,3 @@
 coverage3 run manage.py test
 coverage3 report -m
+coverage3 html -d ~/pccs/docs/coverage
