@@ -4,6 +4,7 @@ from users.models import User
 from django import forms
 #from bootstrap3_datetime.widgets import DateTimePicker
 from datetime import datetime
+from dal import autocomplete
 
 
 '''
@@ -59,7 +60,9 @@ class CreateContestForm(ModelForm):
         widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
     )
     problem_description = forms.FileField(required=True, label="Problem Descriptions (.pdf)")
-    contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple)
+    contest_admins = forms.ModelMultipleChoiceField(
+        required=False, queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple
+    )
     # contest_admins = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
     contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 

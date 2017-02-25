@@ -49,7 +49,28 @@
                 {% csrf_token %}
 
                 {% for field in form %}
-                    {% bootstrap_field field layout='horizontal' %}
+                    {% if field.html_name == "contest_admins" %}
+                        <!-- special treatment for contest admin -->
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Contest admins</label>
+                            <div class="col-md-9 btn-group">
+                                <button type="button" class="btn btn-primary">Action</button>
+                                 <button type="button" class="btn btn-primary">
+                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                 </button>
+                            </div>
+                            <div class="col-md-9" style="float: right;">
+                                <div class="col-md-4 input-group" >
+                                    <input type="text" class="form-control" placeholder="Search for...">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button">Go!</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        {% bootstrap_field field layout='horizontal' %}
+                    {% endif %}
                 {% endfor %}
             </fieldset>
 
