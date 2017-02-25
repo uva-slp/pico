@@ -23,12 +23,12 @@ class ContestTemplateTest(TestCase):
 	def contest_template(
 			self, title="template test", languages="java, python",
 			length=datetime.now(timezone.utc), penalty=datetime.now(timezone.utc), autojudge="1",
-			review="Manual review all submissions", admins="", participants=""):
+			review="Manual review all submissions", participants=""):
 		return ContestTemplate.objects.create(
 			title=title, languages=languages,
 			contest_length=length, time_penalty=penalty,
 			autojudge_enabled=autojudge, autojudge_review=review,
-			contest_admins=admins, contest_participants=participants)
+			contest_participants=participants)
 
 	# Austin
 	def test_contest_template_creation(self):
@@ -78,12 +78,12 @@ class ContestTest(TestCase):
 	def contest(
 			self, title="contest test", languages="java, python",
 			length=datetime.now(timezone.utc), penalty=datetime.now(timezone.utc), autojudge="0", review="",
-			desc="problems.pdf", admins="", participants=""):
+			desc="problems.pdf", participants=""):
 		return Contest.objects.create(
 			title=title, languages=languages,
 			contest_length=length, time_penalty=penalty,
 			autojudge_enabled=autojudge, autojudge_review=review,
-			problem_description=desc, contest_admins=admins,
+			problem_description=desc,
 			contest_participants=participants)
 
 	# Austin
@@ -184,7 +184,7 @@ class ContestTest(TestCase):
 			"contest_length": ct.contest_length, "time_penalty": ct.time_penalty,
 			"autojudge_enabled": ct.autojudge_enabled, "autojudge_review": ct.autojudge_review,
 			"problem_description": "problems.pdf",
-			"contest_admins": ct.contest_admins, "contest_participants": ct.contest_participants
+			"contest_admins": ct.contest_admins.all(), "contest_participants": ct.contest_participants
 		}
 
 		files = {

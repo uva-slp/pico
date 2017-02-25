@@ -101,7 +101,7 @@ def create(request):
                                                                                                   'time_penalty': template.time_penalty,
                                                                                                   'autojudge_enabled': template.autojudge_enabled,
                                                                                                   'autojudge_review': template.autojudge_review,
-                                                                                                  'contest_admins': template.contest_admins,
+                                                                                                  'contest_admins': template.contest_admins.all(),
                                                                                                   'contest_participants': template.contest_participants
                                                                                                   })
 
@@ -205,7 +205,7 @@ def getTeam(contest_data, user):
 def isJudge(contest_data, user):
     contest_judges = contest_data.contest_admins.all()
     for judge in contest_judges:
-        if user.username == judge:
+        if user == judge:
             return True
     return False
 
