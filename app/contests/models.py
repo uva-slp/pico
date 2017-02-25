@@ -31,7 +31,7 @@ class ContestManager(models.Manager):
 class Contest(models.Model):
 	title = models.CharField(max_length=128)
 	date_created = models.DateTimeField(auto_now_add=True)
-	creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+	creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name="contest_creator")
 	languages = models.CharField(max_length=64)
 	contest_length = models.DateTimeField(null=True, blank=True)
 	contest_start = models.DateTimeField(null=True, blank=True)
@@ -39,7 +39,7 @@ class Contest(models.Model):
 	autojudge_enabled = models.BooleanField(max_length=1, default=False)
 	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
 	problem_description = models.FileField(upload_to='uploads/', null=True, blank=True)
-	contest_admins = models.TextField()
+	contest_admins = models.ManyToManyField(User, related_name="contest_admins")
 	contest_participants = models.TextField()
 
 	objects = ContestManager()
@@ -110,13 +110,13 @@ class Notification(models.Model):
 
 class ContestTemplate(models.Model):
 	title = models.CharField(max_length=128)
-	creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+	creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name="contesttemplate_creator")
 	languages = models.CharField(max_length=64)
 	contest_length = models.CharField(max_length=8)
 	time_penalty = models.CharField(max_length=4)
 	autojudge_enabled = models.BooleanField(max_length=1, default=False)
 	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
-	contest_admins = models.TextField()
+	contest_admins = models.ManyToManyField(User, related_name="contesttemplate_admins")
 	contest_participants = models.TextField()
 
 	def __str__(self):

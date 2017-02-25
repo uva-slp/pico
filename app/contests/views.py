@@ -203,9 +203,7 @@ def getTeam(contest_data, user):
 
 # Helper method for checking if user is judge of the contest
 def isJudge(contest_data, user):
-    # TODO need to be changed after we have actual admin field
-    contest_judges = contest_data.contest_admins
-    contest_judges = contest_judges.split()
+    contest_judges = contest_data.contest_admins.all()
     for judge in contest_judges:
         if user.username == judge:
             return True
