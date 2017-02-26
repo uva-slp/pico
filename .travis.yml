@@ -9,9 +9,6 @@ services:
   - docker
 
 before_install:
-  #- sudo gpasswd -a ${USER} docker
-  #- sudo service docker restart
-  #- sudo usermod -a -G docker $USER
   - docker pull dmm7aj/pccs
 
 install:
@@ -24,7 +21,8 @@ install:
   #- pip install -q django-bootstrap3-datetimepicker==2.2.3
 
 script:
-  coverage run app/manage.py test
+  - coverage run app/manage.py test
+  - phantomjs run-qunit.js file://`pwd`/app/templates/tests/qunit.html\?coverage
 
 after_success:
   coveralls
