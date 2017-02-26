@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html>
-{% load static %}
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>QUnit Example</title>
-  <link rel="stylesheet" href="{% static "css/qunit-2.1.1.css" %}">
+  <link rel="stylesheet" href="../../pccs/static/css/qunit-2.1.1.css">
 </head>
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture"></div>
-  <script src="{% static "js/qunit-2.1.1.js" %}"></script>
+  <script src="../../pccs/static/js/qunit-2.1.1.js"></script>
   
   <!-- Code coverage tool -->
-  <script src="{% static "js/blanket.min.js" %}"></script>
+  <script src="../../pccs/static/js/blanket.min.js"></script>
   <!------------------------>
   
   <!-- jQuery -->
@@ -21,11 +20,11 @@
   <!------------>
   
   <!-- INCLUDE ANY JAVASCRIPT FILES YOU WANT TO TEST HERE -->
-  <script src="{% static "js/common.js" %}" data-cover></script>
+  <script src="../../pccs/static/js/common.js" data-cover></script>
   <!-------------------------------------------------------->
 
   <!-- WRITE NEW TESTS IN tests.js -->
-  <script src="{% static "js/tests.js" %}"></script>
+  <script src="../../pccs/static/js/tests.js"></script>
   <!--------------------------------->
 
 </body>
