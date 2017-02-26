@@ -1,4 +1,5 @@
 .diff-table {
+	width: 100%;
 	border-spacing:0;
 	border-collapse: collapse;
 	font-size: 18px;
@@ -9,7 +10,8 @@
 }
 
 .diff-table tbody {
-	height: 100px;
+	min-height: 100px;
+	max-height: 500px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -17,6 +19,7 @@
 .diff-cell {
 	padding-top: 0;
 	padding-bottom: 0;
+	vertical-align: top;
 	font-family: monospace;
 }
 
@@ -32,17 +35,17 @@
 }
 
 .line-text {
-	width: 300px;
+	width: 50%;
 	word-break: break-all;
 	word-wrap: break-word;
 }
 
 .diff-add-bg {
-	background-color: #ddffdd;
+	background-color: #ffecec; /*#ddffdd;*/
 }
 
 .diff-add {
-	background-color: #beffbe;
+	background-color: #ffc5c5; /*#beffbe;*/
 	display: inline-block;
 }
 

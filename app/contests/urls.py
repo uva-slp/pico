@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^submission/upload/(?P<problem_id>[0-9]+)/$', views.upload_code, name='upload_code'),
 	url(r'^api/get_notification/$', views.show_notification, name='show_notification'),
 	url(r'^api/close_notification/$', views.close_notification, name='close_notification'),
+	url(r'^stats/$', views.stats, name='stats')
 ]
