@@ -51,19 +51,22 @@
                 {% for field in form %}
                     {% if field.html_name == "contest_admins" %}
                         <!-- special treatment for contest admin -->
+                        <div id="adminInput" style="display: none;"></div>
+                        <div id="getAdminUrl" style="display: none;">{% url 'contests:get_admin'%}</div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">Contest admins</label>
-                            <div class="col-md-9 btn-group">
-                                <button type="button" class="btn btn-primary">Action</button>
-                                 <button type="button" class="btn btn-primary">
-                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                 </button>
-                            </div>
+{#                            <div class="col-md-9 btn-group">#}
+{#                                <button type="button" class="btn btn-default">Action</button>#}
+{#                                 <button type="button" class="btn btn-default">#}
+{#                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>#}
+{#                                 </button>#}
+{#                            </div>#}
+                            <div class="col-md-9">{{ field.value }}</div>
                             <div class="col-md-9" style="float: right;">
                                 <div class="col-md-4 input-group" >
-                                    <input type="text" class="form-control" placeholder="Search for...">
+                                    <input id="adminText" type="text" class="form-control" placeholder="Search for...">
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button">Go!</button>
+                                        <button id="adminButton" class="btn btn-default" type="button">Go!</button>
                                     </span>
                                 </div>
                             </div>
@@ -141,6 +144,19 @@
             } else {
                 $('#id_autojudge_review').prop('disabled', true);
             }
+        });
+    </script>
+
+    <script>
+        $('#adminButton').click(function () {
+{#            var adminName = document.getElementById("adminText").value;#}
+{#            var data = {"adminName": adminName}#}
+            var getAdminUrl = $('#getAdminUrl').html();
+            $.post(getAdminUrl, data);
+            inputHtml = '<input name="contest_admins" value="1">';
+            inputHtml += '<input name="contest_admins" value="2">';
+            console.log(inputHtml);
+            $('#adminInput').append(inputHtml);
         });
     </script>
 {% endblock %}

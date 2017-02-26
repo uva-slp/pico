@@ -309,7 +309,7 @@ def displayContest(request, contest_id):
                                                       'is_judge': is_judge, 'is_participant': is_participant,
                                                       'contest_teams': contest_teams, 'submission_attempts': submission_attempts,
                                                       'submission_status': status, 'color_states': color_states,
-                                                      'problem_form_pairs' : problem_form_pairs })
+                                                      'problem_form_pairs' : problem_form_pairs})
 
 
 @login_required
