@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from common.decorators import anonymous_required
 from contests.models import Contest
 from users.forms import LoginForm, UserForm
+from django.contrib.auth.decorators import user_passes_test
 
 @anonymous_required
 def index(request):
@@ -19,3 +20,7 @@ def index(request):
 def home(request):
 	return redirect(reverse('contests:index'))
 	# return render(request, 'pccs/home.html', {})
+
+@user_passes_test(lambda u : u.is_superuser)
+def qunit(request):
+        return render(request, 'tests/qunit.html')
