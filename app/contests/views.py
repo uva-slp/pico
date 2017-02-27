@@ -487,7 +487,7 @@ def scoreboard(request, contest_id):
 
 
     return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
-        'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array})
+        'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest})
 
 
 def show_notification(request):
