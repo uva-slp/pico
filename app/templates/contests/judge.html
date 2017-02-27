@@ -13,7 +13,7 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'contests:contest' contest_id=contest_data.id %}">{{ contest_data.title }}</a></li>
-    <li><a href="{% url 'contests:contest_submissions' contest_id=contest_data.id %}">Submissions</a></li>
+    <li><a href="{% url 'contests:contest_judge_submissions' contest_id=contest_data.id %}">Submissions</a></li>
     <li class="active">Judge</li>
 {% endblock %}
 
