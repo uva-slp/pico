@@ -139,150 +139,23 @@
 
     <!-- Bootstrap Toggle JavaScript -->
     <script src="{% static 'bootstrap-toggle/js/bootstrap-toggle.min.js' %}"></script>
-    <script>
-        $(document).on('change', '.team-public-form', function() {
-            var frm = $(this);
-            $.ajax({
-                url : $(this).attr('action'),
-                type : $(this).attr('method'),
-                data : $(this).serialize(),
-                success : function(data, textStatus, xhr) {
-                    console.log('Toggle team.public successful.');
-                },
-                error : function(data) {
-                    console.log('Toggle team.public failed.');
-                }
-            });
-        });
-    </script>
+    <script src="{% static 'js/team-public-toggle.js' %}"></script>
 
     <!-- Team Search JavaScript -->
     {{ team_search_form.media.js }}
-    <script>
-        $('#team-search-form').change(function() {
-            $.ajax({
-                url : $(this).attr('action'),
-                type : $(this).attr('method'),
-                data : $(this).serialize(),
-                success : function(data, textStatus, xhr) {
-                    if (xhr.status == 200) {
-                        // Use existing tab if present
-                        var tab = $(data.tab);
-                        var href = tab.children().first('a').attr('href');
-                        var target = $('#team-tabs a[href="'+href+'"]');
-                        if (target.exists()) {
-                            target.click();
-                        } else {
-                            // Remove other search panels
-                            $('#team-panels .search-panel').remove();
-                            // Add tab-pane
-                            var panel = $(data.panel).addClass('search-panel');
-                            panel.find('input[type=checkbox][data-toggle^=toggle]').bootstrapToggle();
-                            $('#team-panels').append(panel);
-                            // Clear search tabs
-                            $('#team-tabs .search-tab').remove();
-                            // Add new tab
-                            $('#team-tabs').append(tab.addClass('search-tab hidden'));
-                            // Show new tab
-                            $('#team-tabs li.search-tab:last a').click();
-                        }
-                    } else if (xhr.status == 201) {
-                        console.log('Get team failed.');
-                    }
-                },
-                error : function(data) {
-                    console.log('Get team failed.');
-                }
-            });
-        });
-    </script>
+    <script src="{% static 'js/team-search.js' %}"></script>
 
     <!-- Create Team JavaScript -->
-    <script>        
-        $('#create-team.modal').on('shown.bs.modal', function () {
-            $(this).find('input:text:visible:first').focus();
-        });
-
-        // Backup clean form
-        var team_form_clean = $('#team-form-contents').html();
-
-        $('#team-form').on('submit', function(event) {
-            event.preventDefault();
-            $.ajax({
-                url : $(this).attr('action'),
-                type : $(this).attr('method'),
-                data : $(this).serialize(),
-                success : function(data, textStatus, xhr) {
-                    if (xhr.status == 200) {
-                        // Clear form
-                        $('#team-form-contents').html(team_form_clean);
-                        // Add item to sidemenu and re-sticky
-                        $('#team-tabs').append(data.tab);
-                        // Add tab-pane
-                        var panel = $(data.panel);
-                        panel.find('input[type=checkbox][data-toggle^=toggle]').bootstrapToggle();
-                        $('#team-panels').append(panel);
-                        // Show tab that was added
-                        $('#team-tabs a').last().click();
-                        // Close modal
-                        $('#create-team.modal').modal('hide');
-                    } else if (xhr.status == 201) {
-                        // Update form and focus on input
-                        $('#team-form-contents').html(data.form).find('input:text:visible:first').focus();
-                    }
-                },
-                error : function(data) {
-                    console.log('Create team failed.');
-                }
-            });
-        });
-    </script>
+    <script src="{% static 'js/team-create.js' %}"></script>
 
     <!-- Leave Team JavaScript -->
-    <script>
-        $(document).on('submit', '.team-leave-form', function(event) {
-            event.preventDefault();
-            var frm = $(this);
-            $.ajax({
-                url : $(this).attr('action'),
-                type : $(this).attr('method'),
-                data : $(this).serialize(),
-                success : function(data, textStatus, xhr) {
-                    var team_id = frm.children('input#id_team').val();
-                    // Show first tab that is not the one being deleted or no teams if there are not any anymore
-                    var next = $('#team-tabs').find('a[href!="#"][href!="#no-teams"][href!="#team-'+team_id+'"]').first();
-                    if (next.exists()) {
-                        next.click();
-                    } else {
-                        $('#side-menu').find('a[href="#no-teams"]').click();
-                    }
-                    // Destory tab
-                    $('#team-tabs').find('a[href="#team-'+team_id+'"]').parent().remove();
-                    // Destory tab panel
-                    $('#team-'+team_id).remove();
-                },
-                error : function(data) {
-                    console.log('Leave team failed.');
-                }
-            });
-        });
-    </script>
+    <script src="{% static 'js/team-leave.js' %}"></script>
 
     <!-- Team Invite JavaScript -->
-    <script>
-        $('.panel-heading a').click(function( event ) {
-            // Open modal
-            $($(this).attr('data-target')).modal();
-            event.stopPropagation();
-        });
-    </script>
+    <script src="{% static 'js/team-invite.js' %}"></script>
 
     <!-- Stickytabs JavaScript -->
-    <script>
-        $(document).on('click', '#team-tabs a', function(event) {
-            history.replaceState('data', '', '{% url "teams:index" %}' + this.href.split('#team-')[1] + '/');
-        });
-    </script>
+    <script src="{% static 'js/team-stickytabs.js' %}"></script>
 
     <!-- User Search JavaScript -->
     {{ user_search_form.media.js }}

@@ -5,22 +5,77 @@
 
 {% block title_block %}{{ contest_data.title }} Contest{% endblock %}
 
+{% block head_block %}
+    {{ block.super }}
+    
+{% endblock %}
+
 {% block content_block %}
     {% if user.is_authenticated %}
-        Statistics for: {{ user.username }}
+        <h2>Statistics for: <strong>{{ user.username }}</strong></h2>
         <br>
-        <table>
-            <tr>
-                <th>Contest Participation</th>
-                    {% for c in contest_participation %}
-                        <tr> 
-                            <td>
-                                {{ c.contest.title }} 
-                            </td>
-                        </tr>
-                    {% endfor %}
-            </tr>
-        </table>
+
+        <div class="wrapper col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Contest Participation: {{ contest_count }}</h3>
+                </div>
+                {% if contest_count > 0 %}
+                    <div class="list-group">
+                        {% for c in participation %}
+                            <a href="{% url 'contests:contest' c.contest.id %}" class="list-group-item">
+                                <strong>{{ c.contest.title }}</strong>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="list-group"><div class="list-group-item">No contests found</div></div>
+                {% endif %}
+            </div>
+        </div>      
+
+        
+        <div class="wrapper col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Teams: {{ teams_count }}</h3>
+                </div>
+                {% if teams_count > 0 %}
+                    <div class="list-group">
+                        {% for t in teams %}
+                            <a href="{% url 'teams:index' %}" class="list-group-item">
+                                <strong>{{ t.name }}</strong>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="list-group"><div class="list-group-item">No teams found</div></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="wrapper col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Teammates: {{ teammates_count }}</h3>
+                </div>
+                {% if teammates_count > 0 %}
+                    <div class="list-group">
+                        {% for t in teams %}
+                            {% for m in t.members.all %}
+                                {% if m.username != user.username %}
+                                    <a href="{% url 'users:index' m.id %}" class="list-group-item">
+                                        <strong>{{ m.username }}</strong>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="list-group"><div class="list-group-item">No teammates found</div></div>
+                {% endif %}
+            </div>
+        </div>
     {% else %}
         Log in to see statistics!
     {% endif %}

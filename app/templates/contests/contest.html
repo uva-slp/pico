@@ -43,6 +43,10 @@
     </style>
 {% endblock %}
 
+{% block breadcrumb %}
+    <li class="active">{{ contest_data.title }}</li>
+{% endblock %}
+
 {% block content_block %}
     {{ block.super }}
 

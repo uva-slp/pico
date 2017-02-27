@@ -75,14 +75,14 @@ def diff(request, problem_id):
             retcode = output[0]
             if retcode != 0:
                     error = output[1]
-                    return render(request, 'contests/error.html', {'error_message' : error})
+                    return HttpResponse(error)
             else:
                     fromlines = output[1].split("\n")
                     tolines = ['Hello World from C++!']
                     html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
                     return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
         else:
-                return render(request, 'contests/error.html', {'error_message' : "Invalid form."})
+                return HttpResponse("Invalid form.")
 
 
 def create(request):
@@ -487,7 +487,7 @@ def scoreboard(request, contest_id):
 
 
     return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
-        'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array})
+        'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest})
 
 
 def show_notification(request):
@@ -517,5 +517,21 @@ def close_notification(request):
     return HttpResponse('OK')
 
 def stats(request):
-    contest_participation = Participant.objects.all()
-    return render(request, 'contests/stats.html', {'contest_participation' : contest_participation})
+    if request.user.is_authenticated():
+        participation = Participant.objects.filter(team__members__username=request.user.username).order_by('contest__date_created')
+        contest_count = Participant.objects.filter(team__members__username=request.user.username).count()
+        teams = Team.objects.filter(members__username=request.user.username).order_by('name')
+        teams_count = teams.count()
+        teammates_count = 0
+        for t in teams:
+            members = t.members.all()
+            for m in members:
+                if m.username != request.user.username:
+                    teammates_count += 1
+        return render(request, 'contests/stats.html', { 'participation' : participation, 
+                                                        'contest_count' : contest_count,
+                                                        'teams' : teams,
+                                                        'teams_count' : teams_count,
+                                                        'teammates_count' : teammates_count})
+    else:
+        return render(request, 'contests/stats.html')
