@@ -14,7 +14,8 @@ class RegisterTest(TestCase):
 	def test_post(self):
 		data = {
 			'username': 'testuser',
-			'password': 'password',
+			'password1': 'testPassword!',
+			'password2': 'testPassword!',
 		}
 		resp = self.client.post(reverse('users:register'), data=data)
 
