@@ -2,11 +2,12 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from teams.forms import TeamForm, TeamSelectForm
+from dal import autocomplete
 
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 from .models import Problem, Contest
 from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm
+from users.forms import UserSearchForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.forms.formsets import formset_factory
@@ -22,6 +23,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 from django.http import Http404
+from django.template.loader import render_to_string
 import os
 
 from django.forms.formsets import formset_factory
@@ -171,7 +173,8 @@ def create(request):
                 form = CreateContestForm()
                 QAFormSet = formset_factory(CreateProblem)
                 qa_formset = QAFormSet()
-        return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset})
+                user_search_form = UserSearchForm()
+        return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset, 'user_search_form': user_search_form})
 
 
 def create_template(request):
@@ -513,6 +516,20 @@ def close_notification(request):
         current_notification = Notification.objects.get(id=modal_id)
         current_notification.delete()
     return HttpResponse('OK')
+
+
+def get_admin(request):
+    if request.method == 'GET':
+        user_search_form = UserSearchForm(data=request.GET)
+        print(request.GET['user'])
+        if user_search_form.is_valid():
+            user = user_search_form.cleaned_data['user']
+            data = {'admin_id': user.id}
+            return JsonResponse(data, status=200)
+        else:
+            print(user_search_form.errors)
+
+    return JsonResponse({}, status=201)
 
 def stats(request):
     if request.user.is_authenticated():

@@ -2,6 +2,7 @@ from django.forms import Form, ModelForm
 from .models import Contest, Submission, Problem, ContestTemplate
 from users.models import User
 from django import forms
+from django.urls import reverse_lazy
 #from bootstrap3_datetime.widgets import DateTimePicker
 from datetime import datetime
 from dal import autocomplete
@@ -174,4 +175,3 @@ class ReturnJudgeResultForm(forms.ModelForm):
         else:
             cleaned_data['state'] = 'NEW'
         return cleaned_data
-
