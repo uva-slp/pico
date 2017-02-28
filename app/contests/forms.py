@@ -1,6 +1,7 @@
 from django.forms import Form, ModelForm
 from .models import Contest, Submission, Problem, ContestTemplate
 from users.models import User
+from teams.models import Team
 from django import forms
 from django.urls import reverse_lazy
 #from bootstrap3_datetime.widgets import DateTimePicker
@@ -67,7 +68,13 @@ class CreateContestForm(ModelForm):
                                                         attrs={
                                                             'data-placeholder': 'User',
                                                         }))
-    contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
+    # contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
+    contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
+                                                    widget=autocomplete.ModelSelect2Multiple(
+                                                        url=reverse_lazy('teams:autocomplete'),
+                                                        attrs={
+                                                            'data-placeholder': 'Team',
+                                                        }))
 
     def clean(self):
         upload_to = 'uploads/'
@@ -147,7 +154,13 @@ class CreateContestTemplateForm(ModelForm):
                                                         attrs={
                                                             'data-placeholder': 'User',
                                                         }))
-    contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
+    # contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
+    contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
+                                                    widget=autocomplete.ModelSelect2Multiple(
+                                                        url=reverse_lazy('teams:autocomplete'),
+                                                        attrs={
+                                                            'data-placeholder': 'Team',
+                                                        }))
 
     def clean(self):
         return self.cleaned_data
@@ -197,3 +210,16 @@ class AdminSearchForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('contest_admins',)
+
+
+class ParticipantSearchForm(forms.ModelForm):
+    contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
+                                                    widget=autocomplete.ModelSelect2Multiple(
+                                                        url=reverse_lazy('teams:autocomplete'),
+                                                        attrs={
+                                                            'data-placeholder': 'Team',
+                                                        }))
+
+    class Meta:
+        model = User
+        fields = ('contest_participants',)

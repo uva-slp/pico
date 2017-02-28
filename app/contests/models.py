@@ -40,7 +40,8 @@ class Contest(models.Model):
 	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
 	problem_description = models.FileField(upload_to='uploads/', null=True, blank=True)
 	contest_admins = models.ManyToManyField(User, related_name="contest_admins", blank=True)
-	contest_participants = models.TextField()
+	contest_participants = models.ManyToManyField(Team, related_name="contest_participants", blank=True)
+	# contest_participants = models.TextField()
 
 	objects = ContestManager()
 
@@ -117,7 +118,8 @@ class ContestTemplate(models.Model):
 	autojudge_enabled = models.BooleanField(max_length=1, default=False)
 	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
 	contest_admins = models.ManyToManyField(User, related_name="contesttemplate_admins", blank=True)
-	contest_participants = models.TextField()
+	contest_participants = models.ManyToManyField(Team, related_name="contesttemplate_participants", blank=True)
+	# contest_participants = models.TextField()
 
 	def __str__(self):
 		return self.title

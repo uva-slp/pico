@@ -7,6 +7,7 @@
 {% block head_block %}
     {{ block.super }}
     {{ admin_search_form.media.css }}
+    {{ participant_search_form.media.css }}
     <style>
         a.add-row {
             margin-top: 10px;
@@ -52,15 +53,26 @@
                 {% for field in form %}
                     {% if field.html_name == "contest_admins" %}
                         <!-- special treatment for contest admin -->
-                        <div id="adminInput" style="display: none;"></div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">Contest admins</label>
                             <div class="col-md-9" style="float: right;">
                                 <div class="col-md-4 input-group">
-                                    <div class="admin_search" id="admin_search_form"
-                                          action="{% url 'contests:get_admin' %}">
+                                    <div class="admin_search" id="admin_search_form">
                                         {% csrf_token %}
                                         {{ admin_search_form.contest_admins }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif field.html_name == "contest_participants" %}
+                        <!-- special treatment for contest admin -->
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Contest admins</label>
+                            <div class="col-md-9" style="float: right;">
+                                <div class="col-md-4 input-group">
+                                    <div class="participant_search" id="participant_search_form">
+                                        {% csrf_token %}
+                                        {{ participant_search_form.contest_participants }}
                                     </div>
                                 </div>
                             </div>
@@ -151,4 +163,5 @@
     </script>
 
     {{ admin_search_form.media.js }}
+    {{ participant_search_form.media.js }}
 {% endblock %}

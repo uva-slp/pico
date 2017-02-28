@@ -6,7 +6,7 @@ from dal import autocomplete
 
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 from .models import Problem, Contest
-from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, AdminSearchForm
+from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, AdminSearchForm, ParticipantSearchForm
 from users.forms import UserSearchForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -104,18 +104,21 @@ def create(request):
                                                                                                   'autojudge_enabled': template.autojudge_enabled,
                                                                                                   'autojudge_review': template.autojudge_review,
                                                                                                   'contest_admins': template.contest_admins.all(),
-                                                                                                  'contest_participants': template.contest_participants
+                                                                                                  'contest_participants': template.contest_participants.all()
                                                                                                   })
 
                                 template_user = request.user
                                 templates = ContestTemplate.objects.filter(creator=template_user)
                                 QAFormSet = formset_factory(CreateProblem)
                                 qa_formset = QAFormSet()
-                                admin_search_form = AdminSearchForm(initial={'contest_admins': template.contest_admins.all()})
+                                admin_search_form = AdminSearchForm(
+                                    initial={'contest_admins': template.contest_admins.all()})
+                                participant_search_form = ParticipantSearchForm(
+                                    initial={'contest_participants': template.contest_participants.all()})
 
                                 return render(request, 'contests/create_contest.html',
                                                           {'templates': templates, 'form': form, 'qa_formset': qa_formset,
-                                                           'admin_search_form': admin_search_form})
+                                                           'admin_search_form': admin_search_form, 'participant_search_form': participant_search_form})
 
                         else:
                                 # template does not exist or no template was selected
@@ -124,6 +127,7 @@ def create(request):
                         #grab information from form
                         form = CreateContestForm(request.POST, request.FILES)
                         admin_search_form = AdminSearchForm()
+                        participant_search_form = ParticipantSearchForm()
                         #qa_formset = CreateProblem(request.POST, request.FILES)
 
                         qa_formset = QAFormSet(request.POST, request.FILES)
@@ -177,14 +181,16 @@ def create(request):
                 QAFormSet = formset_factory(CreateProblem)
                 qa_formset = QAFormSet()
                 admin_search_form = AdminSearchForm()
+                participant_search_form = ParticipantSearchForm()
         return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset,
-                                                                'admin_search_form': admin_search_form})
+                                                                'admin_search_form': admin_search_form, 'participant_search_form': participant_search_form})
 
 
 def create_template(request):
         if request.method == 'POST':
                 form = CreateContestTemplateForm(request.POST)
                 admin_search_form = AdminSearchForm()
+                participant_search_form = ParticipantSearchForm()
 
                 if form.is_valid():
                         contest_template = form.save()
@@ -195,7 +201,10 @@ def create_template(request):
         else:
                 form = CreateContestTemplateForm()
                 admin_search_form = AdminSearchForm()
-        return render(request, 'contests/create_template.html', {'form': form, 'admin_search_form': admin_search_form})
+                participant_search_form = ParticipantSearchForm()
+        return render(request, 'contests/create_template.html', {'form': form,
+                                                                 'admin_search_form': admin_search_form,
+                                                                 'participant_search_form': participant_search_form})
 
 
 # Helper method for getting user's team participated in a contest
@@ -523,19 +532,6 @@ def close_notification(request):
         current_notification.delete()
     return HttpResponse('OK')
 
-
-def get_admin(request):
-    if request.method == 'GET':
-        user_search_form = UserSearchForm(data=request.GET)
-        print(request.GET['user'])
-        if user_search_form.is_valid():
-            user = user_search_form.cleaned_data['user']
-            data = {'admin_id': user.id}
-            return JsonResponse(data, status=200)
-        else:
-            print(user_search_form.errors)
-
-    return JsonResponse({}, status=201)
 
 def stats(request):
     if request.user.is_authenticated():
