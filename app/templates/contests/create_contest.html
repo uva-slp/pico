@@ -6,7 +6,7 @@
 
 {% block head_block %}
     {{ block.super }}
-    {{ user_search_form.media.css }}
+    {{ admin_search_form.media.css }}
     <style>
         a.add-row {
             margin-top: 10px;
@@ -55,26 +55,13 @@
                         <div id="adminInput" style="display: none;"></div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">Contest admins</label>
-                            {#                            <div class="col-md-9 btn-group">#}
-                            {#                                <button type="button" class="btn btn-default">Action</button>#}
-                            {#                                 <button type="button" class="btn btn-default">#}
-                            {#                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>#}
-                            {#                                 </button>#}
-                            {#                            </div>#}
-                            <div class="col-md-9">{{ field.value }}</div>
                             <div class="col-md-9" style="float: right;">
                                 <div class="col-md-4 input-group">
-                                    {#                                    <input id="adminText" type="text" class="form-control" placeholder="Search for...">#}
-                                    {#                                    {{ user_search_form.as_p }}#}
-{#                                    <form id="radom"></form><!-- Without this line the next form will be substitude-->#}
                                     <div class="admin_search" id="admin_search_form"
                                           action="{% url 'contests:get_admin' %}">
                                         {% csrf_token %}
-                                        {{ user_search_form.user }}
+                                        {{ admin_search_form.contest_admins }}
                                     </div>
-                                    {#                                    <span class="input-group-btn">#}
-                                    {#                                        <button id="adminButton" class="btn btn-default" type="button">Add</button>#}
-                                    {#                                    </span>#}
                                 </div>
                             </div>
                         </div>
@@ -163,41 +150,5 @@
         });
     </script>
 
-        <script>
-            $('#adminButton').click(function () {
-                var adminName = document.getElementById("adminText").value;
-                var data = {"adminName": adminName}
-                var getAdminUrl = $('#getAdminUrl').html();
-                $.post(getAdminUrl, data);
-                inputHtml = '<input name="contest_admins" value="1">';
-                inputHtml += '<input name="contest_admins" value="2">';
-                console.log(inputHtml);
-                $('#adminInput').append(inputHtml);
-                var input = document.getElementById("admin-search-form").value;
-                console.log(input);
-            });
-        </script>
-
-    {{ user_search_form.media.js }}
-
-    <script>
-        $('#admin_search_form').on('change', function () {
-            console.log($(this).serialize());
-            $.ajax({
-                url: $(this).attr('action'),
-{#                type: $(this).attr('method'),#}
-                data: $(this).serialize(),
-                success: function (data, textStatus, xhr) {
-                    if (xhr.status == 200) {
-                        var admin_id = data.admin_id;
-                        inputHtml = '<input name="contest_admins" value="' + admin_id + '">';
-                        $('#adminInput').append(inputHtml);
-                        console.log('appended');
-                    } else {
-                        console.log('Get user failed.');
-                    }
-                },
-            });
-        });
-    </script>
+    {{ admin_search_form.media.js }}
 {% endblock %}

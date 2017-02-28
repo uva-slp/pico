@@ -61,7 +61,12 @@ class CreateContestForm(ModelForm):
         widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
     )
     problem_description = forms.FileField(required=True, label="Problem Descriptions (.pdf)")
-    contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all())
+    contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
+                                                    widget=autocomplete.ModelSelect2Multiple(
+                                                        url=reverse_lazy('users:autocomplete'),
+                                                        attrs={
+                                                            'data-placeholder': 'User',
+                                                        }))
     # contest_admins = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
     contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 
@@ -91,7 +96,8 @@ class CreateContestForm(ModelForm):
         fields = (
             'title', 'languages', 'contest_length', 'time_penalty',
             'autojudge_enabled', 'autojudge_review', 'problem_description',
-            'contest_admins', 'contest_participants')
+            'contest_admins',
+            'contest_participants')
 
 
 class CreateProblem(ModelForm):
@@ -175,3 +181,16 @@ class ReturnJudgeResultForm(forms.ModelForm):
         else:
             cleaned_data['state'] = 'NEW'
         return cleaned_data
+
+
+class AdminSearchForm(forms.ModelForm):
+	contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
+													widget=autocomplete.ModelSelect2Multiple(
+														url=reverse_lazy('users:autocomplete'),
+														attrs={
+															'data-placeholder': 'User',
+														}))
+
+	class Meta:
+		model = User
+		fields = ('contest_admins',)

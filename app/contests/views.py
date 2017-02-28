@@ -6,7 +6,7 @@ from dal import autocomplete
 
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 from .models import Problem, Contest
-from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm
+from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, AdminSearchForm
 from users.forms import UserSearchForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -111,9 +111,11 @@ def create(request):
                                 templates = ContestTemplate.objects.filter(creator=template_user)
                                 QAFormSet = formset_factory(CreateProblem)
                                 qa_formset = QAFormSet()
+                                admin_search_form = AdminSearchForm()
 
                                 return render(request, 'contests/create_contest.html',
-                                                          {'templates': templates, 'form': form, 'qa_formset': qa_formset})
+                                                          {'templates': templates, 'form': form, 'qa_formset': qa_formset,
+                                                           'admin_search_form': admin_search_form})
 
                         else:
                                 # template does not exist or no template was selected
@@ -121,6 +123,7 @@ def create(request):
                 if request.POST['submit'] == "create_contest":
                         #grab information from form
                         form = CreateContestForm(request.POST, request.FILES)
+                        admin_search_form = AdminSearchForm()
                         #qa_formset = CreateProblem(request.POST, request.FILES)
 
                         qa_formset = QAFormSet(request.POST, request.FILES)
@@ -173,8 +176,9 @@ def create(request):
                 form = CreateContestForm()
                 QAFormSet = formset_factory(CreateProblem)
                 qa_formset = QAFormSet()
-                user_search_form = UserSearchForm()
-        return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset, 'user_search_form': user_search_form})
+                admin_search_form = AdminSearchForm()
+        return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset,
+                                                                'admin_search_form': admin_search_form})
 
 
 def create_template(request):
