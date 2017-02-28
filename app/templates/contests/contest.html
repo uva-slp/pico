@@ -3,7 +3,7 @@
 {% load bootstrap3 %}
 {% load contest_extras %}
 
-{% block title_block %}{{ contest_data.title }} | Contest{% endblock %}
+{% block title_block %}{{ contest_data.title }}{% endblock %}
 
 {% block head_block %}
     {{ block.super }}
@@ -56,9 +56,10 @@
 
     <h1>Contest: {{ contest_data.title }}</h1>
 
-    <a href="{% url 'contests:scoreboard' contest_data.id %}">View Scoreboard</a>
+    <a href="{% url 'contests:scoreboard' contest_data.id %}">View Scoreboard</a><br />
+    <a href="{% url 'contests:edit_contest' contest_data.id %}">Edit Contest</a>
     <br />
-    {% if is_judge %}
+    {% if is_judge or is_creator %}
         {% if contest_data.contest_start == NULL %}
             <form id="activate_contest_form" method="post"
                   action="{% url 'contests:contest' contest_data.id %}">
@@ -150,8 +151,8 @@
         $('#progress-slow').css('animation', secondFraction + 's linear 0s normal none infinite progress-bar-stripes');
 
         var start_time = '{{ contest_data.contest_start }}';
-        var length_datetime = moment('{{ contest_data.contest_length }}', 'MMM DD, YYYY, hh:mm a');
-        var length = length_datetime.hour() * 60 + length_datetime.minute();
+        var length_time = moment('{{ contest_data.contest_length }}', 'hh:mm');
+        var length = length_time.hour() * 60 + length_time.minute();
 
         var percentage_increment = 100 / length; // the amount to increase the percentage bar per minute
         var progress_bar_percentage;
@@ -162,23 +163,27 @@
         var update = function() {
 
             function updateDuration(start_time, curr_time) {
-              var ms = moment(curr_time, 'YYYY/MM/DD HH:mm').diff(moment(start_time, 'MMM DD, YYYY, hh:mm a'));
+              var ms = moment(curr_time, 'YYYY/MM/DD HH:mm:ss').diff(moment(start_time, 'MMM DD, YYYY, hh:mm:ss a'));
               var dt = moment.duration(ms);
               var hours_elapsed = Math.floor(dt.asHours());
               var minutes_elapsed = moment.utc(ms).format('mm');
-
-              var time_left = length - (hours_elapsed * 60 + Number(minutes_elapsed));
+              var seconds_elapsed = moment.utc(ms).format('ss');
+              var time_left = length - ((hours_elapsed * 60) + Number(minutes_elapsed) + (Number(seconds_elapsed) / 60));
               if(time_left >= 0) {
-                  var hours_left = Math.floor(time_left / 60);
-                  var minutes_left = time_left % 60;
+                  var hours_left = ('0' + Math.floor(time_left / 60)).slice(-2);
+                  var minutes_left = ('0' + Math.floor(time_left % 60)).slice(-2);
+                  var seconds_left = ('0' + (((time_left % 60) - minutes_left) * 60).toFixed()).slice(-2);
 
-                  var hour_string = hours_left == 1 ? 'hour' : 'hours';
+                  time_remaining_text.html(hours_left + 'h : ' + minutes_left + 'm : ' + seconds_left + 's remaining');
+                  /*var hour_string = hours_left == 1 ? 'hour' : 'hours';
                   var minute_string = minutes_left == 1 ? 'minute' : 'minutes';
                   if(hours_left >= 1) {
                       time_remaining_text.html(hours_left + ' ' + hour_string + ' ' + minutes_left + ' ' + minute_string + ' remaining');
-                  } else {
+                  } else if(minutes_left >= 1) {
                       time_remaining_text.html(minutes_left + ' ' + minute_string + ' remaining');
-                  }
+                  } else {
+                      time_remaining_text.html(seconds_left + ' seconds remaining');
+                  }*/
 
                   progress_bar_percentage = time_left * percentage_increment;
                   live_timer_div.css("width", progress_bar_percentage + "%");
@@ -196,7 +201,7 @@
               }
             }
 
-            updateDuration(start_time, moment().format('YYYY/MM/DD HH:mm'));
+            updateDuration(start_time, moment().format('YYYY/MM/DD HH:mm:ss'));
         };
 
         $(document).ready(function() {
