@@ -40,9 +40,9 @@ Django’s testing suite and documentation provides us with all of the necessary
 Our unit tests are named in such a way that it is clear what they are testing.  For tests that are more complicated, a comment is added to the unit test to indicate its purpose.  Functional requirements direct unit tests to be created that test the components needed to meet those requirements.  Usability testing directs development focus to work on what the customer deems important to the system and how it should operate.
 
 ###Specific Test Plan Outline  
-Installation test:  
-  * Users will follow an installation instruction manual that provides directions for how to install the PiCO system on a previous unconfigured machine.  This includes all of the necessary prerequisite software needed to host our platform.  Ideally, we would be able to also provide an installation script to make this process easier.  
-Usability testing:
-  * PiCO is designed as a contest control platform.  Therefore, usability testing will be driven by the implementation of the contests being held.  As users decide how they would like their contests managed or how users interact with the contests, the structure of the system may change.  
-Requirements testing:  
+1. Installation test:  
+  * Users will follow an installation instruction manual that provides directions for how to install the PiCO system on a previous unconfigured machine.  This includes all of the necessary prerequisite software needed to host our platform.  Ideally, we would be able to also provide an installation script to make this process easier. 
+2. Usability testing:
+  * PiCO is designed as a contest control platform.  Therefore, usability testing will be driven by the implementation of the contests being held.  As users decide how they would like their contests managed or how users interact with the contests, the structure of the system may change.    
+3. Requirements testing:  
   * When all of the functional and usability requirements defined by the customer have been satisfied, then our requirements testing will have been complete.  Of course, this means that all of the components of our system have also been tested for security, usability, functionality, etc.  
