@@ -432,8 +432,7 @@ def scoreboard(request, contest_id):
         print("problem:")
         print(problem.number)
 
-    participants_string = scoreboard_contest.contest_participants
-    participants_string = participants_string.split()
+    participants = scoreboard_contest.participant_set.all()
 
     problem_count_array = []
     for i in range(1, problem_count+1):
@@ -449,11 +448,13 @@ def scoreboard(request, contest_id):
     #    problems_status_array[problem] = [2]
 
 
-    for teamname in participants_string:
+    for participant in participants:
+        teamname = participant.team.name
         try:
             tempteam = Team.objects.get(name=teamname)
         except:
             raise Http404("Team in scoreboard no longer exists")
+
         # array with [teamname][121001] based on submission>?
 
         problem_score_array[teamname] = 0
@@ -500,7 +501,7 @@ def scoreboard(request, contest_id):
     
 
 
-    return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
+    return render(request, 'contests/scoreboard.html', {'problem_count' : problem_count_array,
         'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest})
 
 
