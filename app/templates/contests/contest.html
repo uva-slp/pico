@@ -56,7 +56,9 @@
 
     <h1>Contest: {{ contest_data.title }}</h1>
 
-    <a href="{% url 'contests:scoreboard' contest_data.id %}">View Scoreboard</a>
+    <a href="{% url 'contests:scoreboard' contest_data.id %}" class="btn btn-default">View Scoreboard</a><br />
+    <br />
+    <a href="{% url 'contests:edit_contest' contest_data.id %}" class="btn btn-default">Edit Contest</a>
     <br />
     {% if is_judge %}
         {% if contest_data.contest_start == NULL %}
