@@ -1,7 +1,7 @@
 {% extends 'pccs/home.html' %}
 {% load staticfiles %}
 
-{% block title_block %}{{ block.super }}{% endblock %}
+{% block title_block %}Contests{% endblock %}
 
 {% block head_block %}{{ block.super }}{% endblock %}
 
@@ -71,7 +71,7 @@
                             <div class="list-group">
                                 {% for contest in past_contests %}
                                     <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
-                                        <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                        <strong>{{ contest.title }}</strong>
                                     </a>
                                 {% endfor %}
                             </div>
@@ -136,7 +136,7 @@
                         <div class="list-group">
                             {% for contest in past_contests %}
                                 <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
-                                    <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                    <strong>{{ contest.title }}</strong>
                                 </a>
                             {% endfor %}
                         </div>

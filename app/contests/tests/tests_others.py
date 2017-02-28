@@ -102,8 +102,8 @@ class ContestTest(TestCase):
     def test_contest_cleaned_datetime(self):
         contest_form = self.contest_form()
         if contest_form.is_valid():
-            self.assertNotEqual(contest_form.cleaned_data['contest_length'], "02:00")
-            self.assertNotEqual(contest_form.cleaned_data['time_penalty'], "20")
+            self.assertEqual(contest_form.cleaned_data['contest_length'], "02:00")
+            self.assertEqual(contest_form.cleaned_data['time_penalty'], "20")
 
     # Austin
     def test_problem_creation(self):

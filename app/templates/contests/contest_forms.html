@@ -1,0 +1,172 @@
+{% extends 'contests/base.html' %}
+
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block head_block %}
+    {{ block.super }}
+    {{ admin_search_form.media.css }}
+    {{ participant_search_form.media.css }}
+    <style>
+        a.add-row {
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content_block %}
+    {% block load_template_form %}
+    <div class="well bs-component">
+        <form class="form-horizontal" id="load_contest_template" method="post"
+              action="{% url 'contests:create' %}">
+            <fieldset>
+                <legend>Default Templates</legend>
+
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <div class="col-lg-4 col-lg-offset-4">
+                        <select class="form-control" name="selected_template" required>
+                            {% for field in templates %}
+                            <option value="{{ field.id }}">{{ field.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row text-center">
+                    {% bootstrap_button "Load Template" value="load_template" button_type="submit" name="submit" button_class="btn btn-primary" %}
+                    <a href="{% url 'contests:create_template' %}" class="btn btn-default">Create Template</a>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    {% endblock %}
+
+    {% block contest_form %}
+    <div class="well bs-component">
+        {% block contest_form_action %}
+        <form class="form-horizontal" id="create_contest" method="post"
+              action="{% url 'contests:create' %}" enctype="multipart/form-data">
+        {% endblock %}
+            <fieldset>
+                <legend>{% block contest_form_legend %}Create Contest{% endblock %}</legend>
+
+                {% csrf_token %}
+
+                {% for field in form %}
+                    {% if field.html_name == "contest_admins" %}
+                        <!-- special treatment for contest admin -->
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Contest admins</label>
+                            <div class="col-md-9" style="float: right;">
+                                <div class="col-md-4 input-group">
+                                    <div class="admin_search" id="admin_search_form">
+                                        {% csrf_token %}
+                                        {{ admin_search_form.contest_admins }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif field.html_name == "contest_participants" %}
+                        <!-- special treatment for contest admin -->
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Contest participants</label>
+                            <div class="col-md-9" style="float: right;">
+                                <div class="col-md-4 input-group">
+                                    <div class="participant_search" id="participant_search_form">
+                                        {% csrf_token %}
+                                        {{ participant_search_form.contest_participants }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        {% bootstrap_field field layout='horizontal' %}
+                    {% endif %}
+                {% endfor %}
+
+                <br />
+
+                {% block individual_problems_formset %}
+                <fieldset>
+                    <legend style="border: 0; margin:0px; padding:0px;">Individual Problems</legend>
+
+                    {{ qa_formset.management_form }}
+
+                    <div class="qa-formset">
+                        <hr style=" border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+                        <br />
+                        {% for form in qa_formset %}
+                            {% bootstrap_form form layout='horizontal' %}
+                        {% endfor %}
+                    </div>
+                    <hr style="margin-bottom:0px; padding-bottom: 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+                </fieldset>
+                {% endblock %}
+
+                <br />
+                <div class="col-lg-2 col-lg-offset-5">
+                    {% block contest_form_submit %}
+                    {% bootstrap_button "Create Contest" value="create_contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
+                    {% endblock %}
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    {% endblock %}
+
+    {% block problem_block %}{% endblock %}
+    {% block new_problem_block %}{% endblock %}
+{% endblock %}
+
+{% block foot_block %}
+    {{ block.super }}
+
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script>
+        $('.qa-formset').formset({
+            addText: 'add question',
+            deleteText: 'delete question',
+            addCssClass: 'add-row btn btn-primary btn-sm btn-margin',
+            deleteCssClass: 'delete-row btn btn-primary btn-sm btn-margin float-left'
+        });
+    </script>
+
+    <script type='text/javascript'>
+        $('#id_autojudge_enabled').click(function() {
+            if($('#id_autojudge_enabled').prop('checked') == true) {
+                $('#id_autojudge_review').prop('disabled', false);
+            } else {
+                $('#id_autojudge_review').prop('disabled', true);
+            }
+        });
+    </script>
+
+    <!--<script type="text/javascript">
+        $(document).ready(function() {
+                $(function () {
+                    $('#id_contest_length_pickers:has(input:not([readonly],[disabled]))').datetimepicker({"format": "HH:mm"});
+                });
+                $(function () {
+                    $('#id_time_penalty_pickers:has(input:not([readonly],[disabled]))').datetimepicker({"format": "mm"});
+                });
+            });
+    </script>
+
+    <script type="text/javascript">
+        (function(window) {
+            var callback = function() {
+                $(function(){$("#id_contest_length_pickers:has(input:not([readonly],[disabled]))").datetimepicker({"language": "en-us", "format": "HH:MM"});});
+            };
+            if(window.addEventListener)
+                window.addEventListener("load", callback, false);
+            else if (window.attachEvent)
+                window.attachEvent("onload", callback);
+            else window.onload = callback;
+        })(window);
+    </script>-->
+
+    {{ admin_search_form.media.js }}
+    {{ participant_search_form.media.js }}
+{% endblock %}

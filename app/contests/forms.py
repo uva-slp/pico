@@ -43,67 +43,52 @@ REVIEW_LIST = (
 
 
 class CreateContestForm(ModelForm):
-    title = forms.CharField(required=True)
-    languages = forms.CharField(
-        required=True,
-        widget=forms.CheckboxSelectMultiple(choices=LANG_LIST)
-    )
-    contest_length = forms.CharField(
-        required=True, label="Contest Length (hours & minutes)", initial='02:00',
-        #widget=DateTimePicker()
-    )
-    time_penalty = forms.CharField(
-        required=True, label="Time Penalty (minutes)", initial=20,
-        #widget=DateTimePicker()
-    )
-    autojudge_enabled = forms.BooleanField(required=False)
-    autojudge_review = forms.CharField(
-        required=False, label="Judge Review Option",
-        widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
-    )
-    problem_description = forms.FileField(required=True, label="Problem Descriptions (.pdf)")
-    contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
-                                                    widget=autocomplete.ModelSelect2Multiple(
-                                                        url=reverse_lazy('users:autocomplete'),
-                                                        attrs={
-                                                            'data-placeholder': 'User',
-                                                        }))
-    # contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
-    contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
-                                                    widget=autocomplete.ModelSelect2Multiple(
-                                                        url=reverse_lazy('teams:autocomplete'),
-                                                        attrs={
-                                                            'data-placeholder': 'Team',
-                                                        }))
+	title = forms.CharField(required=True)
+	languages = forms.CharField(
+		required=True,
+		widget=forms.CheckboxSelectMultiple(choices=LANG_LIST)
+	)
+	contest_length = forms.CharField(
+		required=True, label="Contest Length (hours & minutes)", initial='02:00',
+		widget=forms.TimeInput(format='%H:%M')
+		#widget=DateTimePicker()
+	)
+	time_penalty = forms.CharField(
+		required=True, label="Time Penalty (minutes)", initial=20,
+		widget=forms.TimeInput(format='%M')
+		#widget=DateTimePicker()
+	)
+	autojudge_enabled = forms.BooleanField(required=False)
+	autojudge_review = forms.CharField(
+		required=False, label="Judge Review Option",
+		widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
+	)
+	problem_description = forms.FileField(required=True, label="Problem Descriptions (.pdf)")
+	contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
+												widget=autocomplete.ModelSelect2Multiple(
+													url=reverse_lazy('users:autocomplete'),
+													attrs={
+														'data-placeholder': 'User',
+													}))
+	contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
+													widget=autocomplete.ModelSelect2Multiple(
+														url=reverse_lazy('teams:autocomplete'),
+														attrs={
+															'data-placeholder': 'Team',
+														}))
 
-    def clean(self):
-        upload_to = 'uploads/'
-        if not 'problem_description' in self.cleaned_data:
-            return self.cleaned_data
-        upload_to += self.cleaned_data['problem_description'].name
+	def clean(self):
+		upload_to = 'uploads/'
+		if not 'problem_description' in self.cleaned_data:
+			return self.cleaned_data
+		upload_to += self.cleaned_data['problem_description'].name
 
-    def clean_contest_length(self):
-        data = self.cleaned_data['contest_length']
-        separator = data.find(":")
-        cl_hours = int(data[0:separator])
-        cl_minutes = int(data[separator + 1:])
-        time = datetime.now()
-        data = time.replace(hour=cl_hours, minute=cl_minutes)
-        return data
-
-    def clean_time_penalty(self):
-        data = self.cleaned_data['time_penalty']
-        time = datetime.now()
-        data = time.replace(minute=int(data))
-        return data
-
-    class Meta:
-        model = Contest
-        fields = (
-            'title', 'languages', 'contest_length', 'time_penalty',
-            'autojudge_enabled', 'autojudge_review', 'problem_description',
-            'contest_admins',
-            'contest_participants')
+	class Meta:
+		model = Contest
+		fields = (
+			'title', 'languages', 'contest_length', 'time_penalty',
+			'autojudge_enabled', 'autojudge_review', 'problem_description',
+			'contest_admins', 'contest_participants')
 
 
 class CreateProblem(ModelForm):
@@ -130,47 +115,47 @@ class CreateProblem(ModelForm):
 
 
 class CreateContestTemplateForm(ModelForm):
-    title = forms.CharField(required=True)
-    languages = forms.CharField(
-        required=True,
-        widget=forms.CheckboxSelectMultiple(choices=LANG_LIST)
-    )
-    contest_length = forms.CharField(
-        required=True, label="Contest Length (hours & minutes)", initial='02:00',
-        # widget=DateTimePicker()
-    )
-    time_penalty = forms.CharField(
-        required=True, label="Time Penalty (minutes)", initial=20,
-        # widget=DateTimePicker()
-    )
-    autojudge_enabled = forms.BooleanField(required=False)
-    autojudge_review = forms.CharField(
-        required=False, label="Judge Review Option",
-        widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
-    )
-    contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
-                                                    widget=autocomplete.ModelSelect2Multiple(
-                                                        url=reverse_lazy('users:autocomplete'),
-                                                        attrs={
-                                                            'data-placeholder': 'User',
-                                                        }))
-    # contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
-    contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
-                                                    widget=autocomplete.ModelSelect2Multiple(
-                                                        url=reverse_lazy('teams:autocomplete'),
-                                                        attrs={
-                                                            'data-placeholder': 'Team',
-                                                        }))
+	title = forms.CharField(required=True)
+	languages = forms.CharField(
+		required=True,
+		widget=forms.CheckboxSelectMultiple(choices=LANG_LIST)
+	)
+	contest_length = forms.CharField(
+		required=True, label="Contest Length (hours & minutes)", initial='02:00',
+		widget=forms.TimeInput(format='%H:%M')
+		#widget=DateTimePicker()
+	)
+	time_penalty = forms.CharField(
+		required=True, label="Time Penalty (minutes)", initial=20,
+		widget=forms.TimeInput(format='%M')
+		# widget=DateTimePicker()
+	)
+	autojudge_enabled = forms.BooleanField(required=False)
+	autojudge_review = forms.CharField(
+		required=False, label="Judge Review Option",
+		widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
+	)
+	contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
+												widget=autocomplete.ModelSelect2Multiple(
+													url=reverse_lazy('users:autocomplete'),
+													attrs={
+														'data-placeholder': 'User',
+													}))
+	contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
+													widget=autocomplete.ModelSelect2Multiple(
+														url=reverse_lazy('teams:autocomplete'),
+														attrs={
+															'data-placeholder': 'Team',
+														}))
+	def clean(self):
+		return self.cleaned_data
 
-    def clean(self):
-        return self.cleaned_data
-
-    class Meta:
-        model = ContestTemplate
-        fields = (
-            'title', 'languages', 'contest_length', 'time_penalty',
-            'autojudge_enabled', 'autojudge_review',
-            'contest_admins', 'contest_participants')
+	class Meta:
+		model = ContestTemplate
+		fields = (
+			'title', 'languages', 'contest_length', 'time_penalty',
+			'autojudge_enabled', 'autojudge_review',
+			'contest_admins', 'contest_participants')
 
 
 class UploadCodeForm(forms.ModelForm):
