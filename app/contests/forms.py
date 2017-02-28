@@ -67,7 +67,6 @@ class CreateContestForm(ModelForm):
                                                         attrs={
                                                             'data-placeholder': 'User',
                                                         }))
-    # contest_admins = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
     contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 
     def clean(self):
@@ -142,8 +141,12 @@ class CreateContestTemplateForm(ModelForm):
         required=False, label="Judge Review Option",
         widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
     )
-    # contest_admins = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
-    contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple)
+    contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
+                                                    widget=autocomplete.ModelSelect2Multiple(
+                                                        url=reverse_lazy('users:autocomplete'),
+                                                        attrs={
+                                                            'data-placeholder': 'User',
+                                                        }))
     contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
 
     def clean(self):
@@ -184,13 +187,13 @@ class ReturnJudgeResultForm(forms.ModelForm):
 
 
 class AdminSearchForm(forms.ModelForm):
-	contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
-													widget=autocomplete.ModelSelect2Multiple(
-														url=reverse_lazy('users:autocomplete'),
-														attrs={
-															'data-placeholder': 'User',
-														}))
+    contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
+                                                    widget=autocomplete.ModelSelect2Multiple(
+                                                        url=reverse_lazy('users:autocomplete'),
+                                                        attrs={
+                                                            'data-placeholder': 'User',
+                                                        }))
 
-	class Meta:
-		model = User
-		fields = ('contest_admins',)
+    class Meta:
+        model = User
+        fields = ('contest_admins',)

@@ -111,7 +111,7 @@ def create(request):
                                 templates = ContestTemplate.objects.filter(creator=template_user)
                                 QAFormSet = formset_factory(CreateProblem)
                                 qa_formset = QAFormSet()
-                                admin_search_form = AdminSearchForm()
+                                admin_search_form = AdminSearchForm(initial={'contest_admins': template.contest_admins.all()})
 
                                 return render(request, 'contests/create_contest.html',
                                                           {'templates': templates, 'form': form, 'qa_formset': qa_formset,
@@ -184,6 +184,7 @@ def create(request):
 def create_template(request):
         if request.method == 'POST':
                 form = CreateContestTemplateForm(request.POST)
+                admin_search_form = AdminSearchForm()
 
                 if form.is_valid():
                         contest_template = form.save()
@@ -193,7 +194,8 @@ def create_template(request):
                         return redirect(reverse('home'))
         else:
                 form = CreateContestTemplateForm()
-        return render(request, 'contests/create_template.html', {'form': form})
+                admin_search_form = AdminSearchForm()
+        return render(request, 'contests/create_template.html', {'form': form, 'admin_search_form': admin_search_form})
 
 
 # Helper method for getting user's team participated in a contest
