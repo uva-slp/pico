@@ -89,8 +89,8 @@ class JudgeInterfaceViewTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
     # Vivian
-    def test_view_all_judge(self):
-        self.client.login(username='myadmin', password='password')
+    def test_view_all_superuser(self):
+        self.client.login(username='admin', password='password')
         user = auth.get_user(self.client)
         assert user.is_authenticated()
 
@@ -157,8 +157,20 @@ class JudgeInterfaceViewTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
     # Vivian
+    def test_view_submission_superuser(self):
+        self.client.login(username='admin', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        url = reverse("contests:contest_submissions",
+                      kwargs={'contest_id': 7, 'team_id': 1})
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
     def test_view_submission_nonparticipant(self):
-        self.client.login(username='myadmin', password='password')
+        self.client.login(username='nonparticipant', password='password')
         user = auth.get_user(self.client)
         assert user.is_authenticated()
 
@@ -199,6 +211,18 @@ class JudgeInterfaceViewTest(TestCase):
         resp = self.client.get(url)
 
         self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_judge_superuser(self):
+        self.client.login(username='admin', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        url = reverse("contests:contest_judge",
+                      kwargs={'contest_id': 7, 'run_id': 1})
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 302)
 
     # Vivian
     def test_view_judge_participant(self):

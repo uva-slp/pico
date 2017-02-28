@@ -443,7 +443,7 @@ def displayMySubmissions(request, contest_id, team_id):
     team = Team.objects.get(id=team_id)
 
     is_judge = isJudge(contest_data, request.user)
-    if not is_judge and request.user not in team.members.all():
+    if not is_judge and request.user not in team.members.all() and not request.user.is_superuser:
         return redirect(reverse('home'))
 
     problems = contest_data.problem_set.all()
