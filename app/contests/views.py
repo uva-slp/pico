@@ -1,30 +1,28 @@
-from django.http import HttpResponse
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseForbidden, Http404, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 
 from teams.forms import TeamForm, TeamSelectForm
-
 from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
-from .models import Problem, Contest
-from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm
+from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, CreateContestTemplateForm, AdminSearchForm, ParticipantSearchForm
+from dal import autocomplete
+from users.forms import UserSearchForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.forms.formsets import formset_factory
+from django.forms import formset_factory, inlineformset_factory
 from django.urls import reverse
 from .lib import diff as _diff
 from .lib import execution as exe
 from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
-from .forms import CreateContestTemplateForm
 from .models import Participant, Submission, Notification
 from users.models import User
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 from django.http import Http404
+from django.template.loader import render_to_string
 import os
 
-from django.forms.formsets import formset_factory
 
 def index(request):
     all_active_contests = Contest.objects.active()
@@ -84,7 +82,7 @@ def diff(request, problem_id):
         else:
                 return HttpResponse("Invalid form.")
 
-
+@login_required
 def create(request):
 
         QAFormSet = formset_factory(CreateProblem)
@@ -101,17 +99,22 @@ def create(request):
                                                                                                   'time_penalty': template.time_penalty,
                                                                                                   'autojudge_enabled': template.autojudge_enabled,
                                                                                                   'autojudge_review': template.autojudge_review,
-                                                                                                  'contest_admins': template.contest_admins,
-                                                                                                  'contest_participants': template.contest_participants
+                                                                                                  'contest_admins': template.contest_admins.all(),
+                                                                                                  'contest_participants': template.contest_participants.all()
                                                                                                   })
 
                                 template_user = request.user
                                 templates = ContestTemplate.objects.filter(creator=template_user)
                                 QAFormSet = formset_factory(CreateProblem)
                                 qa_formset = QAFormSet()
+                                admin_search_form = AdminSearchForm(
+                                    initial={'contest_admins': template.contest_admins.all()})
+                                participant_search_form = ParticipantSearchForm(
+                                    initial={'contest_participants': template.contest_participants.all()})
 
                                 return render(request, 'contests/create_contest.html',
-                                                          {'templates': templates, 'form': form, 'qa_formset': qa_formset})
+                                                          {'templates': templates, 'form': form, 'qa_formset': qa_formset,
+                                                           'admin_search_form': admin_search_form, 'participant_search_form': participant_search_form})
 
                         else:
                                 # template does not exist or no template was selected
@@ -119,9 +122,11 @@ def create(request):
                 if request.POST['submit'] == "create_contest":
                         #grab information from form
                         form = CreateContestForm(request.POST, request.FILES)
-                        #qa_formset = CreateProblem(request.POST, request.FILES)
-
                         qa_formset = QAFormSet(request.POST, request.FILES)
+
+                        admin_search_form = AdminSearchForm()
+                        participant_search_form = ParticipantSearchForm()
+
                         if form.is_valid() and qa_formset.is_valid():
 
                                 problem_desc = Contest(problem_description=request.FILES['problem_description'], date_created=datetime.now(timezone.utc))
@@ -133,8 +138,6 @@ def create(request):
                                 contest_id = contest.id
 
                                 contest_participants = form.cleaned_data.get('contest_participants')
-                                contest_participants = contest_participants.split()
-                                print(contest_participants)
 
                                 for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
                                         team = Team.objects.filter(name=participant).get()
@@ -147,20 +150,8 @@ def create(request):
 
                                 for qa_form in qa_formset:
                                         problemcount += 1
-                                        solution = qa_form.cleaned_data.get('solution')
-                                        program_input = qa_form.cleaned_data.get('program_input')
-                                        input_desc = qa_form.cleaned_data.get('input_description')
-                                        output_desc = qa_form.cleaned_data.get('output_description')
-                                        sample_input = qa_form.cleaned_data.get('sample_input')
-                                        sample_output = qa_form.cleaned_data.get('sample_output')
-                                        contest = qa_form.cleaned_data.get('title')
-
-                                        p = Problem(
-                                                number = problemcount, solution=solution, program_input = program_input, input_description=input_desc,
-                                                output_description=output_desc, sample_input=sample_input,
-                                                sample_output=sample_output, contest_id=contest_id)
-
-                                        p.save()
+                                        qa_form = qa_form.cleaned_data
+                                        create_new_problem(qa_form, problemcount, contest_id)
 
                                         # Loop through participants text box and create participant objects for a team on each line w/ contest
 
@@ -168,15 +159,115 @@ def create(request):
         else:
                 template_user = request.user
                 templates = ContestTemplate.objects.filter(creator=template_user)
-                form = CreateContestForm()
+
                 QAFormSet = formset_factory(CreateProblem)
                 qa_formset = QAFormSet()
-        return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset})
 
+                form = CreateContestForm()
+                admin_search_form = AdminSearchForm()
+                participant_search_form = ParticipantSearchForm()
 
+        return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset,
+                                                                'admin_search_form': admin_search_form, 'participant_search_form': participant_search_form})
+
+def create_new_problem(form, problemcount, contest_id):
+    solution = form.get('solution')
+    program_input = form.get('program_input')
+    input_desc = form.get('input_description')
+    output_desc = form.get('output_description')
+    sample_input = form.get('sample_input')
+    sample_output = form.get('sample_output')
+    #contest = form.get('title')
+
+    p = Problem(
+        number=problemcount, solution=solution, program_input=program_input, input_description=input_desc,
+        output_description=output_desc, sample_input=sample_input,
+        sample_output=sample_output, contest_id=contest_id)
+
+    p.save()
+
+@login_required
+def edit(request, contest_id):
+
+    contest = get_object_or_404(Contest, pk=contest_id)
+    if contest.creator != request.user:
+        return HttpResponseForbidden()
+
+    problems = contest.problem_set.all()
+    problems_set = []
+    for problem in problems:
+        problems_set.append((problem.id, CreateProblem(instance=problem)))
+
+    if request.method == 'POST':
+        if request.POST['submit'] == "update_contest":
+
+            form = CreateContestForm(request.POST or None, request.FILES or None, instance=contest)
+            admin_search_form = AdminSearchForm()
+            participant_search_form = ParticipantSearchForm()
+
+            if form.is_valid():
+                problem_desc = Contest(problem_description=request.FILES.get('problem_description', False),
+                                       date_created=datetime.now(timezone.utc))
+                form.save()
+
+                contest_participants = form.cleaned_data.get('contest_participants')
+
+                for participant in contest_participants:  # Loop through the given participants when a user creates a contest and create participant objects for each
+                    if participant not in Contest.objects.values_list('contest_participants', flat=True).filter(pk=contest_id):
+                        team = Team.objects.filter(name=participant).get()
+                        pt = Participant(contest=contest, team=team)
+                        pt.save()
+
+                request.method = None
+                request.POST = None
+                return edit(request, contest_id)
+
+        if request.POST['submit'] == "update_problem":
+            problem_id = request.POST['problem_id']
+            problem = Problem.objects.get(pk=problem_id)
+            problem_form = CreateProblem(request.POST or None, request.FILES or None, instance=problem)
+            if problem_form.is_valid():
+                problem_form.id = problem_id
+                problem_form.save()
+
+            request.method = None
+            request.POST = None
+            return edit(request, contest_id)
+
+        if request.POST['submit'] == "delete_problem":
+            problem_id = request.POST['problem_id']
+            Problem.objects.get(pk=problem_id).delete()
+
+            request.method = None
+            request.POST = None
+            return edit(request, contest_id)
+
+        if request.POST['submit'] == "save_new_problem":
+            # temporary problemcount solution until model is changed
+            problemcount = User.objects.make_random_password(length=3, allowed_chars='123456789')
+            problem_form = CreateProblem(request.POST, request.FILES)
+            if problem_form.is_valid():
+                problem_form = problem_form.cleaned_data
+                create_new_problem(problem_form, problemcount, contest_id)
+
+            request.method = None
+            request.POST = None
+            return edit(request, contest_id)
+
+    form = CreateContestForm(None, None, instance=contest)
+    admin_search_form = AdminSearchForm()
+    participant_search_form = ParticipantSearchForm()
+    problem_form = CreateProblem()
+
+    return render(request, 'contests/edit_contest.html', {'form': form, 'admin_search_form': admin_search_form, 'participant_search_form': participant_search_form,
+                                                          'problem_form': problem_form, 'problems_set': problems_set, 'contest_id': contest_id})
+
+@login_required
 def create_template(request):
         if request.method == 'POST':
                 form = CreateContestTemplateForm(request.POST)
+                admin_search_form = AdminSearchForm()
+                participant_search_form = ParticipantSearchForm()
 
                 if form.is_valid():
                         contest_template = form.save()
@@ -186,7 +277,11 @@ def create_template(request):
                         return redirect(reverse('home'))
         else:
                 form = CreateContestTemplateForm()
-        return render(request, 'contests/create_template.html', {'form': form})
+                admin_search_form = AdminSearchForm()
+                participant_search_form = ParticipantSearchForm()
+        return render(request, 'contests/create_template.html', {'form': form,
+                                                                 'admin_search_form': admin_search_form,
+                                                                 'participant_search_form': participant_search_form})
 
 
 # Helper method for getting user's team participated in a contest
@@ -203,11 +298,9 @@ def getTeam(contest_data, user):
 
 # Helper method for checking if user is judge of the contest
 def isJudge(contest_data, user):
-    # TODO need to be changed after we have actual admin field
-    contest_judges = contest_data.contest_admins
-    contest_judges = contest_judges.split()
+    contest_judges = contest_data.contest_admins.all()
     for judge in contest_judges:
-        if user.username == judge:
+        if user == judge:
             return True
     return False
 
@@ -308,10 +401,10 @@ def displayContest(request, contest_id):
 
 
     return render( request, 'contests/contest.html', {'contest_data': contest_data, 'contest_problems': problems,
-                                                      'is_judge': is_judge, 'is_participant': is_participant,
+                                                      'is_judge': is_judge, 'is_participant': is_participant, 'is_creator': is_creator,
                                                       'contest_teams': contest_teams, 'submission_attempts': submission_attempts,
                                                       'submission_status': status, 'color_states': color_states,
-                                                      'problem_form_pairs' : problem_form_pairs })
+                                                      'problem_form_pairs' : problem_form_pairs})
 
 
 @login_required
@@ -418,8 +511,7 @@ def scoreboard(request, contest_id):
         print("problem:")
         print(problem.number)
 
-    participants_string = scoreboard_contest.contest_participants
-    participants_string = participants_string.split()
+    participants = scoreboard_contest.participant_set.all()
 
     problem_count_array = []
     for i in range(1, problem_count+1):
@@ -435,11 +527,13 @@ def scoreboard(request, contest_id):
     #    problems_status_array[problem] = [2]
 
 
-    for teamname in participants_string:
+    for participant in participants:
+        teamname = participant.team.name
         try:
             tempteam = Team.objects.get(name=teamname)
         except:
             raise Http404("Team in scoreboard no longer exists")
+
         # array with [teamname][121001] based on submission>?
 
         problem_score_array[teamname] = 0
@@ -486,7 +580,7 @@ def scoreboard(request, contest_id):
     
 
 
-    return render(request, 'contests/scoreboard.html', {'teams' : participants_string, 'problem_count' : problem_count_array,
+    return render(request, 'contests/scoreboard.html', {'problem_count' : problem_count_array,
         'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest})
 
 
@@ -515,6 +609,7 @@ def close_notification(request):
         current_notification = Notification.objects.get(id=modal_id)
         current_notification.delete()
     return HttpResponse('OK')
+
 
 def stats(request):
     if request.user.is_authenticated():

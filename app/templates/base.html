@@ -4,7 +4,7 @@
 
 <html>
 	<head>
-        <title>{% block title_block %}PCCS{% endblock %}</title>
+        <title>{% block title_block %}PiCO{% endblock %}</title>
 
     	<!-- Bootstrap Core CSS -->
         <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
@@ -15,6 +15,14 @@
 
         <!-- Base CSS -->
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
+            <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
+        <!-- favicon -->
+        <link rel="apple-touch-icon" sizes="120x120" href="{% static 'favicon/apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'favicon/manifest.json' %}">
+        <link rel="mask-icon" color="#5bbad5" href="{% static 'favicon/safari-pinned-tab.svg' %}">
+        <meta name="theme-color" content="#ffffff">
 
         {% block head_block %}{% endblock %}
 
