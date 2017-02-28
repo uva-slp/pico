@@ -965,7 +965,7 @@
           "autojudge_review": "1",
           "problem_description": "uploads/pdf_iBWQjBk.pdf",
           "contest_admins": [["judge"]],
-          "contest_participants": "team1 team2"
+          "contest_participants": [1, 2]
       }
   }
 ]

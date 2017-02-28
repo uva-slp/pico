@@ -22,12 +22,11 @@ class ContestTemplateTest(TestCase):
     def contest_template(
             self, title="template test", languages="java, python",
             length=datetime.now(timezone.utc), penalty=datetime.now(timezone.utc), autojudge="1",
-            review="Manual review all submissions", participants=""):
+            review="Manual review all submissions"):
         return ContestTemplate.objects.create(
             title=title, languages=languages,
             contest_length=length, time_penalty=penalty,
-            autojudge_enabled=autojudge, autojudge_review=review,
-            contest_participants=participants)
+            autojudge_enabled=autojudge, autojudge_review=review)
 
     # Austin
     def test_contest_template_creation(self):
@@ -77,13 +76,12 @@ class ContestTest(TestCase):
     def contest(
             self, title="contest test", languages="java, python",
             length=datetime.now(timezone.utc), penalty=datetime.now(timezone.utc), autojudge="0", review="",
-            desc="problems.pdf", participants=""):
+            desc="problems.pdf"):
         return Contest.objects.create(
             title=title, languages=languages,
             contest_length=length, time_penalty=penalty,
             autojudge_enabled=autojudge, autojudge_review=review,
-            problem_description=desc,
-            contest_participants=participants)
+            problem_description=desc)
 
     # Austin
     def test_contest_creation(self):
@@ -183,7 +181,7 @@ class ContestTest(TestCase):
             "contest_length": ct.contest_length, "time_penalty": ct.time_penalty,
             "autojudge_enabled": ct.autojudge_enabled, "autojudge_review": ct.autojudge_review,
             "problem_description": "problems.pdf",
-            "contest_admins": ct.contest_admins.all(), "contest_participants": ct.contest_participants
+            "contest_admins": ct.contest_admins.all(), "contest_participants": ct.contest_participants.all()
         }
 
         files = {
@@ -500,14 +498,21 @@ class ScoreboardTest(TestCase):
 
     # Jamel
     def testTeamSelection(self):
-        ct = Contest(contest_participants="team1")
+        ct = Contest()
+        ct.save()
         t = Team(name="team1")
+        t.save()
+        ct.contest_participants.add(t)
 
-        self.assertEqual(ct.contest_participants, t.name)
+        flag = False
+        if t in ct.contest_participants.all():
+            flag = True
+
+        self.assertTrue(flag)
 
     # Jamel
     def testParticipants(self):
-        ct = Contest(contest_participants="team1")
+        ct = Contest()
         t = Team("team1")
         b = Team("team3")
         p1 = Participant(contest=ct, team=t)
@@ -517,7 +522,7 @@ class ScoreboardTest(TestCase):
 
     # Jamel
     def testParticipantScore(self):
-        ct = Contest(contest_participants="team1")
+        ct = Contest()
         t = Team("team1")
         p1 = Participant(contest=ct, team=t)
         p1.score = 5
@@ -526,7 +531,7 @@ class ScoreboardTest(TestCase):
 
     # Jamel
     def test_participant_creation(self):
-        ct = Contest(contest_participants="team1")
+        ct = Contest()
         t = Team("team1")
         p = Participant(team=t, contest=ct)
         self.assertTrue(isinstance(p, Participant))
@@ -594,10 +599,18 @@ class ScoreboardTest(TestCase):
 
     # Jamel
     def testSelect(self):
-        ct = Contest(contest_participants="team1")
+        # this test is redundant with testSelectTeam
+        ct = Contest()
+        ct.save()
         t = Team(name="team1")
+        t.save()
+        ct.contest_participants.add(t)
 
-        self.assertEqual(ct.contest_participants, t.name)
+        flag = False
+        if t in ct.contest_participants.all():
+            flag = True
+
+        self.assertTrue(flag)
 
     # Jamel
     def testScoreboardWrong(self):
@@ -637,7 +650,7 @@ class ScoreboardTest(TestCase):
 
     # Jamel
     def test_participant_false(self):
-        ct = Contest(contest_participants="team1")
+        ct = Contest()
         t = Team("team1")
         z = Team("team2")
         p = Participant(team=t, contest=ct)
@@ -662,53 +675,55 @@ class ScoreboardTest(TestCase):
 
 
     # Jamel
-
-
-def test_participant_true(self):
-    ct = Contest(contest_participants="team1")
-    t = Team("team1")
-    z = Team("team2")
-    p = Participant(team=t, contest=ct)
-    z = Participant(team=z, contest=ct)
-    self.assertTrue(isinstance(z, Participant))
+    def test_participant_true(self):
+        ct = Contest()
+        t = Team("team1")
+        z = Team("team2")
+        p = Participant(team=t, contest=ct)
+        z = Participant(team=z, contest=ct)
+        self.assertTrue(isinstance(z, Participant))
 
 
     # Jamel
+    def testTSelect(self):
+        # this test is redundant with testSelectTeam and testSelect
+        ct = Contest()
+        ct.save()
+        t = Team(name="team1")
+        t.save()
+        ct.contest_participants.add(t)
 
-def testTSelect(self):
-    ct = Contest(contest_participants="team1")
-    t = Team(name="team1")
+        flag = False
+        if t in ct.contest_participants.all():
+            flag = True
 
-    self.assertEqual(ct.contest_participants, t.name)
+        self.assertTrue(flag)
+
 
     # Jamel
+    def testParticipantsAdding(self):
+        ct = Contest()
+        t = Team("team1")
+        b = Team("team3")
+        p1 = Participant(contest=ct, team=t)
+        p2 = Participant(contest=ct, team=b)
 
+        self.assertEqual(p1.contest, p2.contest)
 
-def testParticipantsAdding(self):
-    ct = Contest(contest_participants="team1")
-    t = Team("team1")
-    b = Team("team3")
-    p1 = Participant(contest=ct, team=t)
-    p2 = Participant(contest=ct, team=b)
-
-    self.assertEqual(p1.contest, p2.contest)
 
     # Jamel
+    def testParticipantScoreChange(self):
+        ct = Contest()
+        t = Team("team1")
+        p1 = Participant(contest=ct, team=t)
+        p1.score = 5
 
+        self.assertEqual(5, p1.score)
 
-def testParticipantScoreChange(self):
-    ct = Contest(contest_participants="team1")
-    t = Team("team1")
-    p1 = Participant(contest=ct, team=t)
-    p1.score = 5
-
-    self.assertEqual(5, p1.score)
 
     # Jamel
-
-
-def testNewTeamFalse(self):
-    newTeam = Team(name="banana")
-    newTeam.save()
-    tempteam = Team.objects.get(name="banana")
-    self.assertNotEqual("orange", newTeam.name)
+    def testNewTeamFalse(self):
+        newTeam = Team(name="banana")
+        newTeam.save()
+        tempteam = Team.objects.get(name="banana")
+        self.assertNotEqual("orange", newTeam.name)

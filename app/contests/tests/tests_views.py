@@ -255,10 +255,10 @@ class LoadTemplateTest(TestCase):
             "title": "Contest test 1", "languages": "java, python",
             "contest_length": "02:00", "time_penalty": "20",
             "autojudge_enabled": "0", "autojudge_review": "",
-            "contest_participants": ""
+            "contest_admins": "", "contest_participants": ""
         }
         resp = self.client.post(reverse('contests:create_template'), follow=True, data=data)
-        self.assertRedirects(resp, reverse('contests:index'), target_status_code=200)
+        self.assertEqual(resp.status_code, 200)
 
     # Austin
     def test_create_contest(self):
