@@ -11,7 +11,7 @@
             "autojudge_enabled": false,
             "autojudge_review": "",
             "problem_description": "problems.pdf",
-            "contest_admins": "",
+            "contest_admins": [],
             "contest_participants": ""
         }
     },
@@ -27,7 +27,7 @@
             "autojudge_enabled": false,
             "autojudge_review": "",
             "problem_description": "problems.pdf",
-            "contest_admins": "",
+            "contest_admins": [],
             "contest_participants": ""
         }
     },
@@ -42,7 +42,7 @@
                 "time_penalty": "30",
                 "autojudge_enabled": true,
                 "autojudge_review": "Manual review all submissions",
-                "contest_admins": "",
+                "contest_admins": [],
                 "contest_participants": ""
         }
     }

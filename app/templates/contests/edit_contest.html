@@ -13,10 +13,12 @@
 {% block load_template_form %}{% endblock %}
 
 {% block contest_form_legend %}Edit Contest - {{ form.title.value }}{% endblock %}
+
 {% block contest_form_action %}
     <form class="form-horizontal" id="edit_contest" method="post"
           action="{% url 'contests:edit_contest' contest_id %}" enctype="multipart/form-data">
 {% endblock %}
+
 {% block contest_form_submit %}
     {% bootstrap_button "Update Contest" value="update_contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
 {% endblock %}

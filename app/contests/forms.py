@@ -1,40 +1,44 @@
 from django.forms import Form, ModelForm
 from .models import Contest, Submission, Problem, ContestTemplate
+from users.models import User
+from teams.models import Team
 from django import forms
+from django.urls import reverse_lazy
 #from bootstrap3_datetime.widgets import DateTimePicker
 from datetime import datetime
+from dal import autocomplete
 
 
 '''
 class CreateContestForm(ModelForm):
-	class Meta:
-		model = Contest
-		fields = ['title']
+    class Meta:
+        model = Contest
+        fields = ['title']
 '''
 
 LANGAUGES = (
-	('Python','Python'), 
-	('Java', 'Java') , 
-	('C++', 'C++'))
+    ('Python','Python'),
+    ('Java', 'Java') ,
+    ('C++', 'C++'))
 CONTEST_LENGTH = (
-	('1', '1 Hour'), 
-	('2','2 Hours'), 
-	('5','5 Hours'), 
-	('10', '10 Hours'), 
-	('24','24 Hours'))
+    ('1', '1 Hour'),
+    ('2','2 Hours'),
+    ('5','5 Hours'),
+    ('10', '10 Hours'),
+    ('24','24 Hours'))
 AUTOJUDGE = (
-	('1','Enabled'), 
-	('0','Disabled'))
+    ('1','Enabled'),
+    ('0','Disabled'))
 
 LANG_LIST = (
-	('1', 'Java'),
-	('2', 'C++'),
-	('3', 'Python')
+    ('1', 'Java'),
+    ('2', 'C++'),
+    ('3', 'Python')
 )
 
 REVIEW_LIST = (
-	('1', 'Manual review incorrect submissions'),
-	('2', 'Manual review all submissions')
+    ('1', 'Manual review incorrect submissions'),
+    ('2', 'Manual review all submissions')
 )
 
 
@@ -60,8 +64,18 @@ class CreateContestForm(ModelForm):
 		widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
 	)
 	problem_description = forms.FileField(required=True, label="Problem Descriptions (.pdf)")
-	contest_admins = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
-	contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
+	contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
+												widget=autocomplete.ModelSelect2Multiple(
+													url=reverse_lazy('users:autocomplete'),
+													attrs={
+														'data-placeholder': 'User',
+													}))
+	contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
+													widget=autocomplete.ModelSelect2Multiple(
+														url=reverse_lazy('teams:autocomplete'),
+														attrs={
+															'data-placeholder': 'Team',
+														}))
 
 	def clean(self):
 		upload_to = 'uploads/'
@@ -78,26 +92,26 @@ class CreateContestForm(ModelForm):
 
 
 class CreateProblem(ModelForm):
-	solution = forms.FileField(required=True, label='Solution (.txt)')
-	program_input = forms.FileField(required=False, label= 'Program Input (.txt)')
-	input_description = forms.CharField(required=False, label='Description of Input',
-		widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
-	output_description = forms.CharField(required=False, label='Description of Output',
-		widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
-	sample_input = forms.FileField(required=False, label='Sample Input (.txt)')
-	sample_output = forms.FileField(required=False, label='Sample Output (.txt)')
+    solution = forms.FileField(required=True, label='Solution (.txt)')
+    program_input = forms.FileField(required=False, label= 'Program Input (.txt)')
+    input_description = forms.CharField(required=False, label='Description of Input',
+        widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
+    output_description = forms.CharField(required=False, label='Description of Output',
+        widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
+    sample_input = forms.FileField(required=False, label='Sample Input (.txt)')
+    sample_output = forms.FileField(required=False, label='Sample Output (.txt)')
 
-	def clean(self):
-		upload_to = 'uploads/'
-		if not 'solution' in self.cleaned_data:
-			return self.cleaned_data
-		upload_to += self.cleaned_data['solution'].name
+    def clean(self):
+        upload_to = 'uploads/'
+        if not 'solution' in self.cleaned_data:
+            return self.cleaned_data
+        upload_to += self.cleaned_data['solution'].name
 
-	class Meta:
-		model = Problem
-		fields = (
-			'solution', 'program_input', 'input_description', 'output_description', 'sample_input',
-			'sample_output')
+    class Meta:
+        model = Problem
+        fields = (
+            'solution', 'program_input', 'input_description', 'output_description', 'sample_input',
+            'sample_output')
 
 
 class CreateContestTemplateForm(ModelForm):
@@ -106,7 +120,7 @@ class CreateContestTemplateForm(ModelForm):
 		required=True,
 		widget=forms.CheckboxSelectMultiple(choices=LANG_LIST)
 	)
-	contest_length = forms.TimeField(
+	contest_length = forms.CharField(
 		required=True, label="Contest Length (hours & minutes)", initial='02:00',
 		widget=forms.TimeInput(format='%H:%M')
 		#widget=DateTimePicker()
@@ -121,9 +135,18 @@ class CreateContestTemplateForm(ModelForm):
 		required=False, label="Judge Review Option",
 		widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
 	)
-	contest_admins = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
-	contest_participants = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
-
+	contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
+												widget=autocomplete.ModelSelect2Multiple(
+													url=reverse_lazy('users:autocomplete'),
+													attrs={
+														'data-placeholder': 'User',
+													}))
+	contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
+													widget=autocomplete.ModelSelect2Multiple(
+														url=reverse_lazy('teams:autocomplete'),
+														attrs={
+															'data-placeholder': 'Team',
+														}))
 	def clean(self):
 		return self.cleaned_data
 
@@ -136,27 +159,52 @@ class CreateContestTemplateForm(ModelForm):
 
 
 class UploadCodeForm(forms.ModelForm):
-	class Meta:
-		model = Submission
-		fields = ['code_file', 'problem']
-		widgets = {'problem': forms.HiddenInput()}
+    class Meta:
+        model = Submission
+        fields = ['code_file', 'problem']
+        widgets = {'problem': forms.HiddenInput()}
 
 
 class ReturnJudgeResultForm(forms.ModelForm):
-	class Meta:
-		model = Submission
-		fields = ['result', 'state']
-		widgets = {'state': forms.HiddenInput()}
+    class Meta:
+        model = Submission
+        fields = ['result', 'state']
+        widgets = {'state': forms.HiddenInput()}
 
-	def clean(self):
-		cleaned_data = super(ReturnJudgeResultForm, self).clean()
-		result = cleaned_data.get('result')
-		if result:
-			if result == 'YES':
-				cleaned_data['state'] = 'YES'
-			else:
-				cleaned_data['state'] = 'NO'
-		else:
-			cleaned_data['state'] = 'NEW'
-		return cleaned_data
+    def clean(self):
+        cleaned_data = super(ReturnJudgeResultForm, self).clean()
+        result = cleaned_data.get('result')
+        if result:
+            if result == 'YES':
+                cleaned_data['state'] = 'YES'
+            else:
+                cleaned_data['state'] = 'NO'
+        else:
+            cleaned_data['state'] = 'NEW'
+        return cleaned_data
 
+
+class AdminSearchForm(forms.ModelForm):
+    contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
+                                                    widget=autocomplete.ModelSelect2Multiple(
+                                                        url=reverse_lazy('users:autocomplete'),
+                                                        attrs={
+                                                            'data-placeholder': 'User',
+                                                        }))
+
+    class Meta:
+        model = User
+        fields = ('contest_admins',)
+
+
+class ParticipantSearchForm(forms.ModelForm):
+    contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
+                                                    widget=autocomplete.ModelSelect2Multiple(
+                                                        url=reverse_lazy('teams:autocomplete'),
+                                                        attrs={
+                                                            'data-placeholder': 'Team',
+                                                        }))
+
+    class Meta:
+        model = User
+        fields = ('contest_participants',)
