@@ -31,16 +31,19 @@ class ContestViewTest(TestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
-    # # Vivian
-    # TODO: this need to be refactored after the contest participant/admin field is changed
-    # def test_view_contest_participant(self):
-    #     self.client.login(username='participant1', password='password')
-    #     user = auth.get_user(self.client)
-    #     assert user.is_authenticated()
-    #
-    #     url = reverse("contests:contest", kwargs={'contest_id': 7})
-    #     resp = self.client.get(url)
-    #     self.assertEqual(resp.status_code, 200)
+    # Vivian
+    def test_view_contest_participant(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=7)
+        test_team = Team.objects.get(id=1)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        url = reverse("contests:contest", kwargs={'contest_id': 7})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
 
     # Vivian
     def test_view_contest_superuser(self):
