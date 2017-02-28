@@ -151,7 +151,8 @@ def create(request):
                                 for qa_form in qa_formset:
                                         problemcount += 1
                                         qa_form = qa_form.cleaned_data
-                                        create_new_problem(qa_form, problemcount, contest_id)
+                                        create_new_problem(request, qa_form, problemcount, contest_id)
+                                        #messages.info(request, 'New problem created')
 
                                         # Loop through participants text box and create participant objects for a team on each line w/ contest
 
@@ -170,7 +171,7 @@ def create(request):
         return render(request, 'contests/create_contest.html', {'templates': templates, 'form': form, 'qa_formset': qa_formset,
                                                                 'admin_search_form': admin_search_form, 'participant_search_form': participant_search_form})
 
-def create_new_problem(form, problemcount, contest_id):
+def create_new_problem(request, form, problemcount, contest_id):
     solution = form.get('solution')
     program_input = form.get('program_input')
     input_desc = form.get('input_description')
@@ -185,13 +186,14 @@ def create_new_problem(form, problemcount, contest_id):
         sample_output=sample_output, contest_id=contest_id)
 
     p.save()
+    #messages.info(request, 'New problem created')
 
 @login_required
 def edit(request, contest_id):
 
     contest = get_object_or_404(Contest, pk=contest_id)
-    if contest.creator != request.user:
-        return HttpResponseForbidden()
+    #if contest.creator != request.user:
+     #   return HttpResponseForbidden()
 
     problems = contest.problem_set.all()
     problems_set = []
@@ -248,7 +250,7 @@ def edit(request, contest_id):
             problem_form = CreateProblem(request.POST, request.FILES)
             if problem_form.is_valid():
                 problem_form = problem_form.cleaned_data
-                create_new_problem(problem_form, problemcount, contest_id)
+                create_new_problem(request, problem_form, problemcount, contest_id)
 
             request.method = None
             request.POST = None
