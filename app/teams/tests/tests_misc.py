@@ -45,7 +45,7 @@ class TeamTestCases(TestCase):
 class InviteTestCases(TestCase):
 
     #jason 
-    def testInviteCount(self):
+    def test_invite_count(self):
         u1 = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         u2 = User(username='buddy2', password='jgd3hb222', first_name='123', email='buddy2@gmail.com')
         t = Team(name='team')
@@ -60,7 +60,7 @@ class InviteTestCases(TestCase):
         self.assertEqual(invite_count, 2)
 
     #jason
-    def testInviteIdentity(self):
+    def test_invite_identity(self):
         #we should change this, you shouldnt be able to invite yourself to a team you created
         u1 = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         t = Team(name='team')
@@ -73,7 +73,7 @@ class InviteTestCases(TestCase):
         self.assertEqual(invite_count, 1)
 
     #jason
-    def testJoinRequest(self):
+    def test_join_request_creation(self):
         u = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         t = Team(name='team')
         u.save()
@@ -84,7 +84,7 @@ class InviteTestCases(TestCase):
         self.assertEqual(join_request_count, 1)
 
     #jason
-    def testJoinRequestIdentity(self):
+    def test_join_request_identity(self):
         #we should change this, you shouldnt be able to send a join request to your own team
         u = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         t = Team(name='team')
@@ -95,3 +95,13 @@ class InviteTestCases(TestCase):
         j.save()
         join_request_count = JoinRequest.objects.all().count()
         self.assertEqual(join_request_count, 1)
+
+    #jason
+    def test_join_request_sent(self):
+        u = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
+        t = Team(name='team')
+        u.save()
+        t.save()
+        j = JoinRequest(team=t, user=u)
+        j.save()
+        self.assertEqual(j.user, u)
