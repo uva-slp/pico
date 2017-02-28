@@ -4,6 +4,13 @@
 
 {% block title_block %}Create a new contest template{% endblock %}
 
+{% block head_block %}
+    {{ block.super }}
+    {{ admin_search_form.media.css }}
+    {{ participant_search_form.media.css }}
+{% endblock %}
+
+
 {% block content_block %}
     <div class="well bs-component">
         <form class="form-horizontal" id="create_contest_template" method="post"
@@ -14,7 +21,35 @@
                 {% csrf_token %}
 
                 {% for field in form %}
-                    {% bootstrap_field field layout='horizontal' %}
+                    {% if field.html_name == "contest_admins" %}
+                        <!-- special treatment for contest admin -->
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Contest admins</label>
+                            <div class="col-md-9" style="float: right;">
+                                <div class="col-md-4 input-group">
+                                    <div class="admin_search" id="admin_search_form">
+                                        {% csrf_token %}
+                                        {{ admin_search_form.contest_admins }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif field.html_name == "contest_participants" %}
+                        <!-- special treatment for contest admin -->
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Contest participants</label>
+                            <div class="col-md-9" style="float: right;">
+                                <div class="col-md-4 input-group">
+                                    <div class="participant_search" id="participant_search_form">
+                                        {% csrf_token %}
+                                        {{ participant_search_form.contest_participants }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        {% bootstrap_field field layout='horizontal' %}
+                    {% endif %}
                 {% endfor %}
                 <br />
                 <div class="col-lg-2 col-lg-offset-5">
@@ -23,8 +58,10 @@
             </fieldset>
         </form>
     </div>
+{% endblock %}
 
-    <script type="text/javascript">
+{% block foot_block %}
+        <script type="text/javascript">
         $(document).ready(function() {
                 $(function () {
                     $('#id_contest_length_pickers:has(input:not([readonly],[disabled]))').datetimepicker({"format": "HH:mm"});
@@ -60,5 +97,7 @@
             }
         });
     </script>
+
+    {{ admin_search_form.media.js }}
+    {{ participant_search_form.media.js }}
 {% endblock %}
-</html>

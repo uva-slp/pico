@@ -8,14 +8,124 @@
 
     {{ block.super }}
 
+    <style>
+        .user-info .input-wrapper {
+            overflow: hidden;
+            padding-right: 5px;
+        }
+        .user-info input {
+            width: 100%;
+        }
+        .user-info .btn-save, .user-info .btn-cancel {
+            float: right;
+        }
+        .user-info input, .user-info .btn-save, .user-info .btn-cancel {
+            display: none;
+        }
+        .user-info .input-text {
+            display: inline-block;
+            padding-top: 7px;
+            margin-bottom: 0;
+            margin-right: 10px;
+            float: left;
+        }
+        .user-info .btn-edit, .user-info .btn-save, .user-info .btn-cancel {
+            padding: 0;
+            padding-left: 4px;
+            padding-right: 4px;
+            margin-top: 5px;
+        }
+        .user-info div.editing input, .user-info div.editing .btn-save, .user-info div.editing .btn-cancel {
+            display: inline;
+        }
+        .user-info div.editing .input-text {
+            display: none;
+        }
+        .user-info div.editing .btn-edit {
+            display: none;
+        }
+    </style>
+
 {% endblock %}
 
 {% block content_block %}
 
     <div class="row">
-        <h1>{{ user.firstname }} {{ user.lastname }}</h1>({{ user.username }})
-        {% if user == request.user %}
+        {% if user == request.user %} 
+            <h1>My Profile</h1>
+        {% else %}
+            <h1>View Profile</h1>
         {% endif %}
+        <hr />
+    </div>
+
+    <div class="row">
+        <div class="form-horizontal user-info">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="username">Username</label>
+                <div class="col-sm-4">
+                    <span class="input-text">{{ user.username }}</span>
+                    {% if user == request.user %}
+                    <button class="btn btn-link btn-edit"><i class="fa fa-pencil"></i></button>
+
+                    <button class="btn btn-link btn-cancel"><i class="fa fa-times"></i></button>
+                    <button class="btn btn-link btn-save"><i class="fa fa-floppy-o"></i></button>
+                    <div class="input-wrapper"><input type="username" class="form-control" id="username" placeholder="Username" value="{{ user.username }}"></div>
+                    
+                    {% endif %}
+                </div>
+            </div>
+            {% if user == request.user %}
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="pwd">Password</label>
+                    <div class="col-sm-4">
+                        <a href="{% url 'users:password_change' %}" class="btn btn-default btn-sm">Change Password</a>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="first_name">First name</label>
+                <div class="col-sm-4">
+                    <span class="input-text">{% if user.first_name %}{{ user.first_name }}{% else %}(none){% endif %}</span>
+                    {% if user == request.user %}
+                    <button class="btn btn-link btn-edit"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    
+                    <button class="btn btn-link btn-cancel"><i class="fa fa-times"></i></button>
+                    <button class="btn btn-link btn-save"><i class="fa fa-floppy-o"></i></button>
+                    <div class="input-wrapper"><input type="name" class="form-control" id="first_name" placeholder="First name" value="{{ user.first_name }}"></div>
+
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="last_name">Last name</label>
+                <div class="col-sm-4">
+                    <span class="input-text">{% if user.last_name %}{{ user.last_name }}{% else %}(none){% endif %}</span>
+                    {% if user == request.user %}
+                    <button class="btn btn-link btn-edit"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    
+                    <button class="btn btn-link btn-cancel"><i class="fa fa-times"></i></button>
+                    <button class="btn btn-link btn-save"><i class="fa fa-floppy-o"></i></button>
+                    <div class="input-wrapper"><input type="name" class="form-control" id="last_name" placeholder="Last name" value="{{ user.last_name }}"></div>
+
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="email">Email</label>
+                <div class="col-sm-4">
+                    <span class="input-text">{% if user.email %}{{ user.email }}{% else %}(none){% endif %}</span>
+                    {% if user == request.user %}
+                    <button class="btn btn-link btn-edit"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                    
+                    <button class="btn btn-link btn-cancel"><i class="fa fa-times"></i></button>
+                    <button class="btn btn-link btn-save"><i class="fa fa-floppy-o"></i></button>
+                    <div class="input-wrapper"><input type="email" class="form-control" id="email" placeholder="Email" value="{{ user.email }}"></div>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
@@ -23,5 +133,14 @@
 {% block foot_block %}
     
     {{ block.super }}
+
+    <script>
+        $('.btn-edit').click(function() {
+            $(this).closest('div').addClass('editing');
+        });
+        $('.btn-cancel').click(function() {
+            $(this).closest('div').removeClass('editing');
+        });
+    </script>
 
 {% endblock %}
