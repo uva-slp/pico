@@ -142,8 +142,6 @@ def create(request):
                                 contest_id = contest.id
 
                                 contest_participants = form.cleaned_data.get('contest_participants')
-                                contest_participants = contest_participants.split()
-                                print(contest_participants)
 
                                 for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
                                         team = Team.objects.filter(name=participant).get()
