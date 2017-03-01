@@ -456,6 +456,120 @@ class SubmissionsViewsTest(TestCase):
         compilation_error = output[1].startswith("EXECUTION ERROR:")
         self.assertEqual(compilation_error, True)
 
+    # Derek
+    def test_execution_contest_no_java_allowed(self):
+        allowed_languages = "['2', '3']"
+        #Test Java
+        test_file_java = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.java"), "rb+"))
+        output = exe.execute_code(test_file_java, 'HelloWorld.java', None, allowed_languages)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1].startswith("LANGUAGE ERROR:"), True)
+        #Test C++
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.cpp"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.cpp', None, allowed_languages)
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1].startswith("Hello World"), True)
+        #Test Python
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.py"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.py', None, allowed_languages)
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1].startswith("Hello World"), True)
+
+    # Derek
+    def test_execution_contest_no_cpp_allowed(self):
+        allowed_languages = "['1', '3']"
+        #Test Java
+        test_file_java = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.java"), "rb+"))
+        output = exe.execute_code(test_file_java, 'HelloWorld.java', None, allowed_languages)
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1].startswith("Hello World"), True)
+        #Test C++
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.cpp"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.cpp', None, allowed_languages)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1].startswith("LANGUAGE ERROR:"), True)
+        #Test Python
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.py"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.py', None, allowed_languages)
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1].startswith("Hello World"), True)
+
+    # Derek
+    def test_execution_contest_no_python_allowed(self):
+        allowed_languages = "['1', '2']"
+        #Test Java
+        test_file_java = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.java"), "rb+"))
+        output = exe.execute_code(test_file_java, 'HelloWorld.java', None, allowed_languages)
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1].startswith("Hello World"), True)
+        #Test C++
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.cpp"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.cpp', None, allowed_languages)
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1].startswith("Hello World"), True)
+        #Test Python
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.py"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.py', None, allowed_languages)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1].startswith("LANGUAGE ERROR:"), True)
+
+    # Derek
+    def test_execution_contest_no_java_cpp_allowed(self):
+        allowed_languages = "['3']"
+        #Test Java
+        test_file_java = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.java"), "rb+"))
+        output = exe.execute_code(test_file_java, 'HelloWorld.java', None, allowed_languages)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1].startswith("LANGUAGE ERROR:"), True)
+        #Test C++
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.cpp"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.cpp', None, allowed_languages)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1].startswith("LANGUAGE ERROR:"), True)
+        #Test Python
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.py"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.py', None, allowed_languages)
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1].startswith("Hello World"), True)
+
+    # Derek
+    def test_execution_contest_no_cpp_python_allowed(self):
+        allowed_languages = "['1']"
+        #Test Java
+        test_file_java = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.java"), "rb+"))
+        output = exe.execute_code(test_file_java, 'HelloWorld.java', None, allowed_languages)
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1].startswith("Hello World"), True)
+        #Test C++
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.cpp"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.cpp', None, allowed_languages)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1].startswith("LANGUAGE ERROR:"), True)
+        #Test Python
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.py"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.py', None, allowed_languages)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1].startswith("LANGUAGE ERROR:"), True)
+
+    # Derek
+    def test_execution_contest_no_java_python_allowed(self):
+        allowed_languages = "['2']"
+        #Test Java
+        test_file_java = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.java"), "rb+"))
+        output = exe.execute_code(test_file_java, 'HelloWorld.java', None, allowed_languages)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1].startswith("LANGUAGE ERROR:"), True)
+        #Test C++
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.cpp"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.cpp', None, allowed_languages)
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1].startswith("Hello World"), True)
+        #Test Python
+        test_file = File(open(os.path.join(dir_path, "code_test_files", "HelloWorld.py"), "rb+"))
+        output = exe.execute_code(test_file, 'HelloWorld.py', None, allowed_languages)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1].startswith("LANGUAGE ERROR:"), True)
+
 
 # Method for getting nearest datetime
 def nearest(items, pivot):

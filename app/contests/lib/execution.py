@@ -16,6 +16,8 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 #Returns a return code and the output of the program or an error message
 def execute_code(submission_file, original_filename, input_file, allowed_languages, timeout=5):
+    #Get rid of white space in allowed_languages so it can be passed as a command line arg
+    allowed_languages = "".join(allowed_languages.split())
     if not (submission_file and original_filename):
         return (1, "FILENAME ERROR: No file name given.")
     #Create a temporary directory to mount on the docker container

@@ -484,7 +484,7 @@ def displayJudge(request, contest_id, run_id):
                                         messages.error(request, "Error")
                         else:
                                 form = ReturnJudgeResultForm(instance=current_submission)
-                        allowed_languages = "".join(getattr(contest_data, 'languages').split())
+                        allowed_languages = getattr(contest_data, 'languages')
                         output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'), allowed_languages)
                         retcode = output[0]
                         fromlines = output[1].split("\n")
