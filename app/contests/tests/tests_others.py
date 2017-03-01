@@ -263,36 +263,6 @@ class SubmissionsViewsTest(TestCase):
     fixtures = ['submission.json']
 
     # Derek
-    def test_choose_problem_page(self):
-        response = self.client.get(reverse_lazy('contests:choose_problem'))
-        self.assertEqual(response.status_code, 200)
-
-        # Derek
-
-    def test_choose_problem_page_template(self):
-        response = self.client.get(reverse_lazy('contests:choose_problem'))
-        self.assertTemplateUsed(response, 'contests/choose_problem.html')
-
-        # Derek
-
-    def test_choose_problem_page_title(self):
-        response = self.client.get(reverse_lazy('contests:choose_problem'))
-        self.assertContains(response, 'Problems:')
-
-        # Derek
-
-    def test_upload_code_page(self):
-        response = self.client.get(reverse_lazy('contests:upload_code', kwargs={'problem_id': '1'}))
-        self.assertEqual(response.status_code, 200)
-
-        # Derek
-
-    def test_upload_code_page_title(self):
-        response = self.client.get(reverse_lazy('contests:upload_code', kwargs={'problem_id': '1'}))
-        self.assertContains(response, "Submit for ProblemExample")
-
-        # Derek
-
     def test_cpp_execution_on_empty_files(self):
         temp_dirpath = tempfile.mkdtemp()
         file_path = os.path.join(temp_dirpath, 'test.cpp')
@@ -322,22 +292,6 @@ class SubmissionsViewsTest(TestCase):
         shutil.rmtree(temp_dirpath)
         # An empty file is actually a valid python file, so 0 should be retcode
         self.assertEqual(output[0], 0)
-
-    # Derek
-    def test_diff_with_no_file_template(self):
-        response = self.client.get(reverse_lazy('contests:diff', kwargs={'problem_id': '1'}))
-
-    # 		self.assertTemplateUsed(response, 'contests/error.html') # errror.html removed
-
-    # Derek
-    def test_diff_with_no_file_message(self):
-        response = self.client.get(reverse_lazy('contests:diff', kwargs={'problem_id': '1'}))
-        self.assertContains(response, 'Invalid form.')
-
-    # Derek
-    def test_diff_page(self):
-        response = self.client.get(reverse_lazy('contests:diff', kwargs={'problem_id': '1'}))
-        self.assertEqual(response.status_code, 200)
 
     # Derek
     def test_java_execution_timeout(self):

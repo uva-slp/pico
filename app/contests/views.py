@@ -54,33 +54,6 @@ def index(request):
         }
     )
 
-def choose_problem(request):
-    all_problems = Problem.objects.all()
-    return render(request, 'contests/choose_problem.html', {'problems': all_problems})
-
-
-def upload_code(request, problem_id):
-    problem = Problem.objects.get(id=problem_id)
-    form = UploadCodeForm(initial = {'problem': problem})
-    return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
-
-
-def diff(request, problem_id):
-        form = UploadCodeForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            output = exe.execute_code(request.FILES['code_file'])
-            retcode = output[0]
-            if retcode != 0:
-                    error = output[1]
-                    return HttpResponse(error)
-            else:
-                    fromlines = output[1].split("\n")
-                    tolines = ['Hello World from C++!']
-                    html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
-        else:
-                return HttpResponse("Invalid form.")
 
 @login_required
 def create(request):
