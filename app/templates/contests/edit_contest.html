@@ -1,0 +1,77 @@
+{% extends 'contests/contest_forms.html' %}
+
+{% load staticfiles %}
+{% load static %}
+{% load bootstrap3 %}
+
+{% block title_block %}Edit Contest - {{ form.title.value }}{% endblock %}
+
+{% block head_block %}
+    {{ block.super }}
+{% endblock %}
+
+{% block load_template_form %}{% endblock %}
+
+{% block contest_form_legend %}Edit Contest - {{ form.title.value }}{% endblock %}
+
+{% block contest_form_action %}
+    <form class="form-horizontal" id="edit_contest" method="post"
+          action="{% url 'contests:edit_contest' contest_id %}" enctype="multipart/form-data">
+{% endblock %}
+
+{% block contest_form_submit %}
+    {% bootstrap_button "Update Contest" value="update_contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
+{% endblock %}
+
+{% block individual_problems_formset %}{% endblock %}
+
+<!-- TODO: make problems collapsible accordions -->
+{% block problem_block %}
+    {% for problem in problems_set %}
+        <div class="well bs-component">
+            <form class="form-horizontal" id="edit_contest" method="post"
+                  action="{% url 'contests:edit_contest' contest_id %}" enctype="multipart/form-data">
+                <fieldset>
+                    <legend>Problem {{ forloop.counter }}</legend>
+                    {% csrf_token %}
+
+                    {% bootstrap_form problem.1 layout='horizontal' %}
+                    <input type="hidden" name="problem_id" value="{{ problem.0 }}">
+
+                    <hr style="margin-bottom:0px; padding-bottom: 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+                    <br />
+                    <div class="col-lg-4 col-lg-offset-4">
+                        <div class="btn-toolbar center-block">
+                            {% bootstrap_button "Update Problem" value="update_problem" button_type="submit" name="submit" button_class="btn btn-primary" %}
+                            {% bootstrap_button "Delete Problem" value="delete_problem" button_type="submit" name="submit" button_class="btn btn-danger" %}
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block new_problem_block %}
+    <div class="well bs-component">
+        <form class="form-horizontal" id="edit_contest" method="post"
+              action="{% url 'contests:edit_contest' contest_id %}" enctype="multipart/form-data">
+            <fieldset>
+                <legend>Create New Problem</legend>
+                {% csrf_token %}
+
+                {% bootstrap_form problem_form layout='horizontal' %}
+
+                <hr style="margin-bottom:0px; padding-bottom: 0px; border: 0; height: 0; border-top: 1px solid rgba(0, 0, 0, 0.1); border-bottom: 1px solid rgba(255, 255, 255, 0.3);">
+                <br />
+                <div class="col-lg-2 col-lg-offset-5">
+                    {% bootstrap_button "Save New Problem" value="save_new_problem" button_type="submit" name="submit" button_class="btn btn-primary" %}
+                </div>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}
+
+{% block foot_block %}
+    {{ block.super }}
+{% endblock %}
