@@ -407,6 +407,53 @@ def displayJudge(request, contest_id, run_id):
         )
 
 
+def show_notification(request):
+    l = []
+
+    all_notifications = Notification.objects.all()
+    for noti in all_notifications:
+        submission = noti.submission
+        team = submission.team
+        if request.user in team.members.all():
+            # data needed for showing notification
+            # contest title, problem, run id, and result
+            current_data = (submission.problem.contest.title, submission.problem.number,
+                            submission.run_id, submission.get_result_display(), noti.id)
+            l.append(current_data)
+
+    d = {'data': l}
+    return JsonResponse(d)
+
+
+def close_notification(request):
+    modal_id = request.POST['id']
+    print("modal id: " + modal_id)
+    if Notification.objects.filter(id=modal_id).exists():
+        current_notification = Notification.objects.get(id=modal_id)
+        current_notification.delete()
+    return HttpResponse('OK')
+
+def stats(request):
+    if request.user.is_authenticated():
+        participation = Participant.objects.filter(team__members__username=request.user.username).order_by('contest__date_created')
+        contest_count = Participant.objects.filter(team__members__username=request.user.username).count()
+        teams = Team.objects.filter(members__username=request.user.username).order_by('name')
+        teams_count = teams.count()
+        teammates_count = 0
+        for t in teams:
+            members = t.members.all()
+            for m in members:
+                if m.username != request.user.username:
+                    teammates_count += 1
+        return render(request, 'contests/stats.html', { 'participation' : participation,
+                                                        'contest_count' : contest_count,
+                                                        'teams' : teams,
+                                                        'teams_count' : teams_count,
+                                                        'teammates_count' : teammates_count})
+    else:
+        return render(request, 'contests/stats.html')
+
+
 def scoreboard(request, contest_id):
 
     scoreboard_contest = Contest.objects.get(id=contest_id) # Get contest ID from URL
@@ -490,48 +537,3 @@ def scoreboard(request, contest_id):
         'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest})
 
 
-def show_notification(request):
-    l = []
-
-    all_notifications = Notification.objects.all()
-    for noti in all_notifications:
-        submission = noti.submission
-        team = submission.team
-        if request.user in team.members.all():
-            # data needed for showing notification
-            # contest title, problem, run id, and result
-            current_data = (submission.problem.contest.title, submission.problem.number,
-                            submission.run_id, submission.get_result_display(), noti.id)
-            l.append(current_data)
-
-    d = {'data': l}
-    return JsonResponse(d)
-
-
-def close_notification(request):
-    modal_id = request.POST['id']
-    print("modal id: " + modal_id)
-    if Notification.objects.filter(id=modal_id).exists():
-        current_notification = Notification.objects.get(id=modal_id)
-        current_notification.delete()
-    return HttpResponse('OK')
-
-def stats(request):
-    if request.user.is_authenticated():
-        participation = Participant.objects.filter(team__members__username=request.user.username).order_by('contest__date_created')
-        contest_count = Participant.objects.filter(team__members__username=request.user.username).count()
-        teams = Team.objects.filter(members__username=request.user.username).order_by('name')
-        teams_count = teams.count()
-        teammates_count = 0
-        for t in teams:
-            members = t.members.all()
-            for m in members:
-                if m.username != request.user.username:
-                    teammates_count += 1
-        return render(request, 'contests/stats.html', { 'participation' : participation, 
-                                                        'contest_count' : contest_count,
-                                                        'teams' : teams,
-                                                        'teams_count' : teams_count,
-                                                        'teammates_count' : teammates_count})
-    else:
-        return render(request, 'contests/stats.html')
