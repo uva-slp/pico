@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+from django.http import JsonResponse
 from django.urls import reverse
 
 from dal import autocomplete
@@ -33,7 +36,7 @@ def register(request):
 		user_form = UserForm(data=request.POST)
 
 		if user_form.is_valid():
-			user = user_form.save()
+			user = user_form.save(commit=False)
 			user.set_password(user.password)
 			user.save()
 
@@ -88,6 +91,44 @@ def password_change(request):
 		'users/password_change.html',
 		{'password_change_form': password_change_form})
 
+@login_required
+def edit(request):
+    if request.method == 'POST':
+        print(request.POST)
+
+        if 'username' in request.POST:
+            username = request.POST.get('username')
+            # Check if username is taken
+            if User.objects.filter(username=username).exclude(pk=request.user.pk).exists():
+                return JsonResponse({'error': 'Username already in use.'}, status=201)
+            request.user.username = username
+            request.user.save()
+            return JsonResponse({}, status=200)
+
+        if 'first_name' in request.POST:
+            request.user.first_name = request.POST.get('first_name')
+            request.user.save()
+            return JsonResponse({}, status=200)
+
+        if 'last_name' in request.POST:
+            request.user.last_name = request.POST.get('last_name')
+            request.user.save()
+            return JsonResponse({}, status=200)
+
+        if 'email' in request.POST:
+            email = request.POST.get('email')
+            if email:
+                try:
+                    validate_email(email)
+                    request.user.email = email
+                    request.user.save()
+                    return JsonResponse({}, status=200)
+                except ValidationError as err:
+                    return JsonResponse({'error': '; '.join(err.messages)}, status=201)
+
+        return JsonResponse({}, status=400)
+
+    return redirect(reverse('users:index', kwargs={'user_id':request.user.id}))
 
 class UserAutocomplete(autocomplete.Select2QuerySetView):
 
