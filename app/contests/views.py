@@ -31,11 +31,11 @@ def index(request):
         if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
             my_active_contests.append(contest)
 
-    all_pending_contests = Contest.objects.pending()
-    my_pending_contests = []
-    for contest in all_pending_contests:
+    all_unstarted_contests = Contest.objects.unstarted()
+    my_unstarted_contests = []
+    for contest in all_unstarted_contests:
         if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
-            my_pending_contests.append(contest)
+            my_unstarted_contests.append(contest)
 
     all_past_contests = Contest.objects.past()
     my_past_contests = []
@@ -49,7 +49,7 @@ def index(request):
         'contests/index.html',
         {
             'active_contests': my_active_contests,
-            'pending_contests': my_pending_contests,
+            'unstarted_contests': my_unstarted_contests,
             'past_contests': my_past_contests,
         }
     )
