@@ -131,7 +131,7 @@
             $('#acknowledgement').removeClass('hidden');
 
         }, 'json').fail(function(){
-            $('.alert').removeClass('hidden').toggleClass('alert-info alert-danger');
+            $('.alert').removeClass('hidden').addClass('alert-info alert-danger');
             $('.alert h4').text('Failed to load themes.');
         });
 
@@ -148,9 +148,10 @@
                 data : $(this).serialize(),
                 success : function(data, textStatus, xhr) {
                     if (xhr.status == 200) {
+                        $('.alert').addClass('hidden');
                         $('link#bootstrap-css').attr('href', data.theme);
                     } else if (xhr.status == 201) {
-                        $('.alert').removeClass('hidden').toggleClass('alert-info alert-danger');
+                        $('.alert').removeClass('hidden').addClass('alert-info alert-danger');
                         $('.alert h4').text(data.error);
                     }
                 },

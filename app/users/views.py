@@ -121,10 +121,10 @@ def edit(request):
                 return JsonResponse({'theme': static('bootstrap/css/bootstrap.min.css')}, status=200)
             
             # Use Bootswatch theme
-            validate_url = URLValidator(verify_exists=False)
             try:
-                validate_url(theme)
-                if theme.endswith('.css'):
+                URLValidator()(theme)
+                print(theme)
+                if not theme.endswith('.css'):
                     raise ValidationError('URL must refer to a CSS file.')
                 profile = request.user.get_profile()
                 profile.theme = theme
