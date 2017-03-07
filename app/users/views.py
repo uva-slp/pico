@@ -127,7 +127,7 @@ def edit(request):
                     profile.theme = theme
                     profile.save()
                     return JsonResponse({'theme': theme}, status=200)
-            except ValidationError as err:
+            except Exception as err:
                 return JsonResponse({'error': '; '.join(err.messages)}, status=201)
 
             return JsonResponse({'error': 'Invalid CSS URL.'}, status=201)
