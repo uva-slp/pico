@@ -121,16 +121,19 @@ def edit(request):
                 return JsonResponse({'theme': static('bootstrap/css/bootstrap.min.css')}, status=200)
             
             # Use Bootswatch theme
+            validate_url = URLValidator(verify_exists=False)
             try:
-                if theme.endswith('.css') and urllib.request.urlopen(urllib.request.Request(theme, headers={'User-Agent' : "Magic Browser"})).getcode() == 200:
-                    profile = request.user.get_profile()
-                    profile.theme = theme
-                    profile.save()
-                    return JsonResponse({'theme': theme}, status=200)
-            except Exception as err:
+                validate_url(theme)
+                if theme.endswith('.css'):
+                    raise ValidationError('URL must refer to a CSS file.')
+                profile = request.user.get_profile()
+                profile.theme = theme
+                profile.save()
+                return JsonResponse({'theme': theme}, status=200)
+            except ValidationError, err:
                 return JsonResponse({'error': '; '.join(err.messages)}, status=201)
 
-            return JsonResponse({'error': 'Invalid CSS URL.'}, status=201)
+            return JsonResponse({'error': 'Invalid theme URL.'}, status=201)
 
         return JsonResponse({}, status=400)
 
