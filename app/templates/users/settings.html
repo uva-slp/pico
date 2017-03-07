@@ -97,11 +97,8 @@
         $.getJSON('https://bootswatch.com/api/3.json', function (data) {
             var themes = data.themes;
             var picker = $('#picker');
-
-            console.log(picker);
           
             themes.forEach(function(theme, index){
-                console.log(theme.name);
                 picker.append($('<div />')
                     .addClass('col-lg-4 col-sm-6')
                     .append($('<div />')

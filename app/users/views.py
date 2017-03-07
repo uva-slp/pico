@@ -121,11 +121,14 @@ def edit(request):
                 return JsonResponse({'theme': static('bootstrap/css/bootstrap.min.css')}, status=200)
             
             # Use Bootswatch theme
-            if theme.endswith('.css') and urllib.request.urlopen(urllib.request.Request(theme, headers={'User-Agent' : "Magic Browser"})).getcode() == 200:
-                profile = request.user.get_profile()
-                profile.theme = theme
-                profile.save()
-                return JsonResponse({'theme': theme}, status=200)
+            try:
+                if theme.endswith('.css') and urllib.request.urlopen(urllib.request.Request(theme, headers={'User-Agent' : "Magic Browser"})).getcode() == 200:
+                    profile = request.user.get_profile()
+                    profile.theme = theme
+                    profile.save()
+                    return JsonResponse({'theme': theme}, status=200)
+            except ValidationError as err:
+                return JsonResponse({'error': '; '.join(err.messages)}, status=201)
 
             return JsonResponse({'error': 'Invalid CSS URL.'}, status=201)
 
