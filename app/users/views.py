@@ -130,7 +130,7 @@ def edit(request):
                 profile.theme = theme
                 profile.save()
                 return JsonResponse({'theme': theme}, status=200)
-            except ValidationError, err:
+            except ValidationError as err:
                 return JsonResponse({'error': '; '.join(err.messages)}, status=201)
 
             return JsonResponse({'error': 'Invalid theme URL.'}, status=201)
