@@ -30,7 +30,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <ul class="nav navbar-top-links pull-right">
+                        <ul class="nav navbar-nav navbar-top-links pull-right">
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
                                     <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -68,7 +68,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-right dropdown-user">
                                     <li><a href="{% url 'users:index' user_id=request.user.id %}"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
-                                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
+                                    <li><a href="{% url 'users:settings' %}"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{% url 'users:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
                                 </ul>

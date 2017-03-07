@@ -1,0 +1,170 @@
+{% extends 'pccs/home.html' %}
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+{% block title_block %}{{ block.super }}{% endblock %}
+
+{% block head_block %}
+
+    {{ block.super }}
+
+    <!-- Header CSS -->
+    <style>
+        .header {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .header h2 {
+            float: left;
+            margin: 0;
+            margin-right: 25px;
+        }
+        .header button {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+        .footer {
+            padding-bottom: 10px;
+        }
+    </style>
+
+    <!-- Picker CSS -->
+    <style>
+        /* Collected from Bootswatch [https://bootswatch.com/] */
+        .preview{margin-bottom:4em;background-color:#eaf1f1}
+        .preview .image{position:relative}
+        .preview .image:before{box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);position:absolute;top:0;left:0;width:100%;height:100%;content:"";pointer-events:none}
+        .preview .options{padding:1em 2em 2em;border:1px solid rgba(0,0,0,.05);border-top:none;text-align:center}
+        .preview .options p{margin-bottom:2em}
+    </style>
+
+{% endblock %}
+
+{% block content_block %}
+    <div class="row">
+        <div class="col-md-2 col-sm-3" id="side-menu" style="padding-left:0;">
+            <ul class="nav nav-pills nav-stacked stickytabs">
+                <li class="active"><a href="#appearance" data-toggle="pill">Appearance</a></li>
+                <li><a href="#storage" data-toggle="pill">Storage</a></li>
+            </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="tab-content col-md-10 col-sm-9" id="team-panels">
+            <div class="tab-pane active" id="appearance">
+                <form id="change-theme-form" method="post" action="{% url 'users:edit' %}">
+                    {% csrf_token %}
+                    <input class="hidden" name="theme" id="theme" />
+                    
+                    <div class="header">
+                        <h2>Appearance</h2>
+                        <button type="submit" class="btn btn-default" id="default-theme-btn">Use Default</button>
+                    </div>
+                    <hr />
+
+                    <div class="alert hidden"><h4></h4></div>
+                    <div class="row" id="picker"></div>
+                    <div class="footer hidden row text-center text-muted" id="acknowledgement">
+                        Themes provided by <a href="https://bootswatch.com/">Bootswatch</a>
+                    </div>
+                </form>
+                <!-- /#change-theme-form -->
+            </div>
+            <!-- /.tab-pane -->
+
+            <div class="tab-pane" id="storage">
+                <div class="header">
+                    <h2>Storage</h2>
+                </div>
+                <hr />
+            </div>
+            <!-- /.tab-pane -->
+        </div>
+        <!-- /.tab-content -->
+    </div>
+    <!-- /.row -->
+
+    
+
+{% endblock %}
+
+{% block foot_block %}
+    
+    {{ block.super }}
+
+    <!-- Theme Picker JavaScript -->
+    <script>
+        $.getJSON('https://bootswatch.com/api/3.json', function (data) {
+            var themes = data.themes;
+            var picker = $('#picker');
+
+            console.log(picker);
+          
+            themes.forEach(function(theme, index){
+                console.log(theme.name);
+                picker.append($('<div />')
+                    .addClass('col-lg-4 col-sm-6')
+                    .append($('<div />')
+                        .addClass('preview')
+                        .append($('<div />')
+                            .addClass('image')
+                            .append($('<a />')
+                                .attr('href', theme.preview)
+                                .append($('<img />')
+                                    .addClass('img-responsive')
+                                    .attr('alt', theme.name)
+                                    .attr('src', theme.thumbnail))))
+                        .append($('<div />')
+                            .addClass('options')
+                            .append($('<h3 />')
+                                .text(theme.name))
+                            .append($('<p />')
+                                .text(theme.description))
+                            .append($('<div />')
+                                .addClass('btn-group')
+                                .append($('<button />')
+                                    .addClass('btn btn-info')
+                                    .attr('type', 'submit')
+                                    .text('Apply Theme')
+                                    .click(function() {
+                                        $('input#theme').val(theme.cssMin);
+                                    }))))))
+            });
+
+            $('#acknowledgement').removeClass('hidden');
+
+        }, 'json').fail(function(){
+            $('.alert').removeClass('hidden').toggleClass('alert-info alert-danger');
+            $('.alert h4').text('Failed to load themes.');
+        });
+
+        $('#default-theme-btn').click(function() {
+            $('input#theme').val('');
+        })
+
+        $('#change-theme-form').on('submit', function() {
+            event.preventDefault();
+            var frm = $(this);
+            $.ajax({
+                url : $(this).attr('action'),
+                type : $(this).attr('method'),
+                data : $(this).serialize(),
+                success : function(data, textStatus, xhr) {
+                    if (xhr.status == 200) {
+                        $('link#bootstrap-css').attr('href', data.theme);
+                    } else if (xhr.status == 201) {
+                        $('.alert').removeClass('hidden').toggleClass('alert-info alert-danger');
+                        $('.alert h4').text(data.error);
+                    }
+                },
+                error : function(data) {
+                    console.log('Edit user failed.');
+                }
+            });
+        });
+    </script>
+
+    <!-- Stickytabs JavaScript -->
+    <script src="{% static 'stickytabs/jquery.stickytabs.js' %}"></script>
+
+{% endblock %}
