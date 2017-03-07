@@ -139,7 +139,7 @@
             $('input#theme').val('');
         })
 
-        $('#change-theme-form').on('submit', function() {
+        $('#change-theme-form').on('submit', function(event) {
             event.preventDefault();
             var frm = $(this);
             $.ajax({
