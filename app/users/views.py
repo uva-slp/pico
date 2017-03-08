@@ -1,3 +1,4 @@
+from collections import namedtuple
 import os
 import shutil
 import subprocess
@@ -151,7 +152,11 @@ def settings(request):
     if request.user.is_staff:
         
         # Disk usage overall
-        usage_root = shutil.disk_usage(MNT_ROOT)
+        st = os.statvfs(MNT_ROOT)
+        free = st.f_bavail * st.f_frsize
+        total = st.f_blocks * st.f_frsize
+        used = (st.f_blocks - st.f_bfree) * st.f_frsize
+        usage_root = namedtuple('usage', 'total used free')(total, used, free)
 
         # Disk usage by repo/project
         usage_pico = int(subprocess.check_output('du -sb "%s"'%(GIT_ROOT), shell=True).split()[0].decode("utf-8"))
