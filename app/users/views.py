@@ -1,5 +1,9 @@
+import os
+import shutil
+import subprocess
 import urllib
 
+from django.db import connection
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -15,6 +19,8 @@ from dal import autocomplete
 from common.decorators import anonymous_required
 from .forms import UserForm, LoginForm
 from .models import User
+from pccs.secrets import DB_NAME
+from pccs.settings import GIT_ROOT, MNT_ROOT
 
 @login_required
 def index(request, user_id=None):
@@ -141,7 +147,32 @@ def edit(request):
 
 @login_required
 def settings(request):
-    return render(request, 'users/settings.html', {})
+    context = None
+    if request.user.is_staff:
+        
+        # Disk usage overall
+        usage_root = shutil.disk_usage(MNT_ROOT)
+
+        # Disk usage by repo/project
+        usage_pico = int(subprocess.check_output('du -sb "%s"'%(GIT_ROOT), shell=True).split()[0].decode("utf-8"))
+        
+        # Disk usage by database
+        cursor = connection.cursor()
+        cursor.execute("SELECT sum( data_length + index_length ) " +
+                       "FROM information_schema.TABLES " +
+                       "WHERE table_schema=\"%s\";"%(DB_NAME))
+        usage_db = int(cursor.fetchone()[0])
+        
+        context = {
+            'disk_usage': {
+                'total': usage_root.total,
+                'free': usage_root.free,
+                'pico': usage_pico,
+                'db': usage_db,
+                'other': usage_root.used-usage_pico-usage_db
+            },
+        }
+    return render(request, 'users/settings.html', context)
 
 @login_required
 def password_change(request):

@@ -31,7 +31,7 @@
     <!-- Picker CSS -->
     <style>
         /* Collected from Bootswatch [https://bootswatch.com/] */
-        .preview{margin-bottom:4em;background-color:#eaf1f1}
+        .preview{margin-bottom:4em;background-color:rgba(234,241,241,0.4);}
         .preview .image{position:relative}
         .preview .image:before{box-shadow:inset 0 0 0 1px rgba(0,0,0,.1);position:absolute;top:0;left:0;width:100%;height:100%;content:"";pointer-events:none}
         .preview .options{padding:1em 2em 2em;border:1px solid rgba(0,0,0,.05);border-top:none;text-align:center}
@@ -45,7 +45,7 @@
         <div class="col-md-2 col-sm-3" id="side-menu" style="padding-left:0;">
             <ul class="nav nav-pills nav-stacked stickytabs">
                 <li class="active"><a href="#appearance" data-toggle="pill">Appearance</a></li>
-                <li><a href="#storage" data-toggle="pill">Storage</a></li>
+                {% if request.user.is_staff %}<li><a href="#storage" data-toggle="pill">Storage</a></li>{% endif %}
             </ul>
         </div>
 
@@ -72,13 +72,25 @@
             </div>
             <!-- /.tab-pane -->
 
-            <div class="tab-pane" id="storage">
-                <div class="header">
-                    <h2>Storage</h2>
+            {% if request.user.is_staff %}
+                <div class="tab-pane" id="storage">
+                    <div class="header">
+                        <h2>Storage</h2>
+                    </div>
+                    <hr />
+
+                    <div id="disk-usage-chart" style="width:100%; height:400px;"></div>
+                    
+                    <div class="hidden" id="disk-usage">
+                        <var id="total">{{ disk_usage.total }}</var>
+                        <var id="free">{{ disk_usage.free }}</var>
+                        <var id="pico">{{ disk_usage.pico }}</var>
+                        <var id="db">{{ disk_usage.db }}</var>
+                        <var id="other">{{ disk_usage.other }}</var>
+                    </div>
                 </div>
-                <hr />
-            </div>
-            <!-- /.tab-pane -->
+                <!-- /.tab-pane -->
+            {% endif %}
         </div>
         <!-- /.tab-content -->
     </div>
@@ -158,6 +170,68 @@
                 error : function(data) {
                     console.log('Edit user failed.');
                 }
+            });
+        });
+    </script>
+
+    <!-- Highcharts JavaScript -->
+    <script src="{% static 'highcharts/highcharts.js' %}"></script>
+    <script>
+        $(function () {
+            var myChart = Highcharts.chart('disk-usage-chart', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Disk Usage'
+                },
+                tooltip: {
+                    shared: true,
+                    formatter: function() {
+                        var size = this.y;
+                        var unit = 'B';
+                        if (size >= 1024) { size/=1024; unit='KB'}
+                        if (size >= 1024) { size/=1024; unit='MB'}
+                        if (size >= 1024) { size/=1024; unit='GB'}
+                        if (size >= 1024) { size/=1024; unit='TB'}
+                        size = size.toFixed(1);
+                        return '<span style="font-size: 10px">' + this.key + '</span><br/>' +
+                            this.series.name + ': <b>'+ size +' ' + unit + '</b>';
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Disk Usage',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'PiCO',
+                        y: parseInt($('#disk-usage > #pico').text())
+                    }, {
+                        name: 'Database',
+                        y: parseInt($('#disk-usage > #db').text())
+                    }, {
+                        name: 'Other',
+                        y: parseInt($('#disk-usage > #other').text())
+                    }, {
+                        name: 'Available',
+                        y: parseInt($('#disk-usage > #free').text())
+                    }]
+                }]
             });
         });
     </script>
