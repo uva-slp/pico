@@ -1,0 +1,16 @@
+[
+    {
+        "model": "contests.contesttemplate",
+        "pk": 1,
+        "fields": {
+                "title": "Contest from template 1",
+                "languages": "java, python",
+                "contest_length": "03:00",
+                "time_penalty": "30",
+                "autojudge_enabled": true,
+                "autojudge_review": "1",
+                "contest_admins": [],
+                "contest_participants": ""
+        }
+    }
+]

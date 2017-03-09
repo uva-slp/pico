@@ -91,7 +91,7 @@ class LeaveTeamTest(TestCase):
 
 class AutocompleteTest(TestCase):
 
-	fixtures = ['teams.json']
+	fixtures = ['users.json', 'teams.json']
 
 	# nathan
 	def test_post(self):

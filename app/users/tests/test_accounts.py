@@ -4,7 +4,7 @@ from django.test import TestCase
 from users.models import User
 
 class InvalidUserInfoTest(TestCase):   
-    #jason
+    # jason
     def test_invalid_email(self):
         u = User(username='buddy1', password='password', email='buddyatgmail.com')
         u.save()
@@ -12,7 +12,7 @@ class InvalidUserInfoTest(TestCase):
         if(users.filter(username='buddy1')):
             self.assertTrue('@' not in u.email)
 
-    #jason
+    # jason
     def test_invalid_first_name(self):
         u = User(username='buddy2', password='password', first_name='123', email='buddy@gmail.com')
         u.save()
@@ -20,7 +20,7 @@ class InvalidUserInfoTest(TestCase):
         if(users.filter(username='buddy2')):
             self.assertFalse(any(c.isalpha() for c in u.first_name))
 
-    #jason
+    # jason
     def test_invalid_last_name(self):
         u = User(username='buddy3', password='password', last_name='123', email='buddy@gmail.com')
         u.save()
@@ -29,7 +29,7 @@ class InvalidUserInfoTest(TestCase):
             self.assertFalse(any(c.isalpha() for c in u.last_name))
 
 class ValidUserInfoTest(TestCase):
-    #jason
+    # jason
     def test_valid_email(self):
         u = User(username='buddy4', password='password', email='buddy@gmail.com')
         u.save()
@@ -39,14 +39,14 @@ class ValidUserInfoTest(TestCase):
             self.assertTrue('.' in u.email)
             self.assertTrue(any(c.isalpha() for c in u.email))
 
-    #jason
+    # jason
     def test_valid_first_name(self):
         u = User(username='buddy5', password='password', first_name='buddy', email='buddy@gmail.com')
         u.save()
         users = User.objects.all()
         if(users.filter(username='buddy5')):
             self.assertTrue(all(c.isalpha() for c in u.first_name))
-    #jason
+    # jason
     def test_valid_last_name(self):
         u = User(username='buddy6', password='password', last_name='friend', email='buddy@gmail.com')
         u.save()
@@ -56,7 +56,7 @@ class ValidUserInfoTest(TestCase):
 
 class UniquePasswordTest(TestCase):
 
-    #jason
+    # jason
     def test_unique_password(self):
         u1 = User(username='buddy1', password='password')
         u2 = User(username='buddy2', password='password')
@@ -69,7 +69,7 @@ class UniquePasswordTest(TestCase):
 
 
 class UniqueEmailTest(TestCase):
-    #jason
+    # jason
     def test_unique_email(self):
         u1 = User(username='buddy1', password='password', email='same@same.com')
         u2 = User(username='buddy2', password='password', email='same@same.com')
@@ -81,7 +81,7 @@ class UniqueEmailTest(TestCase):
             self.assertEqual(user_count, 2)
 
 class NoInjectionsPleaseTest(TestCase):
-    #jason
+    # jason
     def test_sanitization(self):
         u = User(username='()buddy()', password='?!password?!')
         u.username.replace(r'[$-/:-?{-~!"^_\[\]]', '')

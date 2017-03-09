@@ -1,0 +1,26 @@
+[
+    {
+        "model": "contests.problem",
+        "pk": 1,
+        "fields": {
+            "solution": "sol1.txt",
+            "input_description": "problem 1 input",
+            "output_description": "problem 1 output",
+            "sample_input": "a b c",
+            "sample_output": "1 2 3",
+            "contest": 22
+        }
+    },
+    {
+        "model": "contests.problem",
+        "pk": 2,
+        "fields": {
+            "solution": "sol2.txt",
+           "input_description": "problem 2 input",
+           "output_description": "problem 2 output",
+           "sample_input": "",
+           "sample_output": "",
+           "contest": 22
+        }
+    }
+]
