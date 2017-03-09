@@ -535,4 +535,4 @@ class EditContestViewTest(TestCase):
         self.assertTrue(Problem.objects.filter(contest_id=contest_id).count(), 3)
         problem = Problem.objects.latest('id')
         self.assertEqual(problem.input_description, "problem 3 input desc")
-        self.assertEqual(problem.sample_output.read(), "problem 3 sample output")
+        self.assertEqual(problem.sample_output.read(), b"problem 3 sample output")
