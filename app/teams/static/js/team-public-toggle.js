@@ -12,3 +12,10 @@ $(document).on('change', '.team-public-form', function() {
         }
     });
 });
+
+$('a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
+    // Re-render toggle to properly determine size
+    var input = $('.tab-pane.active input[type=checkbox][data-toggle^=toggle]');
+    input.bootstrapToggle('destroy');
+    input.bootstrapToggle();
+})
