@@ -479,8 +479,8 @@ class EditContestViewTest(TestCase):
 
         problem.refresh_from_db()
         self.assertEqual(problem.input_description, "edited problem 1 input")
-        self.assertEqual(problem.sample_input.read(), "edited a b c")
-        self.assertEqual(problem.sample_output.read(), "edited 1 2 3")
+        self.assertEqual(problem.sample_input.read(), b"edited a b c")
+        self.assertEqual(problem.sample_output.read(), b"edited 1 2 3")
 
     # Austin
     def test_delete_problem(self):
