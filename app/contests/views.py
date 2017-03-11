@@ -22,6 +22,7 @@ from django.utils import timezone
 from django.http import Http404
 from django.template.loader import render_to_string
 import os
+from itertools import chain
 
 
 def index(request):
@@ -195,9 +196,21 @@ def edit(request, contest_id):
     if contest.creator != request.user:
         return HttpResponseForbidden()
 
+    print (contest.contest_participants.all())
     form = CreateContestForm(None, None, instance=contest)
-    admin_search_form = AdminSearchForm()
-    participant_search_form = ParticipantSearchForm()
+    admin_search_form = AdminSearchForm(initial={'contest_admins': contest.contest_admins.all()})
+    participant_search_form = ParticipantSearchForm(initial={'contest_participants': contest.contest_participants.all()})
+
+    #participant_search_form = ParticipantSearchForm(initial={'contest_participants': Team.objects.filter(id__in=team_list)})
+
+    #user_list = Contest.objects.get(pk=contest_id).values_list("contest_admin")
+    #user_list = User.objects.filter(contest_id)
+    #team_list = Participant.objects.filter(contest_id=contest_id).values_list("team_id", flat=True)
+    #team_list = map(int, team_list)
+
+    #print (Team.objects.all())
+    #print (Team.objects.filter(id__in=team_list))
+
     problem_form = CreateProblem()
 
     problems = contest.problem_set.all()
