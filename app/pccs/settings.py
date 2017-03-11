@@ -19,12 +19,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Path to containing git repository (if exists)
 try:
-    GIT_ROOT = check_output('cd "%s";git rev-parse --show-toplevel'%(BASE_DIR), shell=True).split()[0].decode("utf-8")
+    GIT_ROOT = check_output('cd "%s";git rev-parse --show-toplevel'%(BASE_DIR), shell=True).decode("utf-8").split('\n')[0]
 except CalledProcessError:
     GIT_ROOT = BASE_DIR
 # Path to mountpoint
 try:
-    MNT_ROOT = check_output('stat --format %%m "%s"'%(BASE_DIR), shell=True).split()[0].decode("utf-8")
+    MNT_ROOT = check_output('stat --format %%m "%s"'%(BASE_DIR), shell=True).decode("utf-8").split('\n')[0]
 except CalledProcessError:
     MNT_ROOT = '/'
 
