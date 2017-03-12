@@ -1,7 +1,7 @@
 {% load team_extras %}
 
 <div class="tab-pane team-panel {% if active %}active{% endif %}" id="team-{{ team.id }}">
-    <div class="row header">
+    <div class="row header col-md-12">
         <h2>{{ team.name }}</h2>
 
         {% if team in request.user.teams.all %}
@@ -43,7 +43,7 @@
     <!-- /.header -->
 
     <div class="row content">
-        <div class="col-md-7" style="padding-left:0">
+        <div class="col-md-7">
             <div class="panel panel-default" id="panel1">
                 <div class="panel-heading" data-toggle="collapse" data-target="#team-{{team.id}}-members">
                     <h4 class="panel-title">Members</h4>
@@ -65,7 +65,7 @@
         </div>
 
         {% if request.user in team.members.all %}
-            <div class="col-md-5" style="padding-right:0">
+            <div class="col-md-5">
                 
                 <div class="panel panel-default" id="panel1">
                     <div class="panel-heading" data-toggle="collapse" data-target="#team-{{team.id}}-requests">
