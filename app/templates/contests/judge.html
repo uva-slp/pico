@@ -22,8 +22,7 @@
     <h2>Judging submission:</h2>
     <br />
 
-    <!-- TODO: update when contest support multiple judges-->
-    {% if request.user == contest_data.creator %}
+    {% if is_judge %}
     <div class="panel panel-default panel-table">
         <div class="panel-heading">
             <div class="row">

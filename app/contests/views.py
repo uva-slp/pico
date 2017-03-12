@@ -446,7 +446,7 @@ def displayAllSubmissions(request, contest_id):
     return render(
         request,
         'contests/all_submissions.html',
-        {'contest_data': contest_data, 'new_submissions': new_submissions, 'judged_submissions': judged_submissions}
+        {'contest_data': contest_data, 'new_submissions': new_submissions, 'judged_submissions': judged_submissions, 'is_judge': is_judge}
     )
 
 
