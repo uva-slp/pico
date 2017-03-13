@@ -1,5 +1,5 @@
-Name                                                Stmts   Miss  Cover
------------------------------------------------------------------------
+Name                                                Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------------------
 __init__.py                                             0      0   100%
 alerts/__init__.py                                      0      0   100%
 alerts/admin.py                                         7      0   100%
@@ -13,19 +13,18 @@ alerts/migrations/0006_auto_20170102_1336.py            6      0   100%
 alerts/migrations/0007_auto_20170102_1559.py            6      0   100%
 alerts/migrations/0008_auto_20170110_1440.py            5      0   100%
 alerts/migrations/__init__.py                           0      0   100%
-alerts/models.py                                       37     15    59%
-alerts/tests.py                                        56     56     0%
-alerts/views.py                                         1      1     0%
+alerts/models.py                                       37     15    59%   19-22, 33-43
+alerts/tests.py                                        56      0   100%
 common/__init__.py                                      0      0   100%
-common/decorators.py                                   14     14     0%
+common/decorators.py                                   14      1    93%   16
 contests/__init__.py                                    0      0   100%
 contests/admin.py                                       7      0   100%
 contests/apps.py                                        4      0   100%
-contests/forms.py                                      89     89     0%
+contests/forms.py                                      89      2    98%   181-183
 contests/lib/__init__.py                                0      0   100%
-contests/lib/diff.py                                   94     94     0%
-contests/lib/execution.py                              96     96     0%
-contests/lib/html.py                                   77     77     0%
+contests/lib/diff.py                                   94     22    77%   71, 88, 90, 98-103, 118, 121-127, 145, 148-154
+contests/lib/execution.py                              96     68    29%   41-55, 60-77, 82-98, 103-114, 118-139
+contests/lib/html.py                                   77      6    92%   29-30, 44, 47-48, 111
 contests/migrations/0001_initial.py                     7      0   100%
 contests/migrations/0002_auto_20161202_0738.py          5      0   100%
 contests/migrations/0003_auto_20161202_0741.py          5      0   100%
@@ -45,38 +44,37 @@ contests/migrations/0013_auto_20170225_1541.py          5      0   100%
 contests/migrations/0014_auto_20170227_2113.py          5      0   100%
 contests/migrations/0015_merge_20170228_0047.py         5      0   100%
 contests/migrations/__init__.py                         0      0   100%
-contests/models.py                                     90     25    72%
+contests/models.py                                     90     23    74%   11-15, 18-22, 25-29, 49-51, 54-57, 107
 contests/templatetags/__init__.py                       0      0   100%
-contests/templatetags/contest_extras.py                12     12     0%
-contests/templatetags/filters.py                        6      6     0%
+contests/templatetags/contest_extras.py                12      8    33%   7, 12-19
+contests/templatetags/filters.py                        6      0   100%
 contests/tests/__init__.py                              0      0   100%
-contests/tests/tests_others.py                        450    450     0%
-contests/tests/tests_views.py                         298    298     0%
-contests/urls.py                                        3      3     0%
-contests/views.py                                     402    402     0%
-manage.py                                              13      6    54%
+contests/tests/tests_others.py                        450     42    91%   302-303, 312-313, 322-324, 346-347, 353-354, 360-361, 367-369, 375-377, 384-386, 393-394, 401-402, 409-410, 416-417, 424-425, 431-432, 438-440, 446-448, 455-457
+contests/tests/tests_views.py                         298      0   100%
+contests/urls.py                                        3      0   100%
+contests/views.py                                     402    147    63%   29-48, 72-82, 362-367, 374-375, 385-412, 440, 488-497, 507, 511, 520-598, 603-617, 621-626, 630-647
+manage.py                                              13      6    54%   9-21
 organizations/__init__.py                               0      0   100%
 organizations/admin.py                                  1      0   100%
 organizations/apps.py                                   4      0   100%
-organizations/forms.py                                 19     19     0%
+organizations/forms.py                                 19      0   100%
 organizations/migrations/0001_initial.py                6      0   100%
 organizations/migrations/__init__.py                    0      0   100%
-organizations/models.py                                10      1    90%
+organizations/models.py                                10      1    90%   13
 organizations/tests/__init__.py                         0      0   100%
-organizations/tests/tests_misc.py                       9      9     0%
-organizations/tests/tests_views.py                     34     34     0%
-organizations/urls.py                                   3      3     0%
-organizations/views.py                                 44     44     0%
+organizations/tests/tests_misc.py                       9      6    33%   6-11
+organizations/tests/tests_views.py                     34      0   100%
+organizations/urls.py                                   3      0   100%
+organizations/views.py                                 44     12    73%   11, 52-65
 pccs/__init__.py                                        0      0   100%
 pccs/secrets.py                                         8      0   100%
-pccs/settings.py                                       49      2    96%
-pccs/urls.py                                            6      6     0%
-pccs/views.py                                          12     12     0%
-pccs/wsgi.py                                            4      4     0%
+pccs/settings.py                                       49      2    96%   23-24
+pccs/urls.py                                            6      0   100%
+pccs/views.py                                          12      0   100%
 teams/__init__.py                                       0      0   100%
 teams/admin.py                                         13      0   100%
 teams/apps.py                                           4      0   100%
-teams/forms.py                                         29     29     0%
+teams/forms.py                                         29      0   100%
 teams/migrations/0001_initial.py                        6      0   100%
 teams/migrations/0002_auto_20170122_2105.py             5      0   100%
 teams/migrations/0002_auto_20170123_1044.py             6      0   100%
@@ -85,29 +83,30 @@ teams/migrations/0002_auto_20170127_1537.py             5      0   100%
 teams/migrations/0003_merge_20170129_1910.py            5      0   100%
 teams/migrations/0004_merge_20170201_1008.py            5      0   100%
 teams/migrations/__init__.py                            0      0   100%
-teams/models.py                                        17      1    94%
+teams/models.py                                        17      0   100%
 teams/templatetags/__init__.py                          0      0   100%
-teams/templatetags/team_extras.py                       9      9     0%
+teams/templatetags/team_extras.py                       9      0   100%
 teams/tests/__init__.py                                 0      0   100%
-teams/tests/tests_misc.py                              86     86     0%
-teams/tests/tests_templatetags.py                      18     18     0%
-teams/tests/tests_views.py                             58     58     0%
-teams/urls.py                                           3      3     0%
-teams/views.py                                        120    120     0%
+teams/tests/tests_misc.py                              86      0   100%
+teams/tests/tests_templatetags.py                      18      0   100%
+teams/tests/tests_views.py                             58      0   100%
+teams/urls.py                                           3      0   100%
+teams/views.py                                        120     61    49%   71, 77-98, 102-113, 117-135, 146, 149, 153-170, 174-187, 193, 197
 users/__init__.py                                       0      0   100%
 users/admin.py                                          1      0   100%
 users/apps.py                                           4      0   100%
-users/backends.py                                       8      8     0%
-users/forms.py                                         26     26     0%
+users/backends.py                                       8      0   100%
+users/forms.py                                         26      0   100%
 users/migrations/0001_initial.py                        7      0   100%
 users/migrations/0002_userprofile.py                    6      0   100%
 users/migrations/__init__.py                            0      0   100%
-users/models.py                                        15      5    67%
+users/models.py                                        15      5    67%   6-10
 users/tests/__init__.py                                 0      0   100%
-users/tests/test_accounts.py                           72     72     0%
-users/tests/test_backends.py                           13     13     0%
-users/tests/test_views.py                              59     59     0%
-users/urls.py                                           5      5     0%
-users/views.py                                        131    131     0%
------------------------------------------------------------------------
-TOTAL                                                2850   2421    15%
+users/tests/test_accounts.py                           72      1    99%   91
+users/tests/test_backends.py                           13      0   100%
+users/tests/test_views.py                              59      0   100%
+users/urls.py                                           5      0   100%
+users/views.py                                        131     72    45%   28-35, 88-147, 151-180, 203-210
+---------------------------------------------------------------------------------
+TOTAL                                                2845    500    82%
+
