@@ -73,14 +73,13 @@
             </form>
         {% endif %}
         <br />
-        <a href="{% url 'contests:contest_judge_submissions' contest_data.id %}">View all submissions</a>
+        <a href="{% url 'contests:contest_judge_submissions' contest_data.id %}" class="btn btn-default" >Judge Submissions</a>
     {% endif %}
     <br />
 
-    {% for team in contest_teams %}
-        <a href="{% url 'contests:contest_submissions' contest_data.id team.id %}">View team {{team.name}}'s submissions</a>
-        <br />
-    {% endfor %}
+    {% if current_team is not None %}
+        <br /><a href="{% url 'contests:contest_submissions' contest_data.id current_team.id %}" class="btn btn-default">View my submissions</a>
+    {% endif %}
     <h3>Contest Problems:</h3>
     <div class="panel-group" id="accordion">
     {% for pair in problem_form_pairs %}

@@ -3,8 +3,9 @@ from users.models import User
 from teams.models import Team, Invite
 from alerts.models import Alert, Target
 
+
 class AlertsTestCases(TestCase):
-    #jason
+    # jason
     def testAlertCount(self):
         u = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         u.save()
@@ -17,7 +18,7 @@ class AlertsTestCases(TestCase):
         alerts_count = Alert.objects.all().count()
         self.assertEqual(alerts_count, 3)
 
-    #jason
+    # jason
     def test_alert_read_toggle_false(self):
         u = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         u.save()
@@ -26,7 +27,7 @@ class AlertsTestCases(TestCase):
         a.read=False
         self.assertEqual(a.read, False)
 
-    #jason
+    # jason
     def test_alert_body_change_to_null(self):
         u = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         u.save()
@@ -35,7 +36,7 @@ class AlertsTestCases(TestCase):
         a.body=''
         self.assertEqual(a.body, '')
 
-    #jason
+    # jason
     def test_target_team_switch(self):
         u = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         t1 = Team(name='team1')
@@ -50,7 +51,7 @@ class AlertsTestCases(TestCase):
         tar.team=t2
         self.assertEqual(tar.team, t2)
 
-    #jason
+    # jason
     def test_target_user_switch(self):
         u1 = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         u2 = User(username='buddy2', password='jgd3hb222', email='buddy2@gmail.com')

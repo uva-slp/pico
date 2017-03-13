@@ -17,25 +17,32 @@
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" id="main-navbar" role="navigation" style="margin-bottom: 0">
             <div class="navbar-inner">
-                <div class="container" style="padding:0">
-                    <div class="navbar-header pull-left">
-                        <a class="navbar-brand" href="{% url 'home' %}">PiCO</a>
-                    </div>
-                    <!-- /.navbar-header -->
-
-                    <div class="navbar-header pull-right">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
                             <span class="sr-only">Toggle navigation</span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <ul class="nav navbar-top-links pull-right">
+                        <a class="navbar-brand" href="{% url 'home' %}">PiCO</a>
+                    </div>
+                    <!-- /.navbar-header -->
+
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-left">
+                            <li><a href="{% url 'contests:index' %}">Contests</a></li>
+                            <li><a href="{% url 'teams:index' %}">Teams</a></li> 
+                            <li><a href="{% url 'organizations:index' %}">Organizations</a></li>
+                            <li><a href="{% url 'contests:stats' %}">Statistics</a></li>  
+                        </ul>
+
+                        <ul class="nav navbar-nav navbar-right">
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
                                     <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
                                 </a>
-                                <ul class="dropdown-menu dropdown-menu-right dropdown-alerts">
+                                <ul class="dropdown-menu">
                                     {% if request.user.alerts.all %}
                                         {% for alert in request.user.alerts.all %}
                                             {% if not forloop.first %}<li class="divider"></li>{% endif %}
@@ -68,7 +75,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-right dropdown-user">
                                     <li><a href="{% url 'users:index' user_id=request.user.id %}"><i class="fa fa-user fa-fw"></i> My Profile</a></li>
-                                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
+                                    <li><a href="{% url 'users:settings' %}"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
                                     <li class="divider"></li>
                                     <li><a href="{% url 'users:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
                                 </ul>
@@ -77,16 +84,6 @@
                             <!-- /.dropdown -->
                         </ul>
                         <!-- /.navbar-top-links -->
-                    </div>
-                    <!-- /.navbar-header -->
-
-                    <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav">
-                            <li><a href="{% url 'contests:index' %}">Contests</a></li>
-                            <li><a href="{% url 'teams:index' %}">Teams</a></li> 
-                            <li><a href="{% url 'organizations:index' %}">Organizations</a></li>
-                            <li><a href="{% url 'contests:stats' %}">Statistics</a></li>  
-                        </ul>
                     </div>
                     <!-- /.navbar-collapse -->
                 </div>

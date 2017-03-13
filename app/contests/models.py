@@ -7,12 +7,12 @@ from teams.models import Team
 from datetime import datetime, timedelta
 
 class ContestManager(models.Manager):
-	def pending(self):
-		pending_contests = set()
+	def unstarted(self):
+		unstarted_contests = set()
 		for contest in super(ContestManager, self).get_queryset():
 			if contest.contest_start is None:
-				pending_contests.add(contest)
-		return pending_contests
+				unstarted_contests.add(contest)
+		return unstarted_contests
 
 	def active(self):
 		active_contests = set()
