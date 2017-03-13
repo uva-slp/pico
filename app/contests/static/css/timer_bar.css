@@ -1,0 +1,35 @@
+.progress {
+    z-index: 999;
+    text-align:center;
+    height: 35px;
+    border: 1px solid #c1c3c2;
+    border-radius: 15px;
+}
+.time_remaining_div {
+    position:absolute;
+    right:0;
+    left:0;
+    height: 35px;
+    line-height: 35px;
+}
+.time_remaining_text {
+    padding: 2px 15px;
+    font-size:14px;
+    font-weight: bold;
+    background-color: #eff1f0;
+    border: 1px solid #c1c3c2;
+    border-radius: 15px;
+}
+.fixed {
+    display: block;
+    position: fixed;
+    top: 0;
+}
+
+.slower {
+  animation-duration: 20s;
+}
+
+.panel-heading {
+    cursor: pointer;
+}

@@ -154,6 +154,10 @@ class UploadCodeForm(forms.ModelForm):
         fields = ['code_file', 'problem']
         widgets = {'problem': forms.HiddenInput()}
 
+    def __init__(self, *args, **kwargs):
+        super(UploadCodeForm, self).__init__(*args, **kwargs)
+        self.fields['code_file'].required = True
+
 
 class ReturnJudgeResultForm(forms.ModelForm):
     class Meta:
