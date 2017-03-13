@@ -66,6 +66,7 @@
     <br />
     {% if is_judge or is_creator %}
         {% if contest_data.contest_start == NULL %}
+            <br />
             <form id="activate_contest_form" method="post"
                   action="{% url 'contests:contest' contest_data.id %}">
                 {% csrf_token %}
