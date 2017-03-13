@@ -72,7 +72,7 @@ page.open(system.args[1], function(status){
                 } catch (e) { }
                 return 10000;
             });
-	    page.render("docs/jscoverage.pdf");
+            page.render("jscoverage.pdf");
             phantom.exit((parseInt(failedNum, 10) > 0) ? 1 : 0);
         });
     }
