@@ -9,6 +9,8 @@ urlpatterns = [
 	url(r'^register$', views.register, name='register'),
 	url(r'^login$', views.login, name='login'),
 	url(r'^logout$', views.logout, name='logout'),
+	url(r'^edit$', views.edit, name='edit'),
+	url(r'^settings$', views.settings, name='settings'),
 	url(r'^passwordchange$', views.password_change, name='password_change'),
 	url(r'^password/reset/$', password_reset,
 		{'template_name': 'users/password_reset/password_reset_form.html',

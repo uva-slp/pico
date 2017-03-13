@@ -11,11 +11,22 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from subprocess import CalledProcessError, check_output
 from . import secrets
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Path to containing git repository (if exists)
+try:
+    GIT_ROOT = check_output('cd "%s";git rev-parse --show-toplevel'%(BASE_DIR), shell=True).decode("utf-8").split('\n')[0]
+except CalledProcessError:
+    GIT_ROOT = BASE_DIR
+# Path to mountpoint
+try:
+    MNT_ROOT = check_output('stat --format %%m "%s"'%(BASE_DIR), shell=True).decode("utf-8").split('\n')[0]
+except CalledProcessError:
+    MNT_ROOT = '/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -218,6 +229,7 @@ STATIC_URL = '/pccs/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
 	os.path.join(BASE_DIR, os.path.join('pccs', 'static')),
+	os.path.join(BASE_DIR, os.path.join('contests', 'static')),
 	os.path.join(BASE_DIR, 'vendor')
 ]
 

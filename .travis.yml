@@ -22,7 +22,7 @@ install:
 
 script:
   - coverage run app/manage.py test
-  - phantomjs run-qunit.js file://`pwd`/app/templates/tests/qunit.html\?coverage
+  - phantomjs test/js/run-qunit.js file://`pwd`/test/js/qunit.html\?coverage
 
 after_success:
   coveralls

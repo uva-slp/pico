@@ -14,7 +14,7 @@
             </div>
             <li class="active"><a href="#all-contests" data-toggle="pill">All Contests</a></li>
             <li><a href="#active-contests" data-toggle="pill">Active</a></li>
-            <li><a href="#pending-contests" data-toggle="pill">Pending</a></li>
+            <li><a href="#unstarted-contests" data-toggle="pill">Unstarted</a></li>
             <li><a href="#past-contests" data-toggle="pill">Past</a></li>
         </ul>
         <!-- /.nav-pills -->
@@ -44,23 +44,23 @@
                 <div class="wrapper col-md-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Pending Contests</h3>
+                            <h3 class="panel-title">Unstarted Contests</h3>
                         </div>
-                        {% if pending_contests %}
+                        {% if unstarted_contests %}
                             <div class="list-group">
-                                {% for contest in pending_contests %}
+                                {% for contest in unstarted_contests %}
                                     <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
-                                        <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                        <strong>{{ contest.title }}</strong>
                                     </a>
                                 {% endfor %}
                             </div>
                         {% else %}
-                            <div class="list-group"><div class="list-group-item">No pending contests</div></div>
+                            <div class="list-group"><div class="list-group-item">No unstarted contests</div></div>
                         {% endif %}
                     </div>
                     <!-- /.panel -->
                 </div>
-                <!-- /#pending-contests -->
+                <!-- /#unstarted-contests -->
 
                 <div class="wrapper col-md-4">
                     <div class="panel panel-default">
@@ -106,26 +106,26 @@
             </div>
             <!-- /#active-contests -->
 
-            <div class="tab-pane" id="pending-contests">
+            <div class="tab-pane" id="unstarted-contests">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Pending contests</h3>
+                        <h3 class="panel-title">Unstarted contests</h3>
                     </div>
-                    {% if pending_contests %}
+                    {% if unstarted_contests %}
                         <div class="list-group">
-                            {% for contest in pending_contests %}
+                            {% for contest in unstarted_contests %}
                                 <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
                                     <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
                                 </a>
                             {% endfor %}
                         </div>
                     {% else %}
-                        <div class="list-group"><div class="list-group-item">No pending contests</div></div>
+                        <div class="list-group"><div class="list-group-item">No unstarted contests</div></div>
                     {% endif %}
                 </div>
                 <!-- /.panel -->
             </div>
-            <!-- /#pending-contests -->
+            <!-- /#unstarted-contests -->
 
             <div class="tab-pane" id="past-contests">
                 <div class="panel panel-default">

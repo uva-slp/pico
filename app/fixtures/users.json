@@ -1,92 +1,200 @@
 [
-{
-    "model": "auth.user",
-    "pk": 1,
-    "fields": {
-        "password": "pbkdf2_sha256$30000$A73psQbggcOY$4UwhcGccpD8+I6sl+RHWgmFzoIxjm640hbU1rKDDn8s=",
-        "last_login": "2016-10-23T17:31:19.744Z",
-        "is_superuser": true,
-        "username": "admin",
-        "first_name": "",
-        "last_name": "",
-        "email": "",
-        "is_staff": true,
-        "is_active": true,
-        "date_joined": "2016-10-23T17:23:07Z",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 2,
-    "fields": {
-        "password": "pbkdf2_sha256$30000$mLgcotcxWQTa$BroLN7p8YLKydWJCdQ2aSfBSmEZgIZYcXyXmOONZHmQ=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "testuser",
-        "first_name": "Test",
-        "last_name": "User",
-        "email": "test@test.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2016-10-23T17:23:35.421Z",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 3,
-    "fields": {
-        "password": "jam",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "jam",
-        "first_name": "jam",
-        "last_name": "jam",
-        "email": "jam@jam.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2016-10-23T17:23:35.421Z",
-        "groups": [],
-        "user_permissions": []
-    }
-},
     {
-    "model": "auth.user",
-    "pk": 4,
-    "fields": {
-        "password": "jim",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "jim",
-        "first_name": "jim",
-        "last_name": "jim",
-        "email": "jim@jim.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2016-10-23T17:23:35.421Z",
-        "groups": [],
-        "user_permissions": []
-    }
-},
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$30000$A73psQbggcOY$4UwhcGccpD8+I6sl+RHWgmFzoIxjm640hbU1rKDDn8s=",
+            "last_login": "2016-10-23T17:31:19.744Z",
+            "is_superuser": true,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "email": "admin@virginia.edu",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2016-10-23T17:23:07Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
     {
-    "model": "auth.user",
-    "pk": 5,
-    "fields": {
-        "password": "bob",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "bob",
-        "first_name": "bob",
-        "last_name": "bob",
-        "email": "bob@bob.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2016-10-23T17:23:35.421Z",
-        "groups": [],
-        "user_permissions": []
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$30000$mLgcotcxWQTa$BroLN7p8YLKydWJCdQ2aSfBSmEZgIZYcXyXmOONZHmQ=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "testuser",
+            "first_name": "Test",
+            "last_name": "User",
+            "email": "test@test.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-10-23T17:23:35.421Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "jam",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "jam",
+            "first_name": "jam",
+            "last_name": "jam",
+            "email": "jam@jam.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-10-23T17:23:35.421Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 4,
+        "fields": {
+            "password": "jim",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "jim",
+            "first_name": "jim",
+            "last_name": "jim",
+            "email": "jim@jim.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-10-23T17:23:35.421Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 5,
+        "fields": {
+            "password": "bob",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "bob",
+            "first_name": "bob",
+            "last_name": "bob",
+            "email": "bob@bob.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-10-23T17:23:35.421Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 6,
+        "fields": {
+            "password": "pbkdf2_sha256$30000$3WLJbMdZSs7Q$HKctl071lIMVArCNWm/v4Eq9y4VnIZH+se/FD05RZDU=",
+            "last_login": "2016-11-14T22:53:54.504Z",
+            "is_superuser": false,
+            "username": "judgeP",
+            "first_name": "j",
+            "last_name": "p",
+            "email": "@virginia.edu",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-11-14T22:22:48.868Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 7,
+        "fields": {
+            "password": "pbkdf2_sha256$30000$l02GVUd2ow5s$W9zFNgWvNzB7sbIq/FOpKGHmPrfxhFtE3QGo+3Zr6Ts=",
+            "last_login": "2016-11-15T02:48:57.815Z",
+            "is_superuser": true,
+            "username": "myadmin",
+            "first_name": "",
+            "last_name": "",
+            "email": "myadmin@virginia.edu",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2016-11-14T22:52:20.011Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 8,
+        "fields": {
+            "password": "pbkdf2_sha256$30000$l02GVUd2ow5s$W9zFNgWvNzB7sbIq/FOpKGHmPrfxhFtE3QGo+3Zr6Ts=",
+            "last_login": "2016-11-15T02:43:51.675Z",
+            "is_superuser": false,
+            "username": "participant1",
+            "first_name": "P",
+            "last_name": "T1",
+            "email": "test@gmail.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-11-15T02:43:51.260Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 9,
+        "fields": {
+            "password": "pbkdf2_sha256$30000$DpuOZ5uIqp8q$SkiBq0+7KdoD1KlzAkXLLaRnkAdrXUN9itKAAQGPbhk=",
+            "last_login": "2016-11-15T02:44:08.164Z",
+            "is_superuser": false,
+            "username": "participant2",
+            "first_name": "P",
+            "last_name": "T2",
+            "email": "test@gmail.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-11-15T02:44:07.952Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 10,
+        "fields": {
+            "password": "pbkdf2_sha256$30000$NWtumRylBSEU$1SmoAM5z0MWCjqO2OoH03De6ybrPflYYXZS8NjGhVYs=",
+            "last_login": "2016-11-15T02:45:25.540Z",
+            "is_superuser": false,
+            "username": "judge",
+            "first_name": "J",
+            "last_name": "T3",
+            "email": "test@gmail.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-11-15T02:44:25.609Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 11,
+        "fields": {
+            "password": "pbkdf2_sha256$30000$NWtumRylBSEU$1SmoAM5z0MWCjqO2OoH03De6ybrPflYYXZS8NjGhVYs=",
+            "last_login": "2016-11-15T02:45:25.540Z",
+            "is_superuser": false,
+            "username": "nonparticipant",
+            "first_name": "J",
+            "last_name": "T3",
+            "email": "test@gmail.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2016-11-15T02:44:25.609Z",
+            "groups": [],
+            "user_permissions": []
+        }
     }
-}
 ]

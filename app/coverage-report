@@ -1,3 +1,0 @@
-coverage3 run manage.py test
-coverage3 report --include="$PWD/*" -m
-coverage3 html -d ~/pccs/docs/coverage

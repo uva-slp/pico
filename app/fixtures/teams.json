@@ -1,11 +1,46 @@
 [
-{
-    "model": "teams.Team",
-    "pk": 1,
-    "fields": {
-        "name": "Team 1",
-        "date_created": "2016-10-29T17:47:11.38Z",
-        "members": [11, 12, 13]
+    {
+        "model": "teams.Team",
+        "pk": 1,
+        "fields": {
+            "name": "Team 1",
+            "date_created": "2016-10-29T17:47:11.38Z",
+            "members": [11, 12, 13]
+        }
+    },
+    {
+        "model": "teams.Team",
+        "pk": 2,
+        "fields": {
+            "name": "Team 2",
+            "date_created": "2016-10-29T17:47:11.38Z",
+            "members": [3, 4]
+        }
+    },
+    {
+        "model": "teams.team",
+        "pk": 3,
+        "fields": {
+            "name": "team3",
+            "date_created": "2016-11-14T22:52:55.994Z",
+            "members": [
+                [
+                    "participant1"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "teams.team",
+        "pk": 4,
+        "fields": {
+            "name": "team4",
+            "date_created": "2016-11-15T02:50:11.748Z",
+            "members": [
+                [
+                    "participant2"
+                ]
+            ]
+        }
     }
-}
 ]

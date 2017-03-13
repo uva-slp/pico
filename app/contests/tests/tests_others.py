@@ -562,7 +562,7 @@ class ContestCreationTest(TestCase):
 
 
 class ScoreboardTest(TestCase):
-    fixtures = ['teams.json']
+    fixtures = ['users.json', 'teams.json']
 
     # Jamel
     def testTeamSelection(self):

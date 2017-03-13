@@ -3,37 +3,46 @@ from django.test import TestCase
 from teams.models import Team, Invite, JoinRequest
 from users.models import User
 
+
 class TeamTestCases(TestCase):
 
-    fixtures = ['teams.json']
+    fixtures = ['users.json', 'teams.json']
 
+    # Jamel
     def testTeamFixture(self):
-        t = Team.objects.get(pk = 1)
+        t = Team.objects.get(pk=1)
         self.assertEqual(t.name, 'Team 1')
         t.name = 'wrong name'
         t.save()
+
     # Jamel
     def testTeamNameFilter(self):
         teams = Team.objects.all()
-        c = Team(name = "testTeam")
+        c = Team(name="testTeam")
         c.save()
         if(teams.filter(name="testTeam")) :
             self.assertEqual(c.name, "testTeam")
+
     # Jamel
     def testNumberofTeams(self):
-        a = Team(name="team1")
-        b = Team(name="team2")
-        c = Team(name="team3")
-        d = Team(name="team4")
-        e = Team(name="team5")
+        teams = Team.objects.all()
+        team_count_before = teams.count()
+
+        a = Team(name="test team1")
+        b = Team(name="test team2")
+        c = Team(name="test team3")
+        d = Team(name="test team4")
+        e = Team(name="test team5")
         a.save()
         b.save()
         c.save()
         d.save()
         e.save()
+
         teams = Team.objects.all()
-        teamnumber = teams.count()
-        self.assertEqual(teamnumber, 6)
+        team_count_after = teams.count()
+
+        self.assertEqual(team_count_after, team_count_before + 5)
 
     # nathan
     def testTeamStr(self):
@@ -44,7 +53,7 @@ class TeamTestCases(TestCase):
 
 class InviteTestCases(TestCase):
 
-    #jason 
+    # jason
     def test_invite_count(self):
         u1 = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         u2 = User(username='buddy2', password='jgd3hb222', first_name='123', email='buddy2@gmail.com')
@@ -59,7 +68,7 @@ class InviteTestCases(TestCase):
         invite_count = Invite.objects.all().count()
         self.assertEqual(invite_count, 2)
 
-    #jason
+    # jason
     def test_invite_identity(self):
         #we should change this, you shouldnt be able to invite yourself to a team you created
         u1 = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
@@ -72,7 +81,7 @@ class InviteTestCases(TestCase):
         invite_count = Invite.objects.all().count()
         self.assertEqual(invite_count, 1)
 
-    #jason
+    # jason
     def test_join_request_creation(self):
         u = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         t = Team(name='team')
@@ -83,7 +92,7 @@ class InviteTestCases(TestCase):
         join_request_count = JoinRequest.objects.all().count()
         self.assertEqual(join_request_count, 1)
 
-    #jason
+    # jason
     def test_join_request_identity(self):
         #we should change this, you shouldnt be able to send a join request to your own team
         u = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
@@ -96,7 +105,7 @@ class InviteTestCases(TestCase):
         join_request_count = JoinRequest.objects.all().count()
         self.assertEqual(join_request_count, 1)
 
-    #jason
+    # jason
     def test_join_request_sent(self):
         u = User(username='buddy1', password='jgd3hb111', email='buddy1@gmail.com')
         t = Team(name='team')

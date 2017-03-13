@@ -7,12 +7,12 @@ from teams.models import Team
 from datetime import datetime, timedelta
 
 class ContestManager(models.Manager):
-	def pending(self):
-		pending_contests = set()
+	def unstarted(self):
+		unstarted_contests = set()
 		for contest in super(ContestManager, self).get_queryset():
 			if contest.contest_start is None:
-				pending_contests.add(contest)
-		return pending_contests
+				unstarted_contests.add(contest)
+		return unstarted_contests
 
 	def active(self):
 		active_contests = set()
@@ -41,7 +41,6 @@ class Contest(models.Model):
 	problem_description = models.FileField(upload_to='uploads/', null=True, blank=True)
 	contest_admins = models.ManyToManyField(User, related_name="contest_admins", blank=True)
 	contest_participants = models.ManyToManyField(Team, related_name="contest_participants", blank=True)
-	# contest_participants = models.TextField()
 
 	objects = ContestManager()
 
@@ -60,14 +59,13 @@ class Contest(models.Model):
 		return self.title
 
 class Problem(models.Model):
-	number = models.IntegerField(null=True)
 	name = models.CharField(max_length=2048, null=True, blank=True)
-	solution = models.FileField(upload_to='uploads/', null=True, blank=True)
 	program_input = models.FileField(upload_to='uploads/', null=True, blank=False)
 	input_description = models.CharField(max_length=128, null=True, blank=True)
 	output_description = models.CharField(max_length=128, null=True, blank=True)
 	sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
 	sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
+	solution = models.FileField(upload_to='uploads/', null=True, blank=True)
 	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
 
 class Participant(models.Model):
@@ -119,7 +117,6 @@ class ContestTemplate(models.Model):
 	autojudge_review = models.CharField(max_length=128, null=True, blank=True)
 	contest_admins = models.ManyToManyField(User, related_name="contesttemplate_admins", blank=True)
 	contest_participants = models.ManyToManyField(Team, related_name="contesttemplate_participants", blank=True)
-	# contest_participants = models.TextField()
 
 	def __str__(self):
 		return self.title

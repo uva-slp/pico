@@ -7,16 +7,21 @@
         <title>{% block title_block %}PiCO{% endblock %}</title>
 
     	<!-- Bootstrap Core CSS -->
-        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}">
+        {% if request.user and request.user.profile and request.user.profile.theme %}
+            <link rel="stylesheet" href="{{ request.user.profile.theme }}" id="bootstrap-css">
+        {% else %}
+            <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" id="bootstrap-css">
+            <!-- <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}"> -->
+        {% endif %}
 
         <!-- Custom Fonts -->
         <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
 
         <!-- Base CSS -->
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
-            <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
-        <!-- favicon -->
+
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
         <link rel="apple-touch-icon" sizes="120x120" href="{% static 'favicon/apple-touch-icon.png' %}">
         <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
