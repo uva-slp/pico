@@ -367,9 +367,6 @@ def displayContest(request, contest_id):
         problem_form_pairs.append((problem, form))
 
     contest_participants = contest_data.participant_set.all()
-    contest_teams = []
-    for participant in contest_participants:
-        contest_teams.append(participant.team)
 
     current_team = getTeam(contest_data, request.user)
     submission_attempts = []
@@ -409,7 +406,7 @@ def displayContest(request, contest_id):
     data = {
         'contest_data': contest_data, 'contest_problems': problems,
         'is_judge': is_judge, 'is_participant': is_participant, 'is_creator': is_creator,
-        'contest_teams': contest_teams, 'submission_attempts': submission_attempts,
+        'current_team': current_team, 'submission_attempts': submission_attempts,
         'submission_status': status, 'color_states': color_states,
         'problem_form_pairs': problem_form_pairs
     }
@@ -441,7 +438,7 @@ def displayAllSubmissions(request, contest_id):
     return render(
         request,
         'contests/all_submissions.html',
-        {'contest_data': contest_data, 'new_submissions': new_submissions, 'judged_submissions': judged_submissions}
+        {'contest_data': contest_data, 'new_submissions': new_submissions, 'judged_submissions': judged_submissions, 'is_judge': is_judge}
     )
 
 

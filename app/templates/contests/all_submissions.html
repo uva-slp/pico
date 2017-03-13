@@ -1,5 +1,6 @@
 {% extends 'contests/base.html' %}
 
+{% load staticfiles %}
 {% load bootstrap3 %}
 {% load contest_extras %}
 
@@ -30,7 +31,7 @@
     <br /><br />
     <h1>Contest: {{ contest_data.title }}</h1>
     <br />
-    <div class="panel panel-default panel-table">
+    <div id="new_submissions" class="panel panel-default panel-table">
         <div class="panel-heading" data-toggle="collapse" data-target="#collapse1">
             <div class="row">
                 <div class="col col-xs-6">
@@ -64,7 +65,7 @@
         </div>
     </div>
 
-    <div class="panel panel-default panel-table">
+    <div id="judged_submissions" class="panel panel-default panel-table">
         <div class="panel-heading" data-toggle="collapse" data-target="#collapse2">
             <div class="row">
                 <div class="col col-xs-6">
@@ -104,18 +105,7 @@
 
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
 
-    <script>
-        $('#mydata1').DataTable({
-            "searching": false,
-            "lengthChange": false,
-            "info": false,
-            "paging": false
-        });
-        $('#mydata2').DataTable({
-            "searching": false,
-            "lengthChange": false,
-            "info": false,
-            "paging": false
-        });
-    </script>
+    <script src="{% static 'js/datatable.js' %}"></script>
+
+    <script src="{% static 'js/refresh_submission.js' %}"></script>
 {% endblock %}

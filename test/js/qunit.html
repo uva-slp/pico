@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>QUnit Example</title>
+  <link rel="stylesheet" href="qunit-2.1.1.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script src="qunit-2.1.1.js"></script>
+  
+  <!-- Code coverage tool -->
+  <script src="blanket.min.js"></script>
+  
+  <!-- jQuery -->
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+  
+  <!-- INCLUDE ANY JAVASCRIPT FILES YOU DO NOT WISH TO TEST HERE (DEPENDENCIES) -->
+
+  <!-- INCLUDE ANY JAVASCRIPT FILES YOU WANT TO TEST HERE -->
+  <script src="../../app/contests/static/js/notification.js" data-cover></script>
+  <script src="../../app/contests/static/js/refresh_submission.js" data-cover></script>
+  <script src="../../app/contests/static/js/user_search.js" data-cover></script>
+  <script src="../../app/pccs/static/js/common.js" data-cover></script>
+
+  <!-- WRITE NEW TESTS IN tests.js -->
+  <script src="tests.js"></script>
+
+</body>
+</html>
