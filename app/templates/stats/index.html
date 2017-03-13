@@ -1,9 +1,8 @@
-{% extends 'contests/base.html' %}
+{% extends 'pccs/home.html' %}
 
 {% load bootstrap3 %}
-{% load contest_extras %}
 
-{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
+{% block title_block %}{{ contest_data.title }} Stats {% endblock %}
 
 {% block head_block %}
     {{ block.super }}

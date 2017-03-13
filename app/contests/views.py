@@ -53,34 +53,6 @@ def index(request):
         }
     )
 
-def choose_problem(request):
-    all_problems = Problem.objects.all()
-    return render(request, 'contests/choose_problem.html', {'problems': all_problems})
-
-
-def upload_code(request, problem_id):
-    problem = Problem.objects.get(id=problem_id)
-    form = UploadCodeForm(initial = {'problem': problem})
-    return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
-
-
-def diff(request, problem_id):
-    form = UploadCodeForm(request.POST, request.FILES)
-    if form.is_valid():
-        form.save()
-        output = exe.execute_code(request.FILES['code_file'])
-        retcode = output[0]
-        if retcode != 0:
-            error = output[1]
-            return HttpResponse(error)
-        else:
-            fromlines = output[1].split("\n")
-            tolines = ['Hello World from C++!']
-            html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-            return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
-    else:
-        return HttpResponse("Invalid form.")
-
 
 @login_required
 def create(request):
@@ -466,45 +438,45 @@ def displayMySubmissions(request, contest_id, team_id):
 
 @login_required
 def displayJudge(request, contest_id, run_id):
-    contest_data = Contest.objects.get(id=contest_id)
+        contest_data = Contest.objects.get(id=contest_id)
+        is_judge = isJudge(contest_data, request.user)
+        if not is_judge:
+                return redirect(reverse('home'))
+        
+        problems = contest_data.problem_set.all()
+        for p in problems:
+                if p.submission_set.filter(run_id=run_id).exists():
+                        current_submission = p.submission_set.get(run_id=run_id)
+                        if request.method == 'POST':
+                                form = ReturnJudgeResultForm(request.POST, instance=current_submission)
+                                if form.is_valid():
+                                        form.save()
+                                        # create a new notification
+                                        notification = Notification(submission=current_submission)
+                                        notification.save()
+                                        return redirect(reverse('contests:contest_judge_submissions',
+                                                        kwargs={'contest_id': contest_id}))
+                                else:
+                                        messages.error(request, "Error")
+                        else:
+                                form = ReturnJudgeResultForm(instance=current_submission)
+                        allowed_languages = getattr(contest_data, 'languages')
+                        output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'), allowed_languages)
+                        retcode = output[0]
+                        fromlines = output[1].split("\n")
+                        solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
+                        #Use the solution file if it exists. If not, use empty expected output.
+                        tolines = []
+                        if bool(solution_file) and os.path.isfile(solution_file.name):
+                                tolines = solution_file.read().decode().split("\n")
+                        html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
+                        return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
 
-    is_judge = isJudge(contest_data, request.user)
-    if not is_judge:
-        return redirect(reverse('home'))
-
-    problems = contest_data.problem_set.all()
-    for p in problems:
-        if p.submission_set.filter(run_id=run_id).exists():
-            current_submission = p.submission_set.get(run_id=run_id)
-            if request.method == 'POST':
-                form = ReturnJudgeResultForm(request.POST, instance=current_submission)
-                if form.is_valid():
-                    form.save()
-                    # create a new notification
-                    notification = Notification(submission=current_submission)
-                    notification.save()
-                    return redirect(reverse('contests:contest_judge_submissions',
-                                            kwargs={'contest_id': contest_id}))
-                else:
-                    messages.error(request, "Error")
-            else:
-                form = ReturnJudgeResultForm(instance=current_submission)
-            output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'))
-            retcode = output[0]
-            fromlines = output[1].split("\n")
-            solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
-            #Use the solution file if it exists. If not, use empty expected output.
-            tolines = []
-            if bool(solution_file) and os.path.isfile(solution_file.name):
-                tolines = solution_file.read().decode().split("\n")
-            html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-            return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
-
-    return render(
-        request,
-        'contests/judge.html',
-        {'contest_data': contest_data, 'is_judge': False}
-    )
+        return render(
+                request,
+                'contests/judge.html',
+                {'contest_data': contest_data, 'is_judge': False}
+        )
 
 
 def scoreboard(request, contest_id):
@@ -626,23 +598,3 @@ def close_notification(request):
         current_notification.delete()
     return HttpResponse('OK')
 
-
-def stats(request):
-    if request.user.is_authenticated():
-        participation = Participant.objects.filter(team__members__username=request.user.username).order_by('contest__date_created')
-        contest_count = Participant.objects.filter(team__members__username=request.user.username).count()
-        teams = Team.objects.filter(members__username=request.user.username).order_by('name')
-        teams_count = teams.count()
-        teammates_count = 0
-        for t in teams:
-            members = t.members.all()
-            for m in members:
-                if m.username != request.user.username:
-                    teammates_count += 1
-        return render(request, 'contests/stats.html', { 'participation' : participation, 
-                                                        'contest_count' : contest_count,
-                                                        'teams' : teams,
-                                                        'teams_count' : teams_count,
-                                                        'teammates_count' : teammates_count})
-    else:
-        return render(request, 'contests/stats.html')
