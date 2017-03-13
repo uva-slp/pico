@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 	'organizations.apps.OrganizationsConfig',
 	'contests.apps.ContestsConfig',
 	'alerts.apps.AlertsConfig',
+	'stats.apps.StatsConfig',
 ]
 
 MIDDLEWARE = [
