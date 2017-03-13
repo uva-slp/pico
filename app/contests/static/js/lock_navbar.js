@@ -1,4 +1,4 @@
-<!-- Lock time remaining bar to top of visible frame when scrolling down -->
+// Lock time remaining bar to top of visible frame when scrolling down
 $(document).ready(function() {
     if(is_contest_started && !is_contest_ended) {
         $(window).scroll(function () {

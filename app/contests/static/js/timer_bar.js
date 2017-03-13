@@ -1,10 +1,17 @@
-<!-- Update contest time remaining bar -->
+// Update contest time remaining bar
+
 var secondFraction = '5'; // determines progress-bar animation speed
 $('#progress-slow').css('animation', secondFraction + 's linear 0s normal none infinite progress-bar-stripes');
 
-var start_time = contest_start;
+var start_time = moment(contest_start, 'MMM DD, YYYY, hh:mm:ss a');
 var length_time = moment(contest_length, 'hh:mm');
-var length = length_time.hour() * 60 + length_time.minute();
+var length = length_time.hour() * 3600 + length_time.minute() * 60;
+var end_time = moment(start_time).add(length_time.hour(), 'hours').add(length_time.minute());
+
+var warning_time = moment(start_time).add(length * 0.90, 'seconds'); // 10% of contest length left
+var danger_time = moment(start_time).add(length * 0.75, 'seconds'); // 25% of contest length left
+var last_minute_time = moment(end_time).subtract(1, 'minutes');
+var viewable_time = moment(end_time).add(1, 'minutes');
 
 var percentage_increment = 100 / length; // the amount to increase the percentage bar per minute
 var progress_bar_percentage;
@@ -14,63 +21,64 @@ var time_remaining_text = $(".time_remaining_text");
 
 var update = function() {
 
-    function updateDuration(start_time, curr_time) {
-      var ms = moment(curr_time, 'YYYY/MM/DD HH:mm:ss').diff(moment(start_time, 'MMM DD, YYYY, hh:mm:ss a'));
-      var dt = moment.duration(ms);
-      var hours_elapsed = Math.floor(dt.asHours());
-      var minutes_elapsed = moment.utc(ms).format('mm');
-      var seconds_elapsed = moment.utc(ms).format('ss');
-      var time_left = length - ((hours_elapsed * 60) + Number(minutes_elapsed) + (Number(seconds_elapsed) / 60));
-      if(time_left >= 0) {
-          var hours_left = ('0' + Math.floor(time_left / 60)).slice(-2);
-          var minutes_left = ('0' + Math.floor(time_left % 60)).slice(-2);
-          var seconds_left = ('0' + (((time_left % 60) - minutes_left) * 60).toFixed()).slice(-2);
+    function updateDuration(curr_time) {
+        curr_time = moment(curr_time, 'YYYY/MM/DD HH:mm:ss');
+        var time_remaining = moment.duration(moment(end_time).diff(curr_time)).asSeconds();
 
-          time_remaining_text.html(hours_left + 'h : ' + minutes_left + 'm : ' + seconds_left + 's remaining');
-          /*var hour_string = hours_left == 1 ? 'hour' : 'hours';
-          var minute_string = minutes_left == 1 ? 'minute' : 'minutes';
-          if(hours_left >= 1) {
-              time_remaining_text.html(hours_left + ' ' + hour_string + ' ' + minutes_left + ' ' + minute_string + ' remaining');
-          } else if(minutes_left >= 1) {
-              time_remaining_text.html(minutes_left + ' ' + minute_string + ' remaining');
-          } else {
-              time_remaining_text.html(seconds_left + ' seconds remaining');
-          }*/
+        if(curr_time.isBefore(end_time)) {
+            var hours_remaining = ('0' + Math.floor(time_remaining / 3600)).slice(-2);
+            var minutes_remaining = ('0' + Math.floor((time_remaining % 3600) / 60)).slice(-2);
+            var seconds_remaining = ('0' + (time_remaining % 60).toFixed()).slice(-2);
 
-          progress_bar_percentage = time_left * percentage_increment;
-          live_timer_div.css("width", progress_bar_percentage + "%");
+            time_remaining_text.html(hours_remaining + 'h : ' + minutes_remaining + 'm : ' + seconds_remaining + 's remaining');
+            /*var hour_string = hours_remaining == 1 ? 'hour' : 'hours';
+             var minute_string = minutes_remaining == 1 ? 'minute' : 'minutes';
+             if(hours_remaining >= 1) {
+             time_remaining_text.html(hours_remaining + ' ' + hour_string + ' ' + minutes_remaining + ' ' + minute_string + ' remaining');
+             } else if(minutes_remaining >= 1) {
+             time_remaining_text.html(minutes_remaining + ' ' + minute_string + ' remaining');
+             } else {
+             time_remaining_text.html(seconds_remaining + ' seconds remaining');
+             }*/
 
-          if (time_left <= 30) {
-            live_timer_div.removeClass("progress-bar-success progress-bar-warning");
-            live_timer_div.addClass("progress-bar-danger");
-          } else if (time_left <= 60) {
-            live_timer_div.removeClass("progress-bar-success progress-bar-danger");
-            live_timer_div.addClass("progress-bar-warning");
-          }
-      } else {
-          // contest is over, past contest may be viewed 1 minute after ending
-          is_contest_ended = true;
-          if(time_left >= -1) {
-              window.alert("The contest is now over! You may view this contest 1 minute after it has ended.");
-              window.location.replace(home_url);
-          } else {
-              // view past contest logic
-          }
-      }
+            progress_bar_percentage = time_remaining * percentage_increment;
+            live_timer_div.css("width", progress_bar_percentage + "%");
+
+            if (curr_time.isAfter(warning_time)) { // 10% of contest length left
+                live_timer_div.removeClass("progress-bar-success progress-bar-warning");
+                live_timer_div.addClass("progress-bar-danger");
+            } else if (curr_time.isAfter(danger_time)) { // 25% of contest length left
+                live_timer_div.removeClass("progress-bar-success progress-bar-danger");
+                live_timer_div.addClass("progress-bar-warning");
+            }
+
+            if(curr_time.isSame(last_minute_time)) {
+                window.alert("You have 1 minute remaining.");
+            }
+        } else {
+            // contest is over, past contest may be viewed 1 minute after ending
+            is_contest_ended = true;
+            if(curr_time.isBefore(viewable_time)) {
+                window.alert("The contest is now over! You may view it 1 minute after it has ended.");
+                window.location.replace(home_url);
+            } else {
+                // any additional 'view past contest' logic
+            }
+        }
     }
 
-    updateDuration(start_time, moment().format('YYYY/MM/DD HH:mm:ss'));
+    updateDuration(moment());
 };
 
 $(document).ready(function() {
-  if(is_contest_started && !is_contest_ended) {
-      update();
-      setInterval(update, 1000);
-  }
+    if(is_contest_started && !is_contest_ended) { // keep refreshing contest if active contest
+        update();
+        setInterval(update, 1000);
+    }
 
-  if(!is_contest_started || is_contest_ended) {
-      $("#id_code_file").prop('disabled', true);
-      $("input[type='submit']").prop('disabled', true);
-      $("#timer_bar").hide();
-  }
+    if(!is_contest_started || is_contest_ended) { // hide timer bar & disallow code submission if unstarted or past contest
+        $("#id_code_file").prop('disabled', true);
+        $("input[type='submit']").prop('disabled', true);
+        $("#timer_bar").hide();
+    }
 });
