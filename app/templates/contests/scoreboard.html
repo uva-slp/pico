@@ -9,7 +9,7 @@
     {{ block.super }}
     <!--meta http-equiv="refresh" content="5" -->
     <style>
-       #customers {
+        #customers {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
             width: 100%;
@@ -48,32 +48,24 @@
     {{ problem_status_array.items }}
 
     <table id="scoreboard">
-
         <!-- Top Row -->
         <tr>
             <th> Team </th>
-
             {% for count in problem_count %}
-                <th> Question {{ count }} </th>
+            <th> Question {{ count }} </th>
             {% endfor %}
             <th> Score </th>
             <th> Total Attempts</th>
-
         </tr>
 
-            <!-- Team Row -->
-            {% for team, status_list in problem_status_array.items %}
-                <tr>
-
+        <!-- Team Row -->
+        {% for team, status_list in problem_status_array.items %}
+            <tr>
                 <td> {{ team }} </td>
 
                 {% for character in status_list %}
 
-
                     <!-- {% for problem in problems %} -->
-
-
-
                         {% if character == "1" %}
                             <td style="background-color:green; font-weight:bold"> Correct </td>
                         {% endif %}
@@ -90,30 +82,19 @@
                             <td style="font-weight:bold"> No Submission </td>
                         {% endif %}
 
-                    <!-- {% endfor %} -->
+                        <!-- {% endfor %} -->
                 {% endfor %}
 
                 <td>
-                {% for key,value in problem_score_array.items %}
+                    {% for key,value in problem_score_array.items %}
                         {{ value }}
-                {% endfor %}
+                    {% endfor %}
                 </td>
-
                 <td> 1 </td>
-
-                </tr>
-
-
-
-            {% endfor %}
-            <!-- if problem/submission.status = right, color green, wrong color red, else color yellow -->
-
-
-
-
-
+            </tr>
+        {% endfor %}
+        <!-- if problem/submission.status = right, color green, wrong color red, else color yellow -->
     </table>
-
 {% endblock %}
 <!-- loop through teams and add a row for each team, add a TD for each question with color corresponding -->
 

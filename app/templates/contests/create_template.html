@@ -63,12 +63,12 @@
 {% endblock %}
 
 {% block foot_block %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="{% static 'moment/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>-->
 
-    <script src="{% static 'js/autojudge_checkbox.js' %}"></script>
-    <!--<script src="{% static 'js/datetime_picker.js' %}"></script>-->
+    <script type="text/javascript" src="{% static 'js/autojudge_checkbox.js' %}"></script>
+    <!--<script type="text/javascript" src="{% static 'js/datetime_picker.js' %}"></script>-->
 
     {{ admin_search_form.media.js }}
     {{ participant_search_form.media.js }}
