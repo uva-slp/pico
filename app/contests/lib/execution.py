@@ -5,18 +5,19 @@ created: 11/13/2016
 execution.py is concerned with the compilation and execution of C++ and Java files on the fly (the output of the program is returned as a string, but compiled and/or object files are deleted upon completion). Since using VMs would be too slow for our purposes, the code is executed in Docker containers to provide some level of sandboxing although it is not perfectly secure (See https://docs.docker.com/engine/security/security/).
 """
 
-
 import os
 import sys
 from subprocess import Popen, PIPE
 import tempfile
 import shutil
+import ast
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-#TODO: Should use a Unix group called docker and add users so the password doesn't have to be hardcoded 
+dir_path = os.path.dirname(os.path.realpath(__file__)) 
 
 #Returns a return code and the output of the program or an error message
-def execute_code(submission_file, original_filename, input_file, timeout=5):
+def execute_code(submission_file, original_filename, input_file, allowed_languages, timeout=5):
+    #Get rid of white space in allowed_languages so it can be passed as a command line arg
+    allowed_languages = "".join(allowed_languages.split())
     if not (submission_file and original_filename):
         return (1, "FILENAME ERROR: No file name given.")
     #Create a temporary directory to mount on the docker container
@@ -31,12 +32,12 @@ def execute_code(submission_file, original_filename, input_file, timeout=5):
             for chunk in input_file.chunks():
                 destination.write(chunk)
         Popen("cp " + os.path.join(dir_path, "execution.py") + " " + temp_dirpath, shell=True, stdout=PIPE, stderr=PIPE)
-        docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name + " input.txt").split()
+        docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name + " " + allowed_languages + " input.txt").split()
         command = Popen(docker_command, stdin=PIPE, stderr=PIPE, stdout=PIPE, universal_newlines=True)
     #If this problem does not have an input file:
     else:
         Popen("cp " + os.path.join(dir_path, "execution.py") + " " + temp_dirpath, shell=True, stdout=PIPE, stderr=PIPE)
-        docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name).split()
+        docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name + " " + allowed_languages).split()
         command = Popen(docker_command, stdin=PIPE, stderr=PIPE, stdout=PIPE, universal_newlines=True)
     output, error = command.communicate()
     #Delete the temporary directory
@@ -115,25 +116,35 @@ def run_python(file_name, input_file, timeout):
 
 
 if __name__ == "__main__":
-    if len( sys.argv) < 2:
+    if len( sys.argv) < 3:
         print("1,FILENAME ERROR: No file name given.")
     else:
         input_file = None
-        if len(sys.argv) > 2:
-            input_file = sys.argv[2]
+        if len(sys.argv) > 3:
+            input_file = sys.argv[3]
         file_name = sys.argv[1]
+        allowed_languages = ast.literal_eval(sys.argv[2])
         file_prefix, file_extension = os.path.splitext(file_name)
         timeout = 5
         #If it didn't have a proper extensions, have a default error:
-        result = (1, "FILENAME ERROR: Must have a valid C++ or Java file extension")
+        result = (1, "FILENAME ERROR: Must have a valid C++, Java, or Python file extension")
         #Check if it's a Java file:
         if file_extension == '.java':
-            result = run_java(file_name, input_file, timeout)
+            if '1' in allowed_languages:
+                result = run_java(file_name, input_file, timeout)
+            else:
+                result = (1, "LANGUAGE ERROR: Java submissions are not allowed in this contest")
         #Check if it's a c++ file:
         cpp_extensions = {'.cpp', '.cc', '.C', '.cxx', '.c++'}
         if file_extension in cpp_extensions:
-            result = run_cpp(file_name, input_file, timeout)
+            if '2' in allowed_languages:
+                result = run_cpp(file_name, input_file, timeout)
+            else:
+                result = (1, "LANGUAGE ERROR: C++ submissions are not allowed in this contest")
         #Check if it's a python file:
         if file_extension == '.py':
-            result = run_python(file_name, input_file, timeout)
+            if '3' in allowed_languages:
+                result = run_python(file_name, input_file, timeout)
+            else:
+                result = (1, "LANGUAGE ERROR: Python submissions are not allowed in this contest")
         print(str(result[0]) + ',' + str(result[1]))
