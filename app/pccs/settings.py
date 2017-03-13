@@ -229,6 +229,7 @@ STATIC_URL = '/pccs/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
 	os.path.join(BASE_DIR, os.path.join('pccs', 'static')),
+	os.path.join(BASE_DIR, os.path.join('contests', 'static')),
 	os.path.join(BASE_DIR, 'vendor')
 ]
 

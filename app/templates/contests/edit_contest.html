@@ -10,6 +10,10 @@
     {{ block.super }}
 {% endblock %}
 
+{% block top_body_links %}
+    <a href="{% url 'contests:contest' contest_id %}" class="btn btn-default">Return to Contest</a>
+{% endblock %}
+
 {% block load_template_form %}{% endblock %}
 
 {% block contest_form_legend %}Edit Contest - {{ form.title.value }}{% endblock %}

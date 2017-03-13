@@ -50,7 +50,7 @@
                             <div class="list-group">
                                 {% for contest in unstarted_contests %}
                                     <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
-                                        <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                        <strong>{{ contest.title }}</strong>
                                     </a>
                                 {% endfor %}
                             </div>

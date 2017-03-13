@@ -1,6 +1,7 @@
 {% extends 'contests/base.html' %}
 
 {% load bootstrap3 %}
+{% load staticfiles %}
 {% load contest_extras %}
 
 {% block title_block %}{{ contest_data.title }}{% endblock %}
@@ -50,32 +51,41 @@
 {% block content_block %}
     {{ block.super }}
 
+    <!-- Time Remaining Bar -->
     {% if contest_data.contest_start != NULL %}
-        <!-- Time Remaining Bar -->
         <div class="progress slower">
             <div class="time_remaining_div"><span class="time_remaining_text"></span></div>
             <div id="progress-slow" class="progress-bar progress-bar-striped active live_timer_div" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height:170px; width:100%"></div>
         </div>
     {% endif %}
 
-    <h1>Contest: {{ contest_data.title }}</h1>
+    <div class="row text-center">
+        <h1 style="font-weight: bold;">{{ contest_data.title }}</h1>
+    </div>
 
-    <a href="{% url 'contests:scoreboard' contest_data.id %}" class="btn btn-default">View Scoreboard</a><br />
-    <br />
-    <a href="{% url 'contests:edit_contest' contest_data.id %}" class="btn btn-default">Edit Contest</a>
-    <br />
     {% if is_judge or is_creator %}
-        {% if contest_data.contest_start == NULL %}
-            <form id="activate_contest_form" method="post"
-                  action="{% url 'contests:contest' contest_data.id %}">
-                {% csrf_token %}
-                {% bootstrap_button "Activate Contest" value="activate_contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
-            </form>
-        {% endif %}
-        <br />
-        <a href="{% url 'contests:contest_judge_submissions' contest_data.id %}">View all submissions</a>
+        <div class="well bs-component">
+            <p style="font-weight: bold;">Judge Panel:</p>
+            <div class="col-lg-5 col-lg-offset-2">
+                <div class="btn-toolbar center-block">
+                    {% if contest_data.contest_start == NULL %}
+                        <form id="activate_contest_form" method="post"
+                              action="{% url 'contests:contest' contest_data.id %}">
+                            {% csrf_token %}
+                            {% bootstrap_button "Activate Contest" value="activate_contest" button_type="submit" name="submit" button_class="btn btn-primary" %}
+                        </form>
+                    {% endif %}
+                    <a href="{% url 'contests:edit_contest' contest_data.id %}" class="btn btn-default">Edit Contest</a>
+                    <a href="{% url 'contests:contest_judge_submissions' contest_data.id %}" class="btn btn-default">View all submissions</a>
+                </div>
+            </div>
+            <br />
+        </div>
     {% endif %}
-    <br />
+
+    <br /><br />
+        <a href="{% url 'contests:scoreboard' contest_data.id %}" class="btn btn-default">View Scoreboard</a>
+    <br /><br />
 
     {% for team in contest_teams %}
         <a href="{% url 'contests:contest_submissions' contest_data.id team.id %}">View team {{team.name}}'s submissions</a>
@@ -217,22 +227,6 @@
         });
     </script>
 
-    <!-- Lock time remaining bar to top of visible frame when scrolling down -->
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $(window).scroll(function() {
-                var distanceFromTop = $(document).scrollTop();
-                var navbar_height = $('#main-navbar').height();
-                var progress_width = $('.progress').width();
-                if (distanceFromTop >= navbar_height) {
-                    $('.progress').fadeIn(400).addClass('fixed');
-                    $('.progress').width(progress_width);
-                } else {
-                    $('.progress').fadeIn(400).removeClass('fixed');
-                    $('.progress').width(progress_width);
-                }
-            });
-        });
-    </script>
+    <script type="text/javascript" src="{% static 'contests/static/js/lock_navbar.js' %}"></script>
 
 {% endblock %}

@@ -22,7 +22,6 @@ from django.utils import timezone
 from django.http import Http404
 from django.template.loader import render_to_string
 import os
-from itertools import chain
 
 
 def index(request):
@@ -43,7 +42,6 @@ def index(request):
     for contest in all_past_contests:
         if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
             my_past_contests.append(contest)
-
 
     return render(
         request,
@@ -67,21 +65,21 @@ def upload_code(request, problem_id):
 
 
 def diff(request, problem_id):
-        form = UploadCodeForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            output = exe.execute_code(request.FILES['code_file'])
-            retcode = output[0]
-            if retcode != 0:
-                    error = output[1]
-                    return HttpResponse(error)
-            else:
-                    fromlines = output[1].split("\n")
-                    tolines = ['Hello World from C++!']
-                    html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
+    form = UploadCodeForm(request.POST, request.FILES)
+    if form.is_valid():
+        form.save()
+        output = exe.execute_code(request.FILES['code_file'])
+        retcode = output[0]
+        if retcode != 0:
+            error = output[1]
+            return HttpResponse(error)
         else:
-                return HttpResponse("Invalid form.")
+            fromlines = output[1].split("\n")
+            tolines = ['Hello World from C++!']
+            html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
+            return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
+    else:
+        return HttpResponse("Invalid form.")
 
 
 @login_required
@@ -148,12 +146,9 @@ def create(request):
                     pt = Participant(contest=contest, team=team)
                     pt.save()
 
-                problemcount = 0
-
                 for qa_form in qa_formset:
-                    problemcount += 1
                     qa_form = qa_form.cleaned_data
-                    create_new_problem(request, qa_form, problemcount, contest_id)
+                    create_new_problem(request, qa_form, contest_id)
 
                     # Loop through participants text box and create participant objects for a team on each line w/ contest
 
@@ -171,17 +166,16 @@ def create(request):
 
 
 @login_required
-def create_new_problem(request, form, problemcount, contest_id):
+def create_new_problem(request, form, contest_id):
     solution = form.get('solution')
     program_input = form.get('program_input')
     input_desc = form.get('input_description')
     output_desc = form.get('output_description')
     sample_input = form.get('sample_input')
     sample_output = form.get('sample_output')
-    #contest = form.get('title')
 
     p = Problem(
-        number=problemcount, solution=solution, program_input=program_input, input_description=input_desc,
+        solution=solution, program_input=program_input, input_description=input_desc,
         output_description=output_desc, sample_input=sample_input,
         sample_output=sample_output, contest_id=contest_id
     )
@@ -251,12 +245,10 @@ def edit(request, contest_id):
             return edit(request, contest_id)
 
         if request.POST['submit'] == "save_new_problem":
-            # temporary problemcount solution until model is changed
-            problemcount = User.objects.make_random_password(length=3, allowed_chars='123456789')
             problem_form = CreateProblem(request.POST, request.FILES)
             if problem_form.is_valid():
                 problem_form = problem_form.cleaned_data
-                create_new_problem(request, problem_form, problemcount, contest_id)
+                create_new_problem(request, problem_form, contest_id)
 
             request.method = None
             request.POST = None
@@ -422,7 +414,7 @@ def displayContest(request, contest_id):
         'problem_form_pairs': problem_form_pairs
     }
 
-    return render( request, 'contests/contest.html', data)
+    return render(request, 'contests/contest.html', data)
 
 
 @login_required
@@ -477,45 +469,45 @@ def displayMySubmissions(request, contest_id, team_id):
 
 @login_required
 def displayJudge(request, contest_id, run_id):
-        contest_data = Contest.objects.get(id=contest_id)
+    contest_data = Contest.objects.get(id=contest_id)
 
-        is_judge = isJudge(contest_data, request.user)
-        if not is_judge:
-                return redirect(reverse('home'))
-        
-        problems = contest_data.problem_set.all()
-        for p in problems:
-                if p.submission_set.filter(run_id=run_id).exists():
-                        current_submission = p.submission_set.get(run_id=run_id)
-                        if request.method == 'POST':
-                                form = ReturnJudgeResultForm(request.POST, instance=current_submission)
-                                if form.is_valid():
-                                        form.save()
-                                        # create a new notification
-                                        notification = Notification(submission=current_submission)
-                                        notification.save()
-                                        return redirect(reverse('contests:contest_judge_submissions',
-                                                        kwargs={'contest_id': contest_id}))
-                                else:
-                                        messages.error(request, "Error")
-                        else:
-                                form = ReturnJudgeResultForm(instance=current_submission)
-                        output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'))
-                        retcode = output[0]
-                        fromlines = output[1].split("\n")
-                        solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
-                        #Use the solution file if it exists. If not, use empty expected output.
-                        tolines = []
-                        if bool(solution_file) and os.path.isfile(solution_file.name):
-                                tolines = solution_file.read().decode().split("\n")
-                        html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-                        return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
+    is_judge = isJudge(contest_data, request.user)
+    if not is_judge:
+        return redirect(reverse('home'))
 
-        return render(
-                request,
-                'contests/judge.html',
-                {'contest_data': contest_data, 'is_judge': False}
-        )
+    problems = contest_data.problem_set.all()
+    for p in problems:
+        if p.submission_set.filter(run_id=run_id).exists():
+            current_submission = p.submission_set.get(run_id=run_id)
+            if request.method == 'POST':
+                form = ReturnJudgeResultForm(request.POST, instance=current_submission)
+                if form.is_valid():
+                    form.save()
+                    # create a new notification
+                    notification = Notification(submission=current_submission)
+                    notification.save()
+                    return redirect(reverse('contests:contest_judge_submissions',
+                                            kwargs={'contest_id': contest_id}))
+                else:
+                    messages.error(request, "Error")
+            else:
+                form = ReturnJudgeResultForm(instance=current_submission)
+            output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'))
+            retcode = output[0]
+            fromlines = output[1].split("\n")
+            solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
+            #Use the solution file if it exists. If not, use empty expected output.
+            tolines = []
+            if bool(solution_file) and os.path.isfile(solution_file.name):
+                tolines = solution_file.read().decode().split("\n")
+            html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
+            return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
+
+    return render(
+        request,
+        'contests/judge.html',
+        {'contest_data': contest_data, 'is_judge': False}
+    )
 
 
 def scoreboard(request, contest_id):
@@ -523,16 +515,16 @@ def scoreboard(request, contest_id):
     scoreboard_contest = Contest.objects.get(id=contest_id) # Get contest ID from URL
     problems = Problem.objects.all()
     problems = problems.filter(contest=scoreboard_contest) # Filter problems to look at by contest
-    problem_count = 0
-    for problem in problems :
-        problem_count += 1
+    problem_number = 0
+    for problem in problems:
+        problem_number += 1
         print("problem:")
-        print(problem.number)
+        print(problem_number)
 
     participants = scoreboard_contest.participant_set.all()
 
     problem_count_array = []
-    for i in range(1, problem_count+1):
+    for i in range(1, problem_number+1):
         problem_count_array.append(i)
 
     contest_title = scoreboard_contest.title
@@ -543,7 +535,6 @@ def scoreboard(request, contest_id):
 
     #for problem in problems:
     #    problems_status_array[problem] = [2]
-
 
     for participant in participants:
         teamname = participant.team.name
@@ -562,7 +553,6 @@ def scoreboard(request, contest_id):
 
         for problem in problems: # Iterate through problems and check submissions for right/wrong answer
             #newteam = getTeam(scoreboard_contest, request.user)
-
 
             print("problem: ")
             print(problem)
@@ -595,11 +585,13 @@ def scoreboard(request, contest_id):
             print(problems_status_array)
             #print(problem_score_array)
 
-    
+    data = {
+        'problem_number' : problem_count_array, 'problems' : problems,
+        'contest_title' : contest_title, 'problem_status_array' : problems_status_array,
+        'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest
+    }
 
-
-    return render(request, 'contests/scoreboard.html', {'problem_count' : problem_count_array,
-        'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest})
+    return render(request, 'contests/scoreboard.html', data)
 
 
 def show_notification(request):
@@ -611,8 +603,17 @@ def show_notification(request):
         team = submission.team
         if request.user in team.members.all():
             # data needed for showing notification
-            # contest title, problem, run id, and result
-            current_data = (submission.problem.contest.title, submission.problem.number,
+
+            noti_problem = Problem.get(pk=submission.problem_id)
+            problems = Problem.objects.filter(contest_id=noti_problem.contest_id)
+            problem_number = 0
+            for problem in problems:
+                problem_number += 1
+                if problem.id == noti_problem.id:
+                    break
+
+            # contest title, problem number, run id, and result
+            current_data = (submission.problem.contest.title, problem_number,
                             submission.run_id, submission.get_result_display(), noti.id)
             l.append(current_data)
 
