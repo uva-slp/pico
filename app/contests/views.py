@@ -22,7 +22,6 @@ from django.utils import timezone
 from django.http import Http404
 from django.template.loader import render_to_string
 import os
-from itertools import chain
 
 
 def index(request):
@@ -44,7 +43,6 @@ def index(request):
         if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
             my_past_contests.append(contest)
 
-
     return render(
         request,
         'contests/index.html',
@@ -54,34 +52,6 @@ def index(request):
             'past_contests': my_past_contests,
         }
     )
-
-def choose_problem(request):
-    all_problems = Problem.objects.all()
-    return render(request, 'contests/choose_problem.html', {'problems': all_problems})
-
-
-def upload_code(request, problem_id):
-    problem = Problem.objects.get(id=problem_id)
-    form = UploadCodeForm(initial = {'problem': problem})
-    return render(request, 'contests/upload_page.html', {'form': form, 'problem': problem})
-
-
-def diff(request, problem_id):
-        form = UploadCodeForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            output = exe.execute_code(request.FILES['code_file'])
-            retcode = output[0]
-            if retcode != 0:
-                    error = output[1]
-                    return HttpResponse(error)
-            else:
-                    fromlines = output[1].split("\n")
-                    tolines = ['Hello World from C++!']
-                    html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-                    return render(request, 'contests/diff.html', {'diff_table': html, 'numChanges': numChanges})
-        else:
-                return HttpResponse("Invalid form.")
 
 
 @login_required
@@ -148,12 +118,9 @@ def create(request):
                     pt = Participant(contest=contest, team=team)
                     pt.save()
 
-                problemcount = 0
-
                 for qa_form in qa_formset:
-                    problemcount += 1
                     qa_form = qa_form.cleaned_data
-                    create_new_problem(request, qa_form, problemcount, contest_id)
+                    create_new_problem(request, qa_form, contest_id)
 
                     # Loop through participants text box and create participant objects for a team on each line w/ contest
 
@@ -171,17 +138,16 @@ def create(request):
 
 
 @login_required
-def create_new_problem(request, form, problemcount, contest_id):
+def create_new_problem(request, form, contest_id):
     solution = form.get('solution')
     program_input = form.get('program_input')
     input_desc = form.get('input_description')
     output_desc = form.get('output_description')
     sample_input = form.get('sample_input')
     sample_output = form.get('sample_output')
-    #contest = form.get('title')
 
     p = Problem(
-        number=problemcount, solution=solution, program_input=program_input, input_description=input_desc,
+        solution=solution, program_input=program_input, input_description=input_desc,
         output_description=output_desc, sample_input=sample_input,
         sample_output=sample_output, contest_id=contest_id
     )
@@ -251,12 +217,10 @@ def edit(request, contest_id):
             return edit(request, contest_id)
 
         if request.POST['submit'] == "save_new_problem":
-            # temporary problemcount solution until model is changed
-            problemcount = User.objects.make_random_password(length=3, allowed_chars='123456789')
             problem_form = CreateProblem(request.POST, request.FILES)
             if problem_form.is_valid():
                 problem_form = problem_form.cleaned_data
-                create_new_problem(request, problem_form, problemcount, contest_id)
+                create_new_problem(request, problem_form, contest_id)
 
             request.method = None
             request.POST = None
@@ -419,7 +383,7 @@ def displayContest(request, contest_id):
         'problem_form_pairs': problem_form_pairs
     }
 
-    return render( request, 'contests/contest.html', data)
+    return render(request, 'contests/contest.html', data)
 
 
 @login_required
@@ -475,7 +439,6 @@ def displayMySubmissions(request, contest_id, team_id):
 @login_required
 def displayJudge(request, contest_id, run_id):
         contest_data = Contest.objects.get(id=contest_id)
-
         is_judge = isJudge(contest_data, request.user)
         if not is_judge:
                 return redirect(reverse('home'))
@@ -497,7 +460,8 @@ def displayJudge(request, contest_id, run_id):
                                         messages.error(request, "Error")
                         else:
                                 form = ReturnJudgeResultForm(instance=current_submission)
-                        output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'))
+                        allowed_languages = getattr(contest_data, 'languages')
+                        output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'), allowed_languages)
                         retcode = output[0]
                         fromlines = output[1].split("\n")
                         solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
@@ -513,33 +477,6 @@ def displayJudge(request, contest_id, run_id):
                 'contests/judge.html',
                 {'contest_data': contest_data, 'is_judge': False}
         )
-
-
-def show_notification(request):
-    l = []
-
-    all_notifications = Notification.objects.all()
-    for noti in all_notifications:
-        submission = noti.submission
-        team = submission.team
-        if request.user in team.members.all():
-            # data needed for showing notification
-            # contest title, problem, run id, and result
-            current_data = (submission.problem.contest.title, submission.problem.number,
-                            submission.run_id, submission.get_result_display(), noti.id)
-            l.append(current_data)
-
-    d = {'data': l}
-    return JsonResponse(d)
-
-
-def close_notification(request):
-    modal_id = request.POST['id']
-    print("modal id: " + modal_id)
-    if Notification.objects.filter(id=modal_id).exists():
-        current_notification = Notification.objects.get(id=modal_id)
-        current_notification.delete()
-    return HttpResponse('OK')
 
 def stats(request):
     if request.user.is_authenticated():
@@ -567,16 +504,14 @@ def scoreboard(request, contest_id):
     scoreboard_contest = Contest.objects.get(id=contest_id) # Get contest ID from URL
     problems = Problem.objects.all()
     problems = problems.filter(contest=scoreboard_contest) # Filter problems to look at by contest
-    problem_count = 0
-    for problem in problems :
-        problem_count += 1
-        print("problem:")
-        print(problem.number)
+    problem_number = 0
+    for problem in problems:
+        problem_number += 1
 
     participants = scoreboard_contest.participant_set.all()
 
     problem_count_array = []
-    for i in range(1, problem_count+1):
+    for i in range(1, problem_number+1):
         problem_count_array.append(i)
 
     contest_title = scoreboard_contest.title
@@ -594,15 +529,9 @@ def scoreboard(request, contest_id):
 
         problem_score_array[teamname] = 0
         problem_attempts_array[teamname] = 0
-        print("teamname")
-        print(teamname)
         templist = []
-        # need to iterate through submissions for each team and only edit html per team
 
         for problem in problems: # Iterate through problems and check submissions for right/wrong answer
-
-            print("problem: ")
-            print(problem)
 
             tempsubmission = Submission.objects.filter(team = tempteam, problem=problem).last()
 
@@ -622,6 +551,46 @@ def scoreboard(request, contest_id):
                 templist.append("2")
                 problems_status_array[teamname] = templist # Otherwise the submission is pending
 
+    data = {
+        'problem_number' : problem_count_array, 'problems' : problems,
+        'contest_title' : contest_title, 'problem_status_array' : problems_status_array,
+        'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest
+    }
 
-    return render(request, 'contests/scoreboard.html', {'problem_count' : problem_count_array,
-        'problems' : problems, 'contest_title' : contest_title, 'problem_status_array' : problems_status_array, 'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest})
+    return render(request, 'contests/scoreboard.html', data)
+
+
+def show_notification(request):
+    l = []
+
+    all_notifications = Notification.objects.all()
+    for noti in all_notifications:
+        submission = noti.submission
+        team = submission.team
+        if request.user in team.members.all():
+            # data needed for showing notification
+
+            noti_problem = Problem.get(pk=submission.problem_id)
+            problems = Problem.objects.filter(contest_id=noti_problem.contest_id)
+            problem_number = 0
+            for problem in problems:
+                problem_number += 1
+                if problem.id == noti_problem.id:
+                    break
+
+            # contest title, problem number, run id, and result
+            current_data = (submission.problem.contest.title, problem_number,
+                            submission.run_id, submission.get_result_display(), noti.id)
+            l.append(current_data)
+
+    d = {'data': l}
+    return JsonResponse(d)
+
+
+def close_notification(request):
+    modal_id = request.POST['id']
+    print("modal id: " + modal_id)
+    if Notification.objects.filter(id=modal_id).exists():
+        current_notification = Notification.objects.get(id=modal_id)
+        current_notification.delete()
+    return HttpResponse('OK')

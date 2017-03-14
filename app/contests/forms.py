@@ -9,23 +9,13 @@ from datetime import datetime
 from dal import autocomplete
 
 
-'''
-class CreateContestForm(ModelForm):
-    class Meta:
-        model = Contest
-        fields = ['title']
-'''
-
-LANGAUGES = (
-    ('Python','Python'),
-    ('Java', 'Java') ,
-    ('C++', 'C++'))
 CONTEST_LENGTH = (
     ('1', '1 Hour'),
     ('2','2 Hours'),
     ('5','5 Hours'),
     ('10', '10 Hours'),
     ('24','24 Hours'))
+
 AUTOJUDGE = (
     ('1','Enabled'),
     ('0','Disabled'))
@@ -92,7 +82,6 @@ class CreateContestForm(ModelForm):
 
 
 class CreateProblem(ModelForm):
-    solution = forms.FileField(required=True, label='Solution (.txt)')
     program_input = forms.FileField(required=False, label= 'Program Input (.txt)')
     input_description = forms.CharField(required=False, label='Description of Input',
         widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
@@ -100,6 +89,7 @@ class CreateProblem(ModelForm):
         widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
     sample_input = forms.FileField(required=False, label='Sample Input (.txt)')
     sample_output = forms.FileField(required=False, label='Sample Output (.txt)')
+    solution = forms.FileField(required=True, label='Solution (.txt)')
 
     def clean(self):
         upload_to = 'uploads/'
@@ -110,8 +100,8 @@ class CreateProblem(ModelForm):
     class Meta:
         model = Problem
         fields = (
-            'solution', 'program_input', 'input_description', 'output_description', 'sample_input',
-            'sample_output')
+            'program_input', 'input_description', 'output_description', 'sample_input',
+            'sample_output', 'solution')
 
 
 class CreateContestTemplateForm(ModelForm):
@@ -163,6 +153,10 @@ class UploadCodeForm(forms.ModelForm):
         model = Submission
         fields = ['code_file', 'problem']
         widgets = {'problem': forms.HiddenInput()}
+
+    def __init__(self, *args, **kwargs):
+        super(UploadCodeForm, self).__init__(*args, **kwargs)
+        self.fields['code_file'].required = True
 
 
 class ReturnJudgeResultForm(forms.ModelForm):

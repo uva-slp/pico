@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 	'organizations.apps.OrganizationsConfig',
 	'contests.apps.ContestsConfig',
 	'alerts.apps.AlertsConfig',
+	'stats.apps.StatsConfig',
 ]
 
 MIDDLEWARE = [
@@ -229,6 +230,7 @@ STATIC_URL = '/pccs/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
 	os.path.join(BASE_DIR, os.path.join('pccs', 'static')),
+	os.path.join(BASE_DIR, os.path.join('contests', 'static')),
 	os.path.join(BASE_DIR, 'vendor')
 ]
 

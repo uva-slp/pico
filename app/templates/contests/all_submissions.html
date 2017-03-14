@@ -105,20 +105,7 @@
 
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
 
-    <script>
-        $('#mydata1').DataTable({
-            "searching": false,
-            "lengthChange": false,
-            "info": false,
-            "paging": false
-        });
-        $('#mydata2').DataTable({
-            "searching": false,
-            "lengthChange": false,
-            "info": false,
-            "paging": false
-        });
-    </script>
+    <script src="{% static 'js/datatable.js' %}"></script>
 
     <script src="{% static 'js/refresh_submission.js' %}"></script>
 {% endblock %}

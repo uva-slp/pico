@@ -39,25 +39,19 @@
 {% block content_block %}
     {{ block.super }}
 
-    <!-- <b> {{ contest_title }}</b> -->
-
     <table id="scoreboard">
 
-        <!-- Top Row -->
         <tr>
             <th> Team </th>
-
             {% for count in problem_count %}
-                <th> Question {{ count }} </th>
+            <th> Question {{ count }} </th>
             {% endfor %}
             <th> Score </th>
 
         </tr>
 
-            <!-- Team Row -->
-            {% for team, status_list in problem_status_array.items %}
-                <tr>
-
+        {% for team, status_list in problem_status_array.items %}
+            <tr>
                 <td> {{ team }} </td>
 
                 {% for character in status_list %}
@@ -78,6 +72,7 @@
                             <td style="font-weight:bold"> No Submission </td>
                         {% endif %}
 
+<<<<<<< HEAD
                 {% endfor %}
 
                 <td>
@@ -98,8 +93,8 @@
 
 
     <script src="{% static 'js/refresh_submission.js' %}"></script>
+
 {% endblock %}
-<!-- loop through teams and add a row for each team, add a TD for each question with color corresponding -->
 
 
 

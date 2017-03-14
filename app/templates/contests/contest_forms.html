@@ -17,6 +17,7 @@
 {% endblock %}
 
 {% block content_block %}
+    {% block top_body_links %}{% endblock %}
     {% block load_template_form %}
     <div class="well bs-component">
         <form class="form-horizontal" id="load_contest_template" method="post"
@@ -125,49 +126,10 @@
 {% block foot_block %}
     {{ block.super }}
 
-    <script src="{% static 'js/jquery.formset.js' %}"></script>
-    <script>
-        $('.qa-formset').formset({
-            addText: 'add question',
-            deleteText: 'delete question',
-            addCssClass: 'add-row btn btn-primary btn-sm btn-margin',
-            deleteCssClass: 'delete-row btn btn-primary btn-sm btn-margin float-left'
-        });
-    </script>
-
-    <script type='text/javascript'>
-        $('#id_autojudge_enabled').click(function() {
-            if($('#id_autojudge_enabled').prop('checked') == true) {
-                $('#id_autojudge_review').prop('disabled', false);
-            } else {
-                $('#id_autojudge_review').prop('disabled', true);
-            }
-        });
-    </script>
-
-    <!--<script type="text/javascript">
-        $(document).ready(function() {
-                $(function () {
-                    $('#id_contest_length_pickers:has(input:not([readonly],[disabled]))').datetimepicker({"format": "HH:mm"});
-                });
-                $(function () {
-                    $('#id_time_penalty_pickers:has(input:not([readonly],[disabled]))').datetimepicker({"format": "mm"});
-                });
-            });
-    </script>
-
-    <script type="text/javascript">
-        (function(window) {
-            var callback = function() {
-                $(function(){$("#id_contest_length_pickers:has(input:not([readonly],[disabled]))").datetimepicker({"language": "en-us", "format": "HH:MM"});});
-            };
-            if(window.addEventListener)
-                window.addEventListener("load", callback, false);
-            else if (window.attachEvent)
-                window.attachEvent("onload", callback);
-            else window.onload = callback;
-        })(window);
-    </script>-->
+    <script src="{% static 'jquery-formset/jquery.formset.js' %}"></script>
+    <script src="{% static 'js/formset_styler.js' %}"></script>
+    <script src="{% static 'js/autojudge_checkbox.js' %}"></script>
+    <!--<script src="{% static 'js/datetime_picker.js' %}"></script>-->
 
     {{ admin_search_form.media.js }}
     {{ participant_search_form.media.js }}

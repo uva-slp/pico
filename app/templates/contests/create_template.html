@@ -1,11 +1,13 @@
 {% extends 'pccs/home.html' %}
 
+{% load static %}
 {% load bootstrap3 %}
 
 {% block title_block %}Create a new contest template{% endblock %}
 
 {% block head_block %}
     {{ block.super }}
+
     {{ admin_search_form.media.css }}
     {{ participant_search_form.media.css }}
 {% endblock %}
@@ -61,42 +63,12 @@
 {% endblock %}
 
 {% block foot_block %}
-        <script type="text/javascript">
-        $(document).ready(function() {
-                $(function () {
-                    $('#id_contest_length_pickers:has(input:not([readonly],[disabled]))').datetimepicker({"format": "HH:mm"});
-                });
-                $(function () {
-                    $('#id_time_penalty_pickers:has(input:not([readonly],[disabled]))').datetimepicker({"format": "mm"});
-                });
-            });
-    </script>
+    <script type="text/javascript" src="{% static 'moment/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>-->
 
-    <!--<script type="text/javascript">
-        (function(window) {
-            var callback = function() {
-                $(function(){$("#id_contest_length_pickers:has(input:not([readonly],[disabled]))").datetimepicker({"language": "en-us", "format": "HH:MM"});});
-            };
-            if(window.addEventListener)
-                window.addEventListener("load", callback, false);
-            else if (window.attachEvent)
-                window.attachEvent("onload", callback);
-            else window.onload = callback;
-        })(window);
-    </script>-->
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.43/js/bootstrap-datetimepicker.min.js"></script>
-    <script type='text/javascript'>
-        $('#id_autojudge_enabled').click(function() {
-            if($('#id_autojudge_enabled').prop('checked') == true) {
-                $('#id_autojudge_review').prop('disabled', false);
-            } else {
-                $('#id_autojudge_review').prop('disabled', true);
-            }
-        });
-    </script>
+    <script type="text/javascript" src="{% static 'js/autojudge_checkbox.js' %}"></script>
+    <!--<script type="text/javascript" src="{% static 'js/datetime_picker.js' %}"></script>-->
 
     {{ admin_search_form.media.js }}
     {{ participant_search_form.media.js }}
