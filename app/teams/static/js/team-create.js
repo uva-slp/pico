@@ -19,10 +19,11 @@ $('#team-form').on('submit', function(event) {
                 $('#team-tabs').append(data.tab);
                 // Add tab-pane
                 var panel = $(data.panel);
-                panel.find('input[type=checkbox][data-toggle^=toggle]').bootstrapToggle();
                 $('#team-panels').append(panel);
                 // Show tab that was added
                 $('#team-tabs a').last().click();
+                // Render data-toggle
+                panel.find('input[type=checkbox][data-toggle^=toggle]').bootstrapToggle();
                 // Close modal
                 $('#create-team.modal').modal('hide');
             } else if (xhr.status == 201) {
