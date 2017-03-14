@@ -8,7 +8,7 @@ from .forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 
 @login_required
 def index(request):
-	return render(request, 'pccs/_construction.html')
+	return render(request, 'pico/_construction.html')
 
 @login_required
 def create(request):

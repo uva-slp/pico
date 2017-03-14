@@ -12,10 +12,10 @@ from users.forms import LoginForm, UserForm
 def index(request):
 	return render(
 		request,
-		'pccs/index.html',
+		'pico/index.html',
 		{'login_form': LoginForm(), 'user_form': UserForm()})
 
 @login_required
 def home(request):
 	return redirect(reverse('contests:index'))
-	# return render(request, 'pccs/home.html', {})
+	# return render(request, 'pico/home.html', {})

@@ -20,8 +20,8 @@ from dal import autocomplete
 from common.decorators import anonymous_required
 from .forms import UserForm, LoginForm
 from .models import User
-from pccs.secrets import DB_NAME
-from pccs.settings import GIT_ROOT, MNT_ROOT
+from pico.secrets import DB_NAME
+from pico.settings import GIT_ROOT, MNT_ROOT
 
 @login_required
 def index(request, user_id=None):
