@@ -478,6 +478,26 @@ def displayJudge(request, contest_id, run_id):
                 {'contest_data': contest_data, 'is_judge': False}
         )
 
+def stats(request):
+    if request.user.is_authenticated():
+        participation = Participant.objects.filter(team__members__username=request.user.username).order_by('contest__date_created')
+        contest_count = Participant.objects.filter(team__members__username=request.user.username).count()
+        teams = Team.objects.filter(members__username=request.user.username).order_by('name')
+        teams_count = teams.count()
+        teammates_count = 0
+        for t in teams:
+            members = t.members.all()
+            for m in members:
+                if m.username != request.user.username:
+                    teammates_count += 1
+        return render(request, 'contests/stats.html', { 'participation' : participation,
+                                                        'contest_count' : contest_count,
+                                                        'teams' : teams,
+                                                        'teams_count' : teams_count,
+                                                        'teammates_count' : teammates_count})
+    else:
+        return render(request, 'contests/stats.html')
+
 
 def scoreboard(request, contest_id):
 
@@ -487,8 +507,6 @@ def scoreboard(request, contest_id):
     problem_number = 0
     for problem in problems:
         problem_number += 1
-        print("problem:")
-        print(problem_number)
 
     participants = scoreboard_contest.participant_set.all()
 
@@ -502,9 +520,6 @@ def scoreboard(request, contest_id):
     problem_score_array = {}
     problem_attempts_array = {}
 
-    #for problem in problems:
-    #    problems_status_array[problem] = [2]
-
     for participant in participants:
         teamname = participant.team.name
         try:
@@ -512,33 +527,21 @@ def scoreboard(request, contest_id):
         except:
             raise Http404("Team in scoreboard no longer exists")
 
-        # array with [teamname][121001] based on submission>?
-
         problem_score_array[teamname] = 0
         problem_attempts_array[teamname] = 0
-
         templist = []
-        # need to iterate through submissions for each team and only edit html per team
 
         for problem in problems: # Iterate through problems and check submissions for right/wrong answer
-            #newteam = getTeam(scoreboard_contest, request.user)
-
-            print("problem: ")
-            print(problem)
 
             tempsubmission = Submission.objects.filter(team = tempteam, problem=problem).last()
-
-            print("tempsubmission: ")
-            print(tempsubmission)
 
             #filter submission by problem/team
             if(tempsubmission is None): # no submission given for this problem
                 templist.append("3")
                 problems_status_array[teamname] = templist
-                break
+                continue
             elif(tempsubmission.result == 'YES') : # Correct answer
                 templist.append("1")
-                #tempscore += 1
                 problems_status_array[teamname] = templist
                 problem_score_array[teamname] += 1
             elif(tempsubmission.result == 'WRONG' or tempsubmission.result == 'OFE' or tempsubmission.result == 'IE' or tempsubmission.result == 'EO' or tempsubmission.result == 'CE' or tempsubmission.result == 'RTE' or tempsubmission.result == 'TLE' or tempsubmission.result == 'OTHER'): # Red
@@ -547,12 +550,6 @@ def scoreboard(request, contest_id):
             else:
                 templist.append("2")
                 problems_status_array[teamname] = templist # Otherwise the submission is pending
-
-            print("tempstring")
-            print(templist)
-            print("problems status array: ")
-            print(problems_status_array)
-            #print(problem_score_array)
 
     data = {
         'problem_number' : problem_count_array, 'problems' : problems,
@@ -597,4 +594,3 @@ def close_notification(request):
         current_notification = Notification.objects.get(id=modal_id)
         current_notification.delete()
     return HttpResponse('OK')
-
