@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>QUnit Example</title>
-  <link rel="stylesheet" href="qunit-2.1.1.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="qunit-2.1.1.css">
 </head>
 <body>
-  <div id="qunit"></div>
-  <div id="qunit-fixture"></div>
-  <script src="qunit-2.1.1.js"></script>
-  
-  <!-- Code coverage tool -->
-  <script src="blanket.min.js"></script>
-  
-  <!-- jQuery -->
-  <script src="../../app/vendor/jQuery/jquery.min.js"></script>
-  
-  <!-- INCLUDE ANY JAVASCRIPT FILES YOU DO NOT WISH TO TEST HERE (DEPENDENCIES) -->
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="qunit-2.1.1.js"></script>
 
-  <!-- INCLUDE ANY JAVASCRIPT FILES YOU WANT TO TEST HERE -->
-  <script src="../../app/contests/static/js/user_search.js" data-cover></script>
-  <script src="../../app/pccs/static/js/common.js" data-cover></script>
+<!-- Code coverage tool -->
+<script src="blanket.min.js"></script>
 
-  <!-- WRITE NEW TESTS IN tests.js -->
-  <script src="tests.js"></script>
+<!-- jQuery -->
+<script src="../../app/vendor/jQuery/jquery.min.js"></script>
+
+<!-- INCLUDE ANY JAVASCRIPT FILES YOU DO NOT WISH TO TEST HERE (DEPENDENCIES) -->
+<script src="../../app/vendor/jquery-formset/jquery.formset.js"></script>
+<script src="../../app/vendor/moment/moment.min.js"></script>
+<!-- Set global js vars with django data for external scripts to use -->
+<script type="text/javascript">
+    var contest_start = 'March 13, 2017, 4:44 p.m.';
+    var contest_length = '8 a.m.';
+    var is_contest_started = contest_start != "None";
+    var home_url = "{% url 'contests:index' %}";
+    var is_contest_ended = false;
+</script>
+
+<!-- INCLUDE ANY JAVASCRIPT FILES YOU WANT TO TEST HERE -->
+<script src="../../app/contests/static/js/autojudge_checkbox.js" data-cover></script>
+<script src="../../app/contests/static/js/formset_styler.js" data-cover></script>
+<script src="../../app/contests/static/js/lock_navbar.js" data-cover></script>
+<script src="../../app/contests/static/js/timer_bar.js" data-cover></script>
+<script src="../../app/contests/static/js/user_search.js" data-cover></script>
+<script src="../../app/pccs/static/js/common.js" data-cover></script>
+
+<!-- WRITE NEW TESTS IN tests.js -->
+<script src="tests.js"></script>
 
 </body>
 </html>

@@ -122,8 +122,11 @@
             </div>
     {% endfor %}
     </div>
+{% endblock %}
 
-    <script type="text/javascript" src="{% static 'jQuery/jquery.min.js' %}"></script>
+{% block foot_block %}
+    {{ block.super }}
+
     <script type="text/javascript" src="{% static 'moment/moment.min.js' %}"></script>
 
     <!-- Set global js vars with django data for external scripts to use -->
@@ -133,9 +136,9 @@
         var is_contest_started = contest_start != "None";
         var home_url = "{% url 'contests:index' %}";
         var is_contest_ended = false;
+        console.log(contest_start + ", " + contest_length);
     </script>
 
     <script type="text/javascript" src="{% static 'js/timer_bar.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lock_navbar.js' %}"></script>
-
 {% endblock %}
