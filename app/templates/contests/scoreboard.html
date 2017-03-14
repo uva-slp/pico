@@ -1,6 +1,7 @@
 {% extends 'contests/base.html' %}
 
 {% load bootstrap3 %}
+{% load staticfiles %}
 {% load contest_extras %}
 
 {% block title_block %}{{ contest_data.title }} Contest{% endblock %}
@@ -9,11 +10,6 @@
     {{ block.super }}
     <!--meta http-equiv="refresh" content="5" -->
     <style>
-       #customers {
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
 
         #scoreboard td, #scoreboard th {
             border: 1px solid #ddd;
@@ -43,9 +39,7 @@
 {% block content_block %}
     {{ block.super }}
 
-    <b> {{ contest_title }}</b>
-
-    {{ problem_status_array.items }}
+    <!-- <b> {{ contest_title }}</b> -->
 
     <table id="scoreboard">
 
@@ -57,7 +51,6 @@
                 <th> Question {{ count }} </th>
             {% endfor %}
             <th> Score </th>
-            <th> Total Attempts</th>
 
         </tr>
 
@@ -68,11 +61,6 @@
                 <td> {{ team }} </td>
 
                 {% for character in status_list %}
-
-
-                    <!-- {% for problem in problems %} -->
-
-
 
                         {% if character == "1" %}
                             <td style="background-color:green; font-weight:bold"> Correct </td>
@@ -90,30 +78,26 @@
                             <td style="font-weight:bold"> No Submission </td>
                         {% endif %}
 
-                    <!-- {% endfor %} -->
                 {% endfor %}
 
                 <td>
-                {% for key,value in problem_score_array.items %}
+                {% for key, value in problem_score_array.items %}
+
+                    {% if key == team %}
                         {{ value }}
+                    {% endif %}
+
                 {% endfor %}
                 </td>
 
-                <td> 1 </td>
-
                 </tr>
 
-
-
             {% endfor %}
-            <!-- if problem/submission.status = right, color green, wrong color red, else color yellow -->
-
-
-
-
 
     </table>
 
+
+    <script src="{% static 'js/refresh_submission.js' %}"></script>
 {% endblock %}
 <!-- loop through teams and add a row for each team, add a TD for each question with color corresponding -->
 
