@@ -1,40 +1,4 @@
-{% extends 'contests/base.html' %}
-
-{% load staticfiles %}
-{% load bootstrap3 %}
-{% load contest_extras %}
-
-{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
-
-{% block head_block %}
-    {{ block.super }}
-    <style>
-        .panel-body {
-            padding: 0px;
-        }
-        .table {
-            margin-bottom: 0px;
-        }
-        .table>tbody>tr>td,
-        .table>tbody>tr>th {
-            vertical-align: middle;
-        }
-    </style>
-{% endblock %}
-
-{% block breadcrumb %}
-    <li><a href="{% url 'contests:contest' contest_id=contest_data.id %}">{{ contest_data.title }}</a></li>
-    <li class="active">Submissions</li>
-{% endblock %}
-
-{% block content_block %}
-    <br /><br />
-    <h1>Contest: {{ contest_data.title }}</h1>
-    <br />
-    <div id="refreshSubmissionUrl" style="display: none;">{% url 'contests:refresh_submission'%}</div>
-    <div id="contestId" style="display: none;">{{ contest_data.id }}</div>
-    <div id="submission_table">
-        <div id="new_submissions" class="panel panel-default panel-table">
+    <div id="new_submissions" class="panel panel-default panel-table">
             <div class="panel-heading" data-toggle="collapse" data-target="#collapse1">
                 <div class="row">
                     <div class="col col-xs-6">
@@ -101,16 +65,3 @@
                </table>
             </div>
         </div>
-    </div>
-{% endblock %}
-
-{% block foot_block %}
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
-
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
-
-    <script src="{% static 'js/datatable.js' %}"></script>
-
-    <script src="{% static 'js/ajax_csrf_setup.js' %}"></script>
-    <script src="{% static 'js/refresh_submission.js' %}"></script>
-{% endblock %}

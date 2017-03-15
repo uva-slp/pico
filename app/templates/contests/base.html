@@ -42,7 +42,8 @@
 
 {% block foot_block %}
     {{ block.super }}
-    
+
+    <script src="{% static 'js/ajax_csrf_setup.js' %}"></script>
     <script src="{% static 'js/notification.js' %}"></script>
 
 {% endblock %}

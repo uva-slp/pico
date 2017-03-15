@@ -594,3 +594,29 @@ def close_notification(request):
         current_notification = Notification.objects.get(id=modal_id)
         current_notification.delete()
     return HttpResponse('OK')
+
+
+def refresh_submission(request):
+    contest_id = request.POST.get('contestId', "0")
+    print("contest_id: " + contest_id)
+
+    new_submissions = []
+    judged_submissions = []
+    contest_data = None
+
+    if contest_id is not "0":
+        contest_data = Contest.objects.get(id=contest_id)
+
+        problems = contest_data.problem_set.all()
+        for p in problems:
+            submissions = list(p.submission_set.all())
+            for sub in submissions:
+                if sub.state == 'NEW':
+                    new_submissions.append(sub)
+                else:
+                    judged_submissions.append(sub)
+        new_submissions.sort(key=lambda x: x.timestamp)
+        judged_submissions.sort(key=lambda x: x.timestamp)
+
+    return render(request, 'contests/submission_div.html',
+                  {'contest_data': contest_data, 'new_submissions': new_submissions, 'judged_submissions': judged_submissions})
