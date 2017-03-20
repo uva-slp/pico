@@ -11,7 +11,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_email, URLValidator
+from django.core.validators import UnicodeUsernameValidator, URLValidator, validate_email
 from django.http import JsonResponse
 from django.urls import reverse
 
@@ -92,9 +92,13 @@ def edit(request):
             # Check if username is taken
             if User.objects.filter(username=username).exclude(pk=request.user.pk).exists():
                 return JsonResponse({'error': 'Username already in use.'}, status=201)
-            request.user.username = username
-            request.user.save()
-            return JsonResponse({}, status=200)
+            try:
+                UnicodeUsernameValidator()(username)
+                request.user.username = username
+                request.user.save()
+                return JsonResponse({}, status=200)
+            except ValidationError as err:
+                return JsonResponse({'error': '; '.join(err.messages)}, status=201)
 
         if 'first_name' in request.POST:
             request.user.first_name = request.POST.get('first_name')
@@ -134,7 +138,6 @@ def edit(request):
             # Use Bootswatch theme
             try:
                 URLValidator()(theme)
-                print(theme)
                 if not theme.endswith('.css'):
                     raise ValidationError('URL must refer to a CSS file.')
                 profile = request.user.get_profile()
