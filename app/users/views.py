@@ -9,9 +9,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ValidationError
-from django.core.validators import ASCIIUsernameValidator, URLValidator, validate_email
+from django.core.validators import URLValidator, validate_email
 from django.http import JsonResponse
 from django.urls import reverse
 
@@ -93,7 +94,7 @@ def edit(request):
             if User.objects.filter(username=username).exclude(pk=request.user.pk).exists():
                 return JsonResponse({'error': 'Username already in use.'}, status=201)
             try:
-                ASCIIUsernameValidator()(username)
+                UnicodeUsernameValidator()(username)
                 request.user.username = username
                 request.user.save()
                 return JsonResponse({}, status=200)
