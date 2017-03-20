@@ -53,7 +53,6 @@ INSTALLED_APPS = [
 
 	# Other apps
 	'bootstrap3',
-	#'bootstrap3_datetime',
 	'dal',
 	'dal_select2',
 	'widget_tweaks',

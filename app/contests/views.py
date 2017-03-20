@@ -2,7 +2,6 @@ from django.http import HttpResponse, HttpResponseForbidden, Http404, JsonRespon
 from django.shortcuts import render, redirect, get_object_or_404
 
 from teams.forms import TeamForm, TeamSelectForm
-from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, CreateContestTemplateForm, AdminSearchForm, ParticipantSearchForm
 from dal import autocomplete
 from users.forms import UserSearchForm
