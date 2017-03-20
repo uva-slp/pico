@@ -90,6 +90,9 @@ def edit(request):
 
         if 'username' in request.POST:
             username = request.POST.get('username')
+            # Check if username is taken
+            if User.objects.filter(username=username).exclude(pk=request.user.pk).exists():
+                return JsonResponse({'error': 'Username already in use.'}, status=201)
             try:
                 UnicodeUsernameValidator()(username)
                 request.user.username = username
