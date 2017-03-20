@@ -108,7 +108,11 @@ def edit(request):
 
         if 'email' in request.POST:
             email = request.POST.get('email')
-            if email:
+            if not email:
+                request.user.email = email
+                request.user.save()
+                return JsonResponse({}, status=200)
+            else:
                 try:
                     validate_email(email)
                     request.user.email = email
