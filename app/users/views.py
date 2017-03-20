@@ -93,7 +93,7 @@ def edit(request):
             if User.objects.filter(username=username).exclude(pk=request.user.pk).exists():
                 return JsonResponse({'error': 'Username already in use.'}, status=201)
             try:
-                UnicodeUsernameValidator()(username)
+                ASCIIUsernameValidator()(username)
                 request.user.username = username
                 request.user.save()
                 return JsonResponse({}, status=200)
