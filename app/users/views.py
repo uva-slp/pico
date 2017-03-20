@@ -11,7 +11,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ValidationError
-from django.core.validators import UnicodeUsernameValidator, URLValidator, validate_email
+from django.core.validators import ASCIIUsernameValidator, URLValidator, validate_email
 from django.http import JsonResponse
 from django.urls import reverse
 
