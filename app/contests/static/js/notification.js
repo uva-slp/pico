@@ -3,6 +3,7 @@ function fetchNotification() {
 
     $.ajax({
         url: getNotificationUrl,
+        method: 'get',
         success: function (data) {
             renderNotification(data);
         },
