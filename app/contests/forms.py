@@ -90,6 +90,7 @@ class CreateProblem(ModelForm):
     sample_input = forms.FileField(required=False, label='Sample Input (.txt)')
     sample_output = forms.FileField(required=False, label='Sample Output (.txt)')
     solution = forms.FileField(required=True, label='Solution (.txt)')
+    timeout = forms.FileField(required=False, label='Timeout')
 
     def clean(self):
         upload_to = 'uploads/'
@@ -101,7 +102,7 @@ class CreateProblem(ModelForm):
         model = Problem
         fields = (
             'program_input', 'input_description', 'output_description', 'sample_input',
-            'sample_output', 'solution')
+                'sample_output', 'solution', 'timeout')
 
 
 class CreateContestTemplateForm(ModelForm):
