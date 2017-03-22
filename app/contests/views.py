@@ -569,7 +569,7 @@ def show_notification(request):
         if request.user in team.members.all():
             # data needed for showing notification
 
-            noti_problem = Problem.get(pk=submission.problem_id)
+            noti_problem = Problem.objects.get(pk=submission.problem_id)
             problems = Problem.objects.filter(contest_id=noti_problem.contest_id)
             problem_number = 0
             for problem in problems:
