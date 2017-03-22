@@ -551,7 +551,7 @@ def scoreboard(request, contest_id):
                 problems_status_array[teamname] = templist # Otherwise the submission is pending
 
     data = {
-        'problem_number' : problem_count_array, 'problems' : problems,
+        'problem_number' : problem_count_array,
         'contest_title' : contest_title, 'problem_status_array' : problems_status_array,
         'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest
     }
@@ -594,6 +594,72 @@ def close_notification(request):
         current_notification.delete()
     return HttpResponse('OK')
 
+def refresh_scoreboard(request):
+    contest_id = request.POST.get('contestId', "0")
+
+    contest_data = None
+
+    if contest_id != 0:
+        contest_data = Contest.objects.get(id=contest_id)
+
+    problems = contest_data.problem_set.all()
+
+    problem_number = 0
+    for problem in problems:
+        problem_number += 1
+
+    participants = contest_data.participant_set.all()
+
+    problem_count_array = []
+    for i in range(1, problem_number + 1):
+        problem_count_array.append(i)
+
+    problems_status_array = {}
+    problem_score_array = {}
+    problem_attempts_array = {}
+
+    for participant in participants:
+        teamname = participant.team.name
+
+        tempteam = Team.objects.get(name=teamname)
+
+        problem_score_array[teamname] = 0
+        problem_attempts_array[teamname] = 0
+        templist = []
+
+
+        for p in problems:
+
+            tempsubmission = Submission.objects.filter(team = tempteam, problem=problem).last()
+
+            #filter submission by problem/team
+            if(tempsubmission is None): # no submission given for this problem
+                templist.append("3")
+                problems_status_array[teamname] = templist
+                continue
+            elif(tempsubmission.result == 'YES') : # Correct answer
+                templist.append("1")
+                problems_status_array[teamname] = templist
+                problem_score_array[teamname] += 1
+            elif(tempsubmission.result == 'WRONG' or tempsubmission.result == 'OFE' or tempsubmission.result == 'IE' or tempsubmission.result == 'EO' or tempsubmission.result == 'CE' or tempsubmission.result == 'RTE' or tempsubmission.result == 'TLE' or tempsubmission.result == 'OTHER'): # Red
+                templist.append("0")
+                problems_status_array[teamname] = templist
+            else:
+                templist.append("2")
+                problems_status_array[teamname] = templist # Otherwise the submission is pending
+
+    print("problem status")
+    print(problems_status_array)
+    print("problem attempts")
+    print(problem_attempts_array)
+
+    data = {
+        'problem_number': problem_count_array,
+        'problem_status_array' : problems_status_array,
+        'problem_score_array' : problem_score_array
+    }
+
+    return render(request, 'contests/scoreboard_div.html', data)
 
 def refresh_submission(request):
     contest_id = request.POST.get('contestId', "0")

@@ -18,4 +18,5 @@ urlpatterns = [
 	url(r'^api/get_notification/$', views.show_notification, name='show_notification'),
 	url(r'^api/close_notification/$', views.close_notification, name='close_notification'),
 	url(r'^api/refresh_submission/$', views.refresh_submission, name='refresh_submission'),
+	url(r'^api/refresh_scoreboard/$', views.refresh_scoreboard, name='refresh_scoreboard'),
 ]

@@ -7,7 +7,6 @@
 {% block title_block %}{{ contest_data.title }} Contest{% endblock %}
 
 {% block head_block %}
-    {{ block.super }}
 
     <style>
 
@@ -32,19 +31,16 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'contests:contest' contest_id=contest_data.id %}">{{ contest_data.title }}</a></li>
     <li class="active">Scoreboard</li>
 {% endblock %}
 
 {% block content_block %}
-    {{ block.super }}
 
-    <div id="refreshScoreboardUrl" style="display: none;">{% url 'contests:refresh_scoreboard'%}</div>
-    <div id="contestId" style="display: none;">{{ contest_data.id }}</div>
     <div id = "scoreboard_div">
-    <table id="scoreboard">
+        <table id = "scoreboard">
 
         <tr>
+
             <th> Team </th>
             {% for count in problem_number %}
                 <th> Question {{ count }} </th>
@@ -52,7 +48,6 @@
             <th> Score </th>
 
         </tr>
-
 
         {% for team, status_list in problem_status_array.items %}
             <tr>
@@ -76,7 +71,6 @@
                             <td style="font-weight:bold"> No Submission </td>
                         {% endif %}
 
-
                 {% endfor %}
 
                 <td> 
@@ -89,28 +83,10 @@
                 {% endfor %}
                 </td>
 
-                </tr>
+            </tr>
 
             {% endfor %}
-        </div>
-
-    </table>
-
+        </table>
+    </div>
 
 {% endblock %}
-
-{% block foot_block %}
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
-
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
-
-    <script src="{% static 'js/datatable.js' %}"></script>
-
-    <script src="{% static 'js/ajax_csrf_setup.js' %}"></script>
-    <script src="{% static 'js/refresh_submission.js' %}"></script>
-    <script src="{% static 'js/refresh_scoreboard.js' %}"></script>
-
-{% endblock %}
-
-
-
