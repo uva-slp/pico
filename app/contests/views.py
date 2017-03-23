@@ -14,7 +14,7 @@ from .lib import diff as _diff
 from .lib import execution as exe
 from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
-from .models import Participant, Submission, Notification
+from .models import Participant, Submission, Notification, ContestInvite
 from users.models import User
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -42,6 +42,8 @@ def index(request):
     for contest in all_past_contests:
         if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
             my_past_contests.append(contest)
+
+    contest_invitations = ContestInvite.objects.filter
 
     return render(
         request,
@@ -113,10 +115,15 @@ def create(request):
 
                 contest_participants = form.cleaned_data.get('contest_participants')
 
-                for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
+                for participant in contest_participants :
+                    # Loop through the given participants when a user creates a contest and create participant objects for each
+                    # team = Team.objects.filter(name=participant).get()
+                    # pt = Participant(contest=contest, team=team)
+                    # pt.save()
+                    # Loop through the given participants when a user creates a contest and send invitation to each team
                     team = Team.objects.filter(name=participant).get()
-                    pt = Participant(contest=contest, team=team)
-                    pt.save()
+                    inv = ContestInvite(contest=contest, team=team)
+                    inv.save()
 
                 for qa_form in qa_formset:
                     qa_form = qa_form.cleaned_data
