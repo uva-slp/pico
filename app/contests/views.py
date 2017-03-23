@@ -531,6 +531,10 @@ def scoreboard(request, contest_id):
         templist = []
 
         for problem in problems: # Iterate through problems and check submissions for right/wrong answer
+            tempsubmission = Submission.objects.filter(team = tempteam, problem = problem)
+            for object in tempsubmission :
+                problem_attempts_array[teamname] += 1
+
 
             tempsubmission = Submission.objects.filter(team = tempteam, problem=problem).last()
 
@@ -553,8 +557,13 @@ def scoreboard(request, contest_id):
     data = {
         'problem_number' : problem_count_array,
         'contest_title' : contest_title, 'problem_status_array' : problems_status_array,
-        'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest
+        'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest,
+        'problem_attempts_array': problem_attempts_array
     }
+
+    print("attempts")
+    print(problem_attempts_array)
+
 
     return render(request, 'contests/scoreboard.html', data)
 
@@ -630,6 +639,10 @@ def refresh_scoreboard(request):
 
         for p in problems:
 
+            tempsubmission = Submission.objects.filter(team = tempteam, problem = problem)
+            for object in tempsubmission :
+                problem_attempts_array[teamname] += 1
+
             tempsubmission = Submission.objects.filter(team = tempteam, problem=p).last()
 
             #filter submission by problem/team
@@ -656,7 +669,8 @@ def refresh_scoreboard(request):
     data = {
         'problem_number': problem_count_array,
         'problem_status_array' : problems_status_array,
-        'problem_score_array' : problem_score_array
+        'problem_score_array' : problem_score_array,
+        'problem_attempts_array' : problem_attempts_array
     }
 
     return render(request, 'contests/scoreboard_div.html', data)

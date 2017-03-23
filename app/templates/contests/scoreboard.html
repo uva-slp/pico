@@ -42,44 +42,45 @@
     <div id="refreshScoreboardUrl" style="display: none;">{% url 'contests:refresh_scoreboard'%}</div>
     <div id="contestId" style="display: none;">{{ contest_data.id }}</div>
     <div id = "scoreboard_div">
-    <table id="scoreboard">
+    <table class="table table-striped"; id="scoreboard">
 
         <tr>
-            <th> Team </th>
+            <th align="center"> Team </th>
             {% for count in problem_number %}
                 <th> Question {{ count }} </th>
             {% endfor %}
             <th> Score </th>
+            <th>Total Attempts</th>
 
         </tr>
 
 
         {% for team, status_list in problem_status_array.items %}
             <tr>
-                <td> {{ team }} </td>
+                <td align="center"> {{ team }} </td>
 
                 {% for character in status_list %}
 
                         {% if character == "1" %}
-                            <td style="background-color:green; font-weight:bold"> Correct </td>
+                            <td align="center" style="background-color:green; font-weight:bold"> Correct </td>
                         {% endif %}
 
                         {% if character == "0" %}
-                            <td style="background-color:red; font-weight:bold"> Incorrect </td>
+                            <td align="center" style="background-color:red; font-weight:bold"> Incorrect </td>
                         {% endif %}
 
                         {% if character == "2" %}
-                            <td style="background-color:yellow; font-weight:bold"> Pending </td>
+                            <td align="center" style="background-color:yellow; font-weight:bold"> Pending </td>
                         {% endif %}
 
                         {% if character == "3" %}
-                            <td style="font-weight:bold"> No Submission </td>
+                            <td align="center" style="font-weight:bold"> No Submission </td>
                         {% endif %}
 
 
                 {% endfor %}
 
-                <td> 
+                <td align="center">
                 {% for key, value in problem_score_array.items %}
 
                     {% if key == team %}
@@ -89,13 +90,24 @@
                 {% endfor %}
                 </td>
 
+                <td align="center">
+
+                {% for key, value in problem_attempts_array.items %}
+
+                    {% if key == team %}
+                        {{ value }}
+                    {% endif %}
+
+                {% endfor %}
+
+                </td>
+
                 </tr>
 
             {% endfor %}
-        </div>
 
     </table>
-
+    </div>
 
 {% endblock %}
 
