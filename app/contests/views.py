@@ -630,7 +630,7 @@ def refresh_scoreboard(request):
 
         for p in problems:
 
-            tempsubmission = Submission.objects.filter(team = tempteam, problem=problem).last()
+            tempsubmission = Submission.objects.filter(team = tempteam, problem=p).last()
 
             #filter submission by problem/team
             if(tempsubmission is None): # no submission given for this problem
