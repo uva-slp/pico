@@ -15,7 +15,7 @@ import ast
 dir_path = os.path.dirname(os.path.realpath(__file__)) 
 
 #Returns a return code and the output of the program or an error message
-def execute_code(submission_file, original_filename, input_file, allowed_languages, timeout=5):
+def execute_code(Popen, submission_file, original_filename, input_file, allowed_languages, timeout=5):
     #Get rid of white space in allowed_languages so it can be passed as a command line arg
     allowed_languages = "".join(allowed_languages.split())
     if not (submission_file and original_filename):
@@ -32,12 +32,12 @@ def execute_code(submission_file, original_filename, input_file, allowed_languag
             for chunk in input_file.chunks():
                 destination.write(chunk)
         Popen("cp " + os.path.join(dir_path, "execution.py") + " " + temp_dirpath, shell=True, stdout=PIPE, stderr=PIPE)
-        docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name + " " + allowed_languages + " input.txt").split()
+        docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name + " " + allowed_languages + " " + str(timeout) + " input.txt").split()
         command = Popen(docker_command, stdin=PIPE, stderr=PIPE, stdout=PIPE, universal_newlines=True)
     #If this problem does not have an input file:
     else:
         Popen("cp " + os.path.join(dir_path, "execution.py") + " " + temp_dirpath, shell=True, stdout=PIPE, stderr=PIPE)
-        docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name + " " + allowed_languages).split()
+        docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name + " " + allowed_languages + " " + str(timeout)).split()
         command = Popen(docker_command, stdin=PIPE, stderr=PIPE, stdout=PIPE, universal_newlines=True)
     output, error = command.communicate()
     #Delete the temporary directory
@@ -46,13 +46,9 @@ def execute_code(submission_file, original_filename, input_file, allowed_languag
     if error != '':
         return (1, "Container error:\n" + error)
     #Parse the output of the docker container to get a tuple that has the return code of the executed program and the output of the program (or the error, if it did not execute successfully)
-    index = 1
-    while index < len(output):
-        if ord(output[index])-ord('0') > 9 or ord(output[index])-ord('0') < 0:
-            retcode = int(output[0:index])
-            program_output = output[index+1:len(output)-1]
-            break
-        index += 1
+    retcode = int(output[:1])
+    #Don't include the newline from printing in the Docker container
+    program_output = output[2:]
     return (retcode, program_output)
 
 
@@ -116,16 +112,16 @@ def run_python(file_name, input_file, timeout):
 
 
 if __name__ == "__main__":
-    if len( sys.argv) < 3:
-        print("1,FILENAME ERROR: No file name given.")
+    if len( sys.argv) < 4:
+        print("1,FILENAME ERROR: No file name given.", end='')
     else:
-        input_file = None
-        if len(sys.argv) > 3:
-            input_file = sys.argv[3]
         file_name = sys.argv[1]
         allowed_languages = ast.literal_eval(sys.argv[2])
+        timeout = int(sys.argv[3])
+        input_file = None
+        if len(sys.argv) > 4:
+            input_file = sys.argv[4]
         file_prefix, file_extension = os.path.splitext(file_name)
-        timeout = 5
         #If it didn't have a proper extensions, have a default error:
         result = (1, "FILENAME ERROR: Must have a valid C++, Java, or Python file extension")
         #Check if it's a Java file:
@@ -147,4 +143,4 @@ if __name__ == "__main__":
                 result = run_python(file_name, input_file, timeout)
             else:
                 result = (1, "LANGUAGE ERROR: Python submissions are not allowed in this contest")
-        print(str(result[0]) + ',' + str(result[1]))
+        print(str(result[0]) + ',' + str(result[1]), end='')

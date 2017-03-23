@@ -21,6 +21,7 @@ from django.utils import timezone
 from django.http import Http404
 from django.template.loader import render_to_string
 import os
+from subprocess import Popen
 
 
 def index(request):
@@ -469,7 +470,7 @@ def displayJudge(request, contest_id, run_id):
                         else:
                                 form = ReturnJudgeResultForm(instance=current_submission)
                         allowed_languages = getattr(contest_data, 'languages')
-                        output = exe.execute_code(getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'), allowed_languages)
+                        output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'), allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
                         retcode = output[0]
                         fromlines = output[1].split("\n")
                         solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
