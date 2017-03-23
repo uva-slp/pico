@@ -5,10 +5,6 @@
 	font-size: 18px;
 }
 
-.diff-table thead, .diff-table tbody {
-	display: block;
-}
-
 .diff-table tbody {
 	min-height: 100px;
 	max-height: 500px;
@@ -21,6 +17,11 @@
 	padding-bottom: 0;
 	vertical-align: top;
 	font-family: monospace;
+	height: 1px;
+}
+
+.diff-cell div {
+	height: 100%;
 }
 
 .diff-cell span {
@@ -40,29 +41,30 @@
 	word-wrap: break-word;
 }
 
-.diff-add-bg {
+.diff-add, .diff-del, .diff-chg {
+	display: inline-block;
+}
+
+.diff-add-bg:not(.diff-none) {
 	background-color: #ffecec; /*#ddffdd;*/
 }
 
-.diff-add {
+.diff-add:not(.diff-none) {
 	background-color: #ffc5c5; /*#beffbe;*/
-	display: inline-block;
 }
 
-.diff-del-bg {
+.diff-del-bg:not(.diff-none) {
 	background-color: #ffecec;
 }
 
-.diff-del {
+.diff-del:not(.diff-none) {
 	background-color: #ffc5c5;
-	display: inline-block;
 }
 
-.diff-chg-bg {
+.diff-chg-bg:not(.diff-none) {
 	background-color: #ffffa4;
 }
 
-.diff-chg {
+.diff-chg:not(.diff-none) {
 	background-color: #ffff3b;
-	display: inline-block;
 }
