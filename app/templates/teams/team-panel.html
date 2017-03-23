@@ -2,7 +2,7 @@
 
 <div class="tab-pane team-panel {% if active %}active{% endif %}" id="team-{{ team.id }}">
     <div class="row header col-md-12">
-        <h2>{{ team.name }}</h2>
+        <h2>Team {{ team.name }}</h2>
 
         {% if team in request.user.teams.all %}
             <form class="form form-horizontal team-leave-form"  method="post" action="{% url 'teams:leave' %}" enctype="multipart form-data">

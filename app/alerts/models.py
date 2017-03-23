@@ -3,7 +3,6 @@ from django.urls import reverse
 
 from users.models import User
 from teams.models import Team
-from organizations.models import Organization
 from contests.models import Contest
 
 MAX_LENGTH = 160
@@ -25,7 +24,6 @@ class Target(models.Model):
     alert = models.OneToOneField(Alert, related_name='target')
     user = models.ForeignKey(User, null=True, blank=True)
     team = models.ForeignKey(Team, null=True, blank=True)
-    organization = models.ForeignKey(Organization, null=True, blank=True)
     contest = models.ForeignKey(Contest, null=True, blank=True)
     url = models.CharField(max_length=200, null=True, blank=True)
 
@@ -33,8 +31,6 @@ class Target(models.Model):
         if self.user:
             return ''
         if self.team:
-            return ''
-        if self.organization:
             return ''
         if self.contest:
             return ''

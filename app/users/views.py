@@ -9,9 +9,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_email, URLValidator
+from django.core.validators import URLValidator, validate_email
 from django.http import JsonResponse
 from django.urls import reverse
 
@@ -92,9 +93,13 @@ def edit(request):
             # Check if username is taken
             if User.objects.filter(username=username).exclude(pk=request.user.pk).exists():
                 return JsonResponse({'error': 'Username already in use.'}, status=201)
-            request.user.username = username
-            request.user.save()
-            return JsonResponse({}, status=200)
+            try:
+                UnicodeUsernameValidator()(username)
+                request.user.username = username
+                request.user.save()
+                return JsonResponse({}, status=200)
+            except ValidationError as err:
+                return JsonResponse({'error': '; '.join(err.messages)}, status=201)
 
         if 'first_name' in request.POST:
             request.user.first_name = request.POST.get('first_name')
@@ -108,7 +113,11 @@ def edit(request):
 
         if 'email' in request.POST:
             email = request.POST.get('email')
-            if email:
+            if not email:
+                request.user.email = email
+                request.user.save()
+                return JsonResponse({}, status=200)
+            else:
                 try:
                     validate_email(email)
                     request.user.email = email
@@ -130,7 +139,6 @@ def edit(request):
             # Use Bootswatch theme
             try:
                 URLValidator()(theme)
-                print(theme)
                 if not theme.endswith('.css'):
                     raise ValidationError('URL must refer to a CSS file.')
                 profile = request.user.get_profile()

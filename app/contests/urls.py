@@ -10,6 +10,7 @@ urlpatterns = [
 	url(r'^create_template$', views.create_template, name='create_template'),
 	url(r'^scoreboard/$', views.scoreboard, name='scoreboard'),
 	url(r'^contest/(?P<contest_id>\d+)/$', views.displayContest, name='contest'),
+	url(r'^contest/(?P<contest_id>\d+)/problemDescription$', views.displayProblemDescription, name='problem_description'),
 	url(r'^contest/(?P<contest_id>\d+)/scoreboard$', views.scoreboard, name='scoreboard'),
 	url(r'^contest/(?P<contest_id>\d+)/judge$', views.displayAllSubmissions, name='contest_judge_submissions'),
 	url(r'^contest/(?P<contest_id>\d+)/judge/(?P<run_id>\d+)/$', views.displayJudge, name='contest_judge'),
@@ -18,4 +19,5 @@ urlpatterns = [
 	url(r'^api/get_notification/$', views.show_notification, name='show_notification'),
 	url(r'^api/close_notification/$', views.close_notification, name='close_notification'),
 	url(r'^api/refresh_submission/$', views.refresh_submission, name='refresh_submission'),
+	url(r'^api/refresh_scoreboard/$', views.refresh_scoreboard, name='refresh_scoreboard'),
 ]

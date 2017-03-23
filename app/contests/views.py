@@ -2,7 +2,6 @@ from django.http import HttpResponse, HttpResponseForbidden, Http404, JsonRespon
 from django.shortcuts import render, redirect, get_object_or_404
 
 from teams.forms import TeamForm, TeamSelectForm
-from organizations.forms import OrganizationForm, OrganizationJoinForm, OrganizationLeaveForm
 from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, CreateContestTemplateForm, AdminSearchForm, ParticipantSearchForm
 from dal import autocomplete
 from users.forms import UserSearchForm
@@ -387,6 +386,15 @@ def displayContest(request, contest_id):
     return render(request, 'contests/contest.html', data)
 
 
+@login_required()
+def displayProblemDescription(request, contest_id):
+    contest_data = Contest.objects.get(id=contest_id)
+    path = contest_data.problem_description.path
+    with open(path, 'rb') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline;filename=%s.pdf' %contest_data.problem_description.name
+        return response
+
 @login_required
 def displayAllSubmissions(request, contest_id):
     contest_data = Contest.objects.get(id=contest_id)
@@ -533,6 +541,10 @@ def scoreboard(request, contest_id):
         templist = []
 
         for problem in problems: # Iterate through problems and check submissions for right/wrong answer
+            tempsubmission = Submission.objects.filter(team = tempteam, problem = problem)
+            for object in tempsubmission :
+                problem_attempts_array[teamname] += 1
+
 
             tempsubmission = Submission.objects.filter(team = tempteam, problem=problem).last()
 
@@ -553,10 +565,15 @@ def scoreboard(request, contest_id):
                 problems_status_array[teamname] = templist # Otherwise the submission is pending
 
     data = {
-        'problem_number' : problem_count_array, 'problems' : problems,
+        'problem_number' : problem_count_array,
         'contest_title' : contest_title, 'problem_status_array' : problems_status_array,
-        'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest
+        'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest,
+        'problem_attempts_array': problem_attempts_array
     }
+
+    print("attempts")
+    print(problem_attempts_array)
+
 
     return render(request, 'contests/scoreboard.html', data)
 
@@ -571,7 +588,7 @@ def show_notification(request):
         if request.user in team.members.all():
             # data needed for showing notification
 
-            noti_problem = Problem.get(pk=submission.problem_id)
+            noti_problem = Problem.objects.get(pk=submission.problem_id)
             problems = Problem.objects.filter(contest_id=noti_problem.contest_id)
             problem_number = 0
             for problem in problems:
@@ -595,6 +612,78 @@ def close_notification(request):
         current_notification = Notification.objects.get(id=modal_id)
         current_notification.delete()
     return HttpResponse('OK')
+
+def refresh_scoreboard(request):
+    contest_id = request.POST.get('contestId', "0")
+
+    contest_data = None
+
+    if contest_id != 0:
+        contest_data = Contest.objects.get(id=contest_id)
+
+    problems = contest_data.problem_set.all()
+
+    problem_number = 0
+    for problem in problems:
+        problem_number += 1
+
+    participants = contest_data.participant_set.all()
+
+    problem_count_array = []
+    for i in range(1, problem_number + 1):
+        problem_count_array.append(i)
+
+    problems_status_array = {}
+    problem_score_array = {}
+    problem_attempts_array = {}
+
+    for participant in participants:
+        teamname = participant.team.name
+
+        tempteam = Team.objects.get(name=teamname)
+
+        problem_score_array[teamname] = 0
+        problem_attempts_array[teamname] = 0
+        templist = []
+
+
+        for p in problems:
+
+            tempsubmission = Submission.objects.filter(team = tempteam, problem = problem)
+            for object in tempsubmission :
+                problem_attempts_array[teamname] += 1
+
+            tempsubmission = Submission.objects.filter(team = tempteam, problem=p).last()
+
+            #filter submission by problem/team
+            if(tempsubmission is None): # no submission given for this problem
+                templist.append("3")
+                problems_status_array[teamname] = templist
+                continue
+            elif(tempsubmission.result == 'YES') : # Correct answer
+                templist.append("1")
+                problems_status_array[teamname] = templist
+                problem_score_array[teamname] += 1
+            elif(tempsubmission.result == 'WRONG' or tempsubmission.result == 'OFE' or tempsubmission.result == 'IE' or tempsubmission.result == 'EO' or tempsubmission.result == 'CE' or tempsubmission.result == 'RTE' or tempsubmission.result == 'TLE' or tempsubmission.result == 'OTHER'): # Red
+                templist.append("0")
+                problems_status_array[teamname] = templist
+            else:
+                templist.append("2")
+                problems_status_array[teamname] = templist # Otherwise the submission is pending
+
+    print("problem status")
+    print(problems_status_array)
+    print("problem attempts")
+    print(problem_attempts_array)
+
+    data = {
+        'problem_number': problem_count_array,
+        'problem_status_array' : problems_status_array,
+        'problem_score_array' : problem_score_array,
+        'problem_attempts_array' : problem_attempts_array
+    }
+
+    return render(request, 'contests/scoreboard_div.html', data)
 
 
 def refresh_submission(request):

@@ -3,6 +3,7 @@ function fetchNotification() {
 
     $.ajax({
         url: getNotificationUrl,
+        method: 'get',
         success: function (data) {
             renderNotification(data);
         },
@@ -22,16 +23,18 @@ function renderNotification(data) {
     var listLenth = l.length;
     if (listLenth == 0) return;
 
+    var modalHtml = "";
     for (var i = 0; i < listLenth; i++){
         var currentData = l[i];
         if (($("#myModal" + currentData[4]).data('bs.modal') || {}).isShown == true) {
             console.log("modal " + currentData[4] + " is open" );
         } else {
             console.log("modal " + currentData[4] + " is not open, show new modal" );
-            formatSingleNotification(l[i]);
+            modalHtml += formatSingleNotification(l[i]);
         }
     }
 
+    $('#notificationModal').html(modalHtml);
     $('.notificationClass').modal('show');
 
     $('.notificationClass').on('hidden.bs.modal', function (e) {
@@ -76,7 +79,7 @@ function formatSingleNotification(data){
         + '</div>'
         + '</div>';
 
-    $('#notificationModal').append(modalHtml);
+    return modalHtml;
 }
 
 function closeNotification(data) {

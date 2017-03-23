@@ -23,14 +23,13 @@ class HtmlFormatter():
 	def asTable(self):
 		table = Table().addClass('diff-table')
 		
-		headers = Row()
-		headers.addCell(Th('Submission', 2))
-		headers.addCell(Th('Solution', 2))
+		headers = Row().addCell(Th()).addCell(Th('Submission'))
+		headers.addCell(Th()).addCell(Th('Solution'))
 		table.addHeader(headers)
 
 		num_changes = 0
 		for diff in difflib._mdiff(self.fromlines, self.tolines):
-			fromline, toline, hasChange = self.clean(diff)
+			fromline, toline, hasChange = diff # self.clean(diff)
 			row = Row()
 
 			# tag
@@ -51,6 +50,7 @@ class HtmlFormatter():
 
 			# to
 			line_num, text = toline
+			line_num = line_num if len(str(line_num)) > 0 else '&nbsp;'
 			row.addCell(Td(Div(line_num))
 				.addClass('diff-cell')
 				.addClass('line-number'))
@@ -87,7 +87,7 @@ class HtmlFormatter():
 		if not self.whitespace:
 			text = re.sub('(\0\+|\0\-|\0\^)(.*)(\1)', self.unmark_whitespace, text)
 		if self.emptylines and solo and text.isspace():
-			text = '\0%s \1'%(marker)
+			text = '\0%s%s\1'%(marker, text or ' ')
 
 		return (line_num, text), (hasChange or '\x00' in text)
 
@@ -106,9 +106,10 @@ class HtmlFormatter():
 	Wraps text indicated by difflib (surrounded with \x00 and \x01) with a span and assigns the appropriate classes so that additions are highlighted green and deletions are highlighted red
 	"""
 	def prepare(self, side, text):
-		div = Div()
-		span = Span().addClass('diff-text')
+		div = Div().addClass('diff-text')
+		span = Span()
 		change = None
+		emptyline = re.compile('^(\s*)(\0\+|\0\-|\0\^)(\s*)\1(\s*)$').match(text) is not None
 		
 		i = 0
 		while i < len(text):
@@ -128,9 +129,15 @@ class HtmlFormatter():
 				
 				left = i+2
 				right = text.find('\x01', left)
-				
-				for ch in text[left:right]:
-					span.append(Span(ch).addClass(spanClass))
+
+				for s in re.split(r'(\s+)', text[left:right]):
+					if not s: continue
+					s_span = Span(s).addClass(spanClass)
+					if s.isspace() and not emptyline:
+						s_span.addClass('diff-whitespace')
+					if emptyline:
+						s_span.addClass('diff-emptyline')
+					span.append(s_span)
 
 				i = right
 			
