@@ -79,7 +79,6 @@ function formatSingleNotification(data){
         + '</div>'
         + '</div>';
 
-    // $('#notificationModal').append(modalHtml);
     return modalHtml;
 }
 
