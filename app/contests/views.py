@@ -385,6 +385,15 @@ def displayContest(request, contest_id):
     return render(request, 'contests/contest.html', data)
 
 
+@login_required()
+def displayProblemDescription(request, contest_id):
+    contest_data = Contest.objects.get(id=contest_id)
+    path = contest_data.problem_description.path
+    with open(path, 'rb') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline;filename=%s.pdf' %contest_data.problem_description.name
+        return response
+
 @login_required
 def displayAllSubmissions(request, contest_id):
     contest_data = Contest.objects.get(id=contest_id)
@@ -674,6 +683,7 @@ def refresh_scoreboard(request):
     }
 
     return render(request, 'contests/scoreboard_div.html', data)
+
 
 def refresh_submission(request):
     contest_id = request.POST.get('contestId', "0")
