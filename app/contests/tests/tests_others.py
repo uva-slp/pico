@@ -224,7 +224,7 @@ class ContestTest(TestCase):
 
     # Austin
     def test_problem_solution_content(self):
-        data = {}
+        data = {"timeout" : 5}
         files = {"solution": SimpleUploadedFile("solution.txt", b"test solution")}
         problem = CreateProblem(data=data, files=files)
 
