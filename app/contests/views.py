@@ -278,7 +278,10 @@ def getTeam(contest_data, user):
 # Helper method for checking if user is judge of the contest
 def isJudge(contest_data, user):
     contest_judges = contest_data.contest_admins.all()
-    return user in contest_judges
+    for judge in contest_judges:
+        if user == judge:
+            return True
+    return False
 
 
 # Helper method for checking if user is creator of the contest
@@ -307,7 +310,7 @@ def displayContest(request, contest_id):
     is_creator = isCreator(contest_data, request.user)
     current_team = getTeam(contest_data, request.user)
 
-    if not is_judge and not is_participant and not is_creator:
+    if not is_judge and not is_participant and not is_creator and not request.user.is_superuser:
         return redirect(reverse('home'))
 
     # Activate Contest or save the submission
@@ -386,7 +389,7 @@ def displayContest(request, contest_id):
 def displayAllSubmissions(request, contest_id):
     contest_data = Contest.objects.get(id=contest_id)
 
-    is_judge = isJudge(contest_data, request.user) or request.user.is_superuser
+    is_judge = isJudge(contest_data, request.user)
     if not is_judge:
         return redirect(reverse('home'))
 
