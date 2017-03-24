@@ -40,7 +40,7 @@ function renderNotification(data) {
 
     $('.notificationClass').on('hidden.bs.modal', function (e) {
         var stringId = $(this).attr('id');
-        var id = parseInt(stringId.slice(-1));
+        var id = parseInt(stringId.substring(7));
         console.log("Try close notification: " + id);
         closeNotification(id);
     })
