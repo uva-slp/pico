@@ -1,0 +1,18 @@
+[
+  {
+    "model": "contests.problem",
+    "pk": 1,
+    "fields": {
+	"name": "Test Problem 1",
+	"timeout": 10
+    }
+  },
+  {
+    "model": "contests.problem",
+    "pk": 2,
+    "fields": {
+	"name": "Test Problem 2",
+	"timeout": 20
+    }
+  }
+]

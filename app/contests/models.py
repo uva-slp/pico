@@ -67,6 +67,7 @@ class Problem(models.Model):
 	sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
 	solution = models.FileField(upload_to='uploads/', null=True, blank=True)
 	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
+	timeout = models.IntegerField(default = 5, blank=True)
 
 class Participant(models.Model):
 	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
