@@ -43,7 +43,12 @@ def index(request):
         if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
             my_past_contests.append(contest)
 
-    contest_invitations = ContestInvite.objects.filter
+    all_invitations = ContestInvite.objects.all()
+    my_contest_invitations = []
+    for invitation in all_invitations:
+        if request.user in invitation.team.members.all():
+            my_contest_invitations.append(invitation)
+
 
     return render(
         request,
@@ -52,6 +57,7 @@ def index(request):
             'active_contests': my_active_contests,
             'unstarted_contests': my_unstarted_contests,
             'past_contests': my_past_contests,
+            'contest_invitations': my_contest_invitations
         }
     )
 

@@ -88,7 +88,7 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">Contest Invitations</h3>
                         </div>
-                        {% if past_contests %}
+                        {% if contests_invitations %}
                             <div class="list-group">
                                 {% for invitation in contest_invitations %}
                                     <a class="list-group-item">
@@ -168,6 +168,27 @@
                 <!-- /.panel -->
             </div>
             <!-- /#past-contests -->
+
+            <div class="tab-pane" id="contest-invitations">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Contest Invitations</h3>
+                    </div>
+                    {% if contests_invitations %}
+                        <div class="list-group">
+                            {% for invitation in contests_invitations %}
+                                <a  class="list-group-item">
+                                    <strong>{{ invitation.contest.title }}</strong>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No contest invitation</div></div>
+                    {% endif %}
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /#contest-invitations -->
         </div>
         <!-- /.tab-content -->
     </div>
