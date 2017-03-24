@@ -95,7 +95,13 @@
                             <div class="list-group">
                                 {% for invitation in contest_invitations %}
                                     <a class="list-group-item">
-                                        <strong>{{ invitation.contest.title }}</strong>
+                                        <form method="post" action="{% url 'contests:index' %}">
+                                            {% csrf_token %}
+                                            <strong>{{ invitation.contest.title }}</strong>
+                                            <input name="accept" type="submit" class="btn btn-primary" style="display:inline;" value="Accept">
+                                            <input name="decline" type="submit" class="btn btn-primary" style="display:inline;" value="Decline">
+                                            <input name="invitationId" type="hidden" value="{{ invitation.id }}">
+                                        </form>
                                     </a>
                                 {% endfor %}
                             </div>
@@ -180,8 +186,14 @@
                     {% if contest_invitations %}
                         <div class="list-group">
                             {% for invitation in contest_invitations %}
-                                <a  class="list-group-item">
-                                    <strong>{{ invitation.contest.title }}</strong>
+                                <a class="list-group-item">
+                                    <form method="post" action="{% url 'contests:index' %}">
+                                        {% csrf_token %}
+                                        <strong>{{ invitation.contest.title }}</strong>
+                                        <input name="accept" type="submit" class="btn btn-primary" style="display:inline;" value="Accept">
+                                        <input name="decline" type="submit" class="btn btn-primary" style="display:inline;" value="Decline">
+                                        <input name="invitationId" type="hidden" value="{{ invitation.id }}">
+                                    </form>
                                 </a>
                             {% endfor %}
                         </div>

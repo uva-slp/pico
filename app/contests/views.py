@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseForbidden, Http404, JsonRespon
 from django.shortcuts import render, redirect, get_object_or_404
 
 from teams.forms import TeamForm, TeamSelectForm
-from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, CreateContestTemplateForm, AdminSearchForm, ParticipantSearchForm
+from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, CreateContestTemplateForm, AdminSearchForm, ParticipantSearchForm, AcceptInvitationForm
 from dal import autocomplete
 from users.forms import UserSearchForm
 from django.contrib.auth.decorators import login_required
@@ -43,12 +43,25 @@ def index(request):
         if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
             my_past_contests.append(contest)
 
+    # Handling invitation acceptance
+    if request.method == 'POST':
+        cur_invitation = get_object_or_404(ContestInvite, id=request.POST.get("invitationId"))
+        if request.POST.get("accept"):
+            # Create participant objects for the team
+            team = cur_invitation.team
+            contest = cur_invitation.contest
+            pt = Participant(contest=contest, team=team)
+            pt.save()
+            cur_invitation.delete()
+        elif request.POST.get("decline"):
+            cur_invitation.delete()
+
+
     all_invitations = ContestInvite.objects.all()
     my_contest_invitations = []
     for invitation in all_invitations:
         if request.user in invitation.team.members.all():
             my_contest_invitations.append(invitation)
-
 
     return render(
         request,
@@ -122,10 +135,6 @@ def create(request):
                 contest_participants = form.cleaned_data.get('contest_participants')
 
                 for participant in contest_participants :
-                    # Loop through the given participants when a user creates a contest and create participant objects for each
-                    # team = Team.objects.filter(name=participant).get()
-                    # pt = Participant(contest=contest, team=team)
-                    # pt.save()
                     # Loop through the given participants when a user creates a contest and send invitation to each team
                     team = Team.objects.filter(name=participant).get()
                     inv = ContestInvite(contest=contest, team=team)
