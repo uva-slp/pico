@@ -29,7 +29,7 @@ function renderNotification(data) {
         if (($("#myModal" + currentData[4]).data('bs.modal') || {}).isShown == true) {
             console.log("notification for submission id " + currentData[2] + " is open, current modal id: " + currentData[4]);
         } else {
-            console.log("notification for submission id " + currentData[2gi] + " is not shown, " +
+            console.log("notification for submission id " + currentData[2] + " is not shown, " +
                 "show new modal " + currentData[4]);
             formatSingleNotification(l[i]);
         }
