@@ -31,7 +31,7 @@ function renderNotification(data) {
         } else {
             console.log("notification for submission id " + currentData[2] + " is not shown, " +
                 "show new modal " + currentData[4]);
-            formatSingleNotification(l[i]);
+            modalHtml += formatSingleNotification(l[i]);
         }
     }
 
