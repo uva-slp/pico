@@ -5,6 +5,7 @@ created: 11/13/2016
 execution.py is concerned with the compilation and execution of C++ and Java files on the fly (the output of the program is returned as a string, but compiled and/or object files are deleted upon completion). Since using VMs would be too slow for our purposes, the code is executed in Docker containers to provide some level of sandboxing although it is not perfectly secure (See https://docs.docker.com/engine/security/security/).
 """
 
+from __future__ import print_function
 import os
 import sys
 from subprocess import Popen, PIPE
