@@ -103,7 +103,7 @@
                         
                         <form class="user-edit-form" method="post" action="{% url 'users:edit' %}">
                             {% csrf_token %}
-                            <button class="btn btn-link btn-cancel"><i class="fa fa-times"></i></button>
+                            <button type="button" class="btn btn-link btn-cancel"><i class="fa fa-times"></i></button>
                             <button type="submit" class="btn btn-link btn-save"><i class="fa fa-floppy-o"></i></button>
                             <div class="input-wrapper">
                                 <input type="text" class="form-control" id="first_name" placeholder="First name" name="first_name" value="{{ user.first_name }}">
@@ -124,7 +124,7 @@
                         
                         <form class="user-edit-form" method="post" action="{% url 'users:edit' %}">
                             {% csrf_token %}
-                            <button class="btn btn-link btn-cancel"><i class="fa fa-times"></i></button>
+                            <button type="button" class="btn btn-link btn-cancel"><i class="fa fa-times"></i></button>
                             <button type="submit" class="btn btn-link btn-save"><i class="fa fa-floppy-o"></i></button>
                             <div class="input-wrapper">
                                 <input type="text" class="form-control" id="last_name" placeholder="Last name" name="last_name" value="{{ user.last_name }}">
@@ -144,7 +144,7 @@
                         
                         <form class="user-edit-form" method="post" action="{% url 'users:edit' %}">
                             {% csrf_token %}
-                            <button class="btn btn-link btn-cancel"><i class="fa fa-times"></i></button>
+                            <button type="button" class="btn btn-link btn-cancel"><i class="fa fa-times"></i></button>
                             <button type="submit" class="btn btn-link btn-save"><i class="fa fa-floppy-o"></i></button>
                             <div class="input-wrapper">
                                 <input type="text" class="form-control" id="email" placeholder="Email" name="email" value="{{ user.email }}">

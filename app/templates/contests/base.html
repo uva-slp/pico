@@ -10,7 +10,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" id="main-navbar" role="navigation" style="margin-bottom: 0">
         <div class="navbar-inner">
-            <div class="container" style="padding:0">
+            <div class="container">
                 <div class="navbar-header pull-left">
                     <a class="navbar-brand" href="{% url 'home' %}">PiCO</a>
                 </div>
@@ -38,6 +38,7 @@
     <div id="notificationModal"></div>
     <div id="getNotificationUrl" style="display: none;">{% url 'contests:show_notification'%}</div>
     <div id="closeNotificationUrl" style="display: none;">{% url 'contests:close_notification'%}</div>
+
 {% endblock %}
 
 {% block foot_block %}

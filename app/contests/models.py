@@ -61,15 +61,15 @@ class Contest(models.Model):
 
 
 class Problem(models.Model):
-    name = models.CharField(max_length=2048, null=True, blank=True)
-    program_input = models.FileField(upload_to='uploads/', null=True, blank=False)
-    input_description = models.CharField(max_length=128, null=True, blank=True)
-    output_description = models.CharField(max_length=128, null=True, blank=True)
-    sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
-    sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
-    solution = models.FileField(upload_to='uploads/', null=True, blank=True)
-    contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
-
+	name = models.CharField(max_length=2048, null=True, blank=True)
+	program_input = models.FileField(upload_to='uploads/', null=True, blank=False)
+	input_description = models.CharField(max_length=128, null=True, blank=True)
+	output_description = models.CharField(max_length=128, null=True, blank=True)
+	sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
+	sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
+	solution = models.FileField(upload_to='uploads/', null=True, blank=True)
+	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
+	timeout = models.IntegerField(default = 5, blank=True)
 
 class Participant(models.Model):
     contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)

@@ -74,9 +74,11 @@ class Table(Element):
 
 	def addHeader(self, header):
 		self.headers.append(header)
+		return self
 
 	def addRow(self, row):
 		self.rows.append(row)
+		return self
 
 class Row(Element):
 	def __init__(self):
@@ -88,6 +90,7 @@ class Row(Element):
 
 	def addCell(self, cell):
 		self.cells.append(cell)
+		return self
 
 class Th(Element):
 	def __init__(self, content='', colSpan=1):
@@ -105,10 +108,6 @@ class Div(Element):
 class Span(Element):
 	def __init__(self, content=''):
 		super(Span, self).__init__('span', content)
-
-class Mark(Element):
-	def __init__(self, content=''):
-		super(Mark, self).__init__('mark', content)
 
 class Anchor(Element):
 	def __init__(self, content=''):

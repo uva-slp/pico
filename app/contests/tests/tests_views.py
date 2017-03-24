@@ -462,6 +462,7 @@ class EditContestViewTest(TestCase):
             "sample_input": "",
             "sample_output": "edited 1 2 3",
             "contest": contest_id,
+            "timeout": 5,
             "submit": "update_problem"
         }
         files = {

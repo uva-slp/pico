@@ -3,6 +3,7 @@ function fetchNotification() {
 
     $.ajax({
         url: getNotificationUrl,
+        method: 'get',
         success: function (data) {
             renderNotification(data);
         },
@@ -22,22 +23,19 @@ function renderNotification(data) {
     var listLenth = l.length;
     if (listLenth == 0) return;
 
+    var modalHtml = "";
     for (var i = 0; i < listLenth; i++){
         var currentData = l[i];
-        if (($("#myModal" + currentData[4]).data('bs.modal') || {}).isShown == true) {
-            console.log("notification for submission id " + currentData[5] + " is open, current modal id: " + currentData[4]);
-        } else {
-            console.log("notification for submission id " + currentData[5] + " is not shown, " +
-                "show new modal " + currentData[4]);
-            formatSingleNotification(l[i]);
-        }
+        console.log("Show notification "+ currentData[4] +" for submission id " + currentData[2]);
+        modalHtml += formatSingleNotification(l[i]);
     }
 
+    $('#notificationModal').html(modalHtml);
     $('.notificationClass').modal('show');
 
     $('.notificationClass').on('hidden.bs.modal', function (e) {
         var stringId = $(this).attr('id');
-        var id = parseInt(stringId.slice(-1));
+        var id = parseInt(stringId.substring(7));
         console.log("Try close notification: " + id);
         closeNotification(id);
     })
@@ -78,7 +76,7 @@ function formatSingleNotification(data){
         + '</div>'
         + '</div>';
 
-    $('#notificationModal').append(modalHtml);
+    return modalHtml;
 }
 
 function closeNotification(data) {

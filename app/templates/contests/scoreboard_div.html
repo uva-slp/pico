@@ -1,13 +1,8 @@
-{% extends 'contests/base.html' %}
-
 {% load bootstrap3 %}
 {% load staticfiles %}
 {% load contest_extras %}
 
-{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
-
 {% block head_block %}
-    {{ block.super }}
 
     <style>
 
@@ -28,32 +23,25 @@
             background-color: #4CAF50;
             color: white;
         }
+        #scoreboard td
     </style>
 {% endblock %}
 
-{% block breadcrumb %}
-    <li><a href="{% url 'contests:contest' contest_id=contest_data.id %}">{{ contest_data.title }}</a></li>
-    <li class="active">Scoreboard</li>
-{% endblock %}
-
 {% block content_block %}
-    {{ block.super }}
 
-    <div id="refreshScoreboardUrl" style="display: none;">{% url 'contests:refresh_scoreboard'%}</div>
-    <div id="contestId" style="display: none;">{{ contest_data.id }}</div>
     <div id = "scoreboard_div">
-    <table class="table table-striped"; id="scoreboard">
+        <table class="table"; id = "scoreboard">
 
         <tr>
-            <th align="center"> Team </th>
+
+            <th scope="row"> Team </th>
             {% for count in problem_number %}
-                <th> Question {{ count }} </th>
+                <th scope="row"> Question {{ count }} </th>
             {% endfor %}
             <th> Score </th>
-            <th>Total Attempts</th>
+            <th> Total Attempts </th>
 
         </tr>
-
 
         {% for team, status_list in problem_status_array.items %}
             <tr>
@@ -62,21 +50,20 @@
                 {% for character in status_list %}
 
                         {% if character == "1" %}
-                            <td align="center" style="background-color:green; font-weight:bold"> Correct </td>
+                            <td align="center"; style="background-color:green; font-weight:bold"> Correct </td>
                         {% endif %}
 
                         {% if character == "0" %}
-                            <td align="center" style="background-color:red; font-weight:bold"> Incorrect </td>
+                            <td align="center"; style="background-color:red; font-weight:bold"> Incorrect </td>
                         {% endif %}
 
                         {% if character == "2" %}
-                            <td align="center" style="background-color:yellow; font-weight:bold"> Pending </td>
+                            <td align="center"; style="background-color:yellow; font-weight:bold"> Pending </td>
                         {% endif %}
 
                         {% if character == "3" %}
                             <td align="center" style="font-weight:bold"> No Submission </td>
                         {% endif %}
-
 
                 {% endfor %}
 
@@ -102,26 +89,10 @@
 
                 </td>
 
-                </tr>
+            </tr>
 
             {% endfor %}
-
-    </table>
+        </table>
     </div>
 
 {% endblock %}
-
-{% block foot_block %}
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
-
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
-
-    <script src="{% static 'js/datatable.js' %}"></script>
-
-    <script src="{% static 'js/ajax_csrf_setup.js' %}"></script>
-    <script src="{% static 'js/refresh_scoreboard.js' %}"></script>
-
-{% endblock %}
-
-
-
