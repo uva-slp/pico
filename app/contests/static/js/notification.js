@@ -25,9 +25,10 @@ function renderNotification(data) {
     for (var i = 0; i < listLenth; i++){
         var currentData = l[i];
         if (($("#myModal" + currentData[4]).data('bs.modal') || {}).isShown == true) {
-            console.log("modal " + currentData[4] + " is open" );
+            console.log("notification for submission id " + currentData[5] + " is open, current modal id: " + currentData[4]);
         } else {
-            console.log("modal " + currentData[4] + " is not open, show new modal" );
+            console.log("notification for submission id " + currentData[5] + " is not shown, " +
+                "show new modal " + currentData[4]);
             formatSingleNotification(l[i]);
         }
     }
@@ -37,6 +38,7 @@ function renderNotification(data) {
     $('.notificationClass').on('hidden.bs.modal', function (e) {
         var stringId = $(this).attr('id');
         var id = parseInt(stringId.slice(-1));
+        console.log("Try close notification: " + id);
         closeNotification(id);
     })
 }
