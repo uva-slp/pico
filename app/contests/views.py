@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseForbidden, Http404, JsonRespon
 from django.shortcuts import render, redirect, get_object_or_404
 
 from teams.forms import TeamForm, TeamSelectForm
-from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, CreateContestTemplateForm, AdminSearchForm, ParticipantSearchForm
+from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, CreateContestTemplateForm, AdminSearchForm, ParticipantSearchForm, AcceptInvitationForm
 from dal import autocomplete
 from users.forms import UserSearchForm
 from django.contrib.auth.decorators import login_required
@@ -13,7 +13,7 @@ from .lib import diff as _diff
 from .lib import execution as exe
 from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
-from .models import Participant, Submission, Notification
+from .models import Participant, Submission, Notification, ContestInvite
 from users.models import User
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -43,6 +43,26 @@ def index(request):
         if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
             my_past_contests.append(contest)
 
+    # Handling invitation acceptance
+    if request.method == 'POST':
+        cur_invitation = get_object_or_404(ContestInvite, id=request.POST.get("invitationId"))
+        if request.POST.get("accept"):
+            # Create participant objects for the team
+            team = cur_invitation.team
+            contest = cur_invitation.contest
+            pt = Participant(contest=contest, team=team)
+            pt.save()
+            cur_invitation.delete()
+        elif request.POST.get("decline"):
+            cur_invitation.delete()
+
+
+    all_invitations = ContestInvite.objects.all()
+    my_contest_invitations = []
+    for invitation in all_invitations:
+        if request.user in invitation.team.members.all():
+            my_contest_invitations.append(invitation)
+
     return render(
         request,
         'contests/index.html',
@@ -50,6 +70,7 @@ def index(request):
             'active_contests': my_active_contests,
             'unstarted_contests': my_unstarted_contests,
             'past_contests': my_past_contests,
+            'contest_invitations': my_contest_invitations
         }
     )
 
@@ -113,10 +134,11 @@ def create(request):
 
                 contest_participants = form.cleaned_data.get('contest_participants')
 
-                for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
+                for participant in contest_participants :
+                    # Loop through the given participants when a user creates a contest and send invitation to each team
                     team = Team.objects.filter(name=participant).get()
-                    pt = Participant(contest=contest, team=team)
-                    pt.save()
+                    inv = ContestInvite(contest=contest, team=team)
+                    inv.save()
 
                 for qa_form in qa_formset:
                     qa_form = qa_form.cleaned_data
@@ -598,7 +620,7 @@ def show_notification(request):
 
             # contest title, problem number, run id, and result
             current_data = (submission.problem.contest.title, problem_number,
-                            submission.run_id, submission.get_result_display(), noti.id)
+                            submission.run_id, submission.get_result_display(), noti.id, submission.id)
             l.append(current_data)
 
     d = {'data': l}

@@ -26,7 +26,6 @@ function renderNotification(data) {
     var modalHtml = "";
     for (var i = 0; i < listLenth; i++){
         var currentData = l[i];
-
         console.log("Show notification "+ currentData[4] +" for submission id " + currentData[2]);
         modalHtml += formatSingleNotification(l[i]);
     }
