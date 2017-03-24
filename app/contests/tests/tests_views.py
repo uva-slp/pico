@@ -369,7 +369,8 @@ class CreateContestViewTest(TestCase):
         contest = Contest.objects.latest('date_created')
         self.assertEqual(contest.title, "Contest test creation")
         participants = Participant.objects.filter(contest_id=contest.id)
-        self.assertEqual(participants.count(), 2)
+        self.assertEqual(participants.count(), 0) # participant is updated after a team accept the inviation,
+                                                  # thus should be 0 when contest just created
 
 
 class EditContestViewTest(TestCase):
