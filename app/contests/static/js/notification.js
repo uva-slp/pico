@@ -27,9 +27,9 @@ function renderNotification(data) {
     for (var i = 0; i < listLenth; i++){
         var currentData = l[i];
         if (($("#myModal" + currentData[4]).data('bs.modal') || {}).isShown == true) {
-            console.log("notification for submission id " + currentData[5] + " is open, current modal id: " + currentData[4]);
+            console.log("notification for submission id " + currentData[2] + " is open, current modal id: " + currentData[4]);
         } else {
-            console.log("notification for submission id " + currentData[5] + " is not shown, " +
+            console.log("notification for submission id " + currentData[2gi] + " is not shown, " +
                 "show new modal " + currentData[4]);
             formatSingleNotification(l[i]);
         }
