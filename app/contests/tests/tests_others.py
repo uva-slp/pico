@@ -569,8 +569,7 @@ class ContestCreationTest(TestCase):
         c = Contest(title="testContest")
         c.save()
         contests = Contest.objects.all()
-        if (contests.filter(title="testContest")):
-            self.assertEqual(c.title, "testContest")
+        self.assertEqual(c.title, "testContest")
 
     # Jamel
     def testContestCreation(self):
