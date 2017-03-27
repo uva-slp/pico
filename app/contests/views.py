@@ -24,6 +24,7 @@ import os
 from subprocess import Popen
 
 
+@login_required
 def index(request):
     all_active_contests = Contest.objects.active()
     my_active_contests = []
@@ -55,7 +56,6 @@ def index(request):
             cur_invitation.delete()
         elif request.POST.get("decline"):
             cur_invitation.delete()
-
 
     all_invitations = ContestInvite.objects.all()
     my_contest_invitations = []

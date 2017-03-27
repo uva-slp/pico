@@ -7,6 +7,25 @@ from contests.models import Team, Participant, Contest, Problem, Submission, Con
 from contests.views import create, edit, create_new_problem, create_template, displayContest
 
 
+class DisplayIndexViewTest(TestCase):
+    fixtures = ['users.json', 'teams.json', 'contests.json']
+
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    # Vivian
+    def test_view_index_notloggedin(self):
+        url = reverse("contests:index")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 302)
+
+    # Vivian
+    def test_view_index(self):
+        self.client.login(username='testuser', password='password')
+        url = reverse("contests:index")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
 class DisplayContestViewTest(TestCase):
 
     fixtures = ['users.json', 'teams.json', 'contests.json', 'problems.json']
