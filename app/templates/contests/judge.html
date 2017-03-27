@@ -66,8 +66,9 @@
             <div class="panel-footer">
                 <form class="form-inline" enctype="multipart/form-data" action="{% url 'contests:contest_judge' contest_data.id submission.run_id%}" method="post">
                     {% csrf_token %}
-                    {{ form }}
-                <input class="pull-right" type="submit" value="Submit"/>
+                    <label>Result&nbsp;</label>
+                    {% bootstrap_form form layout='inline' %}
+                    <input class="pull-right btn btn-default" type="submit" value="Submit"/>
                 </form>
             </div>
         </div>
