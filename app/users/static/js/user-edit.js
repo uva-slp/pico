@@ -16,7 +16,6 @@ function submitUserEditForm(event) {
     var frm = $(this);
     var frmGrp = frm.closest('div.form-group');
     var input = frm.find('input.form-control');
-    console.log(input);
     $.ajax({
         url : $(this).attr('action'),
         type : $(this).attr('method'),
