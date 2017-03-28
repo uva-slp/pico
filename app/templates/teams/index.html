@@ -49,7 +49,7 @@
 {% block content_block %}
 
     <div class="row">
-        <div class="col-md-2 col-sm-3" id="side-menu">
+        <ul class="nav col-md-2 col-sm-3" id="side-menu">
             <!-- New team -->
             <div class="text-center" style="padding-bottom:15px">
                 <a href="#" data-toggle="modal" data-target="#create-team" class="btn btn-default"><i class="fa fa-plus"></i> New Team</a>
@@ -76,7 +76,7 @@
                     {% endif %}
                 {% endfor %}
             </ul>
-        </div>
+        </ul>
 
         <!-- Create Team Modal -->
         <div class="modal fade" id="create-team" role="dialog">
