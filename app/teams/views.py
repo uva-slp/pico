@@ -73,42 +73,55 @@ def join(request):
     return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
 
 @login_required
-def invite(request):
+def invite(request, action):
     if request.method == 'POST':
-        team_select_form = TeamSelectForm(data=request.POST)
-        user_select_form = UserSearchForm(data=request.POST)
+        if action == 'send':
+            team_select_form = TeamSelectForm(data=request.POST)
+            user_select_form = UserSearchForm(data=request.POST)
 
-        if team_select_form.is_valid() and user_select_form.is_valid():
-            team = team_select_form.cleaned_data['team']
-            user = user_select_form.cleaned_data['user']
+            if team_select_form.is_valid() and user_select_form.is_valid():
+                team = team_select_form.cleaned_data['team']
+                user = user_select_form.cleaned_data['user']
 
-            if request.user in team.members.all():
-                if user in team.members.all():
-                    # User already on team
-                    pass
-                elif Invite.objects.filter(team=team, user=user).exists():
-                    # Invite already exists
-                    pass
+                if request.user in team.members.all():
+                    if user in team.members.all():
+                        # User already on team
+                        pass
+                    elif Invite.objects.filter(team=team, user=user).exists():
+                        # Invite already exists
+                        pass
+                    else:
+                        Invite(team=team, user=user).save()
                 else:
-                    Invite(team=team, user=user).save()
-            else:
-                # User does not have permission to send invite
-                pass                
+                    # User does not have permission to send invite
+                    pass    
+            
+                return redirect(reverse('teams:index', kwargs={'team_id':team.id}))            
 
-    return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
+        elif action == 'accept':
+            return join(request)
 
-@login_required
-def cancel_invite(request):
-    if request.method == 'POST':
-        invite_form = InviteForm(data=request.POST)
+        elif action == 'decline':
+            team_select_form = TeamSelectForm(data=request.POST)
 
-        if invite_form.is_valid():
-            invite = invite_form.cleaned_data['invite']
+            if team_select_form.is_valid():
+                team = team_select_form.cleaned_data['team']
 
-            if request.user in invite.team.members.all():
-                invite.delete()
+                if Invite.objects.filter(team=team, user=request.user).exists():
+                    Invite.objects.filter(team=team, user=request.user).delete()
 
-            return redirect(reverse('teams:index', kwargs={'team_id':invite.team.id}))
+                return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
+
+        elif action == 'cancel':
+            invite_form = InviteForm(data=request.POST)
+
+            if invite_form.is_valid():
+                invite = invite_form.cleaned_data['invite']
+
+                if request.user in invite.team.members.all():
+                    invite.delete()
+
+                return redirect(reverse('teams:index', kwargs={'team_id':invite.team.id}))
 
     return redirect(reverse('teams:index'))
 
@@ -122,10 +135,11 @@ def join_request(request, action):
             join_request = join_request_form.cleaned_data['request']
 
             if request.user in join_request.team.members.all():
-                if action == 'approve':
+                if action == 'accept':
                     join_request.team.members.add(join_request.user)
                     join_request.delete()
-                elif action == 'reject':
+                    Invite.objects.filter(team=join_request.team, user=join_request.user).delete()
+                elif action == 'decline':
                     join_request.delete()
             elif request.user == join_request.user and action == 'cancel':
                 join_request.delete()

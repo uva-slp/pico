@@ -83,7 +83,6 @@
 <p id="n14" class="pln"><a href="#n14">14</a></p>
 <p id="n15" class="pln"><a href="#n15">15</a></p>
 <p id="n16" class="pln"><a href="#n16">16</a></p>
-<p id="n17" class="pln"><a href="#n17">17</a></p>
 
             </td>
             <td class="text">
@@ -97,13 +96,12 @@
 <p id="t8" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^admin/'</span><span class="op">,</span> <span class="nam">admin</span><span class="op">.</span><span class="nam">site</span><span class="op">.</span><span class="nam">urls</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t9" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^'</span><span class="op">,</span> <span class="nam">include</span><span class="op">(</span><span class="str">'users.urls'</span><span class="op">,</span> <span class="nam">namespace</span><span class="op">=</span><span class="str">'users'</span><span class="op">)</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t10" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^teams/'</span><span class="op">,</span> <span class="nam">include</span><span class="op">(</span><span class="str">'teams.urls'</span><span class="op">,</span> <span class="nam">namespace</span><span class="op">=</span><span class="str">'teams'</span><span class="op">)</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t11" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^organizations/'</span><span class="op">,</span> <span class="nam">include</span><span class="op">(</span><span class="str">'organizations.urls'</span><span class="op">,</span> <span class="nam">namespace</span><span class="op">=</span><span class="str">'organizations'</span><span class="op">)</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t12" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^contests/'</span><span class="op">,</span> <span class="nam">include</span><span class="op">(</span><span class="str">'contests.urls'</span><span class="op">,</span> <span class="nam">namespace</span><span class="op">=</span><span class="str">'contests'</span><span class="op">)</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t13" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^$'</span><span class="op">,</span> <span class="nam">views</span><span class="op">.</span><span class="nam">index</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'index'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t14" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^home$'</span><span class="op">,</span> <span class="nam">views</span><span class="op">.</span><span class="nam">home</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'home'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t15" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^stats/'</span><span class="op">,</span> <span class="nam">include</span><span class="op">(</span><span class="str">'stats.urls'</span><span class="op">,</span> <span class="nam">namespace</span><span class="op">=</span><span class="str">'stats'</span><span class="op">)</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t16" class="pln"><span class="op">]</span> <span class="op">+</span> <span class="nam">static</span><span class="op">(</span><span class="nam">settings</span><span class="op">.</span><span class="nam">MEDIA_URL</span><span class="op">,</span> <span class="nam">document_root</span><span class="op">=</span><span class="nam">settings</span><span class="op">.</span><span class="nam">MEDIA_ROOT</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t17" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t11" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^contests/'</span><span class="op">,</span> <span class="nam">include</span><span class="op">(</span><span class="str">'contests.urls'</span><span class="op">,</span> <span class="nam">namespace</span><span class="op">=</span><span class="str">'contests'</span><span class="op">)</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t12" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^$'</span><span class="op">,</span> <span class="nam">views</span><span class="op">.</span><span class="nam">index</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'index'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t13" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^home$'</span><span class="op">,</span> <span class="nam">views</span><span class="op">.</span><span class="nam">home</span><span class="op">,</span> <span class="nam">name</span><span class="op">=</span><span class="str">'home'</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t14" class="pln">        <span class="nam">url</span><span class="op">(</span><span class="str">r'^stats/'</span><span class="op">,</span> <span class="nam">include</span><span class="op">(</span><span class="str">'stats.urls'</span><span class="op">,</span> <span class="nam">namespace</span><span class="op">=</span><span class="str">'stats'</span><span class="op">)</span><span class="op">)</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t15" class="pln"><span class="op">]</span> <span class="op">+</span> <span class="nam">static</span><span class="op">(</span><span class="nam">settings</span><span class="op">.</span><span class="nam">MEDIA_URL</span><span class="op">,</span> <span class="nam">document_root</span><span class="op">=</span><span class="nam">settings</span><span class="op">.</span><span class="nam">MEDIA_ROOT</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t16" class="pln"><span class="strut">&nbsp;</span></p>
 
             </td>
         </tr>
@@ -114,7 +112,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.3.4</a>,
-            created at 2017-03-15 10:36
+            created at 2017-03-27 10:15
         </p>
     </div>
 </div>

@@ -51,14 +51,12 @@
 
 {% block content_block %}
 
-    <div class="row">
-        {% if user == request.user %} 
-            <h1>My Profile</h1>
-        {% else %}
-            <h1>View Profile</h1>
-        {% endif %}
-        <hr />
-    </div>
+    {% if user == request.user %} 
+        <h1>My Profile</h1>
+    {% else %}
+        <h1>View Profile</h1>
+    {% endif %}
+    <hr />
 
     <div class="row">
         <div class="form-horizontal user-info">

@@ -7,6 +7,26 @@ from contests.models import Team, Participant, Contest, Problem, Submission, Con
 from contests.views import createContest, editContest, createNewProblem, createTemplate, displayContest, activateContest
 
 
+class DisplayIndexViewTest(TestCase):
+    fixtures = ['users.json', 'teams.json', 'contests.json']
+
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    # Vivian
+    def test_view_index_notloggedin(self):
+        url = reverse("contests:index")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 302)
+
+    # Vivian
+    def test_view_index(self):
+        self.client.login(username='testuser', password='password')
+        url = reverse("contests:index")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+
 class DisplayContestViewTest(TestCase):
 
     fixtures = ['users.json', 'teams.json', 'contests.json', 'problems.json']
@@ -367,7 +387,8 @@ class CreateContestViewTest(TestCase):
         contest = Contest.objects.latest('date_created')
         self.assertEqual(contest.title, "Contest test creation")
         participants = Participant.objects.filter(contest_id=contest.id)
-        self.assertEqual(participants.count(), 2)
+        self.assertEqual(participants.count(), 0) # participant is updated after a team accept the inviation,
+                                                  # thus should be 0 when contest just created
 
 
 class EditContestViewTest(TestCase):
