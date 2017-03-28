@@ -507,6 +507,8 @@ def scoreboard(request, contest_id):
     for problem in problems:
         problem_number += 1
 
+    contest_time_penalty = int(scoreboard_contest.time_penalty)
+
     participants = scoreboard_contest.participant_set.all()
 
     problem_count_array = []
@@ -518,6 +520,7 @@ def scoreboard(request, contest_id):
     problems_status_array = {}
     problem_score_array = {}
     problem_attempts_array = {}
+
 
     for participant in participants:
         teamname = participant.team.name
@@ -534,7 +537,6 @@ def scoreboard(request, contest_id):
             tempsubmission = Submission.objects.filter(team = tempteam, problem = problem)
             for object in tempsubmission :
                 problem_attempts_array[teamname] += 1
-
 
             tempsubmission = Submission.objects.filter(team = tempteam, problem=problem).last()
 
@@ -553,6 +555,10 @@ def scoreboard(request, contest_id):
             else:
                 templist.append("2")
                 problems_status_array[teamname] = templist # Otherwise the submission is pending
+
+    for teamname in problem_attempts_array:
+        problem_attempts_array[teamname] = problem_attempts_array[teamname] * contest_time_penalty
+
 
     data = {
         'problem_number' : problem_count_array,
@@ -611,6 +617,8 @@ def refresh_scoreboard(request):
     if contest_id != 0:
         contest_data = Contest.objects.get(id=contest_id)
 
+    contest_time_penalty = int(contest_data.time_penalty)
+
     problems = contest_data.problem_set.all()
 
     problem_number = 0
@@ -661,10 +669,11 @@ def refresh_scoreboard(request):
                 templist.append("2")
                 problems_status_array[teamname] = templist # Otherwise the submission is pending
 
-    print("problem status")
-    print(problems_status_array)
-    print("problem attempts")
-    print(problem_attempts_array)
+    for teamname in problem_attempts_array:
+        problem_attempts_array[teamname] = problem_attempts_array[teamname] * contest_time_penalty
+
+    print("time penalty")
+    print(contest_time_penalty)
 
     data = {
         'problem_number': problem_count_array,
