@@ -16,8 +16,12 @@ $(document).on('submit', '.team-leave-form', function(event) {
             }
             // Destory tab
             $('#team-tabs').find('a[href="#team-'+team_id+'"]').parent().remove();
-            // Destory tab panel
+            // Destroy tab panel
             $('#team-'+team_id).remove();
+            // Change URL to index
+            var baseURL = window.location.href;
+            baseURL = baseURL.substr(0, baseURL.indexOf('/teams/')+7);
+            history.replaceState('data', '', baseURL)
         },
         error : function(data) {
             console.log('Leave team failed.');

@@ -97,32 +97,32 @@ def edit(request):
                 UnicodeUsernameValidator()(username)
                 request.user.username = username
                 request.user.save()
-                return JsonResponse({}, status=200)
+                return JsonResponse({'val':username}, status=200)
             except ValidationError as err:
                 return JsonResponse({'error': '; '.join(err.messages)}, status=201)
 
         if 'first_name' in request.POST:
             request.user.first_name = request.POST.get('first_name')
             request.user.save()
-            return JsonResponse({}, status=200)
+            return JsonResponse({'val':request.user.first_name}, status=200)
 
         if 'last_name' in request.POST:
             request.user.last_name = request.POST.get('last_name')
             request.user.save()
-            return JsonResponse({}, status=200)
+            return JsonResponse({'val':request.user.last_name}, status=200)
 
         if 'email' in request.POST:
             email = request.POST.get('email')
             if not email:
                 request.user.email = email
                 request.user.save()
-                return JsonResponse({}, status=200)
+                return JsonResponse({'val':email}, status=200)
             else:
                 try:
                     validate_email(email)
                     request.user.email = email
                     request.user.save()
-                    return JsonResponse({}, status=200)
+                    return JsonResponse({'val':email}, status=200)
                 except ValidationError as err:
                     return JsonResponse({'error': '; '.join(err.messages)}, status=201)
 

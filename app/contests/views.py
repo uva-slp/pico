@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseForbidden, Http404, JsonRespon
 from django.shortcuts import render, redirect, get_object_or_404
 
 from teams.forms import TeamForm, TeamSelectForm
-from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, CreateContestTemplateForm, AdminSearchForm, ParticipantSearchForm
+from .forms import CreateContestForm, CreateProblem, UploadCodeForm, ReturnJudgeResultForm, CreateContestTemplateForm, AdminSearchForm, ParticipantSearchForm, AcceptInvitationForm
 from dal import autocomplete
 from users.forms import UserSearchForm
 from django.contrib.auth.decorators import login_required
@@ -13,7 +13,7 @@ from .lib import diff as _diff
 from .lib import execution as exe
 from .models import Contest, Problem, ContestTemplate
 from teams.models import Team
-from .models import Participant, Submission, Notification
+from .models import Participant, Submission, Notification, ContestInvite
 from users.models import User
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -24,6 +24,7 @@ import os
 from subprocess import Popen
 
 
+@login_required
 def index(request):
     all_active_contests = Contest.objects.active()
     my_active_contests = []
@@ -43,6 +44,25 @@ def index(request):
         if isCreator(contest, request.user) or isJudge(contest, request.user) or isParticipant(contest, request.user):
             my_past_contests.append(contest)
 
+    # Handling invitation acceptance
+    if request.method == 'POST':
+        cur_invitation = get_object_or_404(ContestInvite, id=request.POST.get("invitationId"))
+        if request.POST.get("accept"):
+            # Create participant objects for the team
+            team = cur_invitation.team
+            contest = cur_invitation.contest
+            pt = Participant(contest=contest, team=team)
+            pt.save()
+            cur_invitation.delete()
+        elif request.POST.get("decline"):
+            cur_invitation.delete()
+
+    all_invitations = ContestInvite.objects.all()
+    my_contest_invitations = []
+    for invitation in all_invitations:
+        if request.user in invitation.team.members.all():
+            my_contest_invitations.append(invitation)
+
     return render(
         request,
         'contests/index.html',
@@ -50,12 +70,13 @@ def index(request):
             'active_contests': my_active_contests,
             'unstarted_contests': my_unstarted_contests,
             'past_contests': my_past_contests,
+            'contest_invitations': my_contest_invitations
         }
     )
 
 
 @login_required
-def create(request):
+def createContest(request):
 
     template_user = request.user
     templates = ContestTemplate.objects.filter(creator=template_user)
@@ -113,14 +134,15 @@ def create(request):
 
                 contest_participants = form.cleaned_data.get('contest_participants')
 
-                for participant in contest_participants : # Loop through the given participants when a user creates a contest and create participant objects for each
+                for participant in contest_participants :
+                    # Loop through the given participants when a user creates a contest and send invitation to each team
                     team = Team.objects.filter(name=participant).get()
-                    pt = Participant(contest=contest, team=team)
-                    pt.save()
+                    inv = ContestInvite(contest=contest, team=team)
+                    inv.save()
 
                 for qa_form in qa_formset:
                     qa_form = qa_form.cleaned_data
-                    create_new_problem(request, qa_form, contest_id)
+                    createNewProblem(request, qa_form, contest_id)
 
                     # Loop through participants text box and create participant objects for a team on each line w/ contest
 
@@ -138,7 +160,7 @@ def create(request):
 
 
 @login_required
-def create_new_problem(request, form, contest_id):
+def createNewProblem(request, form, contest_id):
     solution = form.get('solution')
     program_input = form.get('program_input')
     input_desc = form.get('input_description')
@@ -156,7 +178,7 @@ def create_new_problem(request, form, contest_id):
 
 
 @login_required
-def edit(request, contest_id):
+def editContest(request, contest_id):
 
     contest = get_object_or_404(Contest, pk=contest_id)
     if contest.creator != request.user:
@@ -194,7 +216,7 @@ def edit(request, contest_id):
 
                 request.method = None
                 request.POST = None
-                return edit(request, contest_id)
+                return editContest(request, contest_id)
 
         if request.POST['submit'] == "update_problem":
             problem_id = request.POST['problem_id']
@@ -206,7 +228,7 @@ def edit(request, contest_id):
 
             request.method = None
             request.POST = None
-            return edit(request, contest_id)
+            return editContest(request, contest_id)
 
         if request.POST['submit'] == "delete_problem":
             problem_id = request.POST['problem_id']
@@ -214,17 +236,17 @@ def edit(request, contest_id):
 
             request.method = None
             request.POST = None
-            return edit(request, contest_id)
+            return editContest(request, contest_id)
 
         if request.POST['submit'] == "save_new_problem":
             problem_form = CreateProblem(request.POST, request.FILES)
             if problem_form.is_valid():
                 problem_form = problem_form.cleaned_data
-                create_new_problem(request, problem_form, contest_id)
+                createNewProblem(request, problem_form, contest_id)
 
             request.method = None
             request.POST = None
-            return edit(request, contest_id)
+            return editContest(request, contest_id)
 
     data = {
         'form': form,
@@ -239,7 +261,22 @@ def edit(request, contest_id):
 
 
 @login_required
-def create_template(request):
+def deleteContest(request, contest_id):
+    Contest.objects.get(pk=contest_id).delete()
+    return redirect(reverse('home'))
+
+
+@login_required
+def activateContest(request, contest_id):
+    time = datetime.now()
+    contest = Contest.objects.get(id=contest_id)
+    contest.contest_start = time
+    contest.save()
+    return redirect(reverse('home'))
+
+
+@login_required
+def createTemplate(request):
 
     form = CreateContestTemplateForm()
     admin_search_form = AdminSearchForm()
@@ -310,25 +347,19 @@ def displayContest(request, contest_id):
     is_participant = isParticipant(contest_data, request.user)
     is_creator = isCreator(contest_data, request.user)
     current_team = getTeam(contest_data, request.user)
+    is_past = contest_data.contest_end() <= timezone.now()
 
     if not is_judge and not is_participant and not is_creator and not request.user.is_superuser:
         return redirect(reverse('home'))
 
     # Activate Contest or save the submission
     if request.method == 'POST':
-        if 'submit' in request.POST and request.POST['submit'] == "activate_contest":
-            time = datetime.now()
-            contest = Contest.objects.get(id=contest_id)
-            contest.contest_start = time
-            contest.save()
-            return redirect(reverse('home'))
-        else:
-            form = UploadCodeForm(request.POST, request.FILES)
-            if form.is_valid():
-                sub = form.save(commit=False)
-                sub.original_filename = request.FILES['code_file'].name
-                sub.team = current_team
-                sub.save()
+        form = UploadCodeForm(request.POST, request.FILES)
+        if form.is_valid():
+            sub = form.save(commit=False)
+            sub.original_filename = request.FILES['code_file'].name
+            sub.team = current_team
+            sub.save()
 
     problems = contest_data.problem_set.all()
     #Handle multiple forms on the same page
@@ -380,7 +411,7 @@ def displayContest(request, contest_id):
         'is_judge': is_judge, 'is_participant': is_participant, 'is_creator': is_creator,
         'current_team': current_team, 'submission_attempts': submission_attempts,
         'submission_status': status, 'color_states': color_states,
-        'problem_form_pairs': problem_form_pairs
+        'problem_form_pairs': problem_form_pairs, 'is_past': is_past
     }
 
     return render(request, 'contests/contest.html', data)
@@ -398,9 +429,10 @@ def displayProblemDescription(request, contest_id):
 @login_required
 def displayAllSubmissions(request, contest_id):
     contest_data = Contest.objects.get(id=contest_id)
-
     is_judge = isJudge(contest_data, request.user)
-    if not is_judge:
+    is_creator = isCreator(contest_data, request.user)
+
+    if not is_judge and not is_creator and not request.user.is_superuser:
         return redirect(reverse('home'))
 
     problems = contest_data.problem_set.all()
@@ -427,8 +459,8 @@ def displayAllSubmissions(request, contest_id):
 def displayMySubmissions(request, contest_id, team_id):
     contest_data = Contest.objects.get(id=contest_id)
     team = Team.objects.get(id=team_id)
-
     is_judge = isJudge(contest_data, request.user)
+
     if not is_judge and request.user not in team.members.all() and not request.user.is_superuser:
         return redirect(reverse('home'))
 
@@ -449,7 +481,9 @@ def displayMySubmissions(request, contest_id, team_id):
 def displayJudge(request, contest_id, run_id):
         contest_data = Contest.objects.get(id=contest_id)
         is_judge = isJudge(contest_data, request.user)
-        if not is_judge:
+        is_creator = isCreator(contest_data, request.user)
+
+        if not is_judge and not is_creator and not request.user.is_superuser:
                 return redirect(reverse('home'))
         
         problems = contest_data.problem_set.all()
@@ -517,6 +551,8 @@ def scoreboard(request, contest_id):
     for problem in problems:
         problem_number += 1
 
+    contest_time_penalty = int(scoreboard_contest.time_penalty)
+
     participants = scoreboard_contest.participant_set.all()
 
     problem_count_array = []
@@ -528,6 +564,7 @@ def scoreboard(request, contest_id):
     problems_status_array = {}
     problem_score_array = {}
     problem_attempts_array = {}
+
 
     for participant in participants:
         teamname = participant.team.name
@@ -544,7 +581,6 @@ def scoreboard(request, contest_id):
             tempsubmission = Submission.objects.filter(team = tempteam, problem = problem)
             for object in tempsubmission :
                 problem_attempts_array[teamname] += 1
-
 
             tempsubmission = Submission.objects.filter(team = tempteam, problem=problem).last()
 
@@ -563,6 +599,10 @@ def scoreboard(request, contest_id):
             else:
                 templist.append("2")
                 problems_status_array[teamname] = templist # Otherwise the submission is pending
+
+    for teamname in problem_attempts_array:
+        problem_attempts_array[teamname] = problem_attempts_array[teamname] * contest_time_penalty
+
 
     data = {
         'problem_number' : problem_count_array,
@@ -598,7 +638,7 @@ def show_notification(request):
 
             # contest title, problem number, run id, and result
             current_data = (submission.problem.contest.title, problem_number,
-                            submission.run_id, submission.get_result_display(), noti.id)
+                            submission.run_id, submission.get_result_display(), noti.id, submission.id)
             l.append(current_data)
 
     d = {'data': l}
@@ -620,6 +660,8 @@ def refresh_scoreboard(request):
 
     if contest_id != 0:
         contest_data = Contest.objects.get(id=contest_id)
+
+    contest_time_penalty = int(contest_data.time_penalty)
 
     problems = contest_data.problem_set.all()
 
@@ -671,10 +713,11 @@ def refresh_scoreboard(request):
                 templist.append("2")
                 problems_status_array[teamname] = templist # Otherwise the submission is pending
 
-    print("problem status")
-    print(problems_status_array)
-    print("problem attempts")
-    print(problem_attempts_array)
+    for teamname in problem_attempts_array:
+        problem_attempts_array[teamname] = problem_attempts_array[teamname] * contest_time_penalty
+
+    print("time penalty")
+    print(contest_time_penalty)
 
     data = {
         'problem_number': problem_count_array,

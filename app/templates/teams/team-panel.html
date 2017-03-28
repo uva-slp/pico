@@ -11,31 +11,43 @@
                 <button type="submit" class="btn btn-xs btn-danger">Leave</button>
             </form>
             <!-- /#team-leave-form -->
-
             <form class="form form-horizontal team-public-form"  method="post" action="{% url 'teams:public' %}" enctype="multipart form-data" style="margin-left:10px;">
                 {% csrf_token %}
                 <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
                 <input type="checkbox" name="public" {% if team.public %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Public" data-off="Private">
             </form>
             <!-- /#team-leave-form -->
+        {% elif request.user|has_invite:team %}
+            <form class="form form-horizontal team-join-form"  method="post" action="{% url 'teams:invite' action='accept' %}" enctype="multipart form-data">
+                {% csrf_token %}
+                <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
+                <button type="submit" class="btn btn-xs btn-success">Accept Invite</button>
+            </form>
+            <!-- /#team-join-form -->
+            <form class="form form-horizontal team-invite-decline-form"  method="post" action="{% url 'teams:invite' action='decline' %}" enctype="multipart form-data"  style="margin-left:10px;">
+                {% csrf_token %}
+                <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
+                <button type="submit" class="btn btn-xs btn-danger">Decline Invite</button>
+            </form>
+            <!-- /#team-leave-form -->
+        {% elif team.public %}
+            <form class="form form-horizontal team-join-form"  method="post" action="{% url 'teams:join' %}" enctype="multipart form-data">
+                {% csrf_token %}
+                <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
+                <button type="submit" class="btn btn-xs btn-success">Join</button>
+            </form>
+            <!-- /#team-join-form -->
         {% elif team|has_request:request.user %}
-            <form class="form form-horizontal team-cancel-join-request-form" method="post" action="{% url 'teams:join-request' 'cancel' %}" enctype="multipart form-data">
+            <form class="form form-horizontal cancel-join-request-form" method="post" action="{% url 'teams:join-request' 'cancel' %}" enctype="multipart form-data">
                 {% csrf_token %}
                 <input type="hidden" id="id_request" name="request" value="{% with team|get_request:user as join_request %}{{ join_request.id }}{% endwith %}"/>
                 <button type="submit" class="btn btn-default btn-xs">Cancel Join Request</button>
+            </form>
         {% else %}
             <form class="form form-horizontal team-join-form"  method="post" action="{% url 'teams:join' %}" enctype="multipart form-data">
                 {% csrf_token %}
                 <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
-                <button type="submit" class="btn btn-xs btn-success">
-                    {% if team.public %}
-                        Join
-                    {% elif request.user|has_invite:team %}
-                        Accept Invite
-                    {% else %}
-                        Send Join Request
-                    {% endif %}
-                </button>
+                <button type="submit" class="btn btn-xs btn-success">Send Join Request</button>
             </form>
             <!-- /#team-join-form -->
         {% endif %}
@@ -79,19 +91,19 @@
                                         {{ join_request.user.username }}
                                         <div class="pull-right input-group" style="top:-10px">
 
-                                            <form style="display:inline" class="form approve-join-request-form" method="post" action="{% url 'teams:join-request' 'approve' %}" enctype="multipart form-data">
+                                            <form style="display:inline" class="form accept-join-request-form" method="post" action="{% url 'teams:join-request' 'accept' %}" enctype="multipart form-data">
                                                 {% csrf_token %}
                                                 <input type="hidden" id="id_request" name="request" value="{{ join_request.id }}"/>
                                                 <button type="submit" class="btn btn-link" style="padding-left:0;padding-right:0;padding-top:5px;padding-bottom:4px;margin-right:5px;"><i class="fa fa-check fa-2x"></i></button>
                                             </form>
                                             <!-- /#accept-join-request-form -->
 
-                                            <form style="display:inline" class="form reject-join-request-form" method="post" action="{% url 'teams:join-request' action='approve' %}" enctype="multipart form-data">
+                                            <form style="display:inline" class="form decline-join-request-form" method="post" action="{% url 'teams:join-request' action='decline' %}" enctype="multipart form-data">
                                                 {% csrf_token %}
                                                 <input type="hidden" id="id_request" name="request" value="{{ join_request.id }}"/>
                                                 <button type="submit" class="btn btn-link" style="padding-left:0;padding-right:0;padding-top:5px;padding-bottom:4px;"><i class="fa fa-times fa-2x"></i></button>
                                             </form>
-                                            <!-- /#reject-join-request-form -->
+                                            <!-- /#decline-join-request-form -->
 
                                         </div>
                                     </a>
@@ -117,7 +129,7 @@
                                         {{ invite.user.username }}
                                         <div class="pull-right input-group" style="top:-10px;">
 
-                                            <form style="display:inline" class="form cancel-invite-form" method="post" action="{% url 'teams:cancel-invite' %}" enctype="multipart form-data">
+                                            <form style="display:inline" class="form cancel-invite-form" method="post" action="{% url 'teams:invite' action='cancel' %}" enctype="multipart form-data">
                                                 {% csrf_token %}
                                                 <input type="hidden" id="id_invite" name="invite" value="{{ invite.id }}"/>
                                                 <button type="submit" class="btn btn-link" style="padding-left:0;padding-right:0;padding-top:5px;padding-bottom:4px;"><i class="fa fa-times fa-2x"></i></button>
@@ -138,7 +150,7 @@
                 <!-- Send Invite Modal -->
                 <div class="modal fade" id="new-invite-team-{{team.id}}" role="dialog">
                     <div class="modal-dialog">
-                        <form class="form form-horizontal" id="team-form" method="post" action="{% url 'teams:invite' %}" enctype="multipart form-data">
+                        <form class="form form-horizontal" id="team-form" method="post" action="{% url 'teams:invite' action='send' %}" enctype="multipart form-data">
                         <!-- Modal content-->
                         <div class="modal-content">
                             <div class="modal-header">

@@ -21,7 +21,7 @@
     {% block load_template_form %}
     <div class="well bs-component">
         <form class="form-horizontal" id="load_contest_template" method="post"
-              action="{% url 'contests:create' %}">
+              action="{% url 'contests:create_contest' %}">
             <fieldset>
                 <legend>Default Templates</legend>
 
@@ -50,7 +50,7 @@
     <div class="well bs-component">
         {% block contest_form_action %}
         <form class="form-horizontal" id="create_contest" method="post"
-              action="{% url 'contests:create' %}" enctype="multipart/form-data">
+              action="{% url 'contests:create_contest' %}" enctype="multipart/form-data">
         {% endblock %}
             <fieldset>
                 <legend>{% block contest_form_legend %}Create Contest{% endblock %}</legend>

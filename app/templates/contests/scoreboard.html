@@ -47,13 +47,12 @@
         <tr>
             <th align="center"> Team </th>
             {% for count in problem_number %}
-                <th> Question {{ count }} </th>
+                <th align="center"> Question {{ count }} </th>
             {% endfor %}
-            <th> Score </th>
-            <th>Total Attempts</th>
+            <th align="center"> Score </th>
+            <th align="center"> Attempt Time Penalty </th>
 
         </tr>
-
 
         {% for team, status_list in problem_status_array.items %}
             <tr>
@@ -102,7 +101,7 @@
 
                 </td>
 
-                </tr>
+            </tr>
 
             {% endfor %}
 

@@ -4,23 +4,41 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>QUnit Example</title>
-    <link rel="stylesheet" href="qunit-2.1.1.css">
+    <link rel="stylesheet" href="static/qunit-2.1.1.css">
 </head>
 <body>
 <div id="qunit"></div>
 <div id="qunit-fixture"></div>
-<script src="qunit-2.1.1.js"></script>
+<script src="static/qunit-2.1.1.js"></script>
 
 <!-- Code coverage tool -->
-<script src="blanket.min.js"></script>
+<script src="static/blanket.min.js"></script>
 
 <!-- jQuery -->
 <script src="../../app/vendor/jQuery/jquery.min.js"></script>
+<script>
+    $.ajaxBackup = $.ajax;
+    function replaceAjax(ajax) {
+        $.ajax = ajax;
+    }
+    function restoreAjax() {
+        $.ajax = $.ajaxBackup;
+    }
+</script>
 
-<!-- INCLUDE ANY JAVASCRIPT FILES YOU DO NOT WISH TO TEST HERE (DEPENDENCIES) -->
+<!-- Dependencies -->
 <script src="../../app/vendor/jquery-formset/jquery.formset.js"></script>
 <script src="../../app/vendor/moment/moment.min.js"></script>
-<!-- Set global js vars with django data for external scripts to use -->
+<script src="../../app/vendor/highcharts/highcharts.js"></script>
+
+<!-- WRITE NEW TESTS IN test-APP.js -->
+<script src="tests/example.js"></script>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!--          CONTESTS          -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- Declare variables -->
 <script type="text/javascript">
     var contest_start = 'March 13, 2017, 4:44 p.m.';
     var contest_length = '8 a.m.';
@@ -29,16 +47,39 @@
     var is_contest_ended = false;
 </script>
 
-<!-- INCLUDE ANY JAVASCRIPT FILES YOU WANT TO TEST HERE -->
+<!-- JavaScript files to be tests -->
 <script src="../../app/contests/static/js/autojudge_checkbox.js" data-cover></script>
 <script src="../../app/contests/static/js/formset_styler.js" data-cover></script>
 <script src="../../app/contests/static/js/lock_navbar.js" data-cover></script>
 <script src="../../app/contests/static/js/timer_bar.js" data-cover></script>
 <script src="../../app/contests/static/js/user_search.js" data-cover></script>
+
+<!-- Tests -->
+<script src="tests/test-contests.js"></script>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~ -->
+<!--          Pico          -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- JavaScript files to be tests -->
 <script src="../../app/pico/static/js/common.js" data-cover></script>
 
-<!-- WRITE NEW TESTS IN tests.js -->
-<script src="tests.js"></script>
+<!-- Tests -->
+<script src="tests/test-pico.js"></script>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!--          Users          -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- JavaScript files to be tests -->
+<script src="../../app/users/static/js/storage.js" data-cover></script>
+<script src="../../app/users/static/js/theme-picker.js" data-cover></script>
+<script src="../../app/users/static/js/user-edit.js" data-cover></script>
+
+<!-- Tests -->
+<script src="tests/test-users.js"></script>
 
 </body>
 </html>

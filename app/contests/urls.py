@@ -5,9 +5,11 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.index, name='index'),
-	url(r'^create$', views.create, name='create'),
-	url(r'^edit/(?P<contest_id>\d+)/$', views.edit, name='edit_contest'),
-	url(r'^create_template$', views.create_template, name='create_template'),
+	url(r'^create$', views.createContest, name='create_contest'),
+	url(r'^edit/(?P<contest_id>\d+)/$', views.editContest, name='edit_contest'),
+	url(r'^delete/(?P<contest_id>\d+)/$', views.deleteContest, name='delete_contest'),
+	url(r'^activate/(?P<contest_id>\d+)/$', views.activateContest, name='activate_contest'),
+	url(r'^create_template$', views.createTemplate, name='create_template'),
 	url(r'^scoreboard/$', views.scoreboard, name='scoreboard'),
 	url(r'^contest/(?P<contest_id>\d+)/$', views.displayContest, name='contest'),
 	url(r'^contest/(?P<contest_id>\d+)/problemDescription$', views.displayProblemDescription, name='problem_description'),

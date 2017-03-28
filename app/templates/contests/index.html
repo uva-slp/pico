@@ -8,21 +8,20 @@
 {% block content_block %}
 
     <div class="row">
-        <div class="col-md-2">
-            <ul class="nav nav-pills nav-stacked stickytabs" id="side-menu">
-                <div class="text-center" style="padding-bottom:15px">
-                    <a href="{% url 'contests:create' %}" class="btn btn-default"><i class="fa fa-plus"></i> New Contest</a>
-                </div>
-                <li class="active"><a href="#all-contests" data-toggle="pill">All Contests</a></li>
-                <li><a href="#active-contests" data-toggle="pill">Active</a></li>
-                <li><a href="#unstarted-contests" data-toggle="pill">Unstarted</a></li>
-                <li><a href="#past-contests" data-toggle="pill">Past</a></li>
-            </ul>
-            <!-- /.nav-pills -->
-        </div>
+        <ul class="nav nav-pills nav-stacked col-md-2 col-sm-3 stickytabs" id="side-menu">
+            <div class="text-center" style="padding-bottom:15px">
+                <a href="{% url 'contests:create_contest' %}" class="btn btn-default"><i class="fa fa-plus"></i> New Contest</a>
+            </div>
+            <li class="active"><a href="#all-contests" data-toggle="pill">All Contests</a></li>
+            <li><a href="#active-contests" data-toggle="pill">Active</a></li>
+            <li><a href="#unstarted-contests" data-toggle="pill">Unstarted</a></li>
+            <li><a href="#past-contests" data-toggle="pill">Past</a></li>
+            <li><a href="#contest-invitations" data-toggle="pill">Invitation</a></li>
+        </ul>
+        <!-- /.nav-pills -->
 
         <!-- Tab panes -->
-        <div class="tab-content col-md-10">
+        <div class="tab-content col-md-10 col-sm-9">
             <div class="tab-pane active" id="all-contests">
                 <div class="wrapper col-md-4">
                     <div class="panel panel-default">
@@ -86,6 +85,33 @@
                     <!-- /.panel -->
                 </div>
                 <!-- /#past-contests -->
+
+                <div class="wrapper col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Contest Invitations</h3>
+                        </div>
+                        {% if contest_invitations %}
+                            <div class="list-group">
+                                {% for invitation in contest_invitations %}
+                                    <a class="list-group-item">
+                                        <form method="post" action="{% url 'contests:index' %}">
+                                            {% csrf_token %}
+                                            <strong>{{ invitation.contest.title }}</strong>
+                                            <input name="accept" type="submit" class="btn btn-primary" style="display:inline;" value="Accept">
+                                            <input name="decline" type="submit" class="btn btn-primary" style="display:inline;" value="Decline">
+                                            <input name="invitationId" type="hidden" value="{{ invitation.id }}">
+                                        </form>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="list-group"><div class="list-group-item">No contest invitation</div></div>
+                        {% endif %}
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /#contest-invitation -->
             </div>
             <!-- /#all-contests -->
 
@@ -151,6 +177,33 @@
                 <!-- /.panel -->
             </div>
             <!-- /#past-contests -->
+
+            <div class="tab-pane" id="contest-invitations">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Contest Invitations</h3>
+                    </div>
+                    {% if contest_invitations %}
+                        <div class="list-group">
+                            {% for invitation in contest_invitations %}
+                                <a class="list-group-item">
+                                    <form method="post" action="{% url 'contests:index' %}">
+                                        {% csrf_token %}
+                                        <strong>{{ invitation.contest.title }}</strong>
+                                        <input name="accept" type="submit" class="btn btn-primary" style="display:inline;" value="Accept">
+                                        <input name="decline" type="submit" class="btn btn-primary" style="display:inline;" value="Decline">
+                                        <input name="invitationId" type="hidden" value="{{ invitation.id }}">
+                                    </form>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No contest invitation</div></div>
+                    {% endif %}
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /#contest-invitations -->
         </div>
         <!-- /.tab-content -->
     </div>

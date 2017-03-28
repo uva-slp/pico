@@ -1,13 +1,17 @@
-$('.btn-edit').click(function() {
+function userEditClick() {
     $(this).closest('div.form-group').addClass('editing');
     // Focus and move cursor to end
     var input = $(this).siblings('form').find('input.form-control');
-    input.focus().val(input.val());;
-});
-$('.btn-cancel').click(function() {
+    input.focus().val(input.val());
+};
+$('.btn-edit').click(userEditClick);
+
+function cancelUserEditClick() {
     $(this).closest('div.form-group').removeClass('editing');
-});
-$('.user-edit-form').on('submit', function() {
+}
+$('.btn-cancel').click(cancelUserEditClick);
+
+function submitUserEditForm(event) {
     event.preventDefault();
     var frm = $(this);
     var frmGrp = frm.closest('div.form-group');
@@ -22,10 +26,10 @@ $('.user-edit-form').on('submit', function() {
                 frmGrp.removeClass('has-error');
                 frmGrp.find('.help-block').text('');
                 // Update input value
-                if (input.val() == '') {
+                if (data.val == '') {
                     frm.siblings('span.input-text').text('(none)');
                 } else {
-                    frm.siblings('span.input-text').text(input.val());
+                    frm.siblings('span.input-text').text(data.val);
                 }
                 // Finish editing
                 frmGrp.removeClass('editing');
@@ -39,4 +43,5 @@ $('.user-edit-form').on('submit', function() {
             console.log('Edit user failed.');
         }
     });
-});
+}
+$('.user-edit-form').on('submit', submitUserEditForm);
