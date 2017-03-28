@@ -17,13 +17,6 @@
                 <input type="checkbox" name="public" {% if team.public %}checked{% endif %} data-toggle="toggle" data-size="mini" data-on="Public" data-off="Private">
             </form>
             <!-- /#team-leave-form -->
-        {% elif team.public %}
-            <form class="form form-horizontal team-join-form"  method="post" action="{% url 'teams:join' %}" enctype="multipart form-data">
-                {% csrf_token %}
-                <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
-                <button type="submit" class="btn btn-xs btn-success">Join</button>
-            </form>
-            <!-- /#team-join-form -->
         {% elif request.user|has_invite:team %}
             <form class="form form-horizontal team-join-form"  method="post" action="{% url 'teams:invite' action='accept' %}" enctype="multipart form-data">
                 {% csrf_token %}
@@ -37,6 +30,13 @@
                 <button type="submit" class="btn btn-xs btn-danger">Decline Invite</button>
             </form>
             <!-- /#team-leave-form -->
+        {% elif team.public %}
+            <form class="form form-horizontal team-join-form"  method="post" action="{% url 'teams:join' %}" enctype="multipart form-data">
+                {% csrf_token %}
+                <input type="hidden" id="id_team" name="team" value="{{ team.id }}"/>
+                <button type="submit" class="btn btn-xs btn-success">Join</button>
+            </form>
+            <!-- /#team-join-form -->
         {% elif team|has_request:request.user %}
             <form class="form form-horizontal cancel-join-request-form" method="post" action="{% url 'teams:join-request' 'cancel' %}" enctype="multipart form-data">
                 {% csrf_token %}

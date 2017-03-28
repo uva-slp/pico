@@ -9,6 +9,7 @@ from dal import autocomplete
 
 from .models import Team, Invite, JoinRequest
 from .forms import TeamForm, TeamSelectForm, TeamSearchForm, InviteForm, JoinRequestForm
+from alerts.models import Alert, Target
 from users.forms import UserSearchForm
 
 @login_required
@@ -42,7 +43,7 @@ def create(request):
             team.members.add(request.user)
             data = {
                 'tab': render_to_string('teams/team-tab.html', {'team': team}, request),
-                'panel': render_to_string('teams/team-panel.html', {'team': team}, request),
+                'panel': render_to_string('teams/team-panel.html', {'team': team, 'user_search_form': UserSearchForm()}, request),
             }
             return JsonResponse(data, status=200)
     
@@ -91,7 +92,12 @@ def invite(request, action):
                         # Invite already exists
                         pass
                     else:
-                        Invite(team=team, user=user).save()
+                        invite = Invite(team=team, user=user); invite.save()
+                        alert = Alert(
+                            user=user,
+                            subject='New Team Invite',
+                            body='You have been invited to join team <em>%s</em>.'%(team.name),
+                            target=Target.objects.get_or_create(invite=invite)[0]).save()
                 else:
                     # User does not have permission to send invite
                     pass    
@@ -128,7 +134,6 @@ def invite(request, action):
 @login_required
 def join_request(request, action):
     if request.method == 'POST':
-        print(request.POST)
         join_request_form = JoinRequestForm(data=request.POST)
 
         if join_request_form.is_valid():
@@ -192,7 +197,7 @@ def get(request):
             team = team_search_form.cleaned_data['team']
             data = {
                 'tab': render_to_string('teams/team-tab.html', {'team': team}, request),
-                'panel': render_to_string('teams/team-panel.html', {'team': team}, request),
+                'panel': render_to_string('teams/team-panel.html', {'team': team, 'user_search_form': UserSearchForm()}, request),
             }
             return JsonResponse(data, status=200)
 

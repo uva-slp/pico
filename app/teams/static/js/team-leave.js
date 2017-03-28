@@ -16,7 +16,7 @@ $(document).on('submit', '.team-leave-form', function(event) {
             }
             // Destory tab
             $('#team-tabs').find('a[href="#team-'+team_id+'"]').parent().remove();
-            // Destory tab panel
+            // Destroy tab panel
             $('#team-'+team_id).remove();
             // Change URL to index
             var baseURL = window.location.href;
