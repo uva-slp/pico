@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.core.files.uploadedfile import SimpleUploadedFile
 from datetime import datetime
 from django.utils import timezone
-from contests.models import Team, Participant, Contest, ContestTemplate, Problem, Submission
+from contests.models import Team, Participant, Contest, ContestTemplate, Problem, Submission, ContestInvite
 from subprocess import Popen
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -811,3 +811,29 @@ class ScoreboardTest(TestCase):
         newTeam.save()
         tempteam = Team.objects.get(name="banana")
         self.assertNotEqual("orange", newTeam.name)
+
+
+class ContestInvitationTest(TestCase):
+    fixtures = ['judge_interface.json']
+
+    # Vivian
+    def test_contest_invitation(self):
+        self.client.login(username='participant1', password='password')
+        contest_id = 7
+        contest = Contest.objects.get(pk=contest_id)
+        team_id = 1
+        team = Team.objects.get(pk=team_id)
+
+        self.assertEqual(len(ContestInvite.objects.all()), 0)
+        self.assertEqual(len(contest.participant_set.all()), 0)
+
+        invitation = ContestInvite(contest=contest, team=team)
+        invitation.save()
+        invitation_id = invitation.id
+        self.assertEqual(len(ContestInvite.objects.all()), 1)
+
+        url = reverse("contests:index")
+        self.client.post(url, {'accept' : 'Accept', 'invitationId': invitation_id})
+
+        self.assertEqual(len(ContestInvite.objects.all()), 0)
+        self.assertEqual(len(contest.participant_set.all()), 1)

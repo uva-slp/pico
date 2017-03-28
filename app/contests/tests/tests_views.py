@@ -26,6 +26,7 @@ class DisplayIndexViewTest(TestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
+
 class DisplayContestViewTest(TestCase):
 
     fixtures = ['users.json', 'teams.json', 'contests.json', 'problems.json']
