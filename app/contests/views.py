@@ -347,6 +347,7 @@ def displayContest(request, contest_id):
     is_participant = isParticipant(contest_data, request.user)
     is_creator = isCreator(contest_data, request.user)
     current_team = getTeam(contest_data, request.user)
+    is_past = contest_data.contest_end() <= timezone.now()
 
     if not is_judge and not is_participant and not is_creator and not request.user.is_superuser:
         return redirect(reverse('home'))
@@ -410,7 +411,7 @@ def displayContest(request, contest_id):
         'is_judge': is_judge, 'is_participant': is_participant, 'is_creator': is_creator,
         'current_team': current_team, 'submission_attempts': submission_attempts,
         'submission_status': status, 'color_states': color_states,
-        'problem_form_pairs': problem_form_pairs
+        'problem_form_pairs': problem_form_pairs, 'is_past': is_past
     }
 
     return render(request, 'contests/contest.html', data)
@@ -428,9 +429,10 @@ def displayProblemDescription(request, contest_id):
 @login_required
 def displayAllSubmissions(request, contest_id):
     contest_data = Contest.objects.get(id=contest_id)
-
     is_judge = isJudge(contest_data, request.user)
-    if not is_judge:
+    is_creator = isCreator(contest_data, request.user)
+
+    if not is_judge and not is_creator and not request.user.is_superuser:
         return redirect(reverse('home'))
 
     problems = contest_data.problem_set.all()
@@ -457,8 +459,8 @@ def displayAllSubmissions(request, contest_id):
 def displayMySubmissions(request, contest_id, team_id):
     contest_data = Contest.objects.get(id=contest_id)
     team = Team.objects.get(id=team_id)
-
     is_judge = isJudge(contest_data, request.user)
+
     if not is_judge and request.user not in team.members.all() and not request.user.is_superuser:
         return redirect(reverse('home'))
 
@@ -479,7 +481,9 @@ def displayMySubmissions(request, contest_id, team_id):
 def displayJudge(request, contest_id, run_id):
         contest_data = Contest.objects.get(id=contest_id)
         is_judge = isJudge(contest_data, request.user)
-        if not is_judge:
+        is_creator = isCreator(contest_data, request.user)
+
+        if not is_judge and not is_creator and not request.user.is_superuser:
                 return redirect(reverse('home'))
         
         problems = contest_data.problem_set.all()

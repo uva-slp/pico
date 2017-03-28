@@ -139,7 +139,7 @@ class JudgeInterfaceViewTest(TestCase):
                       kwargs={'contest_id': 7})
         resp = self.client.get(url)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
 
     # Vivian
     def test_view_all_notloggedin(self):
@@ -159,7 +159,7 @@ class JudgeInterfaceViewTest(TestCase):
                       kwargs={'contest_id': 7})
         resp = self.client.get(url)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
 
     # Vivian
     def test_view_all_participant(self):
@@ -263,7 +263,7 @@ class JudgeInterfaceViewTest(TestCase):
                       kwargs={'contest_id': 7, 'run_id': 1})
         resp = self.client.get(url)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
 
     # Vivian
     def test_view_judge_participant(self):
@@ -287,7 +287,7 @@ class JudgeInterfaceViewTest(TestCase):
                       kwargs={'contest_id': 7, 'run_id': 1})
         resp = self.client.get(url)
 
-        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.status_code, 200)
 
     # Vivian
     def test_view_judge_notloggedin(self):

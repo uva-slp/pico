@@ -21,10 +21,17 @@
 
     <!-- Time Remaining Bar -->
     {% if contest_data.contest_start != NULL %}
-    <div class="progress slower" id="timer_bar">
-        <div class="time_remaining_div"><span class="time_remaining_text"></span></div>
-        <div id="progress-slow" class="progress-bar progress-bar-striped active live_timer_div" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height:170px; width:100%"></div>
-    </div>
+        <div class="progress slower" id="timer_bar">
+            <div class="time_remaining_div"><span class="time_remaining_text"></span></div>
+            <div id="progress-slow" class="progress-bar progress-bar-striped active live_timer_div" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height:170px; width:100%"></div>
+        </div>
+    {% endif %}
+
+    {% if is_past %}
+        <div class="well bs-component" style="text-align:center;">
+            <h3>This is a past contest for viewing purposes only</h3>
+            <p>(No new submissions or changes can be made)</p>
+        </div>
     {% endif %}
 
     <div class="row text-center">
@@ -42,10 +49,12 @@
                 <span style="margin: 40px;"></span>
                 <a class="btn-toolbar" style="float:right;">
                     {% if contest_data.contest_start == NULL %}
-                    <a href="{% url 'contests:activate_contest' contest_data.id %}" class="btn btn-success">Activate Contest</a>
+                        <a href="{% url 'contests:activate_contest' contest_data.id %}" class="btn btn-success">Activate Contest</a>
                     {% endif %}
-                    <a href="{% url 'contests:edit_contest' contest_data.id %}" class="btn btn-primary">Edit Contest</a>
-                    <a href="{% url 'contests:delete_contest' contest_data.id %}" onclick="return confirm('Delete this contest?')" class="btn btn-danger">Delete Contest</a>
+                    {% if not is_past %}
+                        <a href="{% url 'contests:edit_contest' contest_data.id %}" class="btn btn-primary">Edit Contest</a>
+                    {% endif %}
+                        <a href="{% url 'contests:delete_contest' contest_data.id %}" onclick="return confirm('Delete this contest?')" class="btn btn-danger">Delete Contest</a>
                 </a>
             </div>
             <br />
@@ -69,9 +78,9 @@
     <div class="panel-group" id="accordion">
     {% for pair in problem_form_pairs %}
             {% if not is_participant %}
-            <div class="panel panel-default">
+                <div class="panel panel-default">
             {% else %}
-            <div class="panel panel-{{ color_states|index:forloop.counter }}">
+                <div class="panel panel-{{ color_states|index:forloop.counter }}">
             {% endif %}
                 <!-- the data-parent attribute make sure only one panel is open at a time-->
                 <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{ forloop.counter }}">
@@ -131,11 +140,11 @@
     {% endfor %}
     </div>
     {% else %}
-    <div class="well bs-component" style="text-align:center;">
-        <h3>This contest has not begun yet</h3>
-        <br />
-        <a href="{% url 'contests:index' %}" class="btn btn-primary">Return Home</a>
-    </div>
+        <div class="well bs-component" style="text-align:center;">
+            <h3>This contest has not begun yet</h3>
+            <br />
+            <a href="{% url 'contests:index' %}" class="btn btn-primary">Return Home</a>
+        </div>
     {% endif %}
 {% endblock %}
 
@@ -143,20 +152,20 @@
     {{ block.super }}
 
     {% if contest_data.contest_start != NULL or is_judge or is_creator %}
-    <script type="text/javascript" src="{% static 'moment/moment.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'moment/moment.min.js' %}"></script>
 
-    <!-- Set global js vars with django data for external scripts to use -->
-    <script type="text/javascript">
-        var contest_start = '{{ contest_data.contest_start }}';
-        var contest_length = '{{ contest_data.contest_length }}';
-        var is_contest_started = contest_start != "None";
-        var home_url = "{% url 'contests:index' %}";
-        var is_contest_ended = false;
-        console.log(contest_start + ", " + contest_length);
-    </script>
+        <!-- Set global js vars with django data for external scripts to use -->
+        <script type="text/javascript">
+            var contest_start = '{{ contest_data.contest_start }}';
+            var contest_length = '{{ contest_data.contest_length }}';
+            var is_contest_started = contest_start != "None";
+            var home_url = "{% url 'contests:index' %}";
+            var is_contest_ended = false;
+            console.log(contest_start + ", " + contest_length);
+        </script>
 
-    <script type="text/javascript" src="{% static 'js/timer_bar.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/lock_navbar.js' %}"></script>
-    <script src="{% static 'js/refresh_scoreboard.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/timer_bar.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lock_navbar.js' %}"></script>
+        <script src="{% static 'js/refresh_scoreboard.js' %}"></script>
     {% endif %}
 {% endblock %}
