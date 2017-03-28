@@ -1,0 +1,20 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$30000$A73psQbggcOY$4UwhcGccpD8+I6sl+RHWgmFzoIxjm640hbU1rKDDn8s=",
+            "last_login": "2016-10-23T17:31:19.744Z",
+            "is_superuser": true,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "email": "admin@virginia.edu",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2016-10-23T17:23:07Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+]
