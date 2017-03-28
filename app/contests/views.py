@@ -55,7 +55,7 @@ def index(request):
 
 
 @login_required
-def create(request):
+def createContest(request):
 
     template_user = request.user
     templates = ContestTemplate.objects.filter(creator=template_user)
@@ -120,7 +120,7 @@ def create(request):
 
                 for qa_form in qa_formset:
                     qa_form = qa_form.cleaned_data
-                    create_new_problem(request, qa_form, contest_id)
+                    createNewProblem(request, qa_form, contest_id)
 
                     # Loop through participants text box and create participant objects for a team on each line w/ contest
 
@@ -138,7 +138,7 @@ def create(request):
 
 
 @login_required
-def create_new_problem(request, form, contest_id):
+def createNewProblem(request, form, contest_id):
     solution = form.get('solution')
     program_input = form.get('program_input')
     input_desc = form.get('input_description')
@@ -156,7 +156,7 @@ def create_new_problem(request, form, contest_id):
 
 
 @login_required
-def edit(request, contest_id):
+def editContest(request, contest_id):
 
     contest = get_object_or_404(Contest, pk=contest_id)
     if contest.creator != request.user:
@@ -194,7 +194,7 @@ def edit(request, contest_id):
 
                 request.method = None
                 request.POST = None
-                return edit(request, contest_id)
+                return editContest(request, contest_id)
 
         if request.POST['submit'] == "update_problem":
             problem_id = request.POST['problem_id']
@@ -206,7 +206,7 @@ def edit(request, contest_id):
 
             request.method = None
             request.POST = None
-            return edit(request, contest_id)
+            return editContest(request, contest_id)
 
         if request.POST['submit'] == "delete_problem":
             problem_id = request.POST['problem_id']
@@ -214,17 +214,17 @@ def edit(request, contest_id):
 
             request.method = None
             request.POST = None
-            return edit(request, contest_id)
+            return editContest(request, contest_id)
 
         if request.POST['submit'] == "save_new_problem":
             problem_form = CreateProblem(request.POST, request.FILES)
             if problem_form.is_valid():
                 problem_form = problem_form.cleaned_data
-                create_new_problem(request, problem_form, contest_id)
+                createNewProblem(request, problem_form, contest_id)
 
             request.method = None
             request.POST = None
-            return edit(request, contest_id)
+            return editContest(request, contest_id)
 
     data = {
         'form': form,
@@ -239,7 +239,22 @@ def edit(request, contest_id):
 
 
 @login_required
-def create_template(request):
+def deleteContest(request, contest_id):
+    Contest.objects.get(pk=contest_id).delete()
+    return redirect(reverse('home'))
+
+
+@login_required
+def activateContest(request, contest_id):
+    time = datetime.now()
+    contest = Contest.objects.get(id=contest_id)
+    contest.contest_start = time
+    contest.save()
+    return redirect(reverse('home'))
+
+
+@login_required
+def createTemplate(request):
 
     form = CreateContestTemplateForm()
     admin_search_form = AdminSearchForm()
@@ -316,19 +331,12 @@ def displayContest(request, contest_id):
 
     # Activate Contest or save the submission
     if request.method == 'POST':
-        if 'submit' in request.POST and request.POST['submit'] == "activate_contest":
-            time = datetime.now()
-            contest = Contest.objects.get(id=contest_id)
-            contest.contest_start = time
-            contest.save()
-            return redirect(reverse('home'))
-        else:
-            form = UploadCodeForm(request.POST, request.FILES)
-            if form.is_valid():
-                sub = form.save(commit=False)
-                sub.original_filename = request.FILES['code_file'].name
-                sub.team = current_team
-                sub.save()
+        form = UploadCodeForm(request.POST, request.FILES)
+        if form.is_valid():
+            sub = form.save(commit=False)
+            sub.original_filename = request.FILES['code_file'].name
+            sub.team = current_team
+            sub.save()
 
     problems = contest_data.problem_set.all()
     #Handle multiple forms on the same page

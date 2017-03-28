@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from contests.forms import ReturnJudgeResultForm, CreateContestForm, CreateContestTemplateForm, CreateProblem
 from contests.models import Team, Participant, Contest, Problem, Submission, ContestTemplate
-from contests.views import create, edit, create_new_problem, create_template, displayContest
+from contests.views import createContest, editContest, createNewProblem, createTemplate, displayContest, activateContest
 
 
 class DisplayContestViewTest(TestCase):
@@ -84,12 +84,10 @@ class DisplayContestViewTest(TestCase):
         contest = Contest.objects.get(pk=contest_id)
         self.assertIsNone(contest.contest_start)
 
-        data = {'submit': 'activate_contest'}
-
-        request = self.factory.post(reverse("contests:contest", kwargs={'contest_id': contest_id}), data)
+        request = self.factory.post(reverse("contests:activate_contest", kwargs={'contest_id': contest_id}))
         request.user = self.user
 
-        resp = displayContest(request, contest_id)
+        resp = activateContest(request, contest_id)
         self.assertEqual(resp.status_code, 302)
 
         contest.refresh_from_db()
@@ -293,13 +291,13 @@ class LoadTemplateViewTest(TestCase):
     # Austin
     def test_load_valid_template(self):
         data = {"selected_template": 1, "submit": "load_template"}
-        resp = self.client.post(reverse('contests:create'), data=data)
+        resp = self.client.post(reverse('contests:create_contest'), data=data)
         self.assertEqual(resp.status_code, 200)
 
     # Austin
     def test_load_invalid_template(self):
         data = {"selected_template": 9999, "submit": "load_template"}
-        resp = self.client.post(reverse('contests:create'), data=data)
+        resp = self.client.post(reverse('contests:create_contest'), data=data)
         self.assertEqual(resp.status_code, 200)
 
     # Austin
@@ -317,7 +315,7 @@ class LoadTemplateViewTest(TestCase):
 
         request = self.factory.post(reverse('contests:create_template'), data)
         request.user = self.user
-        resp = create_template(request)
+        resp = createTemplate(request)
 
         self.assertEqual(resp.status_code, 302)
 
@@ -337,7 +335,7 @@ class CreateContestViewTest(TestCase):
 
     # Austin
     def test_not_post(self):
-        request = reverse("contests:create")
+        request = reverse("contests:create_contest")
         resp = self.client.get(request, follow=True)
 
         self.assertEqual(resp.status_code, 200)
@@ -359,11 +357,11 @@ class CreateContestViewTest(TestCase):
             "problem_description": SimpleUploadedFile("hi.txt", b"test problem desc")
         }
 
-        request = self.factory.post(reverse("contests:create"), data)
+        request = self.factory.post(reverse("contests:create_contest"), data)
         request.user = self.user
         request.FILES.update(files)
 
-        resp = create(request)
+        resp = createContest(request)
         self.assertEqual(resp.status_code, 302)
 
         contest = Contest.objects.latest('date_created')
@@ -441,7 +439,7 @@ class EditContestViewTest(TestCase):
         request.user = self.user
         request.FILES.update(files)
 
-        resp = edit(request, contest_id)
+        resp = editContest(request, contest_id)
         self.assertEqual(resp.status_code, 200)
 
         contest.refresh_from_db()
@@ -475,7 +473,7 @@ class EditContestViewTest(TestCase):
         request.user = self.user
         request.FILES.update(files)
 
-        resp = edit(request, contest_id)
+        resp = editContest(request, contest_id)
         self.assertEqual(resp.status_code, 200)
 
         problem.refresh_from_db()
@@ -499,7 +497,7 @@ class EditContestViewTest(TestCase):
         request = self.factory.post(reverse("contests:edit_contest", kwargs={'contest_id': contest_id}), data)
         request.user = self.user
 
-        resp = edit(request, contest_id)
+        resp = editContest(request, contest_id)
         self.assertEqual(resp.status_code, 200)
 
         self.assertFalse(Problem.objects.filter(pk=problem_id).exists())
@@ -530,7 +528,7 @@ class EditContestViewTest(TestCase):
         request.user = self.user
         request.FILES.update(files)
 
-        resp = edit(request, contest_id)
+        resp = editContest(request, contest_id)
         self.assertEqual(resp.status_code, 200)
 
         self.assertTrue(Problem.objects.filter(contest_id=contest_id).count(), 3)

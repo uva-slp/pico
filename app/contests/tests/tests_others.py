@@ -236,7 +236,7 @@ class ContestTest(TestCase):
     # Austin
     def test_create_view(self):
         self.client.login(username='judge', password='password')
-        url = reverse("contests:create")
+        url = reverse("contests:create_contest")
         resp = self.client.get(url)
 
         self.assertEqual(resp.status_code, 200)
