@@ -49,13 +49,13 @@
                                                 <a href="{{ alert.href }}">
                                                     <div>
                                                         {% if alert.subject %}<strong>{{ alert.subject }}</strong>{% endif %}
-                                                        <span class="pull-right text-muted small">4 minutes</span>
+                                                        <span class="pull-right text-muted small" style="padding-left:8px;">4 minutes</span>
                                                     </div>
                                                     <div>
                                                         {% if not alert.subject and not alert.body %}
                                                             <em>No content</em>
                                                         {% else %}
-                                                            {{ alert.body }}
+                                                            {{ alert.body|safe }}
                                                         {% endif %}
                                                     </div>
                                                 </a>

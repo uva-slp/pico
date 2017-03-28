@@ -1,0 +1,21 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "password":
+            "pbkdf2_sha256$30000$faNkB60zGxYN$/z1oi48BXdG309I3xgnmA47A59tIQDZow2eQ8VCp794=",
+            "last_login": "2017-03-28T07:30:09.474Z",
+            "is_superuser": true,
+            "username": "pico",
+            "first_name": "Pico",
+            "last_name": "de Gallo",
+            "email": "",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2017-03-28T07:30:09.332Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    }
+]
