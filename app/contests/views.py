@@ -352,7 +352,7 @@ def displayContest(request, contest_id):
     if not is_judge and not is_participant and not is_creator and not request.user.is_superuser:
         return redirect(reverse('home'))
 
-    # Activate Contest or save the submission
+    # Save contest submission
     if request.method == 'POST':
         form = UploadCodeForm(request.POST, request.FILES)
         if form.is_valid():

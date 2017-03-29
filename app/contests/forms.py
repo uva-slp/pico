@@ -83,6 +83,7 @@ class CreateContestForm(ModelForm):
 
 
 class CreateProblem(ModelForm):
+    required_css_class = 'required'
     program_input = forms.FileField(required=False, label= 'Program Input (.txt)')
     input_description = forms.CharField(required=False, label='Description of Input',
         widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
