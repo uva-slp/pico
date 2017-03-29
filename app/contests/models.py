@@ -63,8 +63,8 @@ class Contest(models.Model):
 class Problem(models.Model):
 	name = models.CharField(max_length=2048, null=True, blank=True)
 	program_input = models.FileField(upload_to='uploads/', null=True, blank=False)
-	input_description = models.TextField(blank=True)
-	output_description = models.TextField(blank=True)
+	input_description = models.TextField(null=True, blank=True)
+	output_description = models.TextField(null=True, blank=True)
 	sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
 	sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
 	solution = models.FileField(upload_to='uploads/', null=True, blank=True)
