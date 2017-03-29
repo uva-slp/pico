@@ -20,5 +20,14 @@ These instructions outline the process of installing PiCO. Note that the process
   - Enter the database info from Step 3
   - Enter the server email info from Step 4
 
-6. Run the server and enjoy!
-  - To run local, use the `/app/runserver` script or `python3 manage.py runserver`
+6. Set up Docker and download the Docker container
+  - Follow the instructions at https://docs.docker.com/engine/installation/linux/ubuntu/#install-docker to install Docker
+  - Install the Docker container with "sudo docker pull dmm7aj/pccs"
+  - Allow the server to run Docker without sudo by adding them to the docker group. Run:
+        - "sudo groupadd docker"
+	- "sudo gpasswd -a ${USER} docker"
+	- "sudo service docker restart"
+	- "newgrp docker"
+
+7. Run the server and enjoy!
+  - To run locally, use the `/app/runserver` script or `python3 manage.py runserver`
