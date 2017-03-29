@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.index, name='index'),
-	url(r'^create$', views.createContest, name='create_contest'),
+	url(r'^create_contest$', views.createContest, name='create_contest'),
 	url(r'^edit/(?P<contest_id>\d+)/$', views.editContest, name='edit_contest'),
 	url(r'^delete/(?P<contest_id>\d+)/$', views.deleteContest, name='delete_contest'),
 	url(r'^activate/(?P<contest_id>\d+)/$', views.activateContest, name='activate_contest'),

@@ -92,7 +92,7 @@ class CreateProblem(ModelForm):
     sample_input = forms.FileField(required=False, label='Sample Input (.txt)')
     sample_output = forms.FileField(required=False, label='Sample Output (.txt)')
     solution = forms.FileField(required=True, label='Solution (.txt)')
-    timeout = forms.IntegerField(required=False, label='Timeout')
+    timeout = forms.IntegerField(required=False, label='Timeout (seconds)', min_value=0)
 
     def clean(self):
         upload_to = 'uploads/'

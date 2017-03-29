@@ -463,6 +463,7 @@ def displayMySubmissions(request, contest_id, team_id):
     contest_data = Contest.objects.get(id=contest_id)
     team = Team.objects.get(id=team_id)
     is_judge = isJudge(contest_data, request.user)
+    is_past = contest_data.contest_end() <= timezone.now()
 
     if not is_judge and request.user not in team.members.all() and not request.user.is_superuser:
         return redirect(reverse('home'))
@@ -473,7 +474,10 @@ def displayMySubmissions(request, contest_id, team_id):
         submissions += list(p.submission_set.filter(team__pk=team_id))
     submissions.sort(key=lambda x: x.timestamp)
 
-    data = {'contest_data': contest_data, 'team': team, 'contest_submissions': submissions}
+    data = {
+        'contest_data': contest_data, 'team': team,
+        'contest_submissions': submissions, 'is_past': is_past
+    }
 
     return render(request, 'contests/user_submissions.html', data)
 
@@ -483,6 +487,7 @@ def displayJudge(request, contest_id, run_id):
         contest_data = Contest.objects.get(id=contest_id)
         is_judge = isJudge(contest_data, request.user)
         is_creator = isCreator(contest_data, request.user)
+        is_past = contest_data.contest_end() <= timezone.now()
 
         if not is_judge and not is_creator and not request.user.is_superuser:
                 return redirect(reverse('home'))
@@ -516,7 +521,7 @@ def displayJudge(request, contest_id, run_id):
                         html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
                         return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
 
-        data = {'contest_data': contest_data, 'is_judge': False}
+        data = {'contest_data': contest_data, 'is_judge': False, 'is_past': is_past}
 
         return render(request, 'contests/judge.html', data)
 
@@ -604,11 +609,13 @@ def scoreboard(request, contest_id):
     for teamname in problem_attempts_array:
         problem_attempts_array[teamname] = problem_attempts_array[teamname] * contest_time_penalty
 
+    is_past = scoreboard_contest.contest_end() <= timezone.now()
+
     data = {
         'problem_number' : problem_count_array,
         'contest_title' : contest_title, 'problem_status_array' : problems_status_array,
         'problem_score_array' : problem_score_array, 'contest_data':scoreboard_contest,
-        'problem_attempts_array': problem_attempts_array
+        'problem_attempts_array': problem_attempts_array, 'is_past': is_past
     }
 
     print("attempts")
