@@ -33,6 +33,7 @@ REVIEW_LIST = (
 
 
 class CreateContestForm(ModelForm):
+    required_css_class = 'required'
     title = forms.CharField(required=True)
     languages = forms.CharField(
         required=True,
@@ -106,6 +107,7 @@ class CreateProblem(ModelForm):
 
 
 class CreateContestTemplateForm(ModelForm):
+    required_css_class = 'required'
     title = forms.CharField(required=True)
     languages = forms.CharField(
         required=True,
