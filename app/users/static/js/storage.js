@@ -60,6 +60,5 @@ function renderDiskUsageChart() {
 
         hasRenderedDiskUsageChart = true;
     }
-}
-renderDiskUsageChart();
+}; renderDiskUsageChart();
 $('a[data-toggle="pill"][href="#storage"]').on('shown.bs.tab', renderDiskUsageChart);

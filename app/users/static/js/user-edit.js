@@ -3,13 +3,11 @@ function userEditClick() {
     // Focus and move cursor to end
     var input = $(this).siblings('form').find('input.form-control');
     input.focus().val(input.val());
-};
-$('.btn-edit').click(userEditClick);
+}; $('.btn-edit').click(userEditClick);
 
 function cancelUserEditClick() {
     $(this).closest('div.form-group').removeClass('editing');
-}
-$('.btn-cancel').click(cancelUserEditClick);
+}; $('.btn-cancel').click(cancelUserEditClick);
 
 function submitUserEditForm(event) {
     event.preventDefault();
@@ -43,5 +41,4 @@ function submitUserEditForm(event) {
             console.log('Edit user failed.');
         }
     });
-}
-$('.user-edit-form').on('submit', submitUserEditForm);
+}; $('.user-edit-form').on('submit', submitUserEditForm);

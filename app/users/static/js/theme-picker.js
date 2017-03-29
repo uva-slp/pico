@@ -1,10 +1,7 @@
-function syncThemeInput(url) {
-    $('input#theme').val(url.data);
-}
 function loadThemesFailed() {
     $('.alert').removeClass('hidden').addClass('alert-info alert-danger');
     $('.alert h4').text('Failed to load themes.');
-}
+};
 function loadThemes(callback) {
     $.getJSON('https://bootswatch.com/api/3.json', function (data) {
         var themes = data.themes;
@@ -46,7 +43,9 @@ function loadThemes(callback) {
     }, 'json').fail(loadThemesFailed);
 }; loadThemes();
 
-$('#default-theme-btn').click('', syncThemeInput);
+function syncThemeInput(url) {
+    $('input#theme').val(url.data);
+}; $('#default-theme-btn').click('', syncThemeInput);
 
 function submitChangeThemeForm(event) {
     event.preventDefault();
