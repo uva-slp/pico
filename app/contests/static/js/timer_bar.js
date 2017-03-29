@@ -1,7 +1,7 @@
 (function() {
     // Update contest time remaining bar
     var hours = Number(contest_length.substring(0, 2));
-    if(contest_length.includes("a.m.")) {
+    if(contest_length.indexOf("a.m.") != -1) {
         if(hours == 12) {
             contest_length = '00' + contest_length.substring(2);
         }
