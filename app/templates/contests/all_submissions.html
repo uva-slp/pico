@@ -1,10 +1,10 @@
 {% extends 'contests/base.html' %}
 
-{% load staticfiles %}
 {% load bootstrap3 %}
+{% load staticfiles %}
 {% load contest_extras %}
 
-{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
+{% block title_block %}{{ block.super }}{% endblock %}
 
 {% block head_block %}
     {{ block.super }}
@@ -29,9 +29,7 @@
 
 {% block content_block %}
     {{ block.super }}
-    <br /><br />
-    <h1>Contest: {{ contest_data.title }}</h1>
-    <br />
+
     <div id="refreshSubmissionUrl" style="display: none;">{% url 'contests:refresh_submission'%}</div>
     <div id="contestId" style="display: none;">{{ contest_data.id }}</div>
     <div id="submission_table">
@@ -106,12 +104,12 @@
 {% endblock %}
 
 {% block foot_block %}
+    {{ block.super }}
+
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
 
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
-
     <script src="{% static 'js/datatable.js' %}"></script>
-
     <script src="{% static 'js/ajax_csrf_setup.js' %}"></script>
     <script src="{% static 'js/refresh_submission.js' %}"></script>
 {% endblock %}

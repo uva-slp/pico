@@ -8,6 +8,13 @@
 {% block head_block %}
     {{ block.super }}
 
+    <style>
+        .required .control-label:after {
+            content: ' *';
+            color: #f00;
+        }
+    </style>
+
     {{ admin_search_form.media.css }}
     {{ participant_search_form.media.css }}
 {% endblock %}

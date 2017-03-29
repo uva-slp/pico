@@ -4,17 +4,15 @@
 {% load staticfiles %}
 {% load contest_extras %}
 
-{% block title_block %}{{ contest_data.title }} Contest{% endblock %}
+{% block title_block %}{{ block.super }}{% endblock %}
 
 {% block head_block %}
     {{ block.super }}
 
     <style>
-
         #scoreboard td, #scoreboard th {
             border: 1px solid #ddd;
             padding: 8px;
-
         }
 
         #scoreboardtr:nth-child(even){background-color: #f2f2f2;}
@@ -111,16 +109,12 @@
 {% endblock %}
 
 {% block foot_block %}
+    {{ block.super }}
+
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
 
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
-
     <script src="{% static 'js/datatable.js' %}"></script>
-
     <script src="{% static 'js/ajax_csrf_setup.js' %}"></script>
     <script src="{% static 'js/refresh_scoreboard.js' %}"></script>
-
 {% endblock %}
-
-
-

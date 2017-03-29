@@ -4,12 +4,10 @@
 {% load staticfiles %}
 {% load contest_extras %}
 
-{% block title_block %}{{ contest_data.title }}{% endblock %}
+{% block title_block %}{{ block.super }}{% endblock %}
 
 {% block head_block %}
     {{ block.super }}
-
-    <link rel="stylesheet" href="{% static 'css/timer_bar.css' %}">
 {% endblock %}
 
 {% block breadcrumb %}
@@ -18,26 +16,6 @@
 
 {% block content_block %}
     {{ block.super }}
-
-    <!-- Time Remaining Bar -->
-    {% if contest_data.contest_start != NULL %}
-        <div class="progress slower" id="timer_bar">
-            <div class="time_remaining_div"><span class="time_remaining_text"></span></div>
-            <div id="progress-slow" class="progress-bar progress-bar-striped active live_timer_div" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="height:170px; width:100%"></div>
-        </div>
-    {% endif %}
-
-    {% if is_past %}
-        <div class="well bs-component" style="text-align:center;">
-            <h3>This is a past contest for viewing purposes only</h3>
-            <p>(No new submissions or changes can be made)</p>
-        </div>
-    {% endif %}
-
-    <div class="row text-center">
-        <h1 style="font-weight: bold;">{{ contest_data.title }}</h1>
-    </div>
-    <br />
 
     {% if is_judge or is_creator %}
         <div class="well bs-component">
@@ -145,27 +123,5 @@
             <br />
             <a href="{% url 'contests:index' %}" class="btn btn-primary">Return Home</a>
         </div>
-    {% endif %}
-{% endblock %}
-
-{% block foot_block %}
-    {{ block.super }}
-
-    {% if contest_data.contest_start != NULL or is_judge or is_creator %}
-        <script type="text/javascript" src="{% static 'moment/moment.min.js' %}"></script>
-
-        <!-- Set global js vars with django data for external scripts to use -->
-        <script type="text/javascript">
-            var contest_start = '{{ contest_data.contest_start }}';
-            var contest_length = '{{ contest_data.contest_length }}';
-            var is_contest_started = contest_start != "None";
-            var home_url = "{% url 'contests:index' %}";
-            var is_contest_ended = false;
-            console.log(contest_start + ", " + contest_length);
-        </script>
-
-        <script type="text/javascript" src="{% static 'js/timer_bar.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/lock_navbar.js' %}"></script>
-        <script src="{% static 'js/refresh_scoreboard.js' %}"></script>
     {% endif %}
 {% endblock %}

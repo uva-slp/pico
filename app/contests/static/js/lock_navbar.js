@@ -1,6 +1,6 @@
 // Lock time remaining bar to top of visible frame when scrolling down
-$(document).ready(function() {
-    if(is_contest_started && !is_contest_ended) {
+$(function() {
+    if(is_contest_started) {
         $(window).scroll(function () {
             var distanceFromTop = $(document).scrollTop();
             var navbar_height = $('#main-navbar').height();
