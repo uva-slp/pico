@@ -79,13 +79,3 @@ class UniqueEmailTest(TestCase):
         user_count = User.objects.all().count()
         if(users.filter(email='same@same.com')):
             self.assertEqual(user_count, 2)
-
-class NoInjectionsPleaseTest(TestCase):
-    # jason
-    def test_sanitization(self):
-        u = User(username='()buddy()', password='?!password?!')
-        u.username.replace(r'[$-/:-?{-~!"^_\[\]]', '')
-        u.save()
-        users = User.objects.all()
-        if(users.filter(username='buddy')):
-            self.assertEqual(u.username, 'buddy')

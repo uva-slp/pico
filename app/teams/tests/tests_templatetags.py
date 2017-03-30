@@ -16,6 +16,13 @@ class TeamExtrasTest(TestCase):
         self.assertFalse(team_extras.has_invite(user, team))
     
     # nathan
+    def test_get_invite(self):
+        team = Team.objects.get(id=1)
+        user = User.objects.get(id=1)
+        
+        self.assertIsNone(team_extras.get_invite(user, team))
+    
+    # nathan
     def test_has_request(self):
         team = Team.objects.get(id=1)
         user = User.objects.get(id=1)

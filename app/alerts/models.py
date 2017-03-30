@@ -17,7 +17,7 @@ class Target(models.Model):
 
     def href(self):
         if self.user:
-            return ''
+            return reverse('users:index', kwargs={'user_id': self.user.id})
         if self.team:
             return reverse('teams:index', kwargs={'team_id': self.team.id})
         if self.invite:
@@ -25,9 +25,9 @@ class Target(models.Model):
         if self.join_request:
             return reverse('teams:index', kwargs={'team_id': self.join_request.team.id})
         if self.contest:
-            return ''
+            return reverse('contests:contest', kwargs={'contest_id': self.contest.id})
         if self.url:
-            return url
+            return self.url
         return ''
 
 class Alert(models.Model):

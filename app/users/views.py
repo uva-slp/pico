@@ -1,11 +1,3 @@
-from collections import namedtuple
-import os
-import shutil
-import subprocess
-import urllib
-
-from django.db import connection
-from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
@@ -14,15 +6,16 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator, validate_email
 from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from dal import autocomplete
 
 from common.decorators import anonymous_required
 from .forms import UserForm, LoginForm
+from .lib import storage
 from .models import User
-from pico.secrets import DB_NAME
-from pico.settings import GIT_ROOT, MNT_ROOT
+
 
 @login_required
 def index(request, user_id=None):
@@ -156,34 +149,17 @@ def edit(request):
 
 @login_required
 def settings(request):
-    context = None
+    context = {}
     if request.user.is_staff:
-        
-        # Disk usage overall
-        st = os.statvfs(MNT_ROOT)
-        free = st.f_bavail * st.f_frsize
-        total = st.f_blocks * st.f_frsize
-        used = (st.f_blocks - st.f_bfree) * st.f_frsize
-        usage_root = namedtuple('usage', 'total used free')(total, used, free)
-
-        # Disk usage by repo/project
-        usage_pico = int(subprocess.check_output('du -sb "%s"'%(GIT_ROOT), shell=True).split()[0].decode("utf-8"))
-        
-        # Disk usage by database
-        cursor = connection.cursor()
-        cursor.execute("SELECT sum( data_length + index_length ) " +
-                       "FROM information_schema.TABLES " +
-                       "WHERE table_schema=\"%s\";"%(DB_NAME))
-        usage_db = int(cursor.fetchone()[0])
-        
-        context = {
-            'disk_usage': {
-                'total': usage_root.total,
-                'free': usage_root.free,
-                'pico': usage_pico,
-                'db': usage_db,
-                'other': usage_root.used-usage_pico-usage_db
-            },
+        usage_root = storage.usage_root()
+        usage_pico = storage.usage_pico()
+        usage_db = storage.usage_db()
+        context['disk_usage'] = {
+            'total': usage_root.total,
+            'free': usage_root.free,
+            'pico': usage_pico,
+            'db': usage_db,
+            'other': usage_root.used-usage_pico-usage_db
         }
     return render(request, 'users/settings.html', context)
 
