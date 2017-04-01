@@ -89,7 +89,7 @@
 <p id="n20" class="pln"><a href="#n20">20</a></p>
 <p id="n21" class="stm run hide_run"><a href="#n21">21</a></p>
 <p id="n22" class="stm run hide_run"><a href="#n22">22</a></p>
-<p id="n23" class="stm mis"><a href="#n23">23</a></p>
+<p id="n23" class="stm run hide_run"><a href="#n23">23</a></p>
 <p id="n24" class="pln"><a href="#n24">24</a></p>
 <p id="n25" class="stm run hide_run"><a href="#n25">25</a></p>
 <p id="n26" class="stm run hide_run"><a href="#n26">26</a></p>
@@ -114,7 +114,7 @@
 <p id="n45" class="stm run hide_run"><a href="#n45">45</a></p>
 <p id="n46" class="pln"><a href="#n46">46</a></p>
 <p id="n47" class="stm run hide_run"><a href="#n47">47</a></p>
-<p id="n48" class="stm run hide_run"><a href="#n48">48</a></p>
+<p id="n48" class="stm mis"><a href="#n48">48</a></p>
 <p id="n49" class="pln"><a href="#n49">49</a></p>
 <p id="n50" class="stm run hide_run"><a href="#n50">50</a></p>
 <p id="n51" class="pln"><a href="#n51">51</a></p>
@@ -239,7 +239,7 @@
 <p id="t20" class="pln">    <span class="com">#Get rid of white space in allowed_languages so it can be passed as a command line arg</span><span class="strut">&nbsp;</span></p>
 <p id="t21" class="stm run hide_run">    <span class="nam">allowed_languages</span> <span class="op">=</span> <span class="str">""</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span><span class="nam">allowed_languages</span><span class="op">.</span><span class="nam">split</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t22" class="stm run hide_run">    <span class="key">if</span> <span class="key">not</span> <span class="op">(</span><span class="nam">submission_file</span> <span class="key">and</span> <span class="nam">original_filename</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t23" class="stm mis">        <span class="key">return</span> <span class="op">(</span><span class="num">1</span><span class="op">,</span> <span class="str">"FILENAME ERROR: No file name given."</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t23" class="stm run hide_run">        <span class="key">return</span> <span class="op">(</span><span class="num">1</span><span class="op">,</span> <span class="str">"FILENAME ERROR: No file name given."</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t24" class="pln">    <span class="com">#Create a temporary directory to mount on the docker container</span><span class="strut">&nbsp;</span></p>
 <p id="t25" class="stm run hide_run">    <span class="nam">temp_dirpath</span> <span class="op">=</span> <span class="nam">tempfile</span><span class="op">.</span><span class="nam">mkdtemp</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t26" class="stm run hide_run">    <span class="nam">file_name</span> <span class="op">=</span> <span class="nam">original_filename</span><span class="strut">&nbsp;</span></p>
@@ -264,7 +264,7 @@
 <p id="t45" class="stm run hide_run">    <span class="nam">shutil</span><span class="op">.</span><span class="nam">rmtree</span><span class="op">(</span><span class="nam">temp_dirpath</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t46" class="pln">    <span class="com">#Check if there was an error with the command to run the docker container:</span><span class="strut">&nbsp;</span></p>
 <p id="t47" class="stm run hide_run">    <span class="key">if</span> <span class="nam">error</span> <span class="op">!=</span> <span class="str">''</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t48" class="stm run hide_run">        <span class="key">return</span> <span class="op">(</span><span class="num">1</span><span class="op">,</span> <span class="str">"Container error:\n"</span> <span class="op">+</span> <span class="nam">error</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t48" class="stm mis">        <span class="key">return</span> <span class="op">(</span><span class="num">1</span><span class="op">,</span> <span class="str">"Container error:\n"</span> <span class="op">+</span> <span class="nam">error</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t49" class="pln">    <span class="com">#Parse the output of the docker container to get a tuple that has the return code of the executed program and the output of the program (or the error, if it did not execute successfully)</span><span class="strut">&nbsp;</span></p>
 <p id="t50" class="stm run hide_run">    <span class="nam">retcode</span> <span class="op">=</span> <span class="nam">int</span><span class="op">(</span><span class="nam">output</span><span class="op">[</span><span class="op">:</span><span class="num">1</span><span class="op">]</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t51" class="pln">    <span class="com">#Don't include the newline from printing in the Docker container</span><span class="strut">&nbsp;</span></p>
@@ -374,7 +374,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.3.4</a>,
-            created at 2017-04-01 15:09
+            created at 2017-04-01 15:15
         </p>
     </div>
 </div>

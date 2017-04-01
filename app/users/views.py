@@ -18,13 +18,13 @@ from .models import User
 
 
 @login_required
-def index(request, user_id=None):
+def view(request, user_id=None):
     user = None
     if user_id is not None:
         if User.objects.filter(id=user_id).exists():
             user = User.objects.get(id=user_id)
         else:
-            return redirect(reverse('users:index'))
+            return redirect(reverse('users:view'))
 
     return render(
         request,
