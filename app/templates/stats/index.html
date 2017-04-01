@@ -1,0 +1,149 @@
+{% extends 'pico/home.html' %}
+
+{% load bootstrap3 %}
+
+{% block title_block %}{{ contest_data.title }} Stats {% endblock %}
+
+{% block head_block %}
+    {{ block.super }}
+    
+{% endblock %}
+
+{% block content_block %}
+    {% if user.is_authenticated %}
+        <h2>Statistics for: <strong>{{ user.username }}</strong></h2>
+        <br>
+
+                <div class="row">
+            <div class="wrapper col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-check" aria-hidden="true"></i> Lifetime Correct Submissions: {{ correct_submissions }}</h3>
+                    </div>  
+                    {% if submissions_count > 0 %}
+                        <div class="list-group">
+                        {% for s in submissions %}
+                            {% if s.state == "YES" or s.state == "Yes" %}
+                                <div class="list-group-item">
+                                    <strong>{{ s.run_id }}</strong>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No submissions found</div></div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="wrapper col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-trophy" aria-hidden="true"></i> Most Successful Team</h3>
+                    </div>
+                    {% if best_team %}
+                        <div class="list-group">
+                            <a href="{% url 'teams:index' %}" class="list-group-item">
+                                <strong>{{ best_team.name }}: {{ best_team_count }} Problems Solved</strong>
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">None of your teams have solved any problems!</div></div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="wrapper col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-heart" aria-hidden="true"></i> Favorite Teammates</h3>
+                    </div>
+                    {% if teammates_count > 0 %}
+                        <div class="list-group">
+                            {% for t in favorite_teammates %}
+                                {% if t != None %}
+                                    <a href="{% url 'users:index' t.id %}" class="list-group-item">
+                                        <strong>{{ t.username }}</strong>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">You have no friends!</div></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="wrapper col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-certificate" aria-hidden="true"></i> Contest Participation: {{ contest_count }}</h3>
+                    </div>
+                    {% if contest_count > 0 %}
+                        <div class="list-group">
+                            {% for c in participation %}
+                                <a href="{% url 'contests:contest' c.contest.id %}" class="list-group-item">
+                                    <strong>{{ c.contest.title }}</strong>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No contests found</div></div>
+                    {% endif %}
+                </div>
+            </div>      
+
+            <div class="wrapper col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-users" aria-hidden="true"></i> Teams: {{ teams_count }}</h3>
+                    </div>
+                    {% if teams_count > 0 %}
+                        <div class="list-group">
+                            {% for t in teams %}
+                                <a href="{% url 'teams:index' %}" class="list-group-item">
+                                    <strong>{{ t.name }}</strong>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No teams found</div></div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="wrapper col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-user-o" aria-hidden="true"></i> Past Teammates: {{ teammates_count }}</h3>
+                    </div>
+                    {% if teammates_count > 0 %}
+                        <div class="list-group">
+                            {% for t in teams %}
+                                {% for m in t.members.all %}
+                                    {% if m.username != user.username %}
+                                        <a href="{% url 'users:index' m.id %}" class="list-group-item">
+                                            <strong>{{ m.username }}</strong>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="list-group"><div class="list-group-item">No teammates found</div></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        Log in to see statistics!
+    {% endif %}
+
+{% endblock %}
+
+
+
+
