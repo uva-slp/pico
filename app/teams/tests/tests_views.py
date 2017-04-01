@@ -171,16 +171,6 @@ class SendInviteTest(TestCase):
 
 	# nathan
 	def test_invite_exists(self):
-		data = {
-			'team': self.team.id,
-			'user': self.user_other.id
-		}
-		resp = self.client.post(reverse('teams:invite', kwargs={'action':'send'}), data=data)
-		self.assertRedirects(resp,reverse('teams:index', kwargs={'team_id':self.team.id}), 302, 200)
-		self.assertTrue(Invite.objects.filter(team=self.team, user=self.user_other).exists())
-
-	# nathan
-	def test_invite_exists(self):
 		invite = Invite(user=self.user_other, team=self.team)
 		invite.save()
 
