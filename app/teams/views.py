@@ -156,23 +156,8 @@ def join_request(request, action):
     return redirect(reverse('teams:index'))
 
 @login_required
-def leave(request):
-    if request.method == 'POST':
-        team_select_form = TeamSelectForm(data=request.POST)
-
-        if team_select_form.is_valid():
-            team = team_select_form.cleaned_data['team']
-            team.members.remove(request.user)
-            if team.members.count() == 0:
-                team.delete()
-            return JsonResponse({}, status=200)
-
-    return redirect(reverse('teams:index'))
-
-@login_required
 def is_public(request):
     if request.method == 'POST':
-        print(request.POST)
         team_select_form = TeamSelectForm(data=request.POST)
 
         if team_select_form.is_valid():
@@ -186,7 +171,19 @@ def is_public(request):
 
             return JsonResponse({'public': team.public})
 
-        return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
+    return redirect(reverse('teams:index'))
+
+@login_required
+def leave(request):
+    if request.method == 'POST':
+        team_select_form = TeamSelectForm(data=request.POST)
+
+        if team_select_form.is_valid():
+            team = team_select_form.cleaned_data['team']
+            team.members.remove(request.user)
+            if team.members.count() == 0:
+                team.delete()
+            return JsonResponse({}, status=200)
 
     return redirect(reverse('teams:index'))
 

@@ -318,21 +318,103 @@ class JoinRequestTest(TestCase):
 		self.assertRedirects(resp, reverse('teams:index', kwargs={'team_id':self.join_request.team.id}), 302, 200)
 		self.assertFalse(JoinRequest.objects.filter(id=self.join_request.id).exists())
 
+class IsPublicTest(TestCase):
+
+	fixtures = ['users.json', 'teams.json']
+
+	def setUp(self):
+		self.client.login(username='testuser', password='password')
+		self.user = auth.get_user(self.client)
+		self.team = Team.objects.first()
+		self.team.members.add(self.user)
+		self.team.save()
+
+	# nathan
+	def test_get(self):
+		resp = self.client.get(reverse('teams:public'))
+		self.assertRedirects(resp, reverse('teams:index'), 302, 200)
+
+	# nathan
+	def test_public(self):
+		data = {
+			'team': self.team.id,
+			'public': 'on'
+		}
+		resp = self.client.post(reverse('teams:public'), data=data)
+		json = resp.json()
+		self.assertEqual(resp.status_code, 200)
+		self.assertDictEqual(json, {'public': True})
+
+	# nathan
+	def test_private(self):
+		data = {
+			'team': self.team.id,
+			'public': 'off'
+		}
+		resp = self.client.post(reverse('teams:public'), data=data)
+		json = resp.json()
+		self.assertEqual(resp.status_code, 200)
+		self.assertDictEqual(json, {'public': False})
+
+class GetTest(TestCase):
+
+	fixtures = ['users.json', 'teams.json']
+
+	def setUp(self):
+		self.client.login(username='testuser', password='password')
+		self.user = auth.get_user(self.client)
+		self.team = Team.objects.first()
+		self.team.members.add(self.user)
+		self.team.save()
+
+	# nathan
+	def test_get(self):
+		resp = self.client.get(reverse('teams:get'))
+		self.assertRedirects(resp, reverse('teams:index'), 302, 200)
+
+	# nathan
+	def test_post(self):
+		data = {
+			'team': self.team.id,
+		}
+		resp = self.client.post(reverse('teams:get'), data=data)
+		json = resp.json()
+		self.assertEqual(resp.status_code, 200)
+		self.assertTrue('tab' in json and 'panel' in json)
+
+	# nathan
+	def test_post_error(self):
+		resp = self.client.post(reverse('teams:get'), data={})
+		json = resp.json()
+		self.assertEqual(resp.status_code, 201)
+		self.assertDictEqual(json, {})
+
 class LeaveTest(TestCase):
 
 	fixtures = ['users.json', 'teams.json']
 
+	def setUp(self):
+		self.client.login(username='testuser', password='password')
+		self.user = auth.get_user(self.client)
+		self.team = Team(name='team-with-one-user')
+		self.team.save()
+		self.team.members.add(self.user)
+		self.team.save()
+
+	# nathan
+	def test_get(self):
+		resp = self.client.get(reverse('teams:leave'))
+		self.assertRedirects(resp, reverse('teams:index'), 302, 200)
+
 	# nathan
 	def test_post(self):
-		Team.objects.get(pk=1).members.add(User.objects.get(pk=1))
-		self.client.login(username='testuser', password='password')
 		data = {
-			'team': '1',
+			'team': self.team.id
 		}
 		resp = self.client.post(reverse('teams:leave'), data=data)
-
-		team = Team.objects.get(pk=1)
-		self.assertFalse(team.members.filter(username='testuser').exists())
+		json = resp.json()
+		self.assertEqual(resp.status_code, 200)
+		self.assertDictEqual(json, {})
 
 class AutocompleteTest(TestCase):
 
