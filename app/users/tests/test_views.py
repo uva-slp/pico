@@ -13,7 +13,7 @@ class IndexTest(TestCase):
 
 	# nathan
 	def test_user_none(self):
-		resp = self.client.get(reverse('users:view'))
+		resp = self.client.get(reverse('users:index'))
 		self.assertTemplateUsed(resp, 'users/index.html')
 		self.assertIsNone(resp.context['user'])
 
@@ -26,7 +26,7 @@ class IndexTest(TestCase):
 	# nathan
 	def test_user_invalid(self):
 		resp = self.client.get(reverse('users:view', kwargs={'user_id':0}))
-		self.assertRedirects(resp, reverse('users:view'), 302, 200)
+		self.assertRedirects(resp, reverse('users:index'), 302, 200)
 
 class RegisterTest(TestCase):
 

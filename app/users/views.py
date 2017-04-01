@@ -24,7 +24,7 @@ def view(request, user_id=None):
         if User.objects.filter(id=user_id).exists():
             user = User.objects.get(id=user_id)
         else:
-            return redirect(reverse('users:view'))
+            return redirect(reverse('users:index'))
 
     return render(
         request,
