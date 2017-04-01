@@ -8,7 +8,6 @@ class WsgiTest(TestCase):
         from pico import wsgi
 
 class PicoTest(TestCase):
-    
 
     fixtures = ['users.json']
 

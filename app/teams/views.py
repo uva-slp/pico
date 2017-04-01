@@ -71,7 +71,9 @@ def join(request):
                 else:
                     JoinRequest(team=team, user=request.user).save()
 
-    return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
+            return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
+
+    return redirect(reverse('teams:index'))
 
 @login_required
 def invite(request, action):
@@ -137,7 +139,7 @@ def join_request(request, action):
         join_request_form = JoinRequestForm(data=request.POST)
 
         if join_request_form.is_valid():
-            join_request = join_request_form.cleaned_data['request']
+            join_request = join_request_form.cleaned_data['join_request']
 
             if request.user in join_request.team.members.all():
                 if action == 'accept':

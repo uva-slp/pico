@@ -42,5 +42,33 @@
                 ]
             ]
         }
+    },
+    {
+        "model": "teams.team",
+        "pk": 4,
+        "fields": {
+            "name": "public",
+            "date_created": "2016-11-15T02:50:11.748Z",
+            "members": [
+                [
+                    "participant2"
+                ]
+            ],
+            "public": true
+        }
+    },
+    {
+        "model": "teams.team",
+        "pk": 4,
+        "fields": {
+            "name": "private",
+            "date_created": "2016-11-15T02:50:11.748Z",
+            "members": [
+                [
+                    "participant2"
+                ]
+            ],
+            "public": false
+        }
     }
 ]
