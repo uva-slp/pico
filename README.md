@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.com/uva-slp/pico.svg?token=aW6wnLAt24FpZ7h9WE5x&branch=master)](https://travis-ci.com/uva-slp/pico)
 
+This project is licensed under the terms of the MIT license.
+
 ----------------------------
 
 ### Useful links
