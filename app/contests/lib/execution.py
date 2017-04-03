@@ -24,22 +24,19 @@ def execute_code(Popen, submission_file, original_filename, input_file, allowed_
     #Create a temporary directory to mount on the docker container
     temp_dirpath = tempfile.mkdtemp()
     file_name = original_filename
+    #Copy the code file into the temporary directory
     with open(os.path.join(temp_dirpath, file_name), 'wb+') as destination:
         for chunk in submission_file.chunks():
             destination.write(chunk)
-    #If this problem has an input file:
+    docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name + " " + allowed_languages + " " + str(timeout)).split()
+    Popen("cp " + os.path.join(dir_path, "execution.py") + " " + temp_dirpath, shell=True, stdout=PIPE, stderr=PIPE)
+    #If this problem has an input file, put it in the temp directory and add it to the docker command:
     if input_file and input_file.name:
         with open(os.path.join(temp_dirpath, 'input.txt'), 'wb+') as destination:
             for chunk in input_file.chunks():
                 destination.write(chunk)
-        Popen("cp " + os.path.join(dir_path, "execution.py") + " " + temp_dirpath, shell=True, stdout=PIPE, stderr=PIPE)
-        docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name + " " + allowed_languages + " " + str(timeout) + " input.txt").split()
-        command = Popen(docker_command, stdin=PIPE, stderr=PIPE, stdout=PIPE, universal_newlines=True)
-    #If this problem does not have an input file:
-    else:
-        Popen("cp " + os.path.join(dir_path, "execution.py") + " " + temp_dirpath, shell=True, stdout=PIPE, stderr=PIPE)
-        docker_command = ("docker run -v " + temp_dirpath + ":/code dmm7aj/pccs python /code/execution.py " + file_name + " " + allowed_languages + " " + str(timeout)).split()
-        command = Popen(docker_command, stdin=PIPE, stderr=PIPE, stdout=PIPE, universal_newlines=True)
+        docker_command.append("input.txt")
+    command = Popen(docker_command, stdin=PIPE, stderr=PIPE, stdout=PIPE, universal_newlines=True)
     output, error = command.communicate()
     #Delete the temporary directory
     shutil.rmtree(temp_dirpath)
@@ -48,7 +45,6 @@ def execute_code(Popen, submission_file, original_filename, input_file, allowed_
         return (1, "CONTAINER ERROR:\n" + error)
     #Parse the output of the docker container to get a tuple that has the return code of the executed program and the output of the program (or the error, if it did not execute successfully)
     retcode = int(output[:1])
-    #Don't include the newline from printing in the Docker container
     program_output = output[2:]
     return (retcode, program_output)
 
