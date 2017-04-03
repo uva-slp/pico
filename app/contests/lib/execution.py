@@ -45,7 +45,7 @@ def execute_code(Popen, submission_file, original_filename, input_file, allowed_
     shutil.rmtree(temp_dirpath)
     #Check if there was an error with the command to run the docker container:
     if error != '':
-        return (1, "Container error:\n" + error)
+        return (1, "CONTAINER ERROR:\n" + error)
     #Parse the output of the docker container to get a tuple that has the return code of the executed program and the output of the program (or the error, if it did not execute successfully)
     retcode = int(output[:1])
     #Don't include the newline from printing in the Docker container
@@ -53,95 +53,79 @@ def execute_code(Popen, submission_file, original_filename, input_file, allowed_
     return (retcode, program_output)
 
 
+#Runs the given command to execute a compiled file
+def execute_compiled_file(Popen, command, input_file):
+    if input_file:
+        program_output = Popen(command + " < " + os.path.join("code", input_file), stdout=PIPE, stderr=PIPE, shell=True)
+    else:
+        program_output = Popen(command, stdout=PIPE, stderr=PIPE, shell=True)
+    output, error = program_output.communicate()
+    if program_output.returncode:
+        if str(error.decode("utf-8")) == '':
+            return (1, 'CODE TIMED OUT')
+        else:
+            return (1, "EXECUTION ERROR:\n" + str(error.decode("utf-8")))
+    else:
+        return (0, output.decode())
+    
+
 #Returns the a return code and the output of the program or an error message as a tuple.
-def run_java(file_name, input_file, timeout):
+def run_java(Popen, file_name, input_file, timeout):
     compilation_result = Popen("javac " + os.path.join("code", file_name), shell=True, stdout=PIPE, stderr=PIPE)
     compiled_file = os.path.splitext(file_name)[0]
     output, error = compilation_result.communicate()
-    retval = (1, 'CODE TIMED OUT')
     if compilation_result.returncode:
-        retval = (1, ("COMPILATION ERROR:\n" + str(error.decode("utf-8"))))
-    else:
-        if input_file:
-            program_output = Popen("timeout " + str(timeout) + " java -cp " + "code/" + " " + compiled_file + " < " + os.path.join("code", input_file), stdout=PIPE, stderr=PIPE, shell=True)
-        else:
-            program_output = Popen("timeout " + str(timeout) + " java -cp " + "code/" + " " + compiled_file, stdout=PIPE, stderr=PIPE, shell=True)
-        output, error = program_output.communicate()
-        if program_output.returncode:
-            if str(error.decode("utf-8")) != '':
-                retval = (1, ("EXECUTION ERROR:\n" + str(error.decode("utf-8"))))
-        else:
-            retval = (0, output.decode())
-    return retval
+        return (1, ("COMPILATION ERROR:\n" + str(error.decode("utf-8"))))
+    command = "timeout " + str(timeout) + " java -cp " + "code/" + " " + compiled_file
+    return execute_compiled_file(Popen, command, input_file)
 
 
 #Returns the a return code and the output of the program or an error message as a tuple.
-def run_cpp(file_name, input_file, timeout):
+def run_cpp(Popen, file_name, input_file, timeout):
     compilation_result = Popen("/usr/bin/g++ " + os.path.join("code", file_name) + " -o " + os.path.join("code", 'a.out'), shell=True, stdout=PIPE, stderr=PIPE)
     output, error = compilation_result.communicate()
-    retval = (1, 'CODE TIMED OUT')
     if compilation_result.returncode:
-        retval = (1, ("COMPILATION ERROR:\n" + str(error.decode("utf-8"))))
-    else:
-        if input_file:
-            program_output = Popen("timeout " + str(timeout) + " " + os.path.join("code", './a.out') + ' < ' + os.path.join("code", input_file), shell=True, stdout=PIPE, stderr=PIPE)
-        else:
-            program_output = Popen("timeout " + str(timeout) + " " + os.path.join("code", './a.out'), shell=True, stdout=PIPE, stderr=PIPE)
-        output, error = program_output.communicate()
-        if program_output.returncode:
-            if str(error.decode("utf-8")) != '':
-                retval = (1, ("EXECUTION ERROR:\n" + str(error.decode("utf-8"))))
-        else:
-            retval = (0, output.decode())
-    return retval
+        return(1, ("COMPILATION ERROR:\n" + str(error.decode("utf-8"))))
+    command = "timeout " + str(timeout) + " " + os.path.join("code", './a.out')
+    return execute_compiled_file(Popen, command, input_file)
 
 
 #Returns the a return code and the output of the program or an error message as a tuple.
-def run_python(file_name, input_file, timeout):
-    if input_file:
-        execution_result = Popen("timeout " + str(timeout) + " python " + os.path.join("code", file_name) + " < " + os.path.join("code", input_file), shell=True, stdout=PIPE, stderr=PIPE)
-    else:
-        execution_result = Popen("timeout " + str(timeout) + " python " + os.path.join("code", file_name), shell=True, stdout=PIPE, stderr=PIPE)
-    output, error = execution_result.communicate()
-    retval = (1, 'CODE TIMED OUT')
-    if execution_result.returncode:
-        if str(error.decode("utf-8")) != '':
-            retval = (1, ("EXECUTION ERROR:\n" + str(error.decode("utf-8"))))
-    else:
-        retval = (0, output.decode())
-    return retval
+def run_python(Popen, file_name, input_file, timeout):
+    command = "timeout " + str(timeout) + " python " + os.path.join("code", file_name)
+    return execute_compiled_file(Popen, command, input_file)
+
+
+def docker_container_code(Popen, args):
+    if len(args) < 4:
+        return(1, "FILENAME ERROR: No file name given.")
+    file_name = args[1]
+    allowed_languages = ast.literal_eval(args[2])
+    timeout = int(args[3])
+    input_file = None
+    if len(args) > 4:
+        input_file = args[4]
+    file_prefix, file_extension = os.path.splitext(file_name)
+    #Check if it's a Java file:
+    if file_extension == '.java':
+        if '1' in allowed_languages:
+            return run_java(Popen, file_name, input_file, timeout)
+        return (1, "LANGUAGE ERROR: Java submissions are not allowed in this contest")
+    #Check if it's a c++ file:
+    cpp_extensions = {'.cpp', '.cc', '.C', '.cxx', '.c++'}
+    if file_extension in cpp_extensions:
+        if '2' in allowed_languages:
+            return run_cpp(Popen, file_name, input_file, timeout)
+        return (1, "LANGUAGE ERROR: C++ submissions are not allowed in this contest")
+    #Check if it's a python file:
+    if file_extension == '.py':
+        if '3' in allowed_languages:
+            return run_python(Popen, file_name, input_file, timeout)
+        return (1, "LANGUAGE ERROR: Python submissions are not allowed in this contest")
+    #If it didn't have a proper extensions, have a default error:
+    return (1, "FILENAME ERROR: Must have a valid C++, Java, or Python file extension")
 
 
 if __name__ == "__main__":
-    if len( sys.argv) < 4:
-        print("1,FILENAME ERROR: No file name given.", end='')
-    else:
-        file_name = sys.argv[1]
-        allowed_languages = ast.literal_eval(sys.argv[2])
-        timeout = int(sys.argv[3])
-        input_file = None
-        if len(sys.argv) > 4:
-            input_file = sys.argv[4]
-        file_prefix, file_extension = os.path.splitext(file_name)
-        #If it didn't have a proper extensions, have a default error:
-        result = (1, "FILENAME ERROR: Must have a valid C++, Java, or Python file extension")
-        #Check if it's a Java file:
-        if file_extension == '.java':
-            if '1' in allowed_languages:
-                result = run_java(file_name, input_file, timeout)
-            else:
-                result = (1, "LANGUAGE ERROR: Java submissions are not allowed in this contest")
-        #Check if it's a c++ file:
-        cpp_extensions = {'.cpp', '.cc', '.C', '.cxx', '.c++'}
-        if file_extension in cpp_extensions:
-            if '2' in allowed_languages:
-                result = run_cpp(file_name, input_file, timeout)
-            else:
-                result = (1, "LANGUAGE ERROR: C++ submissions are not allowed in this contest")
-        #Check if it's a python file:
-        if file_extension == '.py':
-            if '3' in allowed_languages:
-                result = run_python(file_name, input_file, timeout)
-            else:
-                result = (1, "LANGUAGE ERROR: Python submissions are not allowed in this contest")
-        print(str(result[0]) + ',' + str(result[1]), end='')
+    result = docker_container_code(Popen, sys.argv)
+    print(str(result[0]) + ',' + str(result[1]), end='')
