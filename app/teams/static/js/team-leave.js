@@ -1,4 +1,4 @@
-$(document).on('submit', '.team-leave-form', function(event) {
+function submitTeamLeaveForm(event) {
     event.preventDefault();
     var frm = $(this);
     $.ajax({
@@ -9,9 +9,8 @@ $(document).on('submit', '.team-leave-form', function(event) {
             var team_id = frm.children('input#id_team').val();
             // Show first tab that is not the one being deleted or no teams if there are not any anymore
             var next = $('#team-tabs').find('a[href!="#"][href!="#no-teams"][href!="#team-'+team_id+'"]').first();
-            if (next.exists()) {
-                next.click();
-            } else {
+            next.click();
+            if (!next.exists()) {
                 $('#side-menu').find('a[href="#no-teams"]').click();
             }
             // Destory tab
@@ -27,4 +26,4 @@ $(document).on('submit', '.team-leave-form', function(event) {
             console.log('Leave team failed.');
         }
     });
-});
+}; $(document).on('submit', '.team-leave-form', submitTeamLeaveForm);

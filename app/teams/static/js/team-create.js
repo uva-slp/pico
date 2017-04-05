@@ -1,11 +1,11 @@
-$('#create-team.modal').on('shown.bs.modal', function () {
+function focusInput() {
     $(this).find('input:text:visible:first').focus();
-});
+}; $('#create-team.modal').on('shown.bs.modal', focusInput);
 
 // Backup clean form
 var team_form_clean = $('#team-form-contents').html();
 
-$('#team-form').on('submit', function(event) {
+function submitTeamForm(event) {
     event.preventDefault();
     $.ajax({
         url : $(this).attr('action'),
@@ -35,4 +35,4 @@ $('#team-form').on('submit', function(event) {
             console.log('Create team failed.');
         }
     });
-});
+}; $('#team-form').on('submit', submitTeamForm);
