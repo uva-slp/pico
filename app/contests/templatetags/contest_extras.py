@@ -9,7 +9,7 @@ def index(sequence, position):
 
 @register.filter
 def print_file_content(f):
-	if not f.name:
+	if not f:
 		return ''
 	else:
 		try:
