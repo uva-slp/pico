@@ -568,3 +568,12 @@ class TemplateTagTest(TestCase):
         t = Template('{% load contest_extras %}'+template)
         c = Context(context)
         self.assertEqual(t.render(c), output)
+
+    # Vivian
+    def test_tag_printfile(self):
+        template = "{{ my_file|print_file_content }}"
+        context = {"my_file": SimpleUploadedFile("foo.txt", b"foo"),}
+        output = u"foo"
+        t = Template('{% load contest_extras %}'+template)
+        c = Context(context)
+        self.assertEqual(t.render(c), output)
