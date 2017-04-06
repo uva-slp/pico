@@ -2,7 +2,7 @@ from django.contrib import auth
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
-from contests.forms import ReturnJudgeResultForm, CreateContestForm, CreateContestTemplateForm, CreateProblem
+from django.template import Context, Template
 from contests.models import Team, Participant, Contest, Problem, Submission, ContestTemplate
 from contests.views import createContest, editContest, createNewProblem, createTemplate, displayContest, activateContest
 
@@ -556,3 +556,15 @@ class EditContestViewTest(TestCase):
         problem = Problem.objects.latest('id')
         self.assertEqual(problem.input_description, "problem 3 input desc")
         self.assertEqual(problem.sample_output.read(), b"problem 3 sample output")
+
+
+class TemplateTagTest(TestCase):
+
+    # Vivian
+    def test_tag_index(self):
+        template = "{{ my_list|index:2 }}"
+        context = {"my_list": [1,2,3]}
+        output = u"2"
+        t = Template('{% load contest_extras %}'+template)
+        c = Context(context)
+        self.assertEqual(t.render(c), output)
