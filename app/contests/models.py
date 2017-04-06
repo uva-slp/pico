@@ -104,7 +104,7 @@ class Submission(models.Model):
         ('NO', 'No'),
     )
     state = models.CharField(max_length=20, choices=SUBMISSION_STATE_CHOICES, default='NEW')
-    result = models.CharField(max_length=20, choices=JUDGE_RESULT, null=True)
+    result = models.CharField(max_length=20, choices=JUDGE_RESULT)
 
     def __str__(self):
         return str(self.run_id)
