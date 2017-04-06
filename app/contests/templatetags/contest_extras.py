@@ -14,5 +14,5 @@ def print_file_content(f):
 	else:
 		try:
 			return f.read()
-		except IOError:
+		except:
 			return ''
