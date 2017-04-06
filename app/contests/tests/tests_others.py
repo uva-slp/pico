@@ -249,6 +249,7 @@ class JudgeInterfaceTest(TestCase):
     # form test
     def test_valid_return_form_yes(self):
         submission = Submission.objects.get(run_id=3)
+        self.assertEqual(str(submission), str(submission.run_id))
         data = {
             "result": "YES", "state": "YES"
         }
