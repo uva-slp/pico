@@ -78,19 +78,18 @@
 <p id="n9" class="pln"><a href="#n9">9</a></p>
 <p id="n10" class="stm run hide_run"><a href="#n10">10</a></p>
 <p id="n11" class="pln"><a href="#n11">11</a></p>
-<p id="n12" class="pln"><a href="#n12">12</a></p>
-<p id="n13" class="stm run hide_run"><a href="#n13">13</a></p>
+<p id="n12" class="stm run hide_run"><a href="#n12">12</a></p>
+<p id="n13" class="pln"><a href="#n13">13</a></p>
 <p id="n14" class="pln"><a href="#n14">14</a></p>
-<p id="n15" class="pln"><a href="#n15">15</a></p>
+<p id="n15" class="stm run hide_run"><a href="#n15">15</a></p>
 <p id="n16" class="stm run hide_run"><a href="#n16">16</a></p>
 <p id="n17" class="stm run hide_run"><a href="#n17">17</a></p>
-<p id="n18" class="stm run hide_run"><a href="#n18">18</a></p>
+<p id="n18" class="pln"><a href="#n18">18</a></p>
 <p id="n19" class="pln"><a href="#n19">19</a></p>
-<p id="n20" class="pln"><a href="#n20">20</a></p>
+<p id="n20" class="stm run hide_run"><a href="#n20">20</a></p>
 <p id="n21" class="stm run hide_run"><a href="#n21">21</a></p>
 <p id="n22" class="stm run hide_run"><a href="#n22">22</a></p>
 <p id="n23" class="stm run hide_run"><a href="#n23">23</a></p>
-<p id="n24" class="stm run hide_run"><a href="#n24">24</a></p>
 
             </td>
             <td class="text">
@@ -105,19 +104,18 @@
 <p id="t9" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t10" class="stm run hide_run"><span class="key">class</span> <span class="nam">PicoTest</span><span class="op">(</span><span class="nam">TestCase</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t11" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t12" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t13" class="stm run hide_run">    <span class="nam">fixtures</span> <span class="op">=</span> <span class="op">[</span><span class="str">'users.json'</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
-<p id="t14" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t15" class="pln">    <span class="com"># nathan</span><span class="strut">&nbsp;</span></p>
-<p id="t16" class="stm run hide_run">    <span class="key">def</span> <span class="nam">test_anonymous_required_anon</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t17" class="stm run hide_run">        <span class="nam">resp</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">reverse</span><span class="op">(</span><span class="str">'index'</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t18" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertEqual</span><span class="op">(</span><span class="nam">resp</span><span class="op">.</span><span class="nam">status_code</span><span class="op">,</span> <span class="num">200</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t19" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t20" class="pln">    <span class="com"># nathan</span><span class="strut">&nbsp;</span></p>
-<p id="t21" class="stm run hide_run">    <span class="key">def</span> <span class="nam">test_anonymous_required</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t22" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">login</span><span class="op">(</span><span class="nam">username</span><span class="op">=</span><span class="str">'testuser'</span><span class="op">,</span> <span class="nam">password</span><span class="op">=</span><span class="str">'password'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t23" class="stm run hide_run">        <span class="nam">resp</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">reverse</span><span class="op">(</span><span class="str">'index'</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t24" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertRedirects</span><span class="op">(</span><span class="nam">resp</span><span class="op">,</span> <span class="nam">reverse</span><span class="op">(</span><span class="str">'home'</span><span class="op">)</span><span class="op">,</span> <span class="nam">status_code</span><span class="op">=</span><span class="num">302</span><span class="op">,</span> <span class="nam">target_status_code</span><span class="op">=</span><span class="num">302</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t12" class="stm run hide_run">    <span class="nam">fixtures</span> <span class="op">=</span> <span class="op">[</span><span class="str">'users.json'</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
+<p id="t13" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t14" class="pln">    <span class="com"># nathan</span><span class="strut">&nbsp;</span></p>
+<p id="t15" class="stm run hide_run">    <span class="key">def</span> <span class="nam">test_anonymous_required_anon</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t16" class="stm run hide_run">        <span class="nam">resp</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">reverse</span><span class="op">(</span><span class="str">'index'</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t17" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertEqual</span><span class="op">(</span><span class="nam">resp</span><span class="op">.</span><span class="nam">status_code</span><span class="op">,</span> <span class="num">200</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t18" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t19" class="pln">    <span class="com"># nathan</span><span class="strut">&nbsp;</span></p>
+<p id="t20" class="stm run hide_run">    <span class="key">def</span> <span class="nam">test_anonymous_required</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t21" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">login</span><span class="op">(</span><span class="nam">username</span><span class="op">=</span><span class="str">'testuser'</span><span class="op">,</span> <span class="nam">password</span><span class="op">=</span><span class="str">'password'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t22" class="stm run hide_run">        <span class="nam">resp</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">reverse</span><span class="op">(</span><span class="str">'index'</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t23" class="stm run hide_run">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertRedirects</span><span class="op">(</span><span class="nam">resp</span><span class="op">,</span> <span class="nam">reverse</span><span class="op">(</span><span class="str">'home'</span><span class="op">)</span><span class="op">,</span> <span class="nam">status_code</span><span class="op">=</span><span class="num">302</span><span class="op">,</span> <span class="nam">target_status_code</span><span class="op">=</span><span class="num">302</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 
             </td>
         </tr>
@@ -128,7 +126,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.3.4</a>,
-            created at 2017-03-30 09:37
+            created at 2017-04-01 15:15
         </p>
     </div>
 </div>

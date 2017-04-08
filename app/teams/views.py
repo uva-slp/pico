@@ -71,7 +71,9 @@ def join(request):
                 else:
                     JoinRequest(team=team, user=request.user).save()
 
-    return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
+            return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
+
+    return redirect(reverse('teams:index'))
 
 @login_required
 def invite(request, action):
@@ -137,7 +139,7 @@ def join_request(request, action):
         join_request_form = JoinRequestForm(data=request.POST)
 
         if join_request_form.is_valid():
-            join_request = join_request_form.cleaned_data['request']
+            join_request = join_request_form.cleaned_data['join_request']
 
             if request.user in join_request.team.members.all():
                 if action == 'accept':
@@ -154,23 +156,8 @@ def join_request(request, action):
     return redirect(reverse('teams:index'))
 
 @login_required
-def leave(request):
-    if request.method == 'POST':
-        team_select_form = TeamSelectForm(data=request.POST)
-
-        if team_select_form.is_valid():
-            team = team_select_form.cleaned_data['team']
-            team.members.remove(request.user)
-            if team.members.count() == 0:
-                team.delete()
-            return JsonResponse({}, status=200)
-
-    return redirect(reverse('teams:index'))
-
-@login_required
 def is_public(request):
     if request.method == 'POST':
-        print(request.POST)
         team_select_form = TeamSelectForm(data=request.POST)
 
         if team_select_form.is_valid():
@@ -184,7 +171,19 @@ def is_public(request):
 
             return JsonResponse({'public': team.public})
 
-        return redirect(reverse('teams:index', kwargs={'team_id':team.id}))
+    return redirect(reverse('teams:index'))
+
+@login_required
+def leave(request):
+    if request.method == 'POST':
+        team_select_form = TeamSelectForm(data=request.POST)
+
+        if team_select_form.is_valid():
+            team = team_select_form.cleaned_data['team']
+            team.members.remove(request.user)
+            if team.members.count() == 0:
+                team.delete()
+            return JsonResponse({}, status=200)
 
     return redirect(reverse('teams:index'))
 

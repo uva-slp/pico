@@ -150,11 +150,11 @@
 <p id="t32" class="stm run hide_run">                <span class="nam">fields</span> <span class="op">=</span> <span class="op">(</span><span class="str">'team'</span><span class="op">,</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t33" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t34" class="stm run hide_run"><span class="key">class</span> <span class="nam">JoinRequestForm</span><span class="op">(</span><span class="nam">forms</span><span class="op">.</span><span class="nam">ModelForm</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t35" class="stm run hide_run">        <span class="nam">request</span> <span class="op">=</span> <span class="nam">forms</span><span class="op">.</span><span class="nam">ModelChoiceField</span><span class="op">(</span><span class="nam">queryset</span><span class="op">=</span><span class="nam">JoinRequest</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">all</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t35" class="stm run hide_run">        <span class="nam">join_request</span> <span class="op">=</span> <span class="nam">forms</span><span class="op">.</span><span class="nam">ModelChoiceField</span><span class="op">(</span><span class="nam">queryset</span><span class="op">=</span><span class="nam">JoinRequest</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">all</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t36" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t37" class="stm run hide_run">        <span class="key">class</span> <span class="nam">Meta</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t38" class="stm run hide_run">                <span class="nam">model</span> <span class="op">=</span> <span class="nam">JoinRequest</span><span class="strut">&nbsp;</span></p>
-<p id="t39" class="stm run hide_run">                <span class="nam">fields</span> <span class="op">=</span> <span class="op">(</span><span class="str">'request'</span><span class="op">,</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t39" class="stm run hide_run">                <span class="nam">fields</span> <span class="op">=</span> <span class="op">(</span><span class="str">'join_request'</span><span class="op">,</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t40" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t41" class="stm run hide_run"><span class="key">class</span> <span class="nam">InviteForm</span><span class="op">(</span><span class="nam">forms</span><span class="op">.</span><span class="nam">ModelForm</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t42" class="stm run hide_run">        <span class="nam">invite</span> <span class="op">=</span> <span class="nam">forms</span><span class="op">.</span><span class="nam">ModelChoiceField</span><span class="op">(</span><span class="nam">queryset</span><span class="op">=</span><span class="nam">Invite</span><span class="op">.</span><span class="nam">objects</span><span class="op">.</span><span class="nam">all</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
@@ -172,7 +172,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.3.4</a>,
-            created at 2017-03-30 09:37
+            created at 2017-04-01 15:09
         </p>
     </div>
 </div>

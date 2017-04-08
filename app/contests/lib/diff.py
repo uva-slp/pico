@@ -13,7 +13,7 @@ from .html import Table, Row, Th, Td, Div, Span, Anchor
 Generates HTML containing the diff of two string lists
 """
 class HtmlFormatter():
-	def __init__(self, fromlines, tolines, emptylines=True, whitespace=True, distinguish_changed=False):
+	def __init__(self, fromlines=None, tolines=None, emptylines=True, whitespace=True, distinguish_changed=False):
 		self.fromlines = fromlines
 		self.tolines = tolines
 		self.emptylines = emptylines
@@ -29,7 +29,7 @@ class HtmlFormatter():
 
 		num_changes = 0
 		for diff in difflib._mdiff(self.fromlines, self.tolines):
-			fromline, toline, hasChange = diff # self.clean(diff)
+			fromline, toline, hasChange = diff
 			row = Row()
 
 			# tag
@@ -63,47 +63,7 @@ class HtmlFormatter():
 		return str(table), num_changes
 
 	"""
-	Filters deltas to exclude whitespace and blank lines based on empty_lines and whitespace.
-	"""
-	def clean(self, diff):
-		fromLine, toLine, hasChange = diff
-		if not hasChange:
-			return fromLine, toLine, hasChange
-
-		fromLine, hasChange = self.clean_line(0, fromLine, toLine[0]=='')
-		toLine, hasChange = self.clean_line(1, toLine, fromLine[0]=='', hasChange)
-
-		return fromLine, toLine, hasChange
-
-	"""
-	Helper for #clean.
-	"""
-	def clean_line(self, side, line, solo, hasChange=False):
-		line_num, text = line
-		marker = '-' if side == 0 else '+'
-
-		if not self.emptylines:
-			text = re.sub('^(\s*)(\0\+|\0\-|\0\^)(\s*)\1(\s*)$', lambda m: m.group(1)+m.group(3)+m.group(4), text)
-		if not self.whitespace:
-			text = re.sub('(\0\+|\0\-|\0\^)(.*)(\1)', self.unmark_whitespace, text)
-		if self.emptylines and solo and text.isspace():
-			text = '\0%s%s\1'%(marker, text or ' ')
-
-		return (line_num, text), (hasChange or '\x00' in text)
-
-	"""
-	Replace function for whitespace filtering in #clean_line
-	"""
-	def unmark_whitespace(self, matchgrp):
-		open_tag, content, close_tag = matchgrp.groups()
-		if content.isspace():
-			return content
-
-		content = re.sub('(?<=[^\s])(\s+)|(\s+)(?=[^\s])', lambda m: close_tag+(m.group(1) or m.group(2))+open_tag, content)
-		return open_tag + content + close_tag
-
-	"""
-	Wraps text indicated by difflib (surrounded with \x00 and \x01) with a span and assigns the appropriate classes so that additions are highlighted green and deletions are highlighted red
+	Wraps text indicated by difflib (surrounded with \0 and \1) with a span and assigns the appropriate classes so that additions are highlighted green and deletions are highlighted red
 	"""
 	def prepare(self, side, text):
 		div = Div().addClass('diff-text')
@@ -113,7 +73,7 @@ class HtmlFormatter():
 		
 		i = 0
 		while i < len(text):
-			if text[i] == '\x00':
+			if text[i] == '\0':
 				change = text[i+1]
 				if change == '+':
 					spanClass = 'diff-add'
@@ -128,7 +88,7 @@ class HtmlFormatter():
 						spanClass = 'diff-add'
 				
 				left = i+2
-				right = text.find('\x01', left)
+				right = text.find('\1', left)
 
 				for s in re.split(r'(\s+)', text[left:right]):
 					if not s: continue

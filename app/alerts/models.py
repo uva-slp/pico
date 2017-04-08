@@ -17,7 +17,7 @@ class Target(models.Model):
 
     def href(self):
         if self.user:
-            return reverse('users:index', kwargs={'user_id': self.user.id})
+            return reverse('users:view', kwargs={'user_id': self.user.id})
         if self.team:
             return reverse('teams:index', kwargs={'team_id': self.team.id})
         if self.invite:

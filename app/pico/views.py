@@ -10,12 +10,12 @@ from users.forms import LoginForm, UserForm
 
 @anonymous_required
 def index(request):
-	return render(
-		request,
-		'pico/index.html',
-		{'login_form': LoginForm(), 'user_form': UserForm()})
+    return render(
+        request,
+        'pico/index.html',
+        {'login_form': LoginForm(), 'user_form': UserForm()})
 
 @login_required
 def home(request):
-	return redirect(reverse('contests:index'))
-	# return render(request, 'pico/home.html', {})
+    return redirect(reverse('contests:index'))
+    # return render(request, 'pico/home.html', {})

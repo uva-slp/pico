@@ -18,7 +18,7 @@ from .models import User
 
 
 @login_required
-def index(request, user_id=None):
+def view(request, user_id=None):
     user = None
     if user_id is not None:
         if User.objects.filter(id=user_id).exists():
@@ -141,11 +141,9 @@ def edit(request):
             except ValidationError as err:
                 return JsonResponse({'error': '; '.join(err.messages)}, status=201)
 
-            return JsonResponse({'error': 'Invalid theme URL.'}, status=201)
-
         return JsonResponse({}, status=400)
 
-    return redirect(reverse('users:index', kwargs={'user_id':request.user.id}))
+    return redirect(reverse('users:view', kwargs={'user_id':request.user.id}))
 
 @login_required
 def settings(request):
@@ -190,5 +188,5 @@ class UserAutocomplete(autocomplete.Select2QuerySetView):
         qs = User.objects.all()
         if self.q:
             qs = qs.filter(username__istartswith=self.q)
-        
+
         return qs

@@ -10,7 +10,8 @@ then
     gnome-open $URL
 fi
 
-if [[ `python -V` == 3* ]] ;
+V=`python -V 2>&1`
+if [[ ${V:7:1} =~ ^3 ]] ;
 then
     python -m http.server 8888
 else

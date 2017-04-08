@@ -64,7 +64,7 @@
                     {% if team.members.all %}
                         <div class="list-group">
                             {% for member in team.members.all %}
-                                <a href="{% url 'users:index' member.id %}" class="list-group-item">
+                                <a href="{% url 'users:view' member.id %}" class="list-group-item">
                                     {{ member.username }}
                                 </a>
                             {% endfor %}
@@ -87,7 +87,7 @@
                         {% if team.join_requests.all %}
                             <div class="list-group">
                                 {% for join_request in team.join_requests.all %}
-                                    <a href="{% url 'users:index' join_request.user.id %}" class="list-group-item">
+                                    <a href="{% url 'users:view' join_request.user.id %}" class="list-group-item">
                                         {{ join_request.user.username }}
                                         <div class="pull-right input-group" style="top:-10px">
 
@@ -125,7 +125,7 @@
                         {% if team.invites.all %}
                             <div class="list-group">
                                 {% for invite in team.invites.all %}
-                                    <a href="{% url 'users:index' invite.user.id %}" class="list-group-item">
+                                    <a href="{% url 'users:view' invite.user.id %}" class="list-group-item">
                                         {{ invite.user.username }}
                                         <div class="pull-right input-group" style="top:-10px;">
 
