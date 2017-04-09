@@ -26,6 +26,34 @@ class DisplayIndexViewTest(TestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
+    def test_view_index_activate(self):
+        self.client.login(username='testuser', password='password')
+        self.user = auth.get_user(self.client)
+
+        all_active_contest = Contest.objects.active()
+        self.assertEqual(len(all_active_contest), 0)
+
+        contest_id = 22
+
+        contest = Contest.objects.get(pk=contest_id)
+        self.assertIsNone(contest.contest_start)
+        request = self.factory.post(reverse("contests:activate_contest", kwargs={'contest_id': contest_id}))
+        request.user = self.user
+
+        resp = activateContest(request, contest_id)
+        self.assertEqual(resp.status_code, 302)
+
+        contest.refresh_from_db()
+        self.assertIsNotNone(contest.contest_start)
+
+        all_active_contest = Contest.objects.active()
+        self.assertEqual(len(all_active_contest), 1)
+
+        url = reverse("contests:index")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+
 
 class DisplayContestViewTest(TestCase):
 
