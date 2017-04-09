@@ -1,12 +1,12 @@
-(function() {
-    // Update contest time remaining bar
+// Update contest time remaining bar
+function loadTimerBar(contest_start, is_contest_started, is_contest_ended, contest_length, home_url) {
     var hours = Number(contest_length.substring(0, 2));
-    if(contest_length.indexOf("a.m.") != -1) {
-        if(hours == 12) {
+    if (contest_length.indexOf("a.m.") != -1) {
+        if (hours == 12) {
             contest_length = '00' + contest_length.substring(2);
         }
     } else {
-        if(hours != 12) {
+        if (hours != 12) {
             hours += 12;
             contest_length = '' + hours + contest_length.substring(2);
         }
@@ -30,12 +30,12 @@
     var live_timer_div = $(".live_timer_div");
     var time_remaining_text = $(".time_remaining_text");
 
-    var update = function() {
+    var update = function () {
 
         function updateDuration(curr_time) {
             curr_time = moment(curr_time, 'YYYY/MM/DD HH:mm:ss');
             var time_remaining = moment.duration(end_time.diff(curr_time)).asSeconds();
-            if(curr_time.isBefore(end_time)) {
+            if (curr_time.isBefore(end_time)) {
                 var hours_remaining = ('0' + Math.floor(time_remaining / 3600)).slice(-2);
                 var minutes_remaining = ('0' + Math.floor((time_remaining % 3600) / 60)).slice(-2);
                 var seconds_remaining = ('0' + (time_remaining % 60).toFixed()).slice(-2);
@@ -62,13 +62,13 @@
                     live_timer_div.addClass("progress-bar-warning");
                 }
 
-                if(curr_time.isSame(last_minute_time)) {
+                if (curr_time.isSame(last_minute_time)) {
                     window.alert("You have 1 minute remaining.");
                 }
             } else {
                 // contest is over, past contest may be viewed 1 minute after ending
                 is_contest_ended = true;
-                if(curr_time.isBefore(viewable_time)) {
+                if (curr_time.isBefore(viewable_time)) {
                     window.alert("The contest is now over! You may view it 1 minute after it has ended.");
                     window.location.replace(home_url);
                 } else {
@@ -80,15 +80,13 @@
         updateDuration(moment());
     };
 
-    $(function() {
-        if(is_contest_started && !is_contest_ended) { // keep refreshing contest if active contest
-            update();
-            setInterval(update, 1000);
-        }
+    if (is_contest_started && !is_contest_ended) { // keep refreshing contest if active contest
+        update();
+        setInterval(update, 1000);
+    }
 
-        if(!is_contest_started || is_contest_ended) { // disallow code submission if unstarted or past contest
-            $("#id_code_file").prop('disabled', true);
-            $("input[type='submit']").prop('disabled', true);
-        }
-    });
-})();
+    if (!is_contest_started || is_contest_ended) { // disallow code submission if unstarted or past contest
+        $("#id_code_file").prop('disabled', true);
+        $("input[type='submit']").prop('disabled', true);
+    }
+}
