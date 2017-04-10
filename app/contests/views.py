@@ -530,10 +530,6 @@ def displayJudge(request, contest_id, run_id):
                         html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
                         return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
 
-        data = {'contest_data': contest_data, 'is_judge': False, 'is_past': is_past}
-
-        return render(request, 'contests/judge.html', data)
-
 
 def stats(request):
     if request.user.is_authenticated():
