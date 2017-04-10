@@ -72,18 +72,17 @@
 
     {% if contest_data.contest_start != NULL or is_judge or is_creator %}
         <script type="text/javascript" src="{% static 'moment/moment.min.js' %}"></script>
-
-        <!-- Set global js vars with django data for external scripts to use -->
+        <script type="text/javascript" src="{% static 'js/timer_bar.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/lock_timer_bar.js' %}"></script>
         <script type="text/javascript">
-            var contest_start = '{{ contest_data.contest_start | date:'Y-m-d H:i:s a' }}';
+            var contest_start = "{{ contest_data.contest_start | date:'Y-m-d H:i:s a' }}";
             var is_contest_started = contest_start != "None";
             var is_contest_ended = false;
-            var contest_length = '{{ contest_data.contest_length }}';
+            var contest_length = "{{ contest_data.contest_length }}";
             var home_url = "{% url 'contests:index' %}";
-        </script>
 
-        <script type="text/javascript" src="{% static 'js/timer_bar.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/lock_navbar.js' %}"></script>
+            loadTimerBar(contest_start, is_contest_started, is_contest_ended, contest_length, home_url);
+        </script>
         <script src="{% static 'js/refresh_scoreboard.js' %}"></script>
     {% endif %}
 {% endblock %}

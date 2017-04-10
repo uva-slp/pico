@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
 	"name": "Test Problem 1",
-	"timeout": 10
+	"timeout": 7
     }
   },
   {
