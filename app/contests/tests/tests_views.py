@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template import Context, Template
 from django.utils import timezone
-from contests.models import Team, Participant, Contest, Problem, ContestTemplate, ContestInvite
+from contests.models import Team, Participant, Contest, Problem, ContestTemplate, ContestInvite, Submission
 from contests.views import createContest, editContest, createTemplate, activateContest
 from datetime import datetime, timedelta, time
 
@@ -165,6 +165,84 @@ class DisplayContestViewTest(TestCase):
         url = reverse("contests:contest", kwargs={'contest_id': 7})
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 302)
+
+    # Vivian
+    def test_view_contest_with_problems(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=22)
+        test_team = Team.objects.get(id=3)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problems = test_contest.problem_set.all()
+        problem = list(problems)[0]
+        self.assertEqual(len(problems), 2)
+
+        url = reverse("contests:contest", kwargs={'contest_id': 22})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_contest_with_correct_submission(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=22)
+        test_team = Team.objects.get(id=3)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problems = test_contest.problem_set.all()
+        problem = list(problems)[0]
+        self.assertEqual(len(problems), 2)
+        test_submission = Submission(run_id=1, team=test_team, problem=problem, timestamp=datetime.now(timezone.utc), state="YES", result="YES")
+        test_submission.save()
+
+        url = reverse("contests:contest", kwargs={'contest_id': 22})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_contest_with_unhandled_submission(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=22)
+        test_team = Team.objects.get(id=3)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problems = test_contest.problem_set.all()
+        problem = list(problems)[0]
+        self.assertEqual(len(problems), 2)
+        test_submission = Submission(run_id=1, team=test_team, problem=problem, timestamp=datetime.now(timezone.utc), state="NEW")
+        test_submission.save()
+
+        url = reverse("contests:contest", kwargs={'contest_id': 22})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_contest_with_wrong_submission(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=22)
+        test_team = Team.objects.get(id=3)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problems = test_contest.problem_set.all()
+        problem = list(problems)[0]
+        self.assertEqual(len(problems), 2)
+        test_submission = Submission(run_id=1, team=test_team, problem=problem, timestamp=datetime.now(timezone.utc), state="NO", result="WRONG")
+        test_submission.save()
+
+        url = reverse("contests:contest", kwargs={'contest_id': 22})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
 
     # Austin
     def test_activate_contest(self):
