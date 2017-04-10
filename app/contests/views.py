@@ -516,8 +516,6 @@ def displayJudge(request, contest_id, run_id):
                                         notification.save()
                                         return redirect(reverse('contests:contest_judge_submissions',
                                                         kwargs={'contest_id': contest_id}))
-                                else:
-                                        messages.error(request, "Error")
                         else:
                                 form = ReturnJudgeResultForm(instance=current_submission)
                         allowed_languages = getattr(contest_data, 'languages')

@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template import Context, Template
 from django.utils import timezone
-from contests.models import Team, Participant, Contest, Problem, ContestTemplate, ContestInvite, Submission
+from contests.models import Team, Participant, Contest, Problem, ContestTemplate, ContestInvite, Submission, Notification
 from contests.views import createContest, editContest, createTemplate, activateContest
 from datetime import datetime, timedelta, time
 
@@ -455,6 +455,17 @@ class JudgeInterfaceViewTest(TestCase):
         resp = self.client.get(url)
 
         self.assertEqual(resp.status_code, 302)
+
+    # Vivian
+    def test_judge_return_result(self):
+        self.client.login(username='judge', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        data = {"result": "YES", "submit": "Submit"}
+        resp = self.client.post(reverse("contests:contest_judge", kwargs={'contest_id': 7, 'run_id': 1}),
+                                data=data)
+        self.assertEqual(resp.status_code, 200)
 
 
 class DisplayProblemDescriptionViewTest(TestCase):
