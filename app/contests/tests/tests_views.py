@@ -869,3 +869,13 @@ class NotificationViewTest(TestCase):
         data = {"id": 1}
         resp = self.client.post(reverse("contests:close_notification"), data=data)
         self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_refresh_submission(self):
+        self.client.login(username='judge', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        data = {"contestId": 7}
+        resp = self.client.post(reverse("contests:refresh_submission"), data=data)
+        self.assertEqual(resp.status_code, 200)
