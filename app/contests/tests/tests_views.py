@@ -274,6 +274,15 @@ class JudgeInterfaceViewTest(TestCase):
         user = auth.get_user(self.client)
         assert user.is_authenticated()
 
+        test_contest = Contest.objects.get(id=7)
+        test_team = Team.objects.get(id=1)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problems = test_contest.problem_set.all()
+        problem = list(problems)[0]
+        test_submission = Submission(run_id=1, team=test_team, problem=problem, timestamp=datetime.now(timezone.utc), state="NEW")
+        test_submission.save()
+
         url = reverse("contests:contest_judge_submissions",
                       kwargs={'contest_id': 7})
         resp = self.client.get(url)
