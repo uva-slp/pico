@@ -821,3 +821,29 @@ class TemplateTagTest(TestCase):
         t = Template('{% load contest_extras %}'+template)
         c = Context(context)
         self.assertEqual(t.render(c), output)
+
+
+class NotificationViewTest(TestCase):
+
+    fixtures = ['judge_interface.json']
+
+    # Vivian
+    def test_show_notification(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=7)
+        test_team = Team.objects.get(id=1)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problems = test_contest.problem_set.all()
+        problem = list(problems)[0]
+        test_submission = Submission(run_id=1, team=test_team, problem=problem, timestamp=datetime.now(timezone.utc), state="NEW")
+        test_submission.save()
+        test_notification = Notification(submission=test_submission)
+        test_notification.save()
+
+        url = reverse("contests:show_notification")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
