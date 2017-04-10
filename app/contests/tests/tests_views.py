@@ -462,10 +462,13 @@ class JudgeInterfaceViewTest(TestCase):
         user = auth.get_user(self.client)
         assert user.is_authenticated()
 
-        data = {"result": "YES", "submit": "Submit"}
+        data = {"result": "YES", "state": "YES", "submit": "Submit"}
         resp = self.client.post(reverse("contests:contest_judge", kwargs={'contest_id': 7, 'run_id': 1}),
                                 data=data)
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 302)
+
+        notifications = Notification.objects.all()
+        self.assertEqual(len(notifications), 1)
 
 
 class DisplayProblemDescriptionViewTest(TestCase):
