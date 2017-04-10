@@ -2,9 +2,11 @@ from django.contrib import auth
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
-from contests.forms import ReturnJudgeResultForm, CreateContestForm, CreateContestTemplateForm, CreateProblem
-from contests.models import Team, Participant, Contest, Problem, Submission, ContestTemplate
-from contests.views import createContest, editContest, createNewProblem, createTemplate, displayContest, activateContest
+from django.template import Context, Template
+from django.utils import timezone
+from contests.models import Team, Participant, Contest, Problem, ContestTemplate, ContestInvite, Submission
+from contests.views import createContest, editContest, createTemplate, activateContest
+from datetime import datetime, timedelta, time
 
 
 class DisplayIndexViewTest(TestCase):
@@ -25,6 +27,76 @@ class DisplayIndexViewTest(TestCase):
         url = reverse("contests:index")
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_index_activate(self):
+        self.client.login(username='testuser', password='password')
+        self.user = auth.get_user(self.client)
+
+        all_active_contest = Contest.objects.active()
+        self.assertEqual(len(all_active_contest), 0)
+
+        contest_id = 22
+
+        contest = Contest.objects.get(pk=contest_id)
+        self.assertIsNone(contest.contest_start)
+        request = self.factory.post(reverse("contests:activate_contest", kwargs={'contest_id': contest_id}))
+        request.user = self.user
+
+        resp = activateContest(request, contest_id)
+        self.assertEqual(resp.status_code, 302)
+
+        contest.refresh_from_db()
+        self.assertIsNotNone(contest.contest_start)
+
+        all_active_contest = Contest.objects.active()
+        self.assertEqual(len(all_active_contest), 1)
+
+        url = reverse("contests:index")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_index_past(self):
+        self.client.login(username='testuser', password='password')
+        all_active_contest = Contest.objects.active()
+        self.assertEqual(len(all_active_contest), 0)
+
+        contest_id = 22
+
+        contest = Contest.objects.get(pk=contest_id)
+        self.assertIsNone(contest.contest_start)
+
+        contest.contest_start = datetime.now(timezone.utc) - timedelta(hours=2, minutes=15)
+        self.assertIsNotNone(contest.contest_start)
+        contest.contest_length = time(hour=2)
+        self.assertTrue(contest.contest_end() < datetime.now(timezone.utc))
+
+        contest.save()
+        all_past_contest = Contest.objects.past()
+        self.assertEqual(len(all_past_contest), 1)
+
+        url = reverse("contests:index")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_index_invitation(self):
+        self.client.login(username='participant1', password='password')
+        all_active_contest = Contest.objects.active()
+        self.assertEqual(len(all_active_contest), 0)
+
+        test_contest = Contest.objects.get(id=7)
+        test_team = Team.objects.get(id=3)
+        contest_invite = ContestInvite(contest=test_contest, team=test_team)
+        contest_invite.save()
+        all_contest_invite = ContestInvite.objects.all()
+        self.assertEqual(len(all_contest_invite), 1)
+
+        url = reverse("contests:index")
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
 
 
 class DisplayContestViewTest(TestCase):
@@ -93,6 +165,84 @@ class DisplayContestViewTest(TestCase):
         url = reverse("contests:contest", kwargs={'contest_id': 7})
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 302)
+
+    # Vivian
+    def test_view_contest_with_problems(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=22)
+        test_team = Team.objects.get(id=3)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problems = test_contest.problem_set.all()
+        problem = list(problems)[0]
+        self.assertEqual(len(problems), 2)
+
+        url = reverse("contests:contest", kwargs={'contest_id': 22})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_contest_with_correct_submission(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=22)
+        test_team = Team.objects.get(id=3)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problems = test_contest.problem_set.all()
+        problem = list(problems)[0]
+        self.assertEqual(len(problems), 2)
+        test_submission = Submission(run_id=1, team=test_team, problem=problem, timestamp=datetime.now(timezone.utc), state="YES", result="YES")
+        test_submission.save()
+
+        url = reverse("contests:contest", kwargs={'contest_id': 22})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_contest_with_unhandled_submission(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=22)
+        test_team = Team.objects.get(id=3)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problems = test_contest.problem_set.all()
+        problem = list(problems)[0]
+        self.assertEqual(len(problems), 2)
+        test_submission = Submission(run_id=1, team=test_team, problem=problem, timestamp=datetime.now(timezone.utc), state="NEW")
+        test_submission.save()
+
+        url = reverse("contests:contest", kwargs={'contest_id': 22})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_contest_with_wrong_submission(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=22)
+        test_team = Team.objects.get(id=3)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problems = test_contest.problem_set.all()
+        problem = list(problems)[0]
+        self.assertEqual(len(problems), 2)
+        test_submission = Submission(run_id=1, team=test_team, problem=problem, timestamp=datetime.now(timezone.utc), state="NO", result="WRONG")
+        test_submission.save()
+
+        url = reverse("contests:contest", kwargs={'contest_id': 22})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
 
     # Austin
     def test_activate_contest(self):
@@ -290,11 +440,62 @@ class JudgeInterfaceViewTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
     # Vivian
-    def test_view_judge_notloggedin(self):
+    def test_view_judge_nonparticipant(self):
+        self.client.login(username='nonparticipant', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
         url = reverse("contests:contest_judge",
                       kwargs={'contest_id': 7, 'run_id': 1})
         resp = self.client.get(url)
 
+        self.assertEqual(resp.status_code, 302)
+
+
+class DisplayProblemDescriptionViewTest(TestCase):
+    fixtures = ['users.json', 'teams.json', 'contests.json']
+
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    # Vivian
+    def test_view_problem_description_admin(self):
+        self.client.login(username='myadmin', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+        contest = Contest.objects.get(pk=7)
+        contest.problem_description = SimpleUploadedFile("foo.txt", b"foo")
+        contest.save()
+        url = reverse("contests:problem_description", kwargs={'contest_id': 7})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_problem_description_participant_notactive(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        url = reverse("contests:problem_description", kwargs={'contest_id': 7})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 302)
+
+    # Vivian
+    def test_view_problem_description_notloggedin_active(self):
+        contest = Contest.objects.get(pk=7)
+        self.assertIsNone(contest.contest_start)
+
+        contest.contest_start = datetime.now(timezone.utc)
+        self.assertIsNotNone(contest.contest_start)
+        contest.contest_length = time(hour=2)
+        self.assertTrue(contest.contest_end() > datetime.now(timezone.utc))
+
+        contest.save()
+        all_active_contest = Contest.objects.active()
+        self.assertEqual(len(all_active_contest), 1)
+
+        url = reverse("contests:problem_description", kwargs={'contest_id': 7})
+        resp = self.client.get(url)
         self.assertEqual(resp.status_code, 302)
 
 
@@ -556,3 +757,44 @@ class EditContestViewTest(TestCase):
         problem = Problem.objects.latest('id')
         self.assertEqual(problem.input_description, "problem 3 input desc")
         self.assertEqual(problem.sample_output.read(), b"problem 3 sample output")
+
+
+class TemplateTagTest(TestCase):
+
+    # Vivian
+    def test_tag_index(self):
+        template = "{{ my_list|index:2 }}"
+        context = {"my_list": [1,2,3]}
+        output = u"2"
+        t = Template('{% load contest_extras %}'+template)
+        c = Context(context)
+        self.assertEqual(t.render(c), output)
+
+    # Vivian
+    def test_tag_printfile(self):
+        template = "{{ my_file|print_file_content }}"
+        context = {"my_file": SimpleUploadedFile("foo.txt", b"foo"),}
+        output = u"foo"
+        t = Template('{% load contest_extras %}'+template)
+        c = Context(context)
+        self.assertEqual(t.render(c), output)
+
+    # Vivian
+    def test_tag_printfile_nullfile(self):
+        template = "{{ my_file|print_file_content }}"
+        context = {"my_file": None}
+        output = u""
+        t = Template('{% load contest_extras %}'+template)
+        c = Context(context)
+        self.assertEqual(t.render(c), output)
+
+    # Vivian
+    def test_tag_printfile_closedfile(self):
+        template = "{{ my_file|print_file_content }}"
+        my_file = SimpleUploadedFile("foo.txt", b"foo")
+        my_file.close()
+        context = {"my_file": my_file }
+        output = u""
+        t = Template('{% load contest_extras %}'+template)
+        c = Context(context)
+        self.assertEqual(t.render(c), output)

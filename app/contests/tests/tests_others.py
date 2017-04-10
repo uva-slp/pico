@@ -247,8 +247,9 @@ class JudgeInterfaceTest(TestCase):
 
     # Vivian
     # form test
-    def test_valid_return_form(self):
+    def test_valid_return_form_yes(self):
         submission = Submission.objects.get(run_id=3)
+        self.assertEqual(str(submission), str(submission.run_id))
         data = {
             "result": "YES", "state": "YES"
         }
@@ -258,6 +259,20 @@ class JudgeInterfaceTest(TestCase):
         form.save()
         self.assertTrue(submission.result, "YES")
         self.assertTrue(submission.state, "YES")
+
+    # Vivian
+    # form test
+    def test_valid_return_form_no(self):
+        submission = Submission.objects.get(run_id=3)
+        data = {
+            "result": "WRONG", "state": "NO"
+        }
+        form = ReturnJudgeResultForm(data=data, instance=submission)
+        self.assertTrue(isinstance(form.instance, Submission))
+        self.assertTrue(form.is_valid())
+        form.save()
+        self.assertTrue(submission.result, "NO")
+        self.assertTrue(submission.state, "NO")
 
 
 class SubmissionsViewsTest(TestCase):
