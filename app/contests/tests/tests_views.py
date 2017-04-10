@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template import Context, Template
 from django.utils import timezone
 from contests.models import Team, Participant, Contest, Problem, ContestTemplate, ContestInvite, Submission, Notification
-from contests.views import createContest, editContest, createTemplate, activateContest
+from contests.views import createContest, editContest, createTemplate, activateContest, deleteContest
 from datetime import datetime, timedelta, time
 
 
@@ -780,6 +780,18 @@ class EditContestViewTest(TestCase):
         problem = Problem.objects.latest('id')
         self.assertEqual(problem.input_description, "problem 3 input desc")
         self.assertEqual(problem.sample_output.read(), b"problem 3 sample output")
+
+    # Austin
+    def test_delete_contest(self):
+        contest_id = 22
+
+        self.assertTrue(Contest.objects.filter(pk=contest_id).exists())
+
+        request = reverse("contests:delete_contest", kwargs={'contest_id': contest_id})
+        resp = self.client.get(request)
+
+        self.assertEqual(resp.status_code, 302)
+        self.assertFalse(Contest.objects.filter(pk=contest_id).exists())
 
 
 class TemplateTagTest(TestCase):
