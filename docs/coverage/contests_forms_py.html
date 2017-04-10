@@ -8,7 +8,7 @@
     
     
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for contests/forms.py: 96%</title>
+    <title>Coverage for contests/forms.py: 88%</title>
     <link rel="stylesheet" href="style.css" type="text/css">
     
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -24,15 +24,15 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>contests/forms.py</b> :
-            <span class="pc_cov">96%</span>
+            <span class="pc_cov">88%</span>
         </h1>
 
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
 
         <h2 class="stats">
             100 statements &nbsp;
-            <span class="run hide_run shortkey_r button_toggle_run">96 run</span>
-            <span class="mis shortkey_m button_toggle_mis">4 missing</span>
+            <span class="run hide_run shortkey_r button_toggle_run">88 run</span>
+            <span class="mis shortkey_m button_toggle_mis">12 missing</span>
             <span class="exc shortkey_x button_toggle_exc">0 excluded</span>
 
             
@@ -140,7 +140,7 @@
 <p id="n71" class="stm run hide_run"><a href="#n71">71</a></p>
 <p id="n72" class="stm run hide_run"><a href="#n72">72</a></p>
 <p id="n73" class="stm run hide_run"><a href="#n73">73</a></p>
-<p id="n74" class="stm run hide_run"><a href="#n74">74</a></p>
+<p id="n74" class="stm mis"><a href="#n74">74</a></p>
 <p id="n75" class="stm run hide_run"><a href="#n75">75</a></p>
 <p id="n76" class="pln"><a href="#n76">76</a></p>
 <p id="n77" class="stm run hide_run"><a href="#n77">77</a></p>
@@ -166,7 +166,7 @@
 <p id="n97" class="stm run hide_run"><a href="#n97">97</a></p>
 <p id="n98" class="stm run hide_run"><a href="#n98">98</a></p>
 <p id="n99" class="stm run hide_run"><a href="#n99">99</a></p>
-<p id="n100" class="stm run hide_run"><a href="#n100">100</a></p>
+<p id="n100" class="stm mis"><a href="#n100">100</a></p>
 <p id="n101" class="stm run hide_run"><a href="#n101">101</a></p>
 <p id="n102" class="pln"><a href="#n102">102</a></p>
 <p id="n103" class="stm run hide_run"><a href="#n103">103</a></p>
@@ -239,16 +239,16 @@
 <p id="n170" class="stm run hide_run"><a href="#n170">170</a></p>
 <p id="n171" class="pln"><a href="#n171">171</a></p>
 <p id="n172" class="stm run hide_run"><a href="#n172">172</a></p>
-<p id="n173" class="stm run hide_run"><a href="#n173">173</a></p>
-<p id="n174" class="stm run hide_run"><a href="#n174">174</a></p>
-<p id="n175" class="stm run hide_run"><a href="#n175">175</a></p>
-<p id="n176" class="stm run hide_run"><a href="#n176">176</a></p>
-<p id="n177" class="stm run hide_run"><a href="#n177">177</a></p>
+<p id="n173" class="stm mis"><a href="#n173">173</a></p>
+<p id="n174" class="stm mis"><a href="#n174">174</a></p>
+<p id="n175" class="stm mis"><a href="#n175">175</a></p>
+<p id="n176" class="stm mis"><a href="#n176">176</a></p>
+<p id="n177" class="stm mis"><a href="#n177">177</a></p>
 <p id="n178" class="pln"><a href="#n178">178</a></p>
 <p id="n179" class="stm mis"><a href="#n179">179</a></p>
 <p id="n180" class="pln"><a href="#n180">180</a></p>
 <p id="n181" class="stm mis"><a href="#n181">181</a></p>
-<p id="n182" class="stm run hide_run"><a href="#n182">182</a></p>
+<p id="n182" class="stm mis"><a href="#n182">182</a></p>
 <p id="n183" class="pln"><a href="#n183">183</a></p>
 <p id="n184" class="pln"><a href="#n184">184</a></p>
 <p id="n185" class="stm run hide_run"><a href="#n185">185</a></p>
@@ -358,7 +358,7 @@
 <p id="t71" class="stm run hide_run">    <span class="key">def</span> <span class="nam">clean</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t72" class="stm run hide_run">        <span class="nam">upload_to</span> <span class="op">=</span> <span class="str">'uploads/'</span><span class="strut">&nbsp;</span></p>
 <p id="t73" class="stm run hide_run">        <span class="key">if</span> <span class="key">not</span> <span class="str">'problem_description'</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">cleaned_data</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t74" class="stm run hide_run">            <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">cleaned_data</span><span class="strut">&nbsp;</span></p>
+<p id="t74" class="stm mis">            <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">cleaned_data</span><span class="strut">&nbsp;</span></p>
 <p id="t75" class="stm run hide_run">        <span class="nam">upload_to</span> <span class="op">+=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">cleaned_data</span><span class="op">[</span><span class="str">'problem_description'</span><span class="op">]</span><span class="op">.</span><span class="nam">name</span><span class="strut">&nbsp;</span></p>
 <p id="t76" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t77" class="stm run hide_run">    <span class="key">class</span> <span class="nam">Meta</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
@@ -384,7 +384,7 @@
 <p id="t97" class="stm run hide_run">    <span class="key">def</span> <span class="nam">clean</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t98" class="stm run hide_run">        <span class="nam">upload_to</span> <span class="op">=</span> <span class="str">'uploads/'</span><span class="strut">&nbsp;</span></p>
 <p id="t99" class="stm run hide_run">        <span class="key">if</span> <span class="key">not</span> <span class="str">'solution'</span> <span class="key">in</span> <span class="nam">self</span><span class="op">.</span><span class="nam">cleaned_data</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t100" class="stm run hide_run">            <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">cleaned_data</span><span class="strut">&nbsp;</span></p>
+<p id="t100" class="stm mis">            <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">cleaned_data</span><span class="strut">&nbsp;</span></p>
 <p id="t101" class="stm run hide_run">        <span class="nam">upload_to</span> <span class="op">+=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">cleaned_data</span><span class="op">[</span><span class="str">'solution'</span><span class="op">]</span><span class="op">.</span><span class="nam">name</span><span class="strut">&nbsp;</span></p>
 <p id="t102" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t103" class="stm run hide_run">    <span class="key">class</span> <span class="nam">Meta</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
@@ -457,16 +457,16 @@
 <p id="t170" class="stm run hide_run">        <span class="nam">widgets</span> <span class="op">=</span> <span class="op">{</span><span class="str">'state'</span><span class="op">:</span> <span class="nam">forms</span><span class="op">.</span><span class="nam">HiddenInput</span><span class="op">(</span><span class="op">)</span><span class="op">}</span><span class="strut">&nbsp;</span></p>
 <p id="t171" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t172" class="stm run hide_run">    <span class="key">def</span> <span class="nam">clean</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t173" class="stm run hide_run">        <span class="nam">cleaned_data</span> <span class="op">=</span> <span class="nam">super</span><span class="op">(</span><span class="nam">ReturnJudgeResultForm</span><span class="op">,</span> <span class="nam">self</span><span class="op">)</span><span class="op">.</span><span class="nam">clean</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t174" class="stm run hide_run">        <span class="nam">result</span> <span class="op">=</span> <span class="nam">cleaned_data</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">'result'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t175" class="stm run hide_run">        <span class="key">if</span> <span class="nam">result</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t176" class="stm run hide_run">            <span class="key">if</span> <span class="nam">result</span> <span class="op">==</span> <span class="str">'YES'</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t177" class="stm run hide_run">                <span class="nam">cleaned_data</span><span class="op">[</span><span class="str">'state'</span><span class="op">]</span> <span class="op">=</span> <span class="str">'YES'</span><span class="strut">&nbsp;</span></p>
+<p id="t173" class="stm mis">        <span class="nam">cleaned_data</span> <span class="op">=</span> <span class="nam">super</span><span class="op">(</span><span class="nam">ReturnJudgeResultForm</span><span class="op">,</span> <span class="nam">self</span><span class="op">)</span><span class="op">.</span><span class="nam">clean</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t174" class="stm mis">        <span class="nam">result</span> <span class="op">=</span> <span class="nam">cleaned_data</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">'result'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t175" class="stm mis">        <span class="key">if</span> <span class="nam">result</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t176" class="stm mis">            <span class="key">if</span> <span class="nam">result</span> <span class="op">==</span> <span class="str">'YES'</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t177" class="stm mis">                <span class="nam">cleaned_data</span><span class="op">[</span><span class="str">'state'</span><span class="op">]</span> <span class="op">=</span> <span class="str">'YES'</span><span class="strut">&nbsp;</span></p>
 <p id="t178" class="pln">            <span class="key">else</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t179" class="stm mis">                <span class="nam">cleaned_data</span><span class="op">[</span><span class="str">'state'</span><span class="op">]</span> <span class="op">=</span> <span class="str">'NO'</span><span class="strut">&nbsp;</span></p>
 <p id="t180" class="pln">        <span class="key">else</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t181" class="stm mis">            <span class="nam">cleaned_data</span><span class="op">[</span><span class="str">'state'</span><span class="op">]</span> <span class="op">=</span> <span class="str">'NEW'</span><span class="strut">&nbsp;</span></p>
-<p id="t182" class="stm run hide_run">        <span class="key">return</span> <span class="nam">cleaned_data</span><span class="strut">&nbsp;</span></p>
+<p id="t182" class="stm mis">        <span class="key">return</span> <span class="nam">cleaned_data</span><span class="strut">&nbsp;</span></p>
 <p id="t183" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t184" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t185" class="stm run hide_run"><span class="key">class</span> <span class="nam">AdminSearchForm</span><span class="op">(</span><span class="nam">forms</span><span class="op">.</span><span class="nam">ModelForm</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
@@ -510,7 +510,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.3.4</a>,
-            created at 2017-03-30 09:37
+            created at 2017-04-02 20:11
         </p>
     </div>
 </div>

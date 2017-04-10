@@ -263,21 +263,173 @@ class JudgeInterfaceTest(TestCase):
 class SubmissionsViewsTest(TestCase):
     fixtures = ['execution.json']
 
+    class Popen_mock_success_1:
+        def __init__(self, command, **kwargs):
+            self.command = (command.encode(encoding='UTF-8',errors='strict'), ''.encode(encoding='UTF-8',errors='strict'))
+            self.returncode = 0
+        def communicate(self):
+            return self.command
+                            
+    class Popen_mock_error_1:
+        def __init__(self, command, **kwargs):
+            self.command = (command.encode(encoding='UTF-8',errors='strict'), 'Compilation Error!'.encode(encoding='UTF-8',errors='strict'))
+            self.returncode = 1
+        def communicate(self):
+            return self.command
+    
+    class Popen_mock_success_2:
+        def __init__(self, command, **kwargs):
+            self.command = ('0,' + ' '.join(command), '')
+            self.returncode = 0
+        def communicate(self):
+            return self.command
+        
+    class Popen_mock_error_2:
+        def __init__(self, command, **kwargs):
+            self.command = (' '.join(command), 'Docker Error!')
+            self.returncode = 1
+        def communicate(self):
+            return self.command
+        
+    class Popen_mock_error_3:
+        def __init__(self, command, **kwargs):
+            self.command = (' '.join(command).encode(encoding='UTF-8',errors='strict'), ''.encode(encoding='UTF-8',errors='strict'))
+            self.returncode = 1
+        def communicate(self):
+            return self.command
+
     # Derek
-    def test_passing_timeout(self):
-        class Popen_for_dependency_injection:
-            def __init__(self, command, **kwargs):
-                self.command = ('0,' + ' '.join(command), '')
-            def communicate(self):
-                return self.command
+    def test_docker_container_code_input_file(self):
+        output = exe.docker_container_code(self.Popen_mock_success_1, ['execution.py', 'test.java', '["1","2","3"]', '5', 'input.txt'])
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1], "timeout 5 java -cp code/ test < code/input.txt")
+
+    # Derek
+    def test_docker_container_code_bad_file_extension(self):
+        output = exe.docker_container_code(self.Popen_mock_success_1, ['execution.py', 'test.banana', '["2","3"]', '5'])
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1], "FILENAME ERROR: Must have a valid C++, Java, or Python file extension")
+
+    # Derek
+    def test_docker_container_code_java_not_allowed(self):
+        output = exe.docker_container_code(self.Popen_mock_success_1, ['execution.py', 'test.java', '["2","3"]', '5'])
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1], "LANGUAGE ERROR: Java submissions are not allowed in this contest")
+
+    # Derek
+    def test_docker_container_code_cpp_not_allowed(self):
+        output = exe.docker_container_code(self.Popen_mock_success_1, ['execution.py', 'test.cpp', '["1","3"]', '5'])
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1], "LANGUAGE ERROR: C++ submissions are not allowed in this contest")
+        
+    # Derek
+    def test_docker_container_code__python_not_allowed(self):
+        output = exe.docker_container_code(self.Popen_mock_success_1, ['execution.py', 'test.py', '["1","2"]', '5'])
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1], "LANGUAGE ERROR: Python submissions are not allowed in this contest")
+
+    # Derek
+    def test_docker_container_code_java(self):
+        output = exe.docker_container_code(self.Popen_mock_success_1, ['execution.py', 'test.java', '["1","2","3"]', '5'])
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1], "timeout 5 java -cp code/ test")
+
+    # Derek
+    def test_docker_container_code_cpp(self):
+        output = exe.docker_container_code(self.Popen_mock_success_1, ['execution.py', 'test.cpp', '["1","2","3"]', '5'])
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1], "timeout 5 code/./a.out")
+        
+    # Derek
+    def test_docker_container_code__python(self):
+        output = exe.docker_container_code(self.Popen_mock_success_1, ['execution.py', 'test.py', '["1","2","3"]', '5'])
+        self.assertEqual(output[0], 0)
+        self.assertEqual(output[1], "timeout 5 python code/test.py")
+        
+    #Derek
+    def test_docker_container_code_filename_error(self):
+        output = exe.docker_container_code(self.Popen_mock_success_2, ['execution.py', '[1,2,3]', '5'])
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1], "FILENAME ERROR: No file name given.")
+        
+    #Derek
+    def test_execute_compiled_file_timeout(self):
+        output = exe.execute_compiled_file(self.Popen_mock_error_3, "mock command", None)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1], 'CODE TIMED OUT')
+
+    # Derek
+    def test_run_java_command_input_file(self):
+        output = exe.run_java(self.Popen_mock_success_1, 'trash.java', 'input.txt', 5)
+        self.assertEqual(str(output[1]), "timeout 5 java -cp code/ trash < code/input.txt")
+
+    # Derek
+    def test_run_cpp_command_input_file(self):
+        output = exe.run_cpp(self.Popen_mock_success_1, 'trash.cpp', 'input.txt', 5)
+        self.assertEqual(str(output[1]), "timeout 5 code/./a.out < code/input.txt")
+        
+    # Derek
+    def test_run_python_command_input_file(self):
+        output = exe.run_python(self.Popen_mock_success_1, 'trash.py', 'input.txt', 5)
+        self.assertEqual(str(output[1]), "timeout 5 python code/trash.py < code/input.txt")
+                            
+    # Derek
+    def test_run_java_command_compilation_error(self):
+        output = exe.run_java(self.Popen_mock_error_1, 'trash.java', None, 5)
+        self.assertEqual(str(output[1]), "COMPILATION ERROR:\nCompilation Error!")
+
+    # Derek
+    def test_run_cpp_command_compilation_error(self):
+        output = exe.run_cpp(self.Popen_mock_error_1, 'trash.cpp', None, 5)
+        self.assertEqual(str(output[1]), "COMPILATION ERROR:\nCompilation Error!")
+
+    # Derek
+    def test_run_python_command_execution_error(self):
+        output = exe.run_python(self.Popen_mock_error_1, 'trash.py', None, 5)
+        self.assertEqual(str(output[1]), "EXECUTION ERROR:\nCompilation Error!")
+
+    # Derek
+    def test_run_java_command(self):
+        output = exe.run_java(self.Popen_mock_success_1, 'trash.java', None, 5)
+        self.assertEqual(str(output[1]), "timeout 5 java -cp code/ trash")
+
+    # Derek
+    def test_run_cpp_command(self):
+        output = exe.run_cpp(self.Popen_mock_success_1, 'trash.cpp', None, 5)
+        self.assertEqual(str(output[1]), "timeout 5 code/./a.out")
+        
+    # Derek
+    def test_run_python_command(self):
+        output = exe.run_python(self.Popen_mock_success_1, 'trash.py', None, 5)
+        self.assertEqual(str(output[1]), "timeout 5 python code/trash.py")
+    
+    # Derek
+    def test_problem_timeout(self):
         temp_dirpath = tempfile.mkdtemp()
         file_path = os.path.join(temp_dirpath, 'test.cpp')
+        problem1 = Problem.objects.get(pk=1)
+        problem2 = Problem.objects.get(pk=2)
         with open(file_path, 'w+') as destination:
             test_file_object = File(destination)
-            output = exe.execute_code(Popen_for_dependency_injection, test_file_object, 'test.cpp', test_file_object, "['1','2','3']", 10)
+            output1 = exe.execute_code(self.Popen_mock_success_2, test_file_object, 'test.cpp', test_file_object, "['1','2','3']", getattr(problem1, 'timeout'))
+            output2 = exe.execute_code(self.Popen_mock_success_2, test_file_object, 'test.cpp', test_file_object, "['1','2','3']", getattr(problem2, 'timeout'))
         shutil.rmtree(temp_dirpath)
-        self.assertEqual(output[0], 0)
-        self.assertEqual(output[1][-26:], "['1','2','3'] 10 input.txt")
+        self.assertEqual(output1[0], 0)
+        self.assertEqual(output1[1][-25:], "['1','2','3'] 7 input.txt")
+        self.assertEqual(output2[0], 0)
+        self.assertEqual(output2[1][-26:], "['1','2','3'] 20 input.txt")
+    
+    # Derek
+    def test_container_error(self):
+        temp_dirpath = tempfile.mkdtemp()
+        file_path = os.path.join(temp_dirpath, 'test.cpp')
+        problem = Problem.objects.get(pk=1)
+        with open(file_path, 'w+') as destination:
+            test_file_object = File(destination)
+            output = exe.execute_code(self.Popen_mock_error_2, test_file_object, 'test.cpp', test_file_object, "['1','2','3']", getattr(problem, 'timeout'))
+        shutil.rmtree(temp_dirpath)
+        self.assertEqual(output[0], 1)
+        self.assertEqual(output[1], "CONTAINER ERROR:\nDocker Error!")
 
     # Derek
     def test_cpp_execution_on_empty_files(self):
@@ -347,8 +499,7 @@ class SubmissionsViewsTest(TestCase):
         runtime_error = output[1].startswith("EXECUTION ERROR:")
         self.assertEqual(runtime_error, True)
 
-        # Derek
-
+    # Derek
     def test_python_execution_runtime_error(self):
         test_file = File(open(os.path.join(dir_path, "code_test_files", "runtime_error_test.py"), "rb+"))
         output = exe.execute_code(Popen, test_file, 'runtime_error_test.py', None, "['1','2','3']")
@@ -418,8 +569,7 @@ class SubmissionsViewsTest(TestCase):
         compilation_error = output[1].startswith("COMPILATION ERROR:")
         self.assertEqual(compilation_error, True)
 
-        # Derek
-
+    # Derek
     def test_python_execution_compilation_error(self):
         test_file = File(open(os.path.join(dir_path, "code_test_files", "trash.py"), "rb+"))
         output = exe.execute_code(Popen, test_file, 'trash.py', None, "['1','2','3']")
