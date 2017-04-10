@@ -1,4 +1,4 @@
-$('#team-search-form').change(function() {
+function submitTeamSearchForm() {
     $.ajax({
         url : $(this).attr('action'),
         type : $(this).attr('method'),
@@ -9,9 +9,8 @@ $('#team-search-form').change(function() {
                 var tab = $(data.tab);
                 var href = tab.children().first('a').attr('href');
                 var target = $('#team-tabs a[href="'+href+'"]');
-                if (target.exists()) {
-                    target.click();
-                } else {
+                target.click();
+                if (!target.exists()) {
                     // Remove other search panels
                     $('#team-panels .search-panel').remove();
                     // Add tab-pane
@@ -33,4 +32,4 @@ $('#team-search-form').change(function() {
             console.log('Get team failed.');
         }
     });
-});
+}; $('#team-search-form').change(submitTeamSearchForm);

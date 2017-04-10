@@ -8,7 +8,7 @@ QUnit.test( "submitTeamForm test", function( assert ) {
     replaceAjax(function(options) {
         options.success({tab:'',panel:''},null,{status:200});
         options.success({form:''},null,{status:201});
-        options.error(null);
+        options.error();
     });
     var event = { preventDefault: function() {} };
     submitTeamForm(event);
@@ -29,12 +29,50 @@ QUnit.test( "openInviteModal test", function( assert ) {
 QUnit.test( "submitTeamLeaveForm test", function( assert ) {
     replaceAjax(function(options) {
         var location = window.location.href;
-        options.success(null, null, null);
-        options.error(null);
+        options.success();
+        options.error();
         history.replaceState('data', '', location);
     });
     var event = { preventDefault: function() {} };
     submitTeamLeaveForm(event);
     restoreAjax();
+    assert.ok( 1 == "1", "Passed!" );
+});
+
+// Team public toggle
+
+QUnit.test( "submitTeamPublicForm test", function( assert ) {
+    replaceAjax(function(options) {
+        options.success();
+        options.error();
+    });
+    submitTeamPublicForm();
+    restoreAjax();
+    assert.ok( 1 == "1", "Passed!" );
+});
+QUnit.test( "renderToggle test", function( assert ) {
+    renderToggle();
+    assert.ok( 1 == "1", "Passed!" );
+});
+
+// Team search
+
+QUnit.test( "submitTeamSearchForm test", function( assert ) {
+    replaceAjax(function(options) {
+        options.success({tab:'',panel:''},null,{status:200});
+        options.success(null,null,{status:201});
+        options.error();
+    });
+    submitTeamSearchForm();
+    restoreAjax();
+    assert.ok( 1 == "1", "Passed!" );
+});
+
+// Team stickytabs
+
+QUnit.test( "onClickTeamTab test", function( assert ) {
+    var location = window.location.href;
+    onClickTeamTab.call({href:''});
+    history.replaceState('data', '', location);
     assert.ok( 1 == "1", "Passed!" );
 });
