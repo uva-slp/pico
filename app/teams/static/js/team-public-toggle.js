@@ -1,4 +1,4 @@
-$(document).on('change', '.team-public-form', function() {
+function submitTeamPublicForm(event) {
     var frm = $(this);
     $.ajax({
         url : $(this).attr('action'),
@@ -11,11 +11,11 @@ $(document).on('change', '.team-public-form', function() {
             console.log('Toggle team.public failed.');
         }
     });
-});
+}; $(document).on('change', '.team-public-form', submitTeamPublicForm);
 
-$('a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
+function renderToggle(event) {
     // Re-render toggle to properly determine size
     var input = $('.tab-pane.active input[type=checkbox][data-toggle^=toggle]');
     input.bootstrapToggle('destroy');
     input.bootstrapToggle();
-})
+}; $('a[data-toggle="pill"]').on('shown.bs.tab', renderToggle);
