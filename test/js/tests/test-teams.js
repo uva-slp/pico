@@ -73,6 +73,7 @@ QUnit.test( "submitTeamSearchForm test", function( assert ) {
 QUnit.test( "onClickTeamTab test", function( assert ) {
     var location = window.location.href;
     onClickTeamTab.call({href:''});
-    history.replaceState('data', '', location);
+    try { history.replaceState('data', '', location); }
+    catch (exception) { console.log(exception); }
     assert.ok( 1 == "1", "Passed!" );
 });
