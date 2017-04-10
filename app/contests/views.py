@@ -420,6 +420,17 @@ def displayContest(request, contest_id):
 @login_required()
 def displayProblemDescription(request, contest_id):
     contest_data = Contest.objects.get(id=contest_id)
+    is_judge = isJudge(contest_data, request.user)
+    is_participant = isParticipant(contest_data, request.user)
+    is_creator = isCreator(contest_data, request.user)
+
+    if contest_data.contest_start is not None:
+        if not is_judge and not is_participant and not is_creator and not request.user.is_superuser:
+            return redirect(reverse('home'))
+    else:
+        if not is_judge and not is_creator and not request.user.is_superuser:
+            return redirect(reverse('home'))
+
     path = contest_data.problem_description.path
     with open(path, 'rb') as pdf:
         response = HttpResponse(pdf.read(), content_type='application/pdf')

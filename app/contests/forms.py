@@ -164,6 +164,7 @@ class UploadCodeForm(forms.ModelForm):
 
 
 class ReturnJudgeResultForm(forms.ModelForm):
+
     class Meta:
         model = Submission
         fields = ['result', 'state']
@@ -177,8 +178,6 @@ class ReturnJudgeResultForm(forms.ModelForm):
                 cleaned_data['state'] = 'YES'
             else:
                 cleaned_data['state'] = 'NO'
-        else:
-            cleaned_data['state'] = 'NEW'
         return cleaned_data
 
 

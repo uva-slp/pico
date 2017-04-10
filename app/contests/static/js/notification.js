@@ -20,6 +20,8 @@ setTimeout(fetchNotification, 5000);
 function renderNotification(data) {
     var l = data['data']
 
+    if (!l) return;
+
     var listLenth = l.length;
     if (listLenth == 0) return;
 
