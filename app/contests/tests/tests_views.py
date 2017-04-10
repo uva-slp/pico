@@ -448,6 +448,50 @@ class JudgeInterfaceViewTest(TestCase):
         self.assertEqual(resp.status_code, 302)
 
 
+class DisplayProblemDescriptionViewTest(TestCase):
+    fixtures = ['users.json', 'teams.json', 'contests.json']
+
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    # Vivian
+    def test_view_problem_description_admin(self):
+        self.client.login(username='myadmin', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+        url = reverse("contests:problem_description", kwargs={'contest_id': 7})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_problem_description_participant_notactive(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        url = reverse("contests:problem_description", kwargs={'contest_id': 7})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 302)
+
+    # Vivian
+    def test_view_problem_description_notloggedin_active(self):
+        contest = Contest.objects.get(pk=7)
+        self.assertIsNone(contest.contest_start)
+
+        contest.contest_start = datetime.now(timezone.utc)
+        self.assertIsNotNone(contest.contest_start)
+        contest.contest_length = time(hour=2)
+        self.assertTrue(contest.contest_end() > datetime.now(timezone.utc))
+
+        contest.save()
+        all_active_contest = Contest.objects.active()
+        self.assertEqual(len(all_active_contest), 1)
+
+        url = reverse("contests:problem_description", kwargs={'contest_id': 7})
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 302)
+
+
 class LoadTemplateViewTest(TestCase):
 
     fixtures = ['users.json', 'contest_templates.json']
