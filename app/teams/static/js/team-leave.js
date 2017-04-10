@@ -20,7 +20,8 @@ function submitTeamLeaveForm(event) {
             // Change URL to index
             var baseURL = window.location.href;
             baseURL = baseURL.substr(0, baseURL.indexOf('/teams/')+7);
-            history.replaceState('data', '', baseURL)
+            try { history.replaceState('data', '', baseURL); }
+            catch (exception) { console.log(exception); }
         },
         error : function(data) {
             console.log('Leave team failed.');

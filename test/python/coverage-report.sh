@@ -1,6 +1,6 @@
 #!/bin/bash
-cd ../../app
-coverage3 run --source="." manage.py test
-coverage3 report --include="$PWD/*" --omit="$PWD/manage.py" -m
-coverage3 html --include="$PWD/*" --omit="$PWD/manage.py" -d ../docs/coverage
-mv .coverage ../test/python/.coverage
+cd ../..
+coverage3 run app/manage.py test
+coverage3 report -m
+coverage3 html
+rm -rf pico # new uploads directory created here ; delete it
