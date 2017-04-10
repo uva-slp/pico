@@ -440,7 +440,11 @@ class JudgeInterfaceViewTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
     # Vivian
-    def test_view_judge_notloggedin(self):
+    def test_view_judge_nonparticipant(self):
+        self.client.login(username='nonparticipant', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
         url = reverse("contests:contest_judge",
                       kwargs={'contest_id': 7, 'run_id': 1})
         resp = self.client.get(url)
@@ -459,6 +463,9 @@ class DisplayProblemDescriptionViewTest(TestCase):
         self.client.login(username='myadmin', password='password')
         user = auth.get_user(self.client)
         assert user.is_authenticated()
+        contest = Contest.objects.get(pk=7)
+        contest.problem_description = SimpleUploadedFile("foo.txt", b"foo")
+        contest.save()
         url = reverse("contests:problem_description", kwargs={'contest_id': 7})
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
