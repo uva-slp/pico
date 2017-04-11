@@ -730,21 +730,22 @@ class ContestCreationTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    '''
+
     def testScoreboardRefreshConnection(self):
         self.client.login(username='participant1', password='password')
 
         contest_id = 23
         contest = Contest.objects.get(pk=contest_id)
+        contest.save()
 
         url = reverse("contests:refresh_scoreboard")
 
-        response = self.client.post(url)
+        response = self.client.post(url, {"contestId" : 23})
 
         self.assertEqual(response.status_code, 200)
-    '''
 
-    def testScoreboardFor(self):
+
+    def testScoreboardParticipants(self):
 
         url = reverse("contests:scoreboard", kwargs={'contest_id' : 23})
 
