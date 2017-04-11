@@ -713,21 +713,42 @@ def nearest(items, pivot):
 
 
 class ContestCreationTest(TestCase):
+    fixtures = ['users.json', 'teams.json', 'contests.json']
+    def setUp(self):
+        self.contest_id = 1
+
     # Jamel
-    def testNumberofContests(self):
-        a = Contest(title="contest1")
-        b = Contest(title="contest1")
-        c = Contest(title="contest1")
-        d = Contest(title="contest1")
-        e = Contest(title="contest1")
-        a.save()
-        b.save()
-        c.save()
-        d.save()
-        e.save()
-        contests = Contest.objects.all()
-        teamnumber = contests.count()
-        self.assertEqual(teamnumber, 5)
+    def testScoreboardConnection(self):
+        self.client.login(username='participant1', password='password')
+
+        contest_id = 23
+        contest = Contest.objects.get(pk=contest_id)
+
+        url = reverse("contests:scoreboard", kwargs={'contest_id' : 23})
+
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def testScoreboardRefreshConnection(self):
+        self.client.login(username='participant1', password='password')
+
+        contest_id = 23
+        contest = Contest.objects.get(pk=contest_id)
+
+        url = reverse("contests:refresh_scoreboard")
+
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def testScoreboardFor(self):
+
+        url = reverse("contests:scoreboard", kwargs={'contest_id' : 23})
+
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 200)
 
     # Jamel
     def testContestName(self):
