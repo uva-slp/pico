@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template import Context, Template
 from django.utils import timezone
 from contests.models import Team, Participant, Contest, Problem, ContestTemplate, ContestInvite, Submission, Notification
-from contests.views import createContest, editContest, createTemplate, activateContest, deleteContest
+from contests.views import createContest, editContest, createTemplate, activateContest, deleteContest, displayContest
 from datetime import datetime, timedelta, time
 
 
@@ -114,6 +114,28 @@ class DisplayContestViewTest(TestCase):
 
         url = reverse("contests:contest", kwargs={'contest_id': 7})
         resp = self.client.get(url)
+        self.assertEqual(resp.status_code, 200)
+
+    # Vivian
+    def test_view_contest_uploadcodeform(self):
+        self.client.login(username='participant1', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        test_contest = Contest.objects.get(id=22)
+        test_team = Team.objects.get(id=3)
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        problem = Problem.objects.get(id=1)
+        test_submission = Submission(run_id=1, team=test_team, problem=problem, timestamp=datetime.now(timezone.utc), state="YES", result="YES")
+        test_submission.save()
+        data = {"problem": 1, "submit": "Submit", "instance": 1}
+        files = {"code_file": SimpleUploadedFile("foo.txt", b"foo")}
+
+        request = self.factory.post(reverse("contests:contest", kwargs={'contest_id': 22}), data)
+        request.user = user
+        request.FILES.update(files)
+        resp = displayContest(request, 22)
         self.assertEqual(resp.status_code, 200)
 
     # Vivian
