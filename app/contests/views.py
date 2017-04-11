@@ -555,6 +555,7 @@ def stats(request):
 
 
 def scoreboard(request, contest_id):
+    #contest_id = request.POST.get('contestId', "0")
 
     scoreboard_contest = Contest.objects.get(id=contest_id) # Get contest ID from URL
     problems = Problem.objects.all()

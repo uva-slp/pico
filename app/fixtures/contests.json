@@ -123,6 +123,25 @@
             "autojudge_review": "",
             "problem_description": "uploads/hi.txt",
             "contest_admins": [["testuser"]],
+            "contest_participants": [1,2]
+        }
+    },
+        {
+        "model": "contests.contest",
+        "pk": 23,
+        "fields": {
+            "title": "test contest",
+            "date_created": "2016-11-15T02:48:38.621Z",
+            "creator": [
+                "testuser"
+            ],
+            "languages": "['1', '2', '3']",
+            "contest_length": "02:00",
+            "time_penalty": "20",
+            "autojudge_enabled": false,
+            "autojudge_review": "",
+            "problem_description": "uploads/hi.txt",
+            "contest_admins": [["testuser"]],
             "contest_participants": [1, 2]
         }
     }
