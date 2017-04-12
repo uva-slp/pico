@@ -556,10 +556,8 @@ def scoreboard(request, contest_id):
 
     for participant in participants:
         teamname = participant.team.name
-        try:
-            tempteam = Team.objects.get(name=teamname)
-        except:
-            raise Http404("Team in scoreboard no longer exists")
+
+        tempteam = Team.objects.get(name=teamname)
 
         problem_score_array[teamname] = 0
         problem_attempts_array[teamname] = 0

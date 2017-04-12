@@ -745,11 +745,136 @@ class ContestCreationTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-    def testScoreboardParticipants(self):
+    def testScoreboardParticipantsWrongSub(self):
 
+        test_contest = Contest.objects.get(id=23)
+        test_team = Team.objects.get(id=1)
+        problem = Problem(name="p1", contest=test_contest)
+        problem.save()
+
+        wrongsubmission = Submission(team=test_team, problem=problem, result='WRONG')
+        wrongsubmission.save()
+
+        participant = Participant(contest=test_contest, team=test_team, )
+        participant.save()
         url = reverse("contests:scoreboard", kwargs={'contest_id' : 23})
 
         response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def testScoreboardParticipantsYesSub(self):
+
+        test_contest = Contest.objects.get(id=23)
+        test_team = Team.objects.get(id=1)
+        problem = Problem(name="p1", contest=test_contest)
+        problem.save()
+        yessubmission = Submission(team=test_team, problem=problem, result='YES')
+        yessubmission.save()
+
+        participant = Participant(contest=test_contest, team=test_team, )
+        participant.save()
+        url = reverse("contests:scoreboard", kwargs={'contest_id': 23})
+
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def testScoreboardParticipantsNoSub(self):
+        test_contest = Contest.objects.get(id=23)
+        test_team = Team.objects.get(id=1)
+        problem = Problem(name="p1", contest=test_contest)
+        problem.save()
+
+        participant = Participant(contest=test_contest, team=test_team, )
+        participant.save()
+        url = reverse("contests:scoreboard", kwargs={'contest_id': 23})
+
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def testScoreboardParticipantsPendingSub(self):
+        test_contest = Contest.objects.get(id=23)
+
+        test_team = Team.objects.get(id=1)
+        problem = Problem(name="p1", contest=test_contest)
+        problem.save()
+        elsesubmission = Submission(team=test_team, problem=problem, result='pending')
+        elsesubmission.save()
+
+        participant = Participant(contest=test_contest, team=test_team, )
+        participant.save()
+        url = reverse("contests:scoreboard", kwargs={'contest_id': 23})
+
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def testRefreshScoreboardParticipantsYesSub(self):
+
+        test_contest = Contest.objects.get(pk=23)
+        test_contest.save()
+        test_team = Team.objects.get(id=1)
+        problem = Problem(name="p1", contest=test_contest)
+        problem.save()
+        yessubmission = Submission(team=test_team, problem=problem, result='YES')
+        yessubmission.save()
+
+        participant = Participant(contest=test_contest, team=test_team, )
+        participant.save()
+        url = reverse("contests:refresh_scoreboard")
+
+        response = self.client.post(url, {'contestId': 23})
+
+        self.assertEqual(response.status_code, 200)
+
+    def testRefreshScoreboardParticipantsNoSub(self):
+        test_contest = Contest.objects.get(pk=23)
+        test_contest.save()
+        test_team = Team.objects.get(id=1)
+        problem = Problem(name="p1", contest=test_contest)
+        problem.save()
+
+        participant = Participant(contest=test_contest, team=test_team, )
+        participant.save()
+        url = reverse("contests:refresh_scoreboard")
+
+        response = self.client.post(url, {'contestId': 23})
+
+        self.assertEqual(response.status_code, 200)
+
+    def testRefreshScoreboardParticipantsPendingSub(self):
+        test_contest = Contest.objects.get(pk=23)
+        test_contest.save()
+        test_team = Team.objects.get(id=1)
+        problem = Problem(name="p1", contest=test_contest)
+        problem.save()
+        elsesubmission = Submission(team=test_team, problem=problem, result='pending')
+        elsesubmission.save()
+
+        participant = Participant(contest=test_contest, team=test_team, )
+        participant.save()
+        url = reverse("contests:refresh_scoreboard")
+
+        response = self.client.post(url, {'contestId': 23})
+
+        self.assertEqual(response.status_code, 200)
+
+    def testScoreboardRefreshParticipantsWrongSub(self):
+
+        test_contest = Contest.objects.get(pk=23)
+        test_contest.save()
+        problem = Problem(name="p1", contest=test_contest)
+        problem.save()
+        test_team = Team.objects.get(id=1)
+        wrongsubmission = Submission(team=test_team, problem=problem, result='WRONG')
+        wrongsubmission.save()
+        participant = Participant(contest=test_contest, team=test_team)
+        participant.save()
+        url = reverse("contests:refresh_scoreboard")
+
+        response = self.client.post(url, {'contestId': 23})
 
         self.assertEqual(response.status_code, 200)
 
