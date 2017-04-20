@@ -2,7 +2,9 @@ from django.contrib import auth
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.utils import timezone
-from contests.models import Team, Contest, Problem, Participant,Submission
+from users.models import User
+from teams.models import Team
+from contests.models import Contest, Problem, Participant,Submission
 from datetime import datetime
 
 
@@ -31,6 +33,12 @@ class DisplayContestTest(TestCase):
         problem = Problem.objects.get(id=1)
         test_submission = Submission(run_id=1, team=test_team, problem=problem, timestamp=datetime.now(timezone.utc), state="YES", result="YES")
         test_submission.save()
+
+        self.assertEqual(len(test_team.members.all()), 1)
+        test_teammate = User.objects.get(id=9)
+        # test_team.members.add(test_teammate)
+        # test_team.save()
+        # self.assertEqual(len(test_team.members.all()), 2)
 
         url = reverse("stats:index")
         resp = self.client.get(url)
