@@ -36,9 +36,9 @@ class DisplayContestTest(TestCase):
 
         self.assertEqual(len(test_team.members.all()), 1)
         test_teammate = User.objects.get(id=9)
-        # test_team.members.add(test_teammate)
-        # test_team.save()
-        # self.assertEqual(len(test_team.members.all()), 2)
+        test_team.members.add(test_teammate)
+        test_team.save()
+        self.assertEqual(len(test_team.members.all()), 2)
 
         url = reverse("stats:index")
         resp = self.client.get(url)
