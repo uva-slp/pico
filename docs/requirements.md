@@ -66,7 +66,6 @@ UVa has significant experience with programming contests, and somebody can answe
 ## Requirements: Desired
 
 - Use of the Kattis format for problem creation
-- Ability to use validators for problem judging
 - Implementation of many (if not all) of the features currently handled by PC^2
 - Fully fledged, easy to use, and nice looking web interface
 - Window flashes orange in the taskbar when an alert is given to competitors
@@ -87,3 +86,4 @@ UVa has significant experience with programming contests, and somebody can answe
 - More flexible grading, so that this type of system could be used in a class, for example. This implies the ability to configure scoring metrics.
 - The ability to *theme* the web interface to mimic existing systems, or to create new themes
 - Fully sandboxed execution environments
+- Ability to use validators for problem judging
