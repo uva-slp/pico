@@ -76,8 +76,6 @@ UVa has significant experience with programming contests, and somebody can answe
 - Flexible execution system that will allow new execution environments to be easily added
 - Generation of reports, graphs, and statistics
 - More advanced ways to have the computer judge and view wrong answers, including intelligent diff comparisons
-- Proper following of the [contest control standards](https://clics.ecs.baylor.edu/index.php/Contest_Control_System)
-  - It may be that following them all is beyond the scope of the desired requirements; if so, then the system should be flexible enough that aligning the system with those standards is feasible
 
 
 ## Requirements: Optional
@@ -86,3 +84,4 @@ UVa has significant experience with programming contests, and somebody can answe
 - The ability to *theme* the web interface to mimic existing systems, or to create new themes
 - Fully sandboxed execution environments
 - Ability to use validators for problem judging
+- Proper following of all the [contest control standards](https://clics.ecs.baylor.edu/index.php/Contest_Control_System)
