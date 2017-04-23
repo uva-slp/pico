@@ -61,7 +61,7 @@ function formatSingleNotification(data){
     var notiString = "";
     notiString += "Result for Contest[ " + data[0] + " ] Problem[ "
             + data[1] + " ] Submission[ " + data[2] + " ] :";
-    if (data[3] === "Yes") {
+    if (data[3] == "Yes") {
         notiString += "<b style=\"color:green;\">" + data[3] + "</b>";
     } else {
         notiString += "<b style=\"color:red;\">" + data[3] + "</b>";

@@ -81,8 +81,10 @@ QUnit.module("notification setup", {
         var fixture = $("#qunit-fixture");
         fixture.append('<div id="getNotificationUrl" style="display: none;">http://localhost:8000/contests/api/get_notification/</div>');
         data_list = [];
-        cur_data = ("test contest", 1, 1, "False", 1, 1);
-        data_list.push(cur_data);
+        false_data = ('test contest', 1, 1, 'False', 1, 1);
+        yes_data = ('test contest', 1, 2, 'Yes', 2, 2);
+        data_list.push(yes_data);
+        data_list.push(false_data);
     }
 });
 
