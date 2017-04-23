@@ -35,11 +35,11 @@ function renderNotification(data) {
     $('#notificationModal').html(modalHtml);
     $('.notificationClass').modal('show');
 
-    $('.notificationClass').on('hidden.bs.modal', onModalClose())
+    $('.notificationClass').on('hidden.bs.modal', onModalClose($(this).attr('id')))
 }
 
-function onModalClose() {
-    var stringId = $(this).attr('id');
+function onModalClose(data) {
+    var stringId = data;
     var id = parseInt(stringId.substring(7));
     console.log("Try close notification: " + id);
     closeNotification(id);
