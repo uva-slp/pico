@@ -97,3 +97,12 @@ QUnit.test("get notification test", function (assert) {
     restoreAjax();
     assert.ok( 1 == "1", "Passed!" );
 });
+
+QUnit.test("close notification test", function (assert) {
+    replaceAjax(function(options) {
+        options.success({id:1},null,{status:200});
+    });
+    closeNotification();
+    restoreAjax();
+    assert.ok( 1 == "1", "Passed!" );
+});
