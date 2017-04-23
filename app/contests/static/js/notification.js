@@ -35,12 +35,14 @@ function renderNotification(data) {
     $('#notificationModal').html(modalHtml);
     $('.notificationClass').modal('show');
 
-    $('.notificationClass').on('hidden.bs.modal', function (e) {
-        var stringId = $(this).attr('id');
-        var id = parseInt(stringId.substring(7));
-        console.log("Try close notification: " + id);
-        closeNotification(id);
-    })
+    $('.notificationClass').on('hidden.bs.modal', onModalClose())
+}
+
+function onModalClose() {
+    var stringId = $(this).attr('id');
+    var id = parseInt(stringId.substring(7));
+    console.log("Try close notification: " + id);
+    closeNotification(id);
 }
 
 function formatSingleNotification(data){
