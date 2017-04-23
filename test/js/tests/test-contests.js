@@ -88,15 +88,15 @@ QUnit.module("notification setup", {
     }
 });
 
-QUnit.test("get notification test", function (assert) {
-    replaceAjax(function(options) {
-        options.success({data:data_list},null,{status:200});
-        options.complete();
-    });
-    fetchNotification();
-    restoreAjax();
-    assert.ok( 1 == "1", "Passed!" );
-});
+// QUnit.test("get notification test", function (assert) {
+//     replaceAjax(function(options) {
+//         options.success({data:data_list},null,{status:200});
+//         options.complete();
+//     });
+//     fetchNotification();
+//     restoreAjax();
+//     assert.ok( 1 == "1", "Passed!" );
+// });
 
 //QUnit.test("close modal test", function (assert) {
 //    onModalClose();
