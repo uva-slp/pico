@@ -74,7 +74,6 @@ UVa has significant experience with programming contests, and somebody can answe
   - Highlight diff of candidate submission and judge submission for easy readability by judge. Allow options such as ignore whitespace
   - Admin role by contest, not for overall system (e.g. a student can be an admin for a specific contest)
 - Flexible execution system that will allow new execution environments to be easily added
-  - Also, the ability to "farm out" the judging to external clients
 - Generation of reports, graphs, and statistics
 - More advanced ways to have the computer judge and view wrong answers, including intelligent diff comparisons
 - Proper following of the [contest control standards](https://clics.ecs.baylor.edu/index.php/Contest_Control_System)
