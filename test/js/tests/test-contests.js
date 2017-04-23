@@ -75,3 +75,22 @@ QUnit.test("timer bar test", function (assert) {
 
     assert.equal(1, 1, "Contest timer bar passes");
 });
+
+QUnit.module("notification setup", {
+    beforeEach: function () {
+        var fixture = $("#qunit-fixture");
+        fixture.append('<div id="getNotificationUrl" style="display: none;">http://localhost:8000/contests/api/get_notification/</div>');
+        data_list = [];
+        cur_data = ("test contest", 1, 1, "False", 1, 1);
+        data_list.push(cur_data);
+    }
+});
+
+QUnit.test("get notification test", function (assert) {
+    replaceAjax(function(options) {
+        options.success({data:data_list},null,{status:200});
+    });
+    fetchNotification();
+    restoreAjax();
+    assert.ok( 1 == "1", "Passed!" );
+});
