@@ -68,9 +68,17 @@ QUnit.test("timer bar test", function (assert) {
     contest_length = '5 p.m.';
     loadTimerBar(contest_start, is_contest_started, is_contest_ended, contest_length, home_url);
 
-    contest_start = moment().utc().format('YYYY-MM-DD H:mm:ss a');
     contest_length = '2 a.m.';
+
+    contest_start = moment().subtract(moment.duration("01:40:00")).format('YYYY-MM-DD H:mm:ss a');
     loadTimerBar(contest_start, is_contest_started, is_contest_ended, contest_length, home_url);
+
+    contest_start = moment().subtract(moment.duration("01:50:00")).format('YYYY-MM-DD H:mm:ss a');
+    loadTimerBar(contest_start, is_contest_started, is_contest_ended, contest_length, home_url);
+
+    contest_start = moment().subtract(moment.duration("01:58:55")).format('YYYY-MM-DD H:mm:ss a');
+    loadTimerBar(contest_start, is_contest_started, is_contest_ended, contest_length, home_url);
+
     //assert.equal(live_timer_div.hasClass("progress-bar-warning"), true, "Contest has over 1 hour left");
 
     assert.equal(1, 1, "Contest timer bar passes");
