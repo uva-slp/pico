@@ -206,8 +206,8 @@ LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'home'
 
 # Dynamic content is saved to 'uploads' folder
-MEDIA_ROOT = os.path.join('pico/app/', '')
-MEDIA_URL = '/pico/'
+MEDIA_ROOT = BASE_DIR
+MEDIA_URL = ''
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
