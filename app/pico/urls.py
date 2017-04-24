@@ -12,13 +12,4 @@ urlpatterns = [
     url(r'^stats/', include('stats.urls', namespace='stats')),
 	url(r'^$', views.index, name='index'),
 	url(r'^home$', views.home, name='home'),
-] + static('', document_root=settings.MEDIA_ROOT)
-
-'''
-if settings.DEBUG:
-	urlpatterns += patterns('',
-		url(r'^uploads/(?P<path>.*)$', 'django.views.static.serve', {
-			'document_root': settings.MEDIA_ROOT,
-		}),
-	)
-'''
+] + static(settings.MEDIA_URL.replace('/pico',''), document_root=settings.MEDIA_ROOT)
