@@ -98,10 +98,10 @@ QUnit.module("notification setup", {
      assert.ok( 1 == "1", "Passed!" );
  });
 
-//QUnit.test("close modal test", function (assert) {
-//    onModalClose();
-//    assert.ok( 1 == "1", "Passed!" );
-//});
+QUnit.test("close modal test", function (assert) {
+    onModalClose("myModal1");
+    assert.ok( 1 == "1", "Passed!" );
+});
 
 QUnit.test("close notification test", function (assert) {
     replaceAjax(function(options) {
