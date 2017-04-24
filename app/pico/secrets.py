@@ -2,9 +2,9 @@
 SECRET_KEY = '=i4=h0uavlqe-^yk+(=t^o5^xm@+=8=sw^6li)vaeg(6g05*kw'
 
 # Database info
-DB_NAME = 'pico'
-DB_USER = 'root'
-DB_PASS = 'p@ssw0rd'
+DB_NAME = ''
+DB_USER = ''
+DB_PASS = ''
 
 # Server email info
 SERVER_EMAIL = ''
