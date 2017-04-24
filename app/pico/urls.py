@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^stats/', include('stats.urls', namespace='stats')),
 	url(r'^$', views.index, name='index'),
 	url(r'^home$', views.home, name='home'),
-] + static(r'^', document_root=settings.MEDIA_ROOT)
+] + static('', document_root=settings.MEDIA_ROOT)
 
 '''
 if settings.DEBUG:
