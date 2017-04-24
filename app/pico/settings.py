@@ -206,7 +206,7 @@ LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'home'
 
 # Dynamic content is saved to 'uploads' folder
-MEDIA_ROOT = '/app/'
+MEDIA_ROOT = os.path.join('pico/app/', '')
 MEDIA_URL = '/pico/'
 
 # Static files (CSS, JavaScript, Images)
