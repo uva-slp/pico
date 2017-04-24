@@ -66,7 +66,6 @@ UVa has significant experience with programming contests, and somebody can answe
 ## Requirements: Desired
 
 - Use of the Kattis format for problem creation
-- Ability to use validators for problem judging
 - Implementation of many (if not all) of the features currently handled by PC^2
 - Fully fledged, easy to use, and nice looking web interface
 - Window flashes orange in the taskbar when an alert is given to competitors
@@ -75,11 +74,8 @@ UVa has significant experience with programming contests, and somebody can answe
   - Highlight diff of candidate submission and judge submission for easy readability by judge. Allow options such as ignore whitespace
   - Admin role by contest, not for overall system (e.g. a student can be an admin for a specific contest)
 - Flexible execution system that will allow new execution environments to be easily added
-  - Also, the ability to "farm out" the judging to external clients
 - Generation of reports, graphs, and statistics
 - More advanced ways to have the computer judge and view wrong answers, including intelligent diff comparisons
-- Proper following of the [contest control standards](https://clics.ecs.baylor.edu/index.php/Contest_Control_System)
-  - It may be that following them all is beyond the scope of the desired requirements; if so, then the system should be flexible enough that aligning the system with those standards is feasible
 
 
 ## Requirements: Optional
@@ -87,3 +83,5 @@ UVa has significant experience with programming contests, and somebody can answe
 - More flexible grading, so that this type of system could be used in a class, for example. This implies the ability to configure scoring metrics.
 - The ability to *theme* the web interface to mimic existing systems, or to create new themes
 - Fully sandboxed execution environments
+- Ability to use validators for problem judging
+- Proper following of all the [contest control standards](https://clics.ecs.baylor.edu/index.php/Contest_Control_System)

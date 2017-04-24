@@ -62,7 +62,7 @@
                         <div class="list-group">
                             {% for t in favorite_teammates %}
                                 {% if t != None %}
-                                    <a href="{% url 'users:index' t.id %}" class="list-group-item">
+                                    <a href="{% url 'users:view' t.id%}" class="list-group-item">
                                         <strong>{{ t.username }}</strong>
                                     </a>
                                 {% endif %}
@@ -124,7 +124,7 @@
                             {% for t in teams %}
                                 {% for m in t.members.all %}
                                     {% if m.username != user.username %}
-                                        <a href="{% url 'users:index' m.id %}" class="list-group-item">
+                                        <a href="{% url 'users:view' m.id%}" class="list-group-item">
                                             <strong>{{ m.username }}</strong>
                                         </a>
                                     {% endif %}

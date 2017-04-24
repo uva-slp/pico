@@ -35,12 +35,15 @@ function renderNotification(data) {
     $('#notificationModal').html(modalHtml);
     $('.notificationClass').modal('show');
 
-    $('.notificationClass').on('hidden.bs.modal', function (e) {
-        var stringId = $(this).attr('id');
-        var id = parseInt(stringId.substring(7));
-        console.log("Try close notification: " + id);
-        closeNotification(id);
-    })
+    $('.notificationClass').on('hidden.bs.modal', onModalClose)
+}
+
+function onModalClose() {
+    var stringId = $(this).attr('id');
+    console.log("stringId: " + stringId);
+    var id = parseInt(stringId.substring(7));
+    console.log("Try close notification: " + id);
+    closeNotification(id);
 }
 
 function formatSingleNotification(data){
@@ -61,7 +64,7 @@ function formatSingleNotification(data){
     var notiString = "";
     notiString += "Result for Contest[ " + data[0] + " ] Problem[ "
             + data[1] + " ] Submission[ " + data[2] + " ] :";
-    if (data[3] === "Yes") {
+    if (data[3] == "Yes") {
         notiString += "<b style=\"color:green;\">" + data[3] + "</b>";
     } else {
         notiString += "<b style=\"color:red;\">" + data[3] + "</b>";
