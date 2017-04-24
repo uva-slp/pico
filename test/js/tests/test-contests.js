@@ -89,27 +89,27 @@ QUnit.module("notification setup", {
         var fixture = $("#qunit-fixture");
         fixture.append('<div id="getNotificationUrl" style="display: none;">http://localhost:8000/contests/api/get_notification/</div>');
         data_list = [];
-        false_data = ('test contest', 1, 1, 'False', 1, 1);
-        yes_data = ('test contest', 1, 2, 'Yes', 2, 2);
+        false_data = ['test contest', 1, 1, 'False', 1, 1];
+        yes_data = ['test contest', 1, 2, 'Yes', 2, 2];
         data_list.push(yes_data);
         data_list.push(false_data);
     }
 });
 
-// QUnit.test("get notification test", function (assert) {
-//     replaceAjax(function(options) {
-//         options.success({data:data_list},null,{status:200});
-//         options.complete();
-//     });
-//     fetchNotification();
-//     restoreAjax();
-//     assert.ok( 1 == "1", "Passed!" );
-// });
+ QUnit.test("get notification test", function (assert) {
+     replaceAjax(function(options) {
+         options.success({data:data_list},null,{status:200});
+         options.complete();
+     });
+     fetchNotification();
+     restoreAjax();
+     assert.ok( 1 == "1", "Passed!" );
+ });
 
-//QUnit.test("close modal test", function (assert) {
-//    onModalClose();
-//    assert.ok( 1 == "1", "Passed!" );
-//});
+QUnit.test("close modal test", function (assert) {
+    onModalClose("myModal1");
+    assert.ok( 1 == "1", "Passed!" );
+});
 
 QUnit.test("close notification test", function (assert) {
     replaceAjax(function(options) {
