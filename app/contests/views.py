@@ -522,14 +522,23 @@ def displayJudge(request, contest_id, run_id):
                         else:
                                 form = ReturnJudgeResultForm(instance=current_submission)
                         allowed_languages = getattr(contest_data, 'languages')
-                        output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), getattr(getattr(current_submission, 'problem'), 'program_input'), allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
-                        retcode = output[0]
-                        fromlines = output[1].split("\n")
+                        input_files = getattr(current_submission, 'problem').problem_input.all()
+                        print("###################LENGTH#########: " + str(len(input_files)))
+                        fromlines = []
+                        if len(input_files):
+                            for input_file in input_files:
+                                in_file = getattr(input_file, 'program_input')
+                                output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), in_file, allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
+                                fromlines.extend(output[1].split("\n"))
+                        else:
+                            output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), None, allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
+                            fromlines.extend(output[1].split("\n"))
                         solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
                         #Use the solution file if it exists. If not, use empty expected output.
                         tolines = []
                         if bool(solution_file) and os.path.isfile(os.path.join(settings.MEDIA_ROOT, solution_file.name)):
                                 tolines = solution_file.read().decode().split("\n")
+                        print(fromlines)
                         html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
                         return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
 
