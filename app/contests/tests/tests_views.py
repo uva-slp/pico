@@ -7,6 +7,7 @@ from django.utils import timezone
 from contests.models import Team, Participant, Contest, Problem, ContestTemplate, ContestInvite, Submission, Notification
 from contests.views import createContest, editContest, createTemplate, activateContest, deleteContest, displayContest
 from datetime import datetime, timedelta, time
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class DisplayIndexViewTest(TestCase):
@@ -428,6 +429,21 @@ class JudgeInterfaceViewTest(TestCase):
         user = auth.get_user(self.client)
         assert user.is_authenticated()
 
+        url = reverse("contests:contest_judge",
+                      kwargs={'contest_id': 7, 'run_id': 1})
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
+        
+    # Derek
+    def test_view_judge_superuser_with_solution_file(self):
+        self.client.login(username='admin', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+
+        problem = Problem.objects.get(pk=2)
+        problem.solution = SimpleUploadedFile("solution.txt", b"test solution")
+        problem.save()
         url = reverse("contests:contest_judge",
                       kwargs={'contest_id': 7, 'run_id': 1})
         resp = self.client.get(url)
