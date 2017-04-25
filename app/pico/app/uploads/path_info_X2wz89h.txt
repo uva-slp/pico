@@ -1,0 +1,11 @@
+
+#sys.path.insert(0, os.path.abspath('/home/student/pico/app/contests/lib'))
+#sys.path.insert(0, os.path.abspath('/home/student/pico/app/contests/'))
+sys.path.insert(0, os.path.abspath('../..'))
+#from django.conf import settings
+#settings.configure()
+import django
+
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.pico.settings")
+django.setup()

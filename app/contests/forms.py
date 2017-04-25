@@ -84,7 +84,7 @@ class CreateContestForm(ModelForm):
 
 class CreateProblem(ModelForm):
     required_css_class = 'required'
-    program_input = forms.FileField(required=False, label= 'Program Input (.txt)')
+    program_input = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple' : True}), required=False, label= 'Program Input (.txt)')
     input_description = forms.CharField(required=False, label='Description of Input',
         widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
     output_description = forms.CharField(required=False, label='Description of Output',
@@ -92,13 +92,7 @@ class CreateProblem(ModelForm):
     sample_input = forms.FileField(required=False, label='Sample Input (.txt)')
     sample_output = forms.FileField(required=False, label='Sample Output (.txt)')
     solution = forms.FileField(required=True, label='Solution (.txt)')
-    timeout = forms.IntegerField(required=False, label='Timeout (seconds)', min_value=0)
-
-    def clean(self):
-        upload_to = 'uploads/'
-        if not 'solution' in self.cleaned_data:
-            return self.cleaned_data
-        upload_to += self.cleaned_data['solution'].name
+    timeout = forms.IntegerField(required=False, label='Timeout (seconds)', min_value=0)        
 
     class Meta:
         model = Problem

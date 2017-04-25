@@ -11,7 +11,7 @@ from django.forms import formset_factory, inlineformset_factory
 from django.urls import reverse
 from .lib import diff as _diff
 from .lib import execution as exe
-from .models import Contest, Problem, ContestTemplate
+from .models import Contest, Problem, ProblemInput, ContestTemplate
 from teams.models import Team
 from .models import Participant, Submission, Notification, ContestInvite
 from users.models import User
@@ -141,9 +141,8 @@ def createContest(request):
                     inv = ContestInvite(contest=contest, team=team)
                     inv.save()
 
-                for qa_form in qa_formset:
-                    qa_form = qa_form.cleaned_data
-                    createNewProblem(request, qa_form, contest_id)
+                for index, qa_form in enumerate(qa_formset):
+                    createNewProblem(request, qa_form, contest_id, index)
 
                     # Loop through participants text box and create participant objects for a team on each line w/ contest
 
@@ -161,21 +160,25 @@ def createContest(request):
 
 
 @login_required
-def createNewProblem(request, form, contest_id):
+def createNewProblem(request, problem_form, contest_id, form_number=None):
+    form = problem_form.cleaned_data
     solution = form.get('solution')
-    program_input = form.get('program_input')
     input_desc = form.get('input_description')
     output_desc = form.get('output_description')
     sample_input = form.get('sample_input')
     sample_output = form.get('sample_output')
 
     p = Problem(
-        solution=solution, program_input=program_input, input_description=input_desc,
+        solution=solution, input_description=input_desc,
         output_description=output_desc, sample_input=sample_input,
         sample_output=sample_output, contest_id=contest_id
     )
-
     p.save()
+    if form_number != None:
+        files = request.FILES.getlist('form-'+str(form_number)+'-program_input')
+        for f in files:
+            pi = ProblemInput(problem=p, program_input=f)
+            pi.save()
 
 
 @login_required
@@ -242,7 +245,6 @@ def editContest(request, contest_id):
         if request.POST['submit'] == "save_new_problem":
             problem_form = CreateProblem(request.POST, request.FILES)
             if problem_form.is_valid():
-                problem_form = problem_form.cleaned_data
                 createNewProblem(request, problem_form, contest_id)
 
             request.method = None
