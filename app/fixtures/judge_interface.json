@@ -114,7 +114,7 @@
       "model": "contests.problem",
       "pk": 2,
       "fields": {
-          "solution": "uploads/readme_LiMAWUg.txt",
+          "solution": "/contests/code_test_files/solution.txt",
           "input_description": "problem 1 input",
           "output_description": "problem 1 output",
           "sample_input": "",
