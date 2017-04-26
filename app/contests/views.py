@@ -522,13 +522,16 @@ def displayJudge(request, contest_id, run_id):
                         else:
                                 form = ReturnJudgeResultForm(instance=current_submission)
                         allowed_languages = getattr(contest_data, 'languages')
-                        input_files = getattr(current_submission, 'problem').problem_input.all()
+                        problem_inputs = getattr(current_submission, 'problem').problem_input.all()
+                        input_files = []
+                        for p_i in problem_inputs:
+                            input_files.append(getattr(p_i, 'program_input'))
                         print("###################LENGTH#########: " + str(len(input_files)))
                         fromlines = []
                         if len(input_files):
+                            input_files.sort(key=lambda x: x.name)
                             for input_file in input_files:
-                                in_file = getattr(input_file, 'program_input')
-                                output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), in_file, allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
+                                output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), input_file, allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
                                 fromlines.extend(output[1].split("\n"))
                         else:
                             output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), None, allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
