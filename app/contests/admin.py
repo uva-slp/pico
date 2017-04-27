@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Contest, Submission, Problem, Participant, Notification, ContestInvite
+from .models import Contest, Submission, Problem, ProblemInput, Participant, Notification, ContestInvite
 
 # @admin.register(Contest)
 # class ContestAdmin(admin.ModelAdmin):
@@ -15,6 +15,7 @@ from .models import Contest, Submission, Problem, Participant, Notification, Con
 admin.site.register(Contest)
 admin.site.register(Submission)
 admin.site.register(Problem)
+admin.site.register(ProblemInput)
 admin.site.register(Participant)
 admin.site.register(Notification)
 admin.site.register(ContestInvite)
