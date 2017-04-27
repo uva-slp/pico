@@ -526,7 +526,6 @@ def displayJudge(request, contest_id, run_id):
                         input_files = []
                         for p_i in problem_inputs:
                             input_files.append(getattr(p_i, 'program_input'))
-                        print("###################LENGTH#########: " + str(len(input_files)))
                         fromlines = []
                         if len(input_files):
                             input_files.sort(key=lambda x: x.name)
@@ -541,7 +540,6 @@ def displayJudge(request, contest_id, run_id):
                         tolines = []
                         if bool(solution_file) and os.path.isfile(os.path.join(settings.MEDIA_ROOT, solution_file.name)):
                                 tolines = solution_file.read().decode().split("\n")
-                        print(fromlines)
                         html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
                         return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
 
