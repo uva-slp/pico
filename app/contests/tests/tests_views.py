@@ -4,10 +4,11 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template import Context, Template
 from django.utils import timezone
-from contests.models import Team, Participant, Contest, Problem, ContestTemplate, ContestInvite, Submission, Notification
-from contests.views import createContest, editContest, createTemplate, activateContest, deleteContest, displayContest
+from contests.models import Team, Participant, Contest, Problem, ProblemInput, ContestTemplate, ContestInvite, Submission, Notification
+from contests.views import createContest, editContest, createTemplate, activateContest, deleteContest, displayContest, createNewProblem
 from datetime import datetime, timedelta, time
 from django.core.files.uploadedfile import SimpleUploadedFile
+from contests.forms import CreateProblem
 
 
 class DisplayIndexViewTest(TestCase):
@@ -449,6 +450,24 @@ class JudgeInterfaceViewTest(TestCase):
         resp = self.client.get(url)
 
         self.assertEqual(resp.status_code, 200)
+        
+    # Derek
+    def test_view_judge_superuser_with_input_file(self):
+        self.client.login(username='admin', password='password')
+        user = auth.get_user(self.client)
+        assert user.is_authenticated()
+        
+        problem = Problem.objects.get(pk=2)
+        problem.solution = SimpleUploadedFile("solution.txt", b"test solution")
+        problem.save()
+        p_i = ProblemInput(problem=problem, program_input=SimpleUploadedFile("input.txt", b"test input"))
+        p_i.save()
+        
+        url = reverse("contests:contest_judge",
+                      kwargs={'contest_id': 7, 'run_id': 1})
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
 
     # Vivian
     def test_view_judge_superuser(self):
@@ -672,6 +691,32 @@ class EditContestViewTest(TestCase):
         self.client.login(username='testuser', password='password')
         self.user = auth.get_user(self.client)
 
+    # Derek
+    def test_create_new_problem_with_input_file(self):
+        data = {
+            "title": "Contest test creation", "creator": 1, "languages": "['1', '2', '3']",
+            "contest_length": "02:00", "time_penalty": "20",
+            "autojudge_enabled": "0", "autojudge_review": "",
+            "problem_description": "hi.txt",
+            "contest_admins": [2], "contest_participants": [1, 2],
+            "submit": "create_contest",
+            "form-TOTAL_FORMS": 1, "form-INITIAL_FORMS": 0,
+            "form-MIN_NUM_FORMS": 0, "form-MAX_NUM_FORMS": 1000
+        }
+        files = {
+            "problem_description": SimpleUploadedFile("hi.txt", b"test problem desc"),
+            "form-0-program_input": SimpleUploadedFile("input.txt", b"test problem input")
+        }
+        class problem_form_dependency:
+            def __init__(self, attributes):
+                self.cleaned_data = attributes
+        di = problem_form_dependency({'solution':SimpleUploadedFile("solution.txt", b"test problem solution"),'input_description':SimpleUploadedFile("inputdesc.txt", b"test problem input desc"),'output_description':SimpleUploadedFile("outputdesc.txt", b"test problem output desc"),'sample_input':SimpleUploadedFile("exampleinput.txt", b"test problem example input"), 'sample_output':SimpleUploadedFile("exampleoutput.txt", b"test problem example output")})
+        request = self.factory.post(reverse("contests:create_contest"), data)
+        request.user = self.user
+        request.FILES.update(files)
+        createNewProblem(request, di, 22, 0)
+        self.assertEqual(len(ProblemInput.objects.all()), 1)
+        
     # Austin
     def test_user_allowed(self):
         assert self.user.is_authenticated()
