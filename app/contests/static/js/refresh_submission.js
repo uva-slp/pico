@@ -9,6 +9,7 @@ function refreshPage() {
         success: function (data) {
             console.log("try refresh submission")
             $('#submission_table').html(data)
+            updataDataTable();
         },
         complete: function () {
             setTimeout(refreshPage, 5000);
@@ -17,3 +18,18 @@ function refreshPage() {
 }
 
 setTimeout(refreshPage, 5000);
+
+function updataDataTable() {
+    $('#mydata1').DataTable({
+        "searching": false,
+        "lengthChange": false,
+        "info": false,
+        "paging": false
+    });
+    $('#mydata2').DataTable({
+        "searching": false,
+        "lengthChange": false,
+        "info": false,
+        "paging": false
+    });
+}

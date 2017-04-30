@@ -1,3 +1,4 @@
+console.log("load datatable");
 $('#mydata1').DataTable({
     "searching": false,
     "lengthChange": false,
