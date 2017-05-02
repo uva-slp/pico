@@ -11,7 +11,7 @@ from django.forms import formset_factory, inlineformset_factory
 from django.urls import reverse
 from .lib import diff as _diff
 from .lib import execution as exe
-from .models import Contest, Problem, ProblemInput, ContestTemplate
+from .models import Contest, Problem, ProblemInput, ProblemSolution, ContestTemplate
 from teams.models import Team
 from .models import Participant, Submission, Notification, ContestInvite
 from users.models import User
@@ -169,7 +169,7 @@ def createNewProblem(request, problem_form, contest_id, form_number=None):
     sample_output = form.get('sample_output')
 
     p = Problem(
-        solution=solution, input_description=input_desc,
+        input_description=input_desc,
         output_description=output_desc, sample_input=sample_input,
         sample_output=sample_output, contest_id=contest_id
     )
@@ -179,6 +179,10 @@ def createNewProblem(request, problem_form, contest_id, form_number=None):
         for f in files:
             pi = ProblemInput(problem=p, program_input=f)
             pi.save()
+        files = request.FILES.getlist('form-'+str(form_number)+'-solution')
+        for f in files:
+            ps = ProblemSolution(problem=p, solution=f)
+            ps.save()
 
 
 @login_required
@@ -535,11 +539,16 @@ def displayJudge(request, contest_id, run_id):
                         else:
                             output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), None, allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
                             fromlines.extend(output[1].split("\n"))
-                        solution_file = getattr(getattr(current_submission, 'problem'), 'solution')
-                        #Use the solution file if it exists. If not, use empty expected output.
+                        #Use the solution file(s) if it(they) exists. If not, use empty expected output.
+                        problem_solutions = getattr(current_submission, 'problem').problem_solution.all()
+                        solution_files = []
+                        for p_s in problem_solutions:
+                            solution_files.append(getattr(p_s, 'solution'))
                         tolines = []
-                        if bool(solution_file) and os.path.isfile(os.path.join(settings.MEDIA_ROOT, solution_file.name)):
-                                tolines = solution_file.read().decode().split("\n")
+                        if len(solution_files):
+                            solution_files.sort(key=lambda x: x.name)
+                            for solution_file in solution_files:
+                                tolines.extend(solution_file.read().decode().split("\n"))
                         html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
                         return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
 
