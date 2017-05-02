@@ -3,7 +3,6 @@
         "model": "contests.problem",
         "pk": 1,
         "fields": {
-            "solution": "sol1.txt",
             "input_description": "problem 1 input",
             "output_description": "problem 1 output",
             "sample_input": "a b c",
@@ -15,7 +14,6 @@
         "model": "contests.problem",
         "pk": 2,
         "fields": {
-            "solution": "sol2.txt",
            "input_description": "problem 2 input",
            "output_description": "problem 2 output",
            "sample_input": "",
