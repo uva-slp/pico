@@ -780,10 +780,13 @@ class EditContestViewTest(TestCase):
         problem_id = 1
 
         problem = Problem.objects.get(pk=problem_id)
-
+        pi = ProblemInput(problem=problem, program_input=SimpleUploadedFile("input.txt", b"test input"))
+        pi.save()
+        ps = ProblemSolution(problem=problem, solution=SimpleUploadedFile("solution.txt", b"test solution"))
+        ps.save()
+        
         data = {
             "problem_id": problem_id,
-            "solution": "uploads/test1.txt",
             "input_description": "edited problem 1 input",
             "output_description": "problem 1 output",
             "sample_input": "",
@@ -794,6 +797,7 @@ class EditContestViewTest(TestCase):
         }
         files = {
             "solution": SimpleUploadedFile("sol.txt", b"test solution"),
+            "program_input": SimpleUploadedFile("input.txt", b"test input"),
             "sample_input": SimpleUploadedFile("input.txt", b"edited a b c"),
             "sample_output": SimpleUploadedFile("output.txt", b"edited 1 2 3")
         }
@@ -849,6 +853,7 @@ class EditContestViewTest(TestCase):
         }
         files = {
             "solution": SimpleUploadedFile("sol3.txt", b"problem 3 solution"),
+            "program_input": SimpleUploadedFile("input3.txt", b"problem 3 input"),
             "sample_input": SimpleUploadedFile("input3.txt", b"problem 3 sample input"),
             "sample_output": SimpleUploadedFile("output3.txt", b"problem 3 sample output")
         }
