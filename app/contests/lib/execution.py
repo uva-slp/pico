@@ -38,8 +38,9 @@ def execute_code(Popen, submission_file, original_filename, input_file, allowed_
         docker_command.append("input.txt")
     command = Popen(docker_command, stdin=PIPE, stderr=PIPE, stdout=PIPE, universal_newlines=True)
     output, error = command.communicate()
-    #Delete the temporary directory
+    #Delete the temporary directory and docker container
     shutil.rmtree(temp_dirpath)
+    Popen("docker ps -f status=exited | awk '{ print $1, $2 }' | grep pccs | awk '{print $1 }' | xargs -I {} docker rm {}", shell=True)
     #Check if there was an error with the command to run the docker container:
     if error != '':
         return (1, "CONTAINER ERROR:\n" + error)
