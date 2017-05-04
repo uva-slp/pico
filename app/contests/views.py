@@ -183,6 +183,7 @@ def createNewProblem(request, problem_form, contest_id, form_number=None):
         for f in files:
             ps = ProblemSolution(problem=p, solution=f)
             ps.save()
+    return p
 
 
 @login_required
@@ -229,11 +230,28 @@ def editContest(request, contest_id):
         if request.POST['submit'] == "update_problem":
             problem_id = request.POST['problem_id']
             problem = Problem.objects.get(pk=problem_id)
+            #Delete existing input and solution files
+            problem_inputs = problem.problem_input.all()
+            for problem_input in problem_inputs:
+                problem_input.delete()
+            problem_solutions = problem.problem_solution.all()
+            for problem_solution in problem_solutions:
+                problem_solution.delete()
             problem_form = CreateProblem(request.POST or None, request.FILES or None, instance=problem)
+            #Create new input and solution files
+            p = Problem.objects.get(pk=problem_id)
+            files = request.FILES.getlist('program_input')
+            for f in files:
+                pi = ProblemInput(problem=p, program_input=f)
+                pi.save()
+            files = request.FILES.getlist('solution')
+            for f in files:
+                ps = ProblemSolution(problem=p, solution=f)
+                ps.save()
+                
             if problem_form.is_valid():
                 problem_form.id = problem_id
                 problem_form.save()
-
             request.method = None
             request.POST = None
             return editContest(request, contest_id)
@@ -249,8 +267,15 @@ def editContest(request, contest_id):
         if request.POST['submit'] == "save_new_problem":
             problem_form = CreateProblem(request.POST, request.FILES)
             if problem_form.is_valid():
-                createNewProblem(request, problem_form, contest_id)
-
+                p = createNewProblem(request, problem_form, contest_id)
+                files = request.FILES.getlist('program_input')
+                for f in files:
+                    pi = ProblemInput(problem=p, program_input=f)
+                    pi.save()
+                files = request.FILES.getlist('solution')
+                for f in files:
+                    ps = ProblemSolution(problem=p, solution=f)
+                    ps.save()
             request.method = None
             request.POST = None
             return editContest(request, contest_id)
