@@ -15,8 +15,21 @@ import ast
 
 dir_path = os.path.dirname(os.path.realpath(__file__)) 
 
-#Returns a return code and the output of the program or an error message
 def execute_code(Popen, submission_file, original_filename, input_file, allowed_languages, timeout=5):
+    """Executes the cpp, Java, or Python code in a Docker container (if the language is allowed).
+
+    Args:
+        Popen: A class that can execute subprocess commands.
+        submission_file: A Django file containing the code to be executed.
+        original_filename: The name of the file before being automatically made unique by the Django framework (important for Java files, where the whole file name matters).
+        input_file: The file to be read as stdin in the program.
+        allowed_languages: A list of a combination of the integers 1, 2, and 3 indicating which languages are allowed (1=Java, 2=C++, 3=Python).
+        timeout: The maximum amount of time the code is given to execute.
+
+    Returns:
+        A tuple containing an integer return code (0=success, else failure) and a string of the output of the executed program (or error message).
+
+    """
     #Get rid of white space in allowed_languages so it can be passed as a command line arg
     allowed_languages = "".join(allowed_languages.split())
     if not (submission_file and original_filename):
@@ -38,8 +51,9 @@ def execute_code(Popen, submission_file, original_filename, input_file, allowed_
         docker_command.append("input.txt")
     command = Popen(docker_command, stdin=PIPE, stderr=PIPE, stdout=PIPE, universal_newlines=True)
     output, error = command.communicate()
-    #Delete the temporary directory
+    #Delete the temporary directory and docker container
     shutil.rmtree(temp_dirpath)
+    Popen("docker ps -f status=exited | awk '{ print $1, $2 }' | grep pccs | awk '{print $1 }' | xargs -I {} docker rm {}", shell=True, stdout=PIPE)
     #Check if there was an error with the command to run the docker container:
     if error != '':
         return (1, "CONTAINER ERROR:\n" + error)
@@ -49,8 +63,18 @@ def execute_code(Popen, submission_file, original_filename, input_file, allowed_
     return (retcode, program_output)
 
 
-#Runs the given command to execute a compiled file
 def execute_compiled_file(Popen, command, input_file):
+    """Runs the given command to execute a compiled Java, C++, or Python file.
+
+    Args:
+        Popen: A class that can execute subprocess commands.
+        command: The string holding the command to execute the compiled file.
+        input_file: The file to be read as stdin in the program.
+
+    Returns:
+        A tuple containing an integer return code (0=success, else failure) and a string containing the output of the program (or error message).
+
+    """
     if input_file:
         program_output = Popen(command + " < " + os.path.join("code", input_file), stdout=PIPE, stderr=PIPE, shell=True)
     else:
@@ -67,6 +91,18 @@ def execute_compiled_file(Popen, command, input_file):
 
 #Returns the a return code and the output of the program or an error message as a tuple.
 def run_java(Popen, file_name, input_file, timeout):
+    """Runs the provided Java file.
+
+    Args:
+        Popen: A class that can execute subprocess commands.
+        file_name: The name of the Java file to be compiled and executed.
+        input_file: The file to be read as stdin in the program.
+        timeout: The maximum amount of time the code is given to execute.
+
+    Returns:
+        A tuple containing an integer return code (0=success, else failure) and a string with the output of the executed program or an error message.
+
+    """
     compilation_result = Popen("javac " + os.path.join("code", file_name), shell=True, stdout=PIPE, stderr=PIPE)
     compiled_file = os.path.splitext(file_name)[0]
     output, error = compilation_result.communicate()
@@ -76,8 +112,19 @@ def run_java(Popen, file_name, input_file, timeout):
     return execute_compiled_file(Popen, command, input_file)
 
 
-#Returns the a return code and the output of the program or an error message as a tuple.
 def run_cpp(Popen, file_name, input_file, timeout):
+    """Runs the provided C++ file.
+
+    Args:
+        Popen: A class that can execute subprocess commands.
+        file_name: The name of the C++ file to be compiled and executed.
+        input_file: The file to be read as stdin in the program.
+        timeout: The maximum amount of time the code is given to execute.
+
+    Returns:
+        A tuple containing an integer return code (0=success, else failure) and a string with the output of the executed program or an error message.
+
+    """
     compilation_result = Popen("/usr/bin/g++ " + os.path.join("code", file_name) + " -o " + os.path.join("code", 'a.out'), shell=True, stdout=PIPE, stderr=PIPE)
     output, error = compilation_result.communicate()
     if compilation_result.returncode:
@@ -86,13 +133,34 @@ def run_cpp(Popen, file_name, input_file, timeout):
     return execute_compiled_file(Popen, command, input_file)
 
 
-#Returns the a return code and the output of the program or an error message as a tuple.
 def run_python(Popen, file_name, input_file, timeout):
+    """Runs the provided Python file.
+
+    Args:
+        Popen: A class that can execute subprocess commands.
+        file_name: The name of the Python file to be compiled and executed.
+        input_file: The file to be read as stdin in the program.
+        timeout: The maximum amount of time the code is given to execute.
+
+    Returns:
+        A tuple containing an integer return code (0=success, else failure) and a string with the output of the executed program or an error message.
+
+    """
     command = "timeout " + str(timeout) + " python " + os.path.join("code", file_name)
     return execute_compiled_file(Popen, command, input_file)
 
 
 def docker_container_code(Popen, args):
+    """Runs the provided code with the proper input. Note that this should only be run in a Docker container that has had the proper temporary file system mounted to it (which is set up in the function "execute_code()").
+
+    Args:
+        Popen: A class that can execute subprocess commands.
+        args: The command line arguments indicating the currently running script name, the name of the code file to be executed, the allowed languages, the timeout, and the input file (if provided). They start from index 0 and are order as listed. 
+
+    Returns:
+        A tuple containing an integer return code (0=success, else failure) and a string with the output of the executed program or an error message.
+
+    """
     if len(args) < 4:
         return(1, "FILENAME ERROR: No file name given.")
     file_name = args[1]
@@ -123,5 +191,14 @@ def docker_container_code(Popen, args):
 
 
 if __name__ == "__main__":
+    """This file (i.e. execution.py) is executed directly in a Docker container to run code. That causes this section to execute, which calls the docker_container_code() function that contains the logic to execute the provided Python, Java, or C++ file that is available in the volume mounted to the container in the execute_code() function.
+
+    Args:
+        sys.argv: The command line arguments indicating the currently running script name, the name of the code file to be executed, the allowed languages, the timeout, and the input file (if provided). They start from index 0 and are order as listed. 
+
+    Returns:
+        Does not (and cannot) return since it is not a function. Prints out the results of the executed code to be processed by the calling execute_code() function outside of the container. Prints the retcode and output separated by a comma.
+
+    """
     result = docker_container_code(Popen, sys.argv)
     print(str(result[0]) + ',' + str(result[1]), end='')

@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.core.files.uploadedfile import SimpleUploadedFile
 from datetime import datetime
 from django.utils import timezone
-from contests.models import Team, Participant, Contest, ContestTemplate, Problem, Submission, ContestInvite
+from contests.models import Team, Participant, Contest, ContestTemplate, Problem, ProblemSolution, Submission, ContestInvite
 from subprocess import Popen
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -109,7 +109,7 @@ class ContestTest(TestCase):
     # Austin
     def test_problem_creation(self):
         p = Problem(
-            solution="solution.txt", input_description="1 2 3 4",
+            input_description="1 2 3 4",
             output_description="5 6 7 8", sample_input="input.txt",
             sample_output="output.txt", contest_id=1)
         p.save()
@@ -123,15 +123,15 @@ class ContestTest(TestCase):
         ct2.save()
 
         p1 = Problem(
-            solution="solution.txt", input_description="1 2 3 4",
+            input_description="1 2 3 4",
             output_description="5 6 7 8", sample_input="input.txt",
             sample_output="output.txt", contest_id=1)
         p2 = Problem(
-            solution="solution.txt", input_description="1 2 3 4",
+            input_description="1 2 3 4",
             output_description="5 6 7 8", sample_input="input.txt",
             sample_output="output.txt", contest_id=2)
         p3 = Problem(
-            solution="solution.txt", input_description="1 2 3 4",
+            input_description="1 2 3 4",
             output_description="5 6 7 8", sample_input="input.txt",
             sample_output="output.txt", contest_id=1)
 
@@ -215,22 +215,23 @@ class ContestTest(TestCase):
             "contest": ""
         }
         files = {
-            "solution": "",
             "sample_input": "",
             "sample_output": "",
         }
         problem = CreateProblem(data=data, files=files)
-        self.assertFalse(problem.is_valid())
+        self.assertTrue(problem.is_valid())
 
     # Austin
     def test_problem_solution_content(self):
         data = {"timeout" : 5}
-        files = {"solution": SimpleUploadedFile("solution.txt", b"test solution")}
+        files = {}
         problem = CreateProblem(data=data, files=files)
 
         problem1 = problem.save()
+        ps = ProblemSolution(problem=problem1, solution=SimpleUploadedFile("solution.txt", b"test solution"))
+        ps.save()
 
-        self.assertEqual(problem1.solution.read(), b"test solution")
+        self.assertEqual(getattr(problem1.problem_solution.all()[0], 'solution').read(), b"test solution")
 
     # views test
     # Austin

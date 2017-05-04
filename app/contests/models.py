@@ -66,7 +66,6 @@ class Problem(models.Model):
 	output_description = models.TextField(null=True, blank=True)
 	sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
 	sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
-	solution = models.FileField(upload_to='uploads/', null=True, blank=True)
 	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
 	timeout = models.IntegerField(default=5, blank=True)
 
@@ -74,6 +73,11 @@ class Problem(models.Model):
 class ProblemInput(models.Model):
     problem = models.ForeignKey(Problem, related_name = 'problem_input')
     program_input = models.FileField(upload_to='uploads/', null=True, blank=False)
+
+
+class ProblemSolution(models.Model):
+    problem = models.ForeignKey(Problem, related_name = 'problem_solution')
+    solution = models.FileField(upload_to='uploads/', null=True, blank=True)
 
 
 class Participant(models.Model):

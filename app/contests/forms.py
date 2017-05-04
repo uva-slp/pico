@@ -91,7 +91,7 @@ class CreateProblem(ModelForm):
         widget=forms.Textarea(attrs={'rows':4, 'cols':30}))
     sample_input = forms.FileField(required=False, label='Sample Input (.txt)')
     sample_output = forms.FileField(required=False, label='Sample Output (.txt)')
-    solution = forms.FileField(required=True, label='Solution (.txt)')
+    solution = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple' : True}), required=False, label='Solution (.txt)')
     timeout = forms.IntegerField(required=False, label='Timeout (seconds)', min_value=0)        
 
     class Meta:
