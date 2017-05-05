@@ -87,7 +87,7 @@ class Participant(models.Model):
 
 
 class Submission(models.Model):
-    run_id = models.AutoField(primary_key = True)
+    run_id = models.IntegerField(default=0)
     team = models.ForeignKey(Team, null = True)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True)
     code_file = models.FileField(upload_to='uploads/', null=True, blank=True)

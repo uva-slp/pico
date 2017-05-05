@@ -391,6 +391,12 @@ def displayContest(request, contest_id):
             sub = form.save(commit=False)
             sub.original_filename = request.FILES['code_file'].name
             sub.team = current_team
+
+            totalSub = 0
+            for problem in contest_data.problem_set.all():
+                totalSub += len(problem.submission_set.all())
+            sub.run_id = totalSub + 1
+
             sub.save()
 
     problems = contest_data.problem_set.all()
