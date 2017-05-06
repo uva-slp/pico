@@ -54,7 +54,7 @@ class CreateContestForm(ModelForm):
         required=False, label="Judge Review Option",
         widget=forms.Select(choices=REVIEW_LIST, attrs={'disabled':'disabled'})
     )
-    problem_description = forms.FileField(required=True, label="Problem Descriptions (.pdf)")
+    problem_description = forms.FileField(required=False, label="Problem Descriptions (.pdf)")
     contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
                                                 widget=autocomplete.ModelSelect2Multiple(
                                                     url=reverse_lazy('users:autocomplete'),
