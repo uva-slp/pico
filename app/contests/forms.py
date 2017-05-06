@@ -70,8 +70,8 @@ class CreateContestForm(ModelForm):
 
     def clean(self):
         upload_to = 'uploads/'
-        #if not 'problem_description' in self.cleaned_data:
-        #    return self.cleaned_data
+        if not 'problem_description' in self.cleaned_data:
+            return self.cleaned_data
         upload_to += self.cleaned_data['problem_description'].name
 
     class Meta:

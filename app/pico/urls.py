@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^stats/', include('stats.urls', namespace='stats')),
 	url(r'^$', views.index, name='index'),
 	url(r'^home$', views.home, name='home'),
-] + static(settings.MEDIA_URL.replace('/pico',''), document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # works locally
+# ] + static(settings.MEDIA_URL.replace('/pico',''), document_root=settings.MEDIA_ROOT) # works on server
