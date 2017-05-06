@@ -194,6 +194,7 @@ def editContest(request, contest_id):
         return HttpResponseForbidden()
 
     form = CreateContestForm(None, None, instance=contest)
+    form.base_fields['problem_description'].required = False
 
     admin_search_form = AdminSearchForm(initial={'contest_admins': contest.contest_admins.all()})
     participant_search_form = ParticipantSearchForm(initial={'contest_participants': contest.contest_participants.all()})
