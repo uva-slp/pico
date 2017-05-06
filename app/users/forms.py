@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm
+from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 
 from dal import autocomplete
@@ -42,4 +43,10 @@ class UserSearchForm(forms.ModelForm):
 		model = User
 		fields = ('user',)
 
+class EmailValidationOnForgotPassword(PasswordResetForm):
+	def clean_email(self):
+		email = self.cleaned_data['email']
+		if not User.objects.filter(email__iexact=email, is_active=True).exists():
+			raise ValidationError("There is no user registered with the sepcified email address!")
+		return email
 

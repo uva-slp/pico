@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 from django.urls import reverse_lazy
 from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm, password_reset_complete
+from .forms import EmailValidationOnForgotPassword
 
 from . import views
 
@@ -15,6 +16,7 @@ urlpatterns = [
 	url(r'^passwordchange$', views.password_change, name='password_change'),
 	url(r'^password/reset/$', password_reset,
 		{'template_name': 'users/password_reset/password_reset_form.html',
+		 'password_reset_form':EmailValidationOnForgotPassword,
 		'email_template_name': 'users/password_reset/password_reset_email.html',
 		'post_reset_redirect' : reverse_lazy('users:password_reset_done')},
 		name="password_reset"),
