@@ -32,7 +32,8 @@
                             <div class="list-group">
                                 {% for contest in active_contests %}
                                     <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
-                                        <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                        <strong>{{ contest.title }}:</strong>
+                                        <span class="time_remaining_text" data-start="{{ contest.contest_start | date:'Y-m-d H:i:s a' }}" data-length="{{ contest.contest_length }}"></span>
                                     </a>
                                 {% endfor %}
                             </div>
@@ -124,7 +125,8 @@
                         <div class="list-group">
                             {% for contest in active_contests %}
                                 <a href="{% url 'contests:contest' contest.id %}" class="list-group-item">
-                                    <strong>{{ contest.title }}:</strong> {{ contest.time_remaining }}
+                                    <strong>{{ contest.title }}:</strong>
+                                    <span class="time_remaining_text" data-start="{{ contest.contest_start | date:'Y-m-d H:i:s a' }}" data-length="{{ contest.contest_length }}"></span>
                                 </a>
                             {% endfor %}
                         </div>
@@ -217,5 +219,18 @@
 
     <!-- Stickytabs JavaScript -->
     <script src="{% static 'stickytabs/jquery.stickytabs.js' %}"></script>
+
+    <!-- Active Contests Timer -->
+    <script type="text/javascript" src="{% static 'moment/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/simple_timer.js' %}"></script>
+    <script type="text/javascript">
+        $('.time_remaining_text').each(function() {
+            var contest_start = $(this).attr("data-start");
+            var contest_length = $(this).attr("data-length");
+            var $this = $(this);
+
+            loadTimer($this, contest_start, contest_length);
+        });
+    </script>
 
 {% endblock %}
