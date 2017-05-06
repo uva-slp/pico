@@ -86,6 +86,7 @@ def createContest(request):
     qa_formset = QAFormSet()
 
     form = CreateContestForm()
+    form.base_fields['problem_description'].required = True
     admin_search_form = AdminSearchForm()
     participant_search_form = ParticipantSearchForm()
 
