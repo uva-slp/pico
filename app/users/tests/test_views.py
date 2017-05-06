@@ -1,8 +1,10 @@
 from django.contrib import auth
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 
 from users.models import User
+from users.forms import EmailValidationOnForgotPassword
 
 class IndexTest(TestCase):
 
@@ -271,6 +273,15 @@ class PasswordResetTest(TestCase):
 		resp = self.client.get(url)
 
 		self.assertEqual(resp.status_code, 200)
+
+	# Vivian
+	def test_invalid_email(self):
+		data = {
+			'email': "invalid_email_address@gmail.com"
+		}
+		form = EmailValidationOnForgotPassword(data=data)
+		self.assertFalse(form.is_valid())
+		self.assertTrue(form.has_error('email', code=None))
 
 	# Vivian
 	def test_get_done(self):
