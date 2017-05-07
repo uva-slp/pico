@@ -82,6 +82,7 @@
             var home_url = "{% url 'contests:index' %}";
 
             loadTimerBar(contest_start, is_contest_started, is_contest_ended, contest_length, home_url);
+            loadLockTimerBar(is_contest_started);
         </script>
         <script src="{% static 'js/refresh_scoreboard.js' %}"></script>
     {% endif %}

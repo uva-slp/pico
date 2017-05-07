@@ -1,5 +1,5 @@
 // Lock time remaining bar to top of visible frame when scrolling down
-$(document).ready(function() {
+function loadLockTimerBar(is_contest_started) {
     if(typeof is_contest_started !== 'undefined' && is_contest_started) {
         var timer_bar = $(".progress");
         var progress_width = timer_bar.width();
@@ -20,4 +20,4 @@ $(document).ready(function() {
 
         $(window).scroll(lockTimerBarToTop);
     }
-});
+}

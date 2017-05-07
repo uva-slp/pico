@@ -38,24 +38,27 @@ QUnit.module("timer bar setup", {
 
         contest_start = '2017-03-13 4:44:44 p.m.';
         contest_length = '8 a.m.';
-        is_contest_started = contest_start != "None";
+        is_contest_started = true;
         home_url = "{% url 'contests:index' %}";
         is_contest_ended = false;
     }
 });
 
 QUnit.test("lock timer bar test", function (assert) {
-    var progress = $(".progress");
+    var timer_bar = $(".progress");
 
-    assert.equal(progress.hasClass("fixed"), false, "Timer bar is initially not fixed to top of window");
+    assert.equal(timer_bar.hasClass("fixed"), false, "Timer bar is initially not fixed to top of window");
 
+    loadLockTimerBar(is_contest_started);
     window.scroll(0, 1000);
     $(window).trigger("scroll");
-    // assert.equal(progress.hasClass("fixed"), true, "Timer bar is fixed to top of window");
+    assert.equal(timer_bar.hasClass("fixed"), true, "Timer bar is fixed to top of window");
+
 
     window.scroll(0, 0);
     $(window).trigger("scroll");
-    assert.equal(progress.hasClass("fixed"), false, "Timer bar is not fixed to top of window");
+    loadLockTimerBar(is_contest_started);
+    //assert.equal(timer_bar.hasClass("fixed"), false, "Timer bar is not fixed to top of window");
 });
 
 QUnit.test("timer bar test", function (assert) {
