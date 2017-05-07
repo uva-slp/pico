@@ -50,11 +50,11 @@ class Contest(models.Model):
             return datetime.max.replace(tzinfo=timezone.utc)
         return self.contest_start + timedelta(seconds=self.contest_length.hour*3600+self.contest_length.minute*60)
 
-    def time_remaining(self):
+    '''def time_remaining(self):
         if self.contest_start is None:
             return "Not started"
         seconds = (self.contest_end() - timezone.now()).seconds
-        return "%d:%02d:%02d remaining"%(seconds//3600, seconds%3600//60, seconds%60)
+        return "%d:%02d:%02d remaining"%(seconds//3600, seconds%3600//60, seconds%60)'''
 
     def __str__(self):
         return self.title
