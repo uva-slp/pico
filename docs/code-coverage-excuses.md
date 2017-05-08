@@ -10,10 +10,10 @@
 
 ### contests/static/js/timer_bar.js
 * Lines 66, 72-73
-    ```python
+    ```javascript
     window.alert("You have 1 minute remaining.");
     ```
-    ```python
+    ```javascript
     window.alert("The contest is now over! You may view it 1 minute after it has ended.");
     window.location.replace(home_url);
     ```
@@ -21,7 +21,7 @@
 
 ### contests/static/js/lock_timer_bar.js
 * Lines 15-16
-    ```python
+    ```javascript
     timer_bar.fadeIn(400).removeClass('fixed');
     $('html, body').css('height', body_height);
     ```
