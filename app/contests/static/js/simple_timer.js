@@ -29,7 +29,7 @@ function loadTimer(time_remaining_text, contest_start, contest_length) {
                 time_remaining_text.html(hours_remaining + ':' + minutes_remaining + ':' + seconds_remaining + ' remaining');
             } else {
                 // force page refresh to move contest out of active contests when it finishes
-                window.location.reload()
+                window.location.reload();
             }
         }
 

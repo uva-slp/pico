@@ -30,6 +30,9 @@ class ContestManager(models.Manager):
 
 
 class Contest(models.Model):
+    """
+    A Contest object has any number of Problem objects associated with it as well as the fields below
+    """
     title = models.CharField(max_length=128)
     date_created = models.DateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name="contest_creator")
@@ -61,13 +64,16 @@ class Contest(models.Model):
 
 
 class Problem(models.Model):
-	name = models.CharField(max_length=2048, null=True, blank=True)
-	input_description = models.TextField(null=True, blank=True)
-	output_description = models.TextField(null=True, blank=True)
-	sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
-	sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
-	contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
-	timeout = models.IntegerField(default=5, blank=True)
+    """
+    A Problem object has any number of ProblemInput and ProblemSolution objects associated with it as well as the fields below
+    """
+    name = models.CharField(max_length=2048, null=True, blank=True)
+    input_description = models.TextField(null=True, blank=True)
+    output_description = models.TextField(null=True, blank=True)
+    sample_input = models.FileField(upload_to='uploads/', null=True, blank=True)
+    sample_output = models.FileField(upload_to='uploads/', null=True, blank=True)
+    contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
+    timeout = models.IntegerField(default=5, blank=True)
 
 
 class ProblemInput(models.Model):

@@ -78,6 +78,18 @@ def index(request):
 
 @login_required
 def createContest(request):
+    """ Create new Contest objects.
+    It also displays a Contest Template loading form to allow the user to auto-fill the Contest form with the content of a
+    ContestTemplate he has already created.
+
+    On a submit, either a ContestTemplate will be filled into the form or a contest will be created.
+    Contest creation involves validating the Contest form and QAFormSet, which stores all the Problem forms,
+    then saving the contest to the database, uploading the problem description file to the server, sending invitations to
+    each contest participant, and creating each individual Problem
+
+    :param request: None or POST
+    :return: A rendered Contest form page or redirects the user to the home page on a successful form submit
+    """
 
     template_user = request.user
     templates = ContestTemplate.objects.filter(creator=template_user)
@@ -162,6 +174,16 @@ def createContest(request):
 
 @login_required
 def createNewProblem(request, problem_form, contest_id, form_number=None):
+    """ Create new Problem objects.
+    Each Problem can also have multiple ProblemInputs and ProblemSolutions.
+
+    :param request: None or POST
+    :param problem_form: the Problem form stored in the QAFormSet
+    :param contest_id: the associated Contest, to be used as a foreign key
+    :param form_number: the Problem number
+    :return: Problem
+    """
+
     form = problem_form.cleaned_data
     solution = form.get('solution')
     input_desc = form.get('input_description')
@@ -189,6 +211,13 @@ def createNewProblem(request, problem_form, contest_id, form_number=None):
 
 @login_required
 def editContest(request, contest_id):
+    """ Edit a Contest.
+    The Contest form can be edited, individual Problems can be edited or deleted, and new Problems can be created.
+
+    :param request: None or POST
+    :param contest_id: the Contest to be edited
+    :return: An HttpResponseForbidden for any user who didn't create this Contest or the rendered edit Contest form page
+    """
 
     contest = get_object_or_404(Contest, pk=contest_id)
     if contest.creator != request.user:
@@ -296,12 +325,27 @@ def editContest(request, contest_id):
 
 @login_required
 def deleteContest(request, contest_id):
+    """ Delete a Contest.
+
+    :param request: POST
+    :param contest_id: the Contest to be deleted
+    :return: Redirects the user to the home page
+    """
+
     Contest.objects.get(pk=contest_id).delete()
     return redirect(reverse('home'))
 
 
 @login_required
 def activateContest(request, contest_id):
+    """ Activate a Contest.
+    Saves the current datetime to the Contest's database entry.
+
+    :param request: POST
+    :param contest_id: the Contest to be activated
+    :return: Redirects the user to the home page
+    """
+
     time = datetime.now()
     contest = Contest.objects.get(id=contest_id)
     contest.contest_start = time
@@ -311,6 +355,11 @@ def activateContest(request, contest_id):
 
 @login_required
 def createTemplate(request):
+    """ Create a ContestTemplate.
+
+    :param request: None or POST
+    :return: A rendered ContestTemplate form page or redirects the user to the home page on a successful form submit
+    """
 
     form = CreateContestTemplateForm()
     admin_search_form = AdminSearchForm()
@@ -374,6 +423,23 @@ def isParticipant(contest_data, user):
 
 @login_required
 def displayContest(request, contest_id):
+    """ Display the main page for a Contest.
+    Only the contest creator and judges of a contest have access to it before the contest is activated.
+    Once active, only the contest creator, judges, and participants of a contest have access to viewing it.
+
+    This page displays the time remaining in the contest, the contest problem description, each contest problem,
+    a form to submit solutions to a problem, the status of that problem (unanswered, correct, awaiting judging, or incorrect),
+    problem attempts, and a link to the scoreboard.
+
+    The contest creator and judges have a judging panel which allows them to view and judge user submissions. They can also
+    activate the contest, edit the contest, and delete the contest.
+
+    A past contest can be viewed beginning 1 minute after it has finished, but no more submissions can ever be made.
+
+    :param request: None or POST
+    :param contest_id: the Contest to be viewed
+    :return: A rendered Contest page
+    """
 
     # Check if request user has permission to view the page
     contest_data = Contest.objects.get(id=contest_id)
