@@ -1,5 +1,6 @@
 {% extends 'contests/base.html' %}
 
+{% load static %}
 {% load bootstrap3 %}
 {% load staticfiles %}
 {% load contest_extras %}
@@ -7,9 +8,15 @@
 {% block title_block %}{{ block.super }}{% endblock %}
 
 {% block head_block %}
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/diff.css' %}" />
+
     {{ block.super }}
+
+    <!-- Diff table -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/diff.css' %}" />
+
+    <!-- Fixed panel header -->
+    <link rel="stylesheet" type="text/css" href="{% static 'fixed-panel-headers/css/style.css' %}" />
+
 {% endblock %}
 
 {% block breadcrumb %}
@@ -25,7 +32,7 @@
     <br />
 
     {% if is_judge %}
-    <div class="panel panel-default panel-table">
+    <div class="panel panel-default panel-table fixed-header">
         <div class="panel-heading">
             <div class="row">
                 <div class="col col-xs-4">
@@ -38,28 +45,26 @@
                     <h3 class="panel-title">State: {{ submission.get_state_display }}</h3>
                 </div>
             </div>
+            <div class="row">
+                <button id="first" class="btn btn-default">first</button>
+                <button id="prev" class="btn btn-default">prev</button>
+                <button id="next" class="btn btn-default">next</button>
+                <button id="last" class="btn btn-default">last</button>
+
+                <span class="checkbox" style="display:inline-block;margin-left:20px;">
+                    <label><input id="checkbox-whitespace" type="checkbox" checked>Whitespace</label>
+                </span>
+                <span class="checkbox" style="display:inline-block;margin-left:20px;">
+                    <label><input id="checkbox-emptylines" type="checkbox" checked>Empty lines</label>
+                </span>
+
+                <span style="display:inline-block;margin-left:20px;">
+                    <label>Differences:</label> <span id="numChanges">{{numChanges}}</span> lines
+                </span>
+            </div>
         </div>
         <div class="panel-body">
 	<div>
-		<div>
-			<button id="first" class="btn btn-default">first</button>
-			<button id="prev" class="btn btn-default">prev</button>
-			<button id="next" class="btn btn-default">next</button>
-			<button id="last" class="btn btn-default">last</button>
-
-            <span class="checkbox" style="display:inline-block;margin-left:20px;">
-                <label><input id="checkbox-whitespace" type="checkbox" checked>Whitespace</label>
-            </span>
-            <span class="checkbox" style="display:inline-block;margin-left:20px;">
-                <label><input id="checkbox-emptylines" type="checkbox" checked>Empty lines</label>
-            </span>
-
-            <span style="display:inline-block;margin-left:20px;">
-                <label>Differences:</label> <span id="numChanges">{{numChanges}}</span> lines
-            </span>
-
-		</div>
-        <br/>
 		{{ diff_table|safe }}
 
     	</div>
@@ -79,6 +84,9 @@
 {% block foot_block %}
 
     {{ block.super }}
+
+    <!-- Fixed Panel Header -->
+    <script type="text/javascript" src="{% static 'fixed-panel-headers/js/scrollHeadings.js' %}"></script>
 
     <script type="text/javascript">
 
