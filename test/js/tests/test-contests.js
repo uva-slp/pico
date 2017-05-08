@@ -50,15 +50,13 @@ QUnit.test("lock timer bar test", function (assert) {
     assert.equal(timer_bar.hasClass("fixed"), false, "Timer bar is initially not fixed to top of window");
 
     loadLockTimerBar(is_contest_started);
-    window.scroll(0, 1000);
+    window.scroll(0, 3000);
     $(window).trigger("scroll");
     assert.equal(timer_bar.hasClass("fixed"), true, "Timer bar is fixed to top of window");
-
 
     window.scroll(0, 0);
     $(window).trigger("scroll");
     loadLockTimerBar(is_contest_started);
-    //assert.equal(timer_bar.hasClass("fixed"), false, "Timer bar is not fixed to top of window");
 });
 
 QUnit.test("timer bar test", function (assert) {
