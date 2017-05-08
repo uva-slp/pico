@@ -4,7 +4,7 @@ function UpdatePanelHeaders() {
     offset         = el.offset(),
     scrollTop      = $(window).scrollTop(),
     floatingHeader = $(".floatingHeader", this),
-	absoluteHeader = $(".absoluteHeader", this);
+	  absoluteHeader = $(".absoluteHeader", this);
 
     if ((scrollTop > offset.top) && (scrollTop < offset.top + (el.height() - floatingHeader.outerHeight(false)) + 4)) {
       floatingHeader.css({

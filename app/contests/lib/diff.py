@@ -35,8 +35,8 @@ class HtmlFormatter():
 			# tag
 			tag = ''
 			if hasChange:
-				tag = str(Anchor().setName(num_changes))
 				num_changes+=1
+				tag = str(Anchor().setName(num_changes).addClass('diff-anchor'))
 
 			# from
 			line_num, text = fromline
