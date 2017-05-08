@@ -26,3 +26,10 @@
     $('html, body').css('height', body_height);
     ```
     - The conditional `distanceFromTop >= height_above_timer` to get to these lines of code works fine in any real situation because the height_above_timer can only be a minimum of 0 on a real webpage, but for some reason on qunit's, the height_above_timer is always -9800. I can't find any reasonable work around that doesn't require obscure and needless changes to the js file itself. Nor can I find any way to get qunit to adjust this height back to a normal non-negative range. I was able to change multiple things to get qunit to test that the code inside the else statement actually works though so I am confident the code works as intended, it just isn't realistic to have a devote qunit test to it though.
+
+### contests/static/js/notification.js
+* Line 39
+   ``` javascript
+   onModalClose($(this).attr('id'));
+   ```
+   - This line should be called when a bootstrap modal is closed. However, I couldn't get bootstrap modal work in jquery test. It should come with bootstrap by default but the any bootstrap modal operation is not recognized. I also tried to include the bootstrap modal source code as dependency separately but still got no luck. Beside using bootstap modal call, I tried perform a regular click on the screen (becaue that will close the modal) or treated it as a listener for ```'hidden.bs.modal'``` event, but either way I can't get lines in this event covered. So instead I put action I want to perform when the event is triggered inside an ```onModalClose``` function and tested that function individually. Leaving the line calling that function not covered.
