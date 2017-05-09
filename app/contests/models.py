@@ -7,6 +7,9 @@ from teams.models import Team
 from datetime import datetime, timedelta
 
 class ContestManager(models.Manager):
+    """
+    Helper method used to fetch all unstarted, active or past contests.
+    """
     def unstarted(self):
         unstarted_contests = set()
         for contest in super(ContestManager, self).get_queryset():
@@ -87,13 +90,18 @@ class ProblemSolution(models.Model):
 
 
 class Participant(models.Model):
+    """
+    A Participant object is created when a team accept the invitation to participate in a contest.
+    """
     contest = models.ForeignKey(Contest, null=True, blank=True, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.CASCADE)
     score = models.IntegerField
 
 
 class Submission(models.Model):
-    run_id = models.IntegerField(default=0)
+    run_id = models.IntegerField(default=0)  # run_id is not the primary key of submission.
+                                             # It should be unique within a contest, count start from 1 and increment
+                                             # as later submission comes in.
     team = models.ForeignKey(Team, null = True)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=True)
     code_file = models.FileField(upload_to='uploads/', null=True, blank=True)
@@ -140,9 +148,17 @@ class ContestTemplate(models.Model):
 
 
 class Notification(models.Model):
+    """
+    A Notification object is created when judge return the result of a submission to participant.
+    It is deleted when participant close the notification.
+    """
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
 
 
 class ContestInvite(models.Model):
+    """
+    A ContestInvite object is created when contest admin add a team as participant of a contest.
+    It is deleted when team accept or decline the invitation.
+    """
     contest = models.ForeignKey(Contest)
     team = models.ForeignKey(Team)

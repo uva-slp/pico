@@ -165,6 +165,10 @@ class ReturnJudgeResultForm(forms.ModelForm):
         widgets = {'state': forms.HiddenInput()}
 
     def clean(self):
+        """
+        Only 'result' field is visible to judge to choose.
+        'state' field will be updated according to the value of 'result' field.
+        """
         cleaned_data = super(ReturnJudgeResultForm, self).clean()
         result = cleaned_data.get('result')
         if result:
@@ -176,6 +180,10 @@ class ReturnJudgeResultForm(forms.ModelForm):
 
 
 class AdminSearchForm(forms.ModelForm):
+    """
+    AdminSearchForm is a helper form used to perform autocomplete when searching for user to add to admin during contest
+    creation and contest template creation.
+    """
     contest_admins = forms.ModelMultipleChoiceField(required=False, queryset=User.objects.all(),
                                                     widget=autocomplete.ModelSelect2Multiple(
                                                         url=reverse_lazy('users:autocomplete'),
@@ -189,6 +197,10 @@ class AdminSearchForm(forms.ModelForm):
 
 
 class ParticipantSearchForm(forms.ModelForm):
+    """
+    ParticipantSearchForm is a helper form used to perform autocomplete when searching for team to add to participant
+    during contest creation and contest template creation.
+    """
     contest_participants = forms.ModelMultipleChoiceField(required=False, queryset=Team.objects.all(),
                                                     widget=autocomplete.ModelSelect2Multiple(
                                                         url=reverse_lazy('teams:autocomplete'),

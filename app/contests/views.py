@@ -27,6 +27,12 @@ from subprocess import Popen
 
 @login_required
 def index(request):
+    """ Render contest index page
+    Displays active, unstarted, past contests and contest invitations related to the request user
+    :param request: None or POST
+    :return: A rendered home page or redirects the user to the home page on a successful form submit
+    """
+    # Get all active, unstarted, past contests related to the request user
     all_active_contests = Contest.objects.active()
     my_active_contests = []
     for contest in all_active_contests:
@@ -384,8 +390,12 @@ def createTemplate(request):
     return render(request, 'contests/create_template.html', data)
 
 
-# Helper method for getting user's team participated in a contest
 def getTeam(contest_data, user):
+    """ Helper method for getting the team of a user participated in a contest
+    :param contest_data:a Contest object
+    :param user: a User object
+    :return: A Team object if the user is in a team which participate in the contest, or None if not.
+    """
     user = User.objects.get(id=user.id)
     contest_data = Contest.objects.get(id=contest_data.id)
     contest_participants = contest_data.participant_set.all()
@@ -396,8 +406,12 @@ def getTeam(contest_data, user):
     return None
 
 
-# Helper method for checking if user is judge of the contest
 def isJudge(contest_data, user):
+    """ Helper method for checking if a user is judge of the contest
+    :param contest_data:a Contest object
+    :param user: a User object
+    :return: boolean type. True if the user is a judge of the contest, or False if not.
+    """
     contest_judges = contest_data.contest_admins.all()
     for judge in contest_judges:
         if user == judge:
@@ -405,27 +419,35 @@ def isJudge(contest_data, user):
     return False
 
 
-# Helper method for checking if user is creator of the contest
 def isCreator(contest_data, user):
+    """ Helper method for checking if a user is the creator of the contest
+    :param contest_data:a Contest object
+    :param user: a User object
+    :return: boolean type. True if the user is the creator of the contest, or False if not.
+    """
     if user == contest_data.creator:
         return True
     return False
 
 
-# Helper method for checking if user is participant in the contest
 def isParticipant(contest_data, user):
-	current_team = getTeam(contest_data, user)
-	if current_team is None:
-		return False
-	else:
-		return True
+    """ Helper method for checking if user is participant in the contest
+    :param contest_data:a Contest object
+    :param user: a User object
+    :return: boolean type. True if the user is in a team which participate in the contest, or Fale if not.
+    """
+    current_team = getTeam(contest_data, user)
+    if current_team is None:
+        return False
+    else:
+        return True
 
 
 @login_required
 def displayContest(request, contest_id):
     """ Display the main page for a Contest.
-    Only the contest creator and judges of a contest have access to it before the contest is activated.
-    Once active, only the contest creator, judges, and participants of a contest have access to viewing it.
+    Only the contest creator, judges of a contest and superusers have access to it before the contest is activated.
+    Once active, only the contest creator, judges, superusers and participants of a contest have access to viewing it.
 
     This page displays the time remaining in the contest, the contest problem description, each contest problem,
     a form to submit solutions to a problem, the status of that problem (unanswered, correct, awaiting judging, or incorrect),
@@ -468,7 +490,7 @@ def displayContest(request, contest_id):
             sub.save()
 
     problems = contest_data.problem_set.all()
-    #Handle multiple forms on the same page
+    # Handle multiple forms on the same page
     UploadCodeFormSet = formset_factory(UploadCodeForm, extra=len(problems))
     problem_form_pairs = []
     for problem in problems:
@@ -477,6 +499,7 @@ def displayContest(request, contest_id):
 
     contest_participants = contest_data.participant_set.all()
 
+    # Get information of the team's submissions for each problem
     current_team = getTeam(contest_data, request.user)
     submission_attempts = []
     status = []
@@ -525,6 +548,16 @@ def displayContest(request, contest_id):
 
 @login_required()
 def displayProblemDescription(request, contest_id):
+    """ Display the problem description of a Contest.
+    Only the contest creator, judges of a contest and superusers have access to it before the contest is activated.
+    Once active, only the contest creator, judges, superusers and participants of a contest have access to viewing it.
+
+    This page displays the program description (a pdf file) of a contest.
+
+    :param request: None or POST
+    :param contest_id: the Contest of which program description to be viewed
+    :return: A rendered pdf display page
+    """
     contest_data = Contest.objects.get(id=contest_id)
     is_judge = isJudge(contest_data, request.user)
     is_participant = isParticipant(contest_data, request.user)
@@ -545,6 +578,18 @@ def displayProblemDescription(request, contest_id):
 
 @login_required
 def displayAllSubmissions(request, contest_id):
+    """ Display all submissions of all participants in a Contest.
+    Only the contest creator, judges of a contest and superusers have access to it.
+
+    This page displays all submissions of all participants in the contest, separated as two panel, new and judged. In
+    each panel the submissions are sorted by the time submitted, latest first.
+
+    These two panels will be refreshed every 5 seconds.
+
+    :param request: None or POST
+    :param contest_id: the Contest of which submissions to be viewed
+    :return: A rendered AllSubmission page
+    """
     contest_data = Contest.objects.get(id=contest_id)
     is_judge = isJudge(contest_data, request.user)
     is_creator = isCreator(contest_data, request.user)
@@ -577,6 +622,16 @@ def displayAllSubmissions(request, contest_id):
 
 @login_required
 def displayMySubmissions(request, contest_id, team_id):
+    """ Display all submissions of a team in the Contest.
+    Only the contest creator, judges of a contest, superusers and members of the team have access to it.
+
+    This page displays all submissions of the team with id of team_id in the contest, sorted by tthe time submitted,
+    latest first.
+
+    :param request: None or POST
+    :param contest_id: the Contest of which submissions to be viewed
+    :return: A rendered ContestSubmission page
+    """
     contest_data = Contest.objects.get(id=contest_id)
     team = Team.objects.get(id=team_id)
     is_judge = isJudge(contest_data, request.user)
@@ -601,55 +656,72 @@ def displayMySubmissions(request, contest_id, team_id):
 
 @login_required
 def displayJudge(request, contest_id, run_id):
-        contest_data = Contest.objects.get(id=contest_id)
-        is_judge = isJudge(contest_data, request.user)
-        is_creator = isCreator(contest_data, request.user)
-        is_past = contest_data.contest_end() <= timezone.now()
+    """ Display judge page of a submission.
+    Only the contest creator, judges of a contest and superusers have access to it.
 
-        if not is_judge and not is_creator and not request.user.is_superuser:
-                return redirect(reverse('home'))
-        
-        problems = contest_data.problem_set.all()
-        for p in problems:
-                if p.submission_set.filter(run_id=run_id).exists():
-                        current_submission = p.submission_set.get(run_id=run_id)
-                        if request.method == 'POST':
-                                form = ReturnJudgeResultForm(request.POST, instance=current_submission)
-                                if form.is_valid():
-                                        form.save()
-                                        # create a new notification
-                                        notification = Notification(submission=current_submission)
-                                        notification.save()
-                                        return redirect(reverse('contests:contest_judge_submissions',
-                                                        kwargs={'contest_id': contest_id}))
-                        else:
-                                form = ReturnJudgeResultForm(instance=current_submission)
-                        allowed_languages = getattr(contest_data, 'languages')
-                        problem_inputs = getattr(current_submission, 'problem').problem_input.all()
-                        input_files = []
-                        for p_i in problem_inputs:
-                            input_files.append(getattr(p_i, 'program_input'))
-                        fromlines = []
-                        if len(input_files):
-                            input_files.sort(key=lambda x: x.name)
-                            for input_file in input_files:
-                                output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), input_file, allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
-                                fromlines.extend(output[1].split("\n"))
-                        else:
-                            output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), None, allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
+    This page displays a diff table with two column, the left column displays the output of the participant's submission,
+    the right column displays the desired output that was uploaded to problem output. The line that are different will
+    be marked red. A banner containing 'previous' button and 'next' button will be on top of the page. By clicking on
+    the button a user could jump to the previous or next line that is different.
+
+    There is a drop down choice box at the bottom of the page. Judge could choose the result to return and click on
+    submit. A notification object will be generated.
+
+    :param request: None or POST
+    :param contest_id: the Contest of which submission judge page to be viewed
+    :param run_id: run_id of the submission
+    :return: A rendered judge page
+    """
+    contest_data = Contest.objects.get(id=contest_id)
+    is_judge = isJudge(contest_data, request.user)
+    is_creator = isCreator(contest_data, request.user)
+    is_past = contest_data.contest_end() <= timezone.now()
+
+    if not is_judge and not is_creator and not request.user.is_superuser:
+            return redirect(reverse('home'))
+
+    problems = contest_data.problem_set.all()
+    for p in problems:
+            if p.submission_set.filter(run_id=run_id).exists():
+                    current_submission = p.submission_set.get(run_id=run_id)
+                    if request.method == 'POST':
+                            form = ReturnJudgeResultForm(request.POST, instance=current_submission)
+                            if form.is_valid():
+                                    form.save()
+                                    # create a new notification
+                                    notification = Notification(submission=current_submission)
+                                    notification.save()
+                                    return redirect(reverse('contests:contest_judge_submissions',
+                                                    kwargs={'contest_id': contest_id}))
+                    else:
+                            form = ReturnJudgeResultForm(instance=current_submission)
+                    allowed_languages = getattr(contest_data, 'languages')
+                    problem_inputs = getattr(current_submission, 'problem').problem_input.all()
+                    input_files = []
+                    for p_i in problem_inputs:
+                        input_files.append(getattr(p_i, 'program_input'))
+                    fromlines = []
+                    if len(input_files):
+                        input_files.sort(key=lambda x: x.name)
+                        for input_file in input_files:
+                            output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), input_file, allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
                             fromlines.extend(output[1].split("\n"))
-                        #Use the solution file(s) if it(they) exists. If not, use empty expected output.
-                        problem_solutions = getattr(current_submission, 'problem').problem_solution.all()
-                        solution_files = []
-                        for p_s in problem_solutions:
-                            solution_files.append(getattr(p_s, 'solution'))
-                        tolines = []
-                        if len(solution_files):
-                            solution_files.sort(key=lambda x: x.name)
-                            for solution_file in solution_files:
-                                tolines.extend(solution_file.read().decode().split("\n"))
-                        html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
-                        return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
+                    else:
+                        output = exe.execute_code(Popen, getattr(current_submission, 'code_file'), getattr(current_submission, 'original_filename'), None, allowed_languages, getattr(getattr(current_submission, 'problem'), 'timeout'))
+                        fromlines.extend(output[1].split("\n"))
+                    #Use the solution file(s) if it(they) exists. If not, use empty expected output.
+                    problem_solutions = getattr(current_submission, 'problem').problem_solution.all()
+                    solution_files = []
+                    for p_s in problem_solutions:
+                        solution_files.append(getattr(p_s, 'solution'))
+                    tolines = []
+                    if len(solution_files):
+                        solution_files.sort(key=lambda x: x.name)
+                        for solution_file in solution_files:
+                            tolines.extend(solution_file.read().decode().split("\n"))
+                    html, numChanges = _diff.HtmlFormatter(fromlines, tolines, False).asTable()
+                    return render(request, 'contests/judge.html', {'diff_table': html, 'numChanges': numChanges, 'contest_data': contest_data, 'is_judge': True, 'submission': current_submission, 'form': form})
+
 
 def scoreboard(request, contest_id):
     #contest_id = request.POST.get('contestId', "0")
@@ -726,6 +798,14 @@ def scoreboard(request, contest_id):
 
 
 def show_notification(request):
+    """ Helper method to show the notification modal
+
+    The method will find the information of all notifications related to the request user's team, put the information in
+    a dictionary, and send them to javascript.
+
+    :param request: None or GET
+    :return: A JsonResponse with data
+    """
     l = []
 
     all_notifications = Notification.objects.all()
@@ -753,6 +833,13 @@ def show_notification(request):
 
 
 def close_notification(request):
+    """ Helper method to delete the notification object
+
+    The method will get the id of the notification to be deleted from ajax request, and delete the notification object.
+
+    :param request: None or POST
+    :return: A HttpResponse
+    """
     modal_id = request.POST['id']
     print("modal id: " + modal_id)
     if Notification.objects.filter(id=modal_id).exists():
@@ -837,6 +924,13 @@ def refresh_scoreboard(request):
 
 
 def refresh_submission(request):
+    """ Helper method to refresh the div in all_submission page.
+
+    The method will get the id of the contest to be refreshed from ajax request, and render the div to be refreshed.
+
+    :param request: None or POST
+    :return: A renderd div
+    """
     contest_id = request.POST.get('contestId', "0")
     print("contest_id: " + contest_id)
 
