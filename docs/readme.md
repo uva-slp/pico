@@ -8,6 +8,7 @@ Documentations of Programming and Instructional Contest Organizer
 
 * How to use our website:
   - [programming-reference.rst](programming-reference.rst)
+  >>>We couldn't generate the full programming reference as desired so we decided to comment the code properly.
   - [installation-instructions.md](installation-instructions.md)
   - [packages.txt](packages.txt)
   >>>list of packages need to be installed
@@ -27,5 +28,6 @@ Documentations of Programming and Instructional Contest Organizer
 
 * Advertising documents:
   - [screenshots](screenshots/.)
+  - [one-slide.pptx](one-slide.pptx), [one-slide.pdf](one-slide.pdf)
 
 
