@@ -1,17 +1,16 @@
-# UVA Programming and Instructional Contest Organizer
+# Programming and Instructional Contest Organizer (PICO)
 
 [![Build Status](https://travis-ci.com/uva-slp/pico.svg?token=aW6wnLAt24FpZ7h9WE5x&branch=master)](https://travis-ci.com/uva-slp/pico)
 
-This is an UVA's 4th year capstone project of B.S. computer science major. It is created by PiCO (Programming and Instructional Contest Organizer) team for UVA's programming contest community.
+The Programming and Instructional Contest Organizer (PICO) is a open source programming contest submission system, written in Django.  It was the result of a year-long project in [UVA's 4th year computer science capstone](http://aaronbloomfield.github.io/slp/), and is released under the [MIT License](LICENSE.md).
 
-PiCO is a Django based open source programming contest platform. It is designed to suit the use of ACM-ICPC format programing contest. Checkout our system [here](http://libra.cs.virginia.edu/pico/).
+One can see how PICO works by building the docker container for the project (the ability to pull the container is coming shortly).  See the [PICO docker readme](docker/readme.md) for details.
 
 ----------------------------
 
 ## Getting Started
 ### As User
-Our system is available [here](http://libra.cs.virginia.edu/pico/). 
-For more detail, checkout [system escription and feature summary](/docs/requirements-documents.md) and [user manual](/docs/user-manual.md).
+For more details, look at the [system description and feature summary](/docs/requirements-documents.md) and [user manual](/docs/user-manual.md).
 ### As Developer
 #### Prerequisites
 Our source code may contain some instructions only work on Linux system. It is not guaranteed that all feature will work perfectly on other operating system (this won't affect general users as the system runs in Docker).
