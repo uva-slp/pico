@@ -3,10 +3,10 @@ source = app
 include = app/*
 omit = app/manage.py
 
-# [report]
-# exclude_lines =
-#     if __name__ == .__main__.:
-# ignore_errors = True
+[report]
+exclude_lines =
+    if __name__ == .__main__.:
+ignore_errors = True
 
 [html]
 directory = docs/coverage
