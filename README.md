@@ -1,6 +1,7 @@
 # Programming and Instructional Contest Organizer (PICO)
 
 [![Build Status](https://travis-ci.com/uva-slp/pico.svg?token=aW6wnLAt24FpZ7h9WE5x&branch=master)](https://travis-ci.com/uva-slp/pico)
+[![Coverage Status](https://coveralls.io/repos/github/uva-slp/pico/badge.svg?branch=master)](https://coveralls.io/github/uva-slp/pico?branch=master)
 
 The Programming and Instructional Contest Organizer (PICO) is a open source programming contest submission system, written in Django.  It was the result of a year-long project in [UVA's 4th year computer science capstone](http://aaronbloomfield.github.io/slp/), and is released under the [MIT License](LICENSE.md).
 
