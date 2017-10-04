@@ -1,6 +1,15 @@
 FROM ubuntu:16.04
 MAINTAINER Aaron Bloomfield "aaron@virginia.edu"
 
+# build this image as either:
+# docker build -t pico docker
+# docker build --build-arg APT_PROXY=1.2.3.4 -t pico docker
+
+# step 1: allow the use of a apt-cacher-ng proxy defined via
+# --build-arg (this is only for the build, and is removed at the end)
+ARG APT_PROXY=0.0.0.0
+RUN echo $APT_PROXY | grep -v 0.0.0.0 | awk '{print "Acquire::http::Proxy \"http://" $1 ":3142\";"}' > /etc/apt/apt.conf.d/02proxy
+
 # step 1: update the system and install apt-utils and locales
 RUN DEBIAN_FRONTEND=noninteractive apt-get update -y -q -q
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q -q apt-utils locales
@@ -69,11 +78,14 @@ RUN cd /root/pico; python3 app/manage.py collectstatic --noinput
 RUN mv /root/pico /var/www/
 RUN chown -R www-data:www-data /var/www/pico/
 
-# step 15: configure apache2
+# step 25: remove the (possible) apt-cacher-ng repository
+RUN /bin/rm -f /etc/apt/apt.conf.d/02proxy
+
+# step 16: configure apache2
 COPY django.conf /etc/apache2/conf-available/pico-django.conf
 RUN a2enconf pico-django
 
-# step 16: some final configuration
+# step 17: some final configuration
 RUN gpasswd -a www-data docker
 COPY my.cnf /root/.my.cnf
 EXPOSE 22 80
