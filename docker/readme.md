@@ -1,12 +1,17 @@
 Run PICO in Docker
 ==================
 
+There are two docker images herein:
+
+- pico, which runs the entire contest system
+- pccs, which is the execution environment for a single submitted run
+
 
 ### Quickstart
 
 1. Install docker (now sure how? see below)
 2. Pull the image for executing submissions: `docker pull dmm7aj/pccs`
-3. Build the docker image contained herein; from the directory above, run `docker build -t pico docker/`
+3. Build the docker image contained herein; from the pico/ directory, run `docker build -t pico docker/`
 4. Run docker via: `docker run -v /var/run/docker.sock:/var/run/docker.sock -dP pico`
 5. Run `docker ps -a`, and note the port that 80 is mapped to (something like 32780); browse to that port (http://localhost:32780)
     - You can also ssh in via the other port redirected (`ssh root@localhost -p 32779`)

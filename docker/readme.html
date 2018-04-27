@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="../markdown.css" type="text/css" />
+</head>
+<body>
+<h1 id="run-pico-in-docker">Run PICO in Docker</h1>
+<p>There are two docker images herein:</p>
+<ul>
+<li>pico, which runs the entire contest system</li>
+<li>pccs, which is the execution environment for a single submitted run</li>
+</ul>
+<h3 id="quickstart">Quickstart</h3>
+<ol style="list-style-type: decimal">
+<li>Install docker (now sure how? see below)</li>
+<li>Pull the image for executing submissions: <code>docker pull dmm7aj/pccs</code></li>
+<li>Build the docker image contained herein; from the pico/ directory, run <code>docker build -t pico docker/</code></li>
+<li>Run docker via: <code>docker run -v /var/run/docker.sock:/var/run/docker.sock -dP pico</code></li>
+<li>Run <code>docker ps -a</code>, and note the port that 80 is mapped to (something like 32780); browse to that port (http://localhost:32780)
+<ul>
+<li>You can also ssh in via the other port redirected (<code>ssh root@localhost -p 32779</code>)</li>
+<li>The login to the web page is admin/admin; root's password is 'password', and it can automatically log into mysql (but root's password there is 'password' again)</li>
+</ul></li>
+</ol>
+<h3 id="installing-docker">Installing docker</h3>
+<p>One must first install docker; <a href="https://docs.docker.com/engine/installation/" class="uri">https://docs.docker.com/engine/installation/</a> is a good place to start (install the Stable Docker CE version); the Ubuntu specific directions are <a href="https://docs.docker.com/engine/installation/linux/ubuntu/#install-using-the-repository">here</a>. One will likely want to allow non-privileged users to run docker; see <a href="http://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo" class="uri">http://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo</a> for details. That link is Ubuntu specific, but will apply to any Linux system. Other operating systems are possible, but those links are not in this document.</p>
+<h3 id="notes">Notes</h3>
+<p>This is not really running docker-in-docker; it's using the host's docker socket. This is described at <a href="https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/" class="uri">https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/</a> (in &quot;The solution&quot; section). To start the container, run:</p>
+</body>
+</html>

@@ -1,34 +1,37 @@
-FROM ubuntu:16.04
-LABEL maintainer="Aaron Bloomfield aaron@virginia.edu"
-ENV DEBIAN_FRONTEND noninteractive
+# This Dockerfile is part of the uva-slp/pico repository, and will
+# create an image that will run the entire contest submission system.
 
 # build this image as either:
 # docker build -t pico docker
 # docker build --build-arg APT_PROXY=1.2.3.4 -t pico docker
 
+FROM ubuntu:16.04
+LABEL maintainer="Aaron Bloomfield aaron@virginia.edu"
+ENV DEBIAN_FRONTEND noninteractive
+
 # step 1: allow the use of a apt-cacher-ng proxy defined via
 # --build-arg (this is only for the build, and is removed at the end)
 ARG APT_PROXY=0.0.0.0
-RUN echo $APT_PROXY | grep -v 0.0.0.0 | awk '{print "Acquire::http::Proxy \"http://" $1 ":3142\";"}' > /etc/apt/apt.conf.d/02proxy && \
-    apt-get update -y -q
+RUN echo $APT_PROXY | grep -v 0.0.0.0 | awk '{print "Acquire::http::Proxy \"http://" $1 ":3142\";"}' > /etc/apt/apt.conf.d/02proxy
 
 # step 2: update the system and install apt-utils and locales
-RUN apt-get dist-upgrade -y -q -q && \
+RUN apt-get update -y -q && \
+    apt-get dist-upgrade -y -q -q && \
     apt-get install -y -q -q --no-install-recommends \
 	    apt-utils \
 	    locales && \
     apt-get clean -y
 
-# step 2: fix the locale
+# step 3: fix the locale
 RUN locale-gen en_US.UTF-8
 
-# step 3: set up root mysql password as 'password'
+# step 4: set up root mysql password as 'password'
 RUN echo mysql-server mysql-server/root_password password password > /tmp/debconf && \
     echo mysql-server mysql-server/root_password_again password password >> /tmp/debconf && \
     debconf-set-selections /tmp/debconf && \
     /bin/rm -f /tmp/debconf
 
-# step 4: install necessary packages
+# step 5: install necessary packages
 RUN apt-get install -y -q -q --no-install-recommends \
         openssh-client \
 	git \
@@ -37,7 +40,6 @@ RUN apt-get install -y -q -q --no-install-recommends \
 	mysql-server \
 	libmysqlclient-dev \
 	supervisor \
-	openssh-server \
 	apache2 \
 	libapache2-mod-wsgi-py3 \
 	apt-transport-https \
@@ -46,21 +48,23 @@ RUN apt-get install -y -q -q --no-install-recommends \
 	software-properties-common && \
     apt-get clean -y
 
-# step 5: clone the tools repo
+# step 6: clone the tools repo
 RUN mkdir -p ~/.ssh && \
     ssh-keyscan github.com > ~/.ssh/known_hosts && \
     cd /root; git clone https://github.com/uva-slp/pico
 
-# step 6: upgrade pip and install python packages
-RUN pip3 install --upgrade pip && \
-    pip3 install setuptools && \
+# step 7: upgrade pip and install python packages (this caused a build
+# error when these two RUN commands were combined into a single
+# command)
+RUN pip3 install --upgrade pip
+RUN pip3 install setuptools && \
     apt-get install -y -q -q --no-install-recommends gcc libpython3.5-dev && \
     cd /root/pico/docs; pip3 install -r packages.txt && \
     apt-get remove -y gcc libpython3.5-dev && \
     apt-get autoremove -y && \
     apt-get clean -y
 
-# step 7: set up the database to be initialized upon image startup
+# step 8: set up the database to be initialized upon image startup
 RUN mkdir /init-db && \
     echo \#\!/bin/bash > /pico-init.sh && \
     echo "if [ -d \"/init-db/\" ]; then" >> /pico-init.sh && \
@@ -73,11 +77,6 @@ RUN mkdir /init-db && \
     chmod 755 /pico-init.sh
 COPY 000-db-init.sql /init-db/
 COPY schema.sql /init-db/
-
-# step 8: make sure root can log in
-RUN echo 'root:password' | chpasswd && \
-    sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-    sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 
 # step 9: install docker in docker (adapted from https://docs.docker.com/engine/installation/linux/ubuntu/#install-using-the-repository)
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
