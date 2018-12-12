@@ -16,7 +16,7 @@ RUN echo $APT_PROXY | grep -v 0.0.0.0 | awk '{print "Acquire::http::Proxy \"http
 RUN apt-get update -y -q -q && \
      apt-get -y -y -q install --no-install-recommends \
      g++ \
-     openjdk-7-jdk \
+     default-jdk \
      sudo
 
 # step 3: remove the (possible) apt-cacher-ng repository
